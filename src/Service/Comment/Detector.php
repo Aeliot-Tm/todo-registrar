@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Aeliot\TodoRegistrar;
+namespace Aeliot\TodoRegistrar\Service\Comment;
 
 final class Detector
 {

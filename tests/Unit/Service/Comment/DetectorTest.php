@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Aeliot\TodoRegistrar\Test\Unit;
+namespace Aeliot\TodoRegistrar\Test\Unit\Service\Comment;
 
-use Aeliot\TodoRegistrar\Detector;
+use Aeliot\TodoRegistrar\Service\Comment\Detector;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
