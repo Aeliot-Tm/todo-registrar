@@ -11,6 +11,21 @@ use PHPUnit\Framework\TestCase;
 #[CoversClass(Detector::class)]
 final class DetectorTest extends TestCase
 {
+    public function testCollectMultilineComment(): void
+    {
+        $tokens = $this->getTokens( __DIR__ . '/../fixtures/multi_line_comment.php');
+
+        self::assertCount(1, $tokens);
+
+        $expectedContent = <<<CONT
+/*
+ * Multi line comment
+ */
+CONT;
+        ;
+        self::assertSame($expectedContent, $tokens[0]->text);
+    }
+
     public function testCollectMultilineDocBlock(): void
     {
         $tokens = $this->getTokens( __DIR__ . '/../fixtures/multi_line_doc_block.php');
