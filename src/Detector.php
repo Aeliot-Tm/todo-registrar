@@ -19,7 +19,7 @@ final class Detector
             }
         }
 
-        return array_values($tokens);
+        return $tokens;
     }
 
     /**

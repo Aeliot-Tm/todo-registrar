@@ -50,14 +50,13 @@ CONT;
     }
 
     /**
-     * @param string $path
-     *
      * @return \PhpToken[]
      */
     private function getTokens(string $path): array
     {
         $tokens = \PhpToken::tokenize(file_get_contents($path));
+        $tokens = (new Detector())->filter($tokens);
 
-        return (new Detector())->filter($tokens);
+        return array_values($tokens);
     }
 }
