@@ -6,47 +6,44 @@ namespace Aeliot\TodoRegistrar\Test\Unit\Service\Comment;
 
 use Aeliot\TodoRegistrar\Service\Comment\Detector;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(Detector::class)]
 final class DetectorTest extends TestCase
 {
-    public function testCollectMultilineComment(): void
+    public static function getDataForTestDetection(): iterable
     {
-        $tokens = $this->getTokens( __DIR__ . '/../fixtures/multi_line_comment.php');
+        yield [
+            '// TODO single line comment',
+            __DIR__ . '/../../../fixtures/single_line.php',
+        ];
 
-        self::assertCount(1, $tokens);
-
-        $expectedContent = <<<CONT
+        yield [
+            <<<CONT
 /*
  * Multi line comment
  */
-CONT;
-        ;
-        self::assertSame($expectedContent, $tokens[0]->text);
-    }
+CONT,
+            __DIR__ . '/../../../fixtures/multi_line_comment.php',
+        ];
 
-    public function testCollectMultilineDocBlock(): void
-    {
-        $tokens = $this->getTokens( __DIR__ . '/../fixtures/multi_line_doc_block.php');
-
-        self::assertCount(1, $tokens);
-
-        $expectedContent = <<<CONT
+        yield [
+            <<<CONT
 /**
  * Multi line doc block
  */
-CONT;
-        ;
-        self::assertSame($expectedContent, $tokens[0]->text);
+CONT,
+            __DIR__ . '/../../../fixtures/multi_line_doc_block.php',
+        ];
     }
 
-    public function testCollectSingleLine(): void
+    #[DataProvider('getDataForTestDetection')]
+    public function testDetection(string $expectedText, string $path): void
     {
-        $tokens = $this->getTokens(__DIR__ . '/../fixtures/single_line.php');
-
+        $tokens = $this->getTokens($path);
         self::assertCount(1, $tokens);
-        self::assertSame('// TODO single line comment', $tokens[0]->text);
+        self::assertSame($expectedText, $tokens[0]->text);
     }
 
     /**
