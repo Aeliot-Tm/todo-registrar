@@ -1,5 +1,5 @@
 {
-    "name": "aeliot/todo-to-issue-tracker",
+    "name": "aeliot/todo-registrar",
     "type": "library",
     "description": "Register TODOs from source code in issue tracker",
     "license": "MIT",
