@@ -1,0 +1,17 @@
+{
+    "name": "aeliot/todo-to-issue-tracker",
+    "type": "library",
+    "description": "Register TODOs from source code in issue tracker",
+    "license": "MIT",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "config": {
+        "allow-plugins": {
+            "composer/*": true
+        },
+        "sort-packages": true
+    },
+    "require": {
+        "php": "^8.2"
+    }
+}
