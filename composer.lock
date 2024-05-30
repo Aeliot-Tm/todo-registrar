@@ -4,9 +4,62 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bbaf56cb85bf133d21c0a1aebb23d8a0",
+    "content-hash": "569f904e516971d8cf67f5d4f2b65c0d",
     "packages": [],
     "packages-dev": [
+        {
+            "name": "dg/bypass-finals",
+            "version": "v1.7.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dg/bypass-finals.git",
+                "reference": "dbe238be99c8d2406ce09d254cbcc93d90578c88"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dg/bypass-finals/zipball/dbe238be99c8d2406ce09d254cbcc93d90578c88",
+                "reference": "dbe238be99c8d2406ce09d254cbcc93d90578c88",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1"
+            },
+            "require-dev": {
+                "nette/tester": "^2.3",
+                "phpstan/phpstan": "^0.12"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause",
+                "GPL-2.0",
+                "GPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "David Grudl",
+                    "homepage": "https://davidgrudl.com"
+                }
+            ],
+            "description": "Removes final keyword from source code on-the-fly and allows mocking of final methods and classes",
+            "keywords": [
+                "finals",
+                "mocking",
+                "phpunit",
+                "testing",
+                "unit"
+            ],
+            "support": {
+                "issues": "https://github.com/dg/bypass-finals/issues",
+                "source": "https://github.com/dg/bypass-finals/tree/v1.7.0"
+            },
+            "time": "2024-05-17T01:03:44+00:00"
+        },
         {
             "name": "myclabs/deep-copy",
             "version": "1.11.1",

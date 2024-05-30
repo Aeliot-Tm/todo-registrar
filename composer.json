@@ -20,6 +20,7 @@
         "php": "^8.2"
     },
     "require-dev": {
+        "dg/bypass-finals": "^1.7",
         "phpunit/phpunit": "^11.1"
     },
     "scripts": {
