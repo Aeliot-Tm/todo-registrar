@@ -14,11 +14,21 @@ final class Detector
     public function filter(array $tokens): array
     {
         foreach ($tokens as $index => $token) {
-            if ($token->id !== T_COMMENT) {
+            if (!$this->isComment($token)) {
                 unset($tokens[$index]);
             }
         }
 
         return array_values($tokens);
+    }
+
+    /**
+     * @param \PhpToken $token
+     *
+     * @return bool
+     */
+    public function isComment(\PhpToken $token): bool
+    {
+        return \in_array($token->id, [T_COMMENT, T_DOC_COMMENT], true);
     }
 }
