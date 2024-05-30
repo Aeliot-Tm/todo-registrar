@@ -21,8 +21,22 @@ RUN set -xe; \
 RUN rm -rf /var/lib/apt/lists/* && \
     apt-get clean
 
+# Install composer
+RUN set -xe; \
+    curl -sS https://getcomposer.org/installer | php -- --filename=composer --install-dir=/usr/local/bin --version=${COMPOSER_VERSION} > /dev/null 2>&1 && \
+    chmod +x /usr/local/bin/composer
+
 WORKDIR /app
+
+COPY composer.* ./
+
+RUN set -xe; \
+    composer install --no-autoloader --no-dev --no-interaction --no-progress --no-scripts --prefer-dist && \
+    composer clear-cache && \
+    rm -rf ./vendor/*/*/tests
 
 COPY . ./
 RUN chmod +x ./docker-entrypoint.sh && \
     rm -rf ./.docker
+
+RUN composer dump-autoload --optimize
