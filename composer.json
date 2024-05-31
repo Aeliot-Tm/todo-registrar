@@ -22,7 +22,8 @@
         "sort-packages": true
     },
     "require": {
-        "php": "^8.2"
+        "php": "^8.2",
+        "lesstif/php-jira-rest-client": "^5.8"
     },
     "require-dev": {
         "dg/bypass-finals": "^1.7",
