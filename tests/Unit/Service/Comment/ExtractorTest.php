@@ -20,6 +20,19 @@ final class ExtractorTest extends TestCase
             '// TODO single line comment',
         ];
         yield [
+            1,
+            1,
+            '# TODO single line comment',
+        ];
+        yield [
+            1,
+            1,
+            <<<CON
+# TODO single line comment
+#      with some extra part
+CON,
+        ];
+        yield [
             3,
             1,
             <<<CONT

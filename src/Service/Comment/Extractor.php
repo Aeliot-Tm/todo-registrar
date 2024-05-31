@@ -52,7 +52,7 @@ final class Extractor
         $prefixLength = $part->getPosition() + strlen($part->getTag());
         $prefix = substr($line, 0, $prefixLength);
 
-        return strlen($prefix) === $prefixLength && \in_array(trim($prefix), ['*', '//'], true);
+        return strlen($prefix) === $prefixLength && \in_array(trim($prefix), ['*', '//', '#'], true);
     }
 
     public function registerPart(string $line, CommentParts $parts): CommentPart
