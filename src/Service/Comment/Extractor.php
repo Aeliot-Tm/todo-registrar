@@ -6,10 +6,11 @@ namespace Aeliot\TodoRegistrar\Service\Comment;
 
 use Aeliot\TodoRegistrar\Dto\Comment\CommentPart;
 use Aeliot\TodoRegistrar\Dto\Comment\CommentParts;
+use Aeliot\TodoRegistrar\Service\Tag\Detector as TagDetector;
 
 final class Extractor
 {
-    public function __construct(private string $pattern = '/\\b(todo|fixme)\\b/i')
+    public function __construct(private TagDetector $tagDetector = new TagDetector())
     {
     }
 
@@ -33,16 +34,6 @@ final class Extractor
         return $parts;
     }
 
-    /**
-     * @return array{0: string|null, 1: int|null}
-     */
-    private function getCommentPosition(string $line): array
-    {
-        $tag = preg_match($this->pattern, $line, $matches) ? $matches[1] : null;
-
-        return null === $tag ? [null, null] : [strtoupper($tag), stripos($line, $tag)];
-    }
-
     private function hasEmptyPrefix(string $line, CommentPart $part): bool
     {
         if (null === $part->getTag()) {
@@ -57,7 +48,7 @@ final class Extractor
 
     public function registerPart(string $line, CommentParts $parts): CommentPart
     {
-        $part = new CommentPart(...$this->getCommentPosition($line));
+        $part = new CommentPart(...$this->tagDetector->getTagMetadata($line));
         $parts->addPart($part);
 
         return $part;
