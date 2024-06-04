@@ -4,19 +4,26 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Tag;
 
+use Aeliot\TodoRegistrar\Dto\Tag\TagMetadata;
+
 final class Detector
 {
-    public function __construct(private string $pattern = '/\\b(todo|fixme)\\b/i')
-    {
-    }
+    private string $pattern;
 
     /**
-     * @return array{0: string|null, 1: int|null}
+     * @param string[] $tags
      */
-    public function getTagMetadata(string $line): array
+    public function __construct(array $tags = ['todo', 'fixme'])
     {
-        $tag = preg_match($this->pattern, $line, $matches) ? $matches[1] : null;
+        $this->pattern = sprintf('/^(.*(%s)(?:@([a-z0-9._-]+))?\b\s*:?)/i', implode('|', $tags));
+    }
 
-        return null === $tag ? [null, null] : [strtoupper($tag), stripos($line, $tag)];
+    public function getTagMetadata(string $line): ?TagMetadata
+    {
+        if (!preg_match($this->pattern, $line, $matches)) {
+            return null;
+        }
+
+        return new TagMetadata(strtoupper($matches[2]), strlen($matches[1]), $matches[3] ?? null);
     }
 }

@@ -40,15 +40,14 @@ final class Extractor
             return false;
         }
 
-        $prefixLength = $part->getPosition() + strlen($part->getTag());
-        $prefix = substr($line, 0, $prefixLength);
+        $prefix = substr($line, 0, $part->getPrefixLength());
 
-        return strlen($prefix) === $prefixLength && \in_array(trim($prefix), ['*', '//', '#'], true);
+        return \in_array(trim($prefix), ['*', '//', '#'], true);
     }
 
     public function registerPart(string $line, CommentParts $parts): CommentPart
     {
-        $part = new CommentPart(...$this->tagDetector->getTagMetadata($line));
+        $part = new CommentPart($this->tagDetector->getTagMetadata($line));
         $parts->addPart($part);
 
         return $part;

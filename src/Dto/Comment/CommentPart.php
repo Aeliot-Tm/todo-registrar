@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Dto\Comment;
 
+use Aeliot\TodoRegistrar\Dto\Tag\TagMetadata;
+
 final class CommentPart
 {
     /**
@@ -12,8 +14,7 @@ final class CommentPart
     protected array $lines;
 
     public function __construct(
-        private ?string $tag,
-        private ?int $position,
+        private ?TagMetadata $tagMetadata,
     ) {
     }
 
@@ -30,13 +31,13 @@ final class CommentPart
         return $this->lines;
     }
 
-    public function getPosition(): ?int
+    public function getPrefixLength(): ?int
     {
-        return $this->position;
+        return $this->tagMetadata?->getPrefixLength();
     }
 
     public function getTag(): ?string
     {
-        return $this->tag;
+        return $this->tagMetadata?->getTag();
     }
 }
