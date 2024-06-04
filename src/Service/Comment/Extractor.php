@@ -55,10 +55,15 @@ final class Extractor
     }
 
     /**
+     * Method returns lines with EOL.
+     *
+     * So, it is no matter for comment rebuild process which one was used for each line.
+     * And it will not be the case of their changing.
+     *
      * @return string[]
      */
     private function splitLines(string $comment): array
     {
-        return preg_split("/\\r?\\n/", $comment);
+        return preg_split("/[\r\n]+/", $comment, -1, PREG_SPLIT_DELIM_CAPTURE);
     }
 }
