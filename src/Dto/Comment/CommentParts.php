@@ -40,4 +40,9 @@ final class CommentParts
     {
         return $this->todos;
     }
+
+    public function getContent(): string
+    {
+        return implode('', array_map(static fn (CommentPart $part): string => $part->getContent(), $this->parts));
+    }
 }

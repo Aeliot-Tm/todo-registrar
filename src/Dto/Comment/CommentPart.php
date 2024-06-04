@@ -11,7 +11,7 @@ final class CommentPart
     /**
      * @var string[]
      */
-    protected array $lines;
+    private array $lines = [];
 
     public function __construct(
         private ?TagMetadata $tagMetadata,
@@ -39,5 +39,14 @@ final class CommentPart
     public function getTag(): ?string
     {
         return $this->tagMetadata?->getTag();
+    }
+
+    public function getContent(): string
+    {
+        if (!$this->lines) {
+            throw new \RuntimeException('Cannot get line till injected one');
+        }
+
+        return implode('', $this->lines);
     }
 }
