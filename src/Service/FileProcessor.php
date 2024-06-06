@@ -6,6 +6,7 @@ namespace Aeliot\TodoRegistrar\Service;
 
 use Aeliot\TodoRegistrar\Service\Comment\Detector as CommentDetector;
 use Aeliot\TodoRegistrar\Service\Comment\Extractor as CommentExtractor;
+use Aeliot\TodoRegistrar\Service\File\Tokenizer;
 use Aeliot\TodoRegistrar\Service\Registrar\RegistrarInterface;
 
 final class FileProcessor
@@ -14,12 +15,13 @@ final class FileProcessor
         private CommentDetector $commentDetector,
         private CommentExtractor $commentExtractor,
         private RegistrarInterface $registrar,
+        private Tokenizer $tokenizer,
     ) {
     }
 
     public function process(\SplFileInfo $file): void
     {
-        $tokens = \PhpToken::tokenize(file_get_contents($file->getPathname()));
+        $tokens = $this->tokenizer->tokenize($file);
         $commentTokens = $this->commentDetector->filter($tokens);
         if (!$commentTokens) {
             return;
