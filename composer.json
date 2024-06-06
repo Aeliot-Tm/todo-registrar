@@ -15,6 +15,9 @@
             "Aeliot\\TodoRegistrar\\Test\\": "tests/"
         }
     },
+    "bin": [
+        "bin/todo-registrar"
+    ],
     "config": {
         "allow-plugins": {
             "composer/*": true

@@ -1,0 +1,56 @@
+#!/usr/bin/env php
+<?php
+
+use Aeliot\TodoRegistrar\ApplicationFactory;
+use Aeliot\TodoRegistrar\Config;
+
+$autoloaderPath = (static function (): string {
+    $paths = [
+        __DIR__ . '/vendor/autoload.php',
+        __DIR__ . '/../vendor/autoload.php',
+        __DIR__ . '/../../vendor/autoload.php',
+        __DIR__ . '/../../../vendor/autoload.php',
+    ];
+
+    foreach ($paths as $path) {
+        if (file_exists($path)) {
+            return realpath($path);
+        }
+    }
+
+    throw new RuntimeException('Cannot find autoloader');
+})();
+
+require_once $autoloaderPath;
+
+$projectPath = dirname($autoloaderPath, 2);
+
+$absolutePathMaker = static function (string $path) use ($projectPath): string {
+    if (preg_match('#^(?:[[:alpha:]]:[/\\\\]|/)#', $path)) {
+        return $path;
+    }
+
+    return $projectPath . '/' . $path;
+};
+
+$options = (static function () use ($absolutePathMaker): array {
+    $values = [];
+    $options = getopt('c:', ['config']);
+    $defaults = [
+        'config' => ['c', '.todo-registrar.dist.php'],
+    ];
+
+    foreach ($defaults as $long => [$short, $default]) {
+        if (isset($options[$short], $options[$long])) {
+            throw new InvalidArgumentException(sprintf('Option %s is duplicated', $long));
+        }
+        $values[$long] = $absolutePathMaker($options[$short] ?? $options[$long] ?? $default);
+    }
+
+    return $values;
+})();
+
+/** @var Config $config */
+$config = require $options['config'];
+
+(new ApplicationFactory())->create($config)->run();
