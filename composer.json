@@ -23,7 +23,8 @@
     },
     "require": {
         "php": "^8.2",
-        "lesstif/php-jira-rest-client": "^5.8"
+        "lesstif/php-jira-rest-client": "^5.8",
+        "symfony/finder": "^5.4|^6.0|^7.0"
     },
     "require-dev": {
         "dg/bypass-finals": "^1.7",
