@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "871a9380536a9b43e1573f979a380cb7",
+    "content-hash": "348915d6bd9d618e8cc393e27ea4ccb4",
     "packages": [
         {
             "name": "lesstif/php-jira-rest-client",
