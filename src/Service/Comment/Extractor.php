@@ -45,7 +45,7 @@ final class Extractor
         return \in_array(trim($prefix), ['*', '//', '#'], true);
     }
 
-    public function registerPart(string $line, CommentParts $parts): CommentPart
+    private function registerPart(string $line, CommentParts $parts): CommentPart
     {
         $part = new CommentPart($this->tagDetector->getTagMetadata($line));
         $parts->addPart($part);
