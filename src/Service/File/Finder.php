@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Aeliot\TodoRegistrar\Service;
+namespace Aeliot\TodoRegistrar\Service\File;
 
 use Symfony\Component\Finder\Finder as SymfonyFinder;
 
