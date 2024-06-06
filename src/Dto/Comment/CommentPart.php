@@ -23,6 +23,15 @@ final class CommentPart
         $this->lines[] = $line;
     }
 
+    public function getFirstLine(): string
+    {
+        if (!$this->lines) {
+            throw new \RuntimeException('Cannot get line till injected one');
+        }
+
+        return reset($this->lines);
+    }
+
     /**
      * @return string[]
      */
@@ -41,6 +50,11 @@ final class CommentPart
         return $this->tagMetadata?->getTag();
     }
 
+    public function getTagMetadata(): ?TagMetadata
+    {
+        return $this->tagMetadata;
+    }
+
     public function getContent(): string
     {
         if (!$this->lines) {
@@ -48,5 +62,20 @@ final class CommentPart
         }
 
         return implode('', $this->lines);
+    }
+
+    public function injectKey(string $key): void
+    {
+        if (!$this->lines) {
+            throw new \RuntimeException('Cannot get line till injected one');
+        }
+
+        $prefixLength = $this->tagMetadata?->getPrefixLength();
+        if (!$prefixLength) {
+            throw new \RuntimeException('Cannot get prefix length');
+        }
+
+        $line = $this->lines[0];
+        $this->lines[0] = substr($line, 0, $prefixLength) . " $key " . substr($line, $prefixLength);
     }
 }
