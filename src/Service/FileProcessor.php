@@ -6,6 +6,7 @@ namespace Aeliot\TodoRegistrar\Service;
 
 use Aeliot\TodoRegistrar\Service\Comment\Detector as CommentDetector;
 use Aeliot\TodoRegistrar\Service\Comment\Extractor as CommentExtractor;
+use Aeliot\TodoRegistrar\Service\File\Saver;
 use Aeliot\TodoRegistrar\Service\File\Tokenizer;
 use Aeliot\TodoRegistrar\Service\Registrar\RegistrarInterface;
 
@@ -15,6 +16,7 @@ final class FileProcessor
         private CommentDetector $commentDetector,
         private CommentExtractor $commentExtractor,
         private RegistrarInterface $registrar,
+        private Saver $saver,
         private Tokenizer $tokenizer,
     ) {
     }
@@ -31,7 +33,7 @@ final class FileProcessor
             return;
         }
 
-        $this->saveTokensToFile($file, $tokens);
+        $this->saver->save($file, $tokens);
     }
 
     /**
@@ -54,14 +56,5 @@ final class FileProcessor
         }
 
         return $hasNewTodo;
-    }
-
-    /**
-     * @param \PhpToken[] $tokens
-     */
-    private function saveTokensToFile(\SplFileInfo $file, array $tokens): void
-    {
-        $content = implode('', array_map(static fn(\PhpToken $x): string => $x->text, $tokens));
-        file_put_contents($file->getPathname(), $content);
     }
 }
