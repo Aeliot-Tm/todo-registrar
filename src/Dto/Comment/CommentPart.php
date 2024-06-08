@@ -70,12 +70,17 @@ final class CommentPart
             throw new \RuntimeException('Cannot get line till injected one');
         }
 
-        $prefixLength = $this->tagMetadata?->getPrefixLength();
-        if (!$prefixLength) {
+        $prefixLength = (int) $this->tagMetadata?->getPrefixLength();
+        if (1 > $prefixLength) {
             throw new \RuntimeException('Cannot get prefix length');
         }
 
         $line = $this->lines[0];
-        $this->lines[0] = substr($line, 0, $prefixLength) . " $key " . substr($line, $prefixLength);
+        $injection = [' ', $key];
+        if (' ' !== $line[$prefixLength]) {
+            $injection[] = ' ';
+        }
+
+        $this->lines[0] = substr($line, 0, $prefixLength) . implode('', $injection) . substr($line, $prefixLength);
     }
 }
