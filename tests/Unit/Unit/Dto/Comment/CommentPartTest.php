@@ -6,6 +6,7 @@ namespace Aeliot\TodoRegistrar\Test\Unit\Unit\Dto\Comment;
 
 use Aeliot\TodoRegistrar\Dto\Comment\CommentPart;
 use Aeliot\TodoRegistrar\Dto\Tag\TagMetadata;
+use Aeliot\TodoRegistrar\Exception\NoPrefixException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
@@ -101,7 +102,7 @@ final class CommentPartTest extends TestCase
     #[DataProvider('getDataForTestInjectKeyThrowsExceptionWithoutPrefix')]
     public function testInjectKeyThrowsExceptionWithoutPrefix(?int $prefixLength): void
     {
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(NoPrefixException::class);
 
         $commentPart = new CommentPart(new TagMetadata(null, $prefixLength));
         $commentPart->addLine('any text of line');

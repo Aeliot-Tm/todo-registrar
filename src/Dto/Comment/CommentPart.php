@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Dto\Comment;
 
 use Aeliot\TodoRegistrar\Dto\Tag\TagMetadata;
+use Aeliot\TodoRegistrar\Exception\NoPrefixException;
 
 final class CommentPart
 {
@@ -72,7 +73,7 @@ final class CommentPart
 
         $prefixLength = (int) $this->tagMetadata?->getPrefixLength();
         if (1 > $prefixLength) {
-            throw new \RuntimeException('Cannot get prefix length');
+            throw new NoPrefixException('Cannot get prefix length');
         }
 
         $line = $this->lines[0];
