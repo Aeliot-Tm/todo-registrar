@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Aeliot\TodoRegistrar\Test\Unit\Unit\Dto\Comment;
+namespace Aeliot\TodoRegistrar\Test\Unit\Dto\Comment;
 
 use Aeliot\TodoRegistrar\Dto\Comment\CommentPart;
 use Aeliot\TodoRegistrar\Dto\Tag\TagMetadata;
