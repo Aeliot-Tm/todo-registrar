@@ -28,7 +28,7 @@ final class CommentPart
     public function getFirstLine(): string
     {
         if (!$this->lines) {
-            throw new NoLineException('Cannot get line till injected one');
+            throw new NoLineException('Cannot get first line till added one');
         }
 
         return reset($this->lines);
@@ -60,7 +60,7 @@ final class CommentPart
     public function getContent(): string
     {
         if (!$this->lines) {
-            throw new NoLineException('Cannot get line till injected one');
+            throw new NoLineException('Cannot get content till added one line');
         }
 
         return implode('', $this->lines);
@@ -69,7 +69,7 @@ final class CommentPart
     public function injectKey(string $key): void
     {
         if (!$this->lines) {
-            throw new NoLineException('Cannot get line till injected one');
+            throw new NoLineException('Cannot inject key till added one line');
         }
 
         $prefixLength = (int) $this->tagMetadata?->getPrefixLength();
