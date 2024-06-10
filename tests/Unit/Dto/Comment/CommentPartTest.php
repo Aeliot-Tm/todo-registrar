@@ -6,6 +6,7 @@ namespace Aeliot\TodoRegistrar\Test\Unit\Dto\Comment;
 
 use Aeliot\TodoRegistrar\Dto\Comment\CommentPart;
 use Aeliot\TodoRegistrar\Dto\Tag\TagMetadata;
+use Aeliot\TodoRegistrar\Exception\NoLineException;
 use Aeliot\TodoRegistrar\Exception\NoPrefixException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -68,14 +69,14 @@ final class CommentPartTest extends TestCase
 
     public function testGetContentThrowsExceptionWithoutLines(): void
     {
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(NoLineException::class);
         $commentPart = new CommentPart(null);
         $commentPart->getContent();
     }
 
     public function testGetFirstLineThrowsExceptionWithoutLines(): void
     {
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(NoLineException::class);
         $commentPart = new CommentPart(null);
         $commentPart->getFirstLine();
     }
@@ -94,7 +95,7 @@ final class CommentPartTest extends TestCase
 
     public function testInjectKeyThrowsExceptionWithoutLines(): void
     {
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(NoLineException::class);
         $commentPart = new CommentPart(null);
         $commentPart->injectKey('any key');
     }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Dto\Comment;
 
 use Aeliot\TodoRegistrar\Dto\Tag\TagMetadata;
+use Aeliot\TodoRegistrar\Exception\NoLineException;
 use Aeliot\TodoRegistrar\Exception\NoPrefixException;
 
 final class CommentPart
@@ -27,7 +28,7 @@ final class CommentPart
     public function getFirstLine(): string
     {
         if (!$this->lines) {
-            throw new \RuntimeException('Cannot get line till injected one');
+            throw new NoLineException('Cannot get line till injected one');
         }
 
         return reset($this->lines);
@@ -59,7 +60,7 @@ final class CommentPart
     public function getContent(): string
     {
         if (!$this->lines) {
-            throw new \RuntimeException('Cannot get line till injected one');
+            throw new NoLineException('Cannot get line till injected one');
         }
 
         return implode('', $this->lines);
@@ -68,7 +69,7 @@ final class CommentPart
     public function injectKey(string $key): void
     {
         if (!$this->lines) {
-            throw new \RuntimeException('Cannot get line till injected one');
+            throw new NoLineException('Cannot get line till injected one');
         }
 
         $prefixLength = (int) $this->tagMetadata?->getPrefixLength();
