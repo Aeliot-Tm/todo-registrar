@@ -6,6 +6,7 @@ namespace Aeliot\TodoRegistrar;
 
 use Aeliot\TodoRegistrar\Enum\RegistrarType;
 use Aeliot\TodoRegistrar\Service\File\Finder;
+use Aeliot\TodoRegistrar\Service\Registrar\RegistrarFactoryInterface;
 
 class Config
 {
@@ -14,7 +15,7 @@ class Config
      * @var array<string,mixed>
      */
     private array $registrarConfig;
-    private RegistrarType $registrarType;
+    private RegistrarType|RegistrarFactoryInterface $registrarType;
 
     public function getFinder(): Finder
     {
@@ -36,7 +37,7 @@ class Config
         return $this->registrarConfig;
     }
 
-    public function getRegistrarType(): RegistrarType
+    public function getRegistrarType(): RegistrarType|RegistrarFactoryInterface
     {
         return $this->registrarType;
     }
@@ -44,7 +45,7 @@ class Config
     /**
      * @param array<string,mixed> $config
      */
-    public function setRegistrar(RegistrarType $type, array $config): self
+    public function setRegistrar(RegistrarType|RegistrarFactoryInterface $type, array $config): self
     {
         $this->registrarType = $type;
         $this->registrarConfig = $config;

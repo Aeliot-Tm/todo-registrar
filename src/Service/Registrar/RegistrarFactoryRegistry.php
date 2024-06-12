@@ -7,17 +7,9 @@ namespace Aeliot\TodoRegistrar\Service\Registrar;
 use Aeliot\TodoRegistrar\Enum\RegistrarType;
 use Aeliot\TodoRegistrar\Service\Registrar\JIRA\JiraRegistrarFactory;
 
-class RegistrarFactory
+class RegistrarFactoryRegistry
 {
-    /**
-     * @param array<string,mixed> $config
-     */
-    public function createRegistrar(RegistrarType $type, array $config): RegistrarInterface
-    {
-        return $this->getExactFactory($type)->create($config);
-    }
-
-    private function getExactFactory(RegistrarType $type): RegistrarFactoryInterface
+    public function getFactory(RegistrarType $type): RegistrarFactoryInterface
     {
         return match ($type) {
             RegistrarType::JIRA => new JiraRegistrarFactory(),

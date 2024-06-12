@@ -10,7 +10,8 @@ use Aeliot\TodoRegistrar\Service\CommentRegistrar;
 use Aeliot\TodoRegistrar\Service\File\Saver;
 use Aeliot\TodoRegistrar\Service\File\Tokenizer;
 use Aeliot\TodoRegistrar\Service\FileProcessor;
-use Aeliot\TodoRegistrar\Service\Registrar\RegistrarFactory;
+use Aeliot\TodoRegistrar\Service\Registrar\RegistrarFactoryInterface;
+use Aeliot\TodoRegistrar\Service\Registrar\RegistrarFactoryRegistry;
 use Aeliot\TodoRegistrar\Service\Registrar\RegistrarInterface;
 use Aeliot\TodoRegistrar\Service\TodoFactory;
 
@@ -49,9 +50,13 @@ class ApplicationFactory
 
     private function createRegistrar(Config $config): RegistrarInterface
     {
-        return (new RegistrarFactory())->createRegistrar(
-            $config->getRegistrarType(),
-            $config->getRegistrarConfig(),
-        );
+        $registrarType = $config->getRegistrarType();
+        if ($registrarType instanceof RegistrarFactoryInterface) {
+            $registrarFactory = $registrarType;
+        } else {
+            $registrarFactory = (new RegistrarFactoryRegistry())->getFactory($registrarType);
+        }
+
+        return $registrarFactory->create($config->getRegistrarConfig());
     }
 }
