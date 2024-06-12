@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\JIRA;
 
+/**
+ * @see https://github.com/lesstif/php-jira-rest-client?tab=readme-ov-file#use-array
+ */
 class IssueServiceArrayConfigPreparer
 {
     /**
