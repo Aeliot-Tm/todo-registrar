@@ -50,7 +50,14 @@ $options = (static function () use ($absolutePathMaker): array {
     return $values;
 })();
 
+if (!file_exists($options['config'])) {
+    throw new RuntimeException(sprintf('Config file "%s" does not exist', $options['config']));
+}
+
 /** @var Config $config */
 $config = require $options['config'];
+if (!$config instanceof Config) {
+    throw new RuntimeException(sprintf('Config file "%s" does not return instance of config', $options['config']));
+}
 
 (new ApplicationFactory())->create($config)->run();
