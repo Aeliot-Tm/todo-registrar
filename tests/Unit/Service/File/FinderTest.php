@@ -13,7 +13,10 @@ final class FinderTest extends TestCase
 {
     public function testFind(): void
     {
-        $finder = (new Finder())->in(__DIR__ . '/../../../fixtures');
+        $finder = (new Finder())
+            ->in(__DIR__ . '/../../../fixtures')
+            ->sortByName(true);
+
         self::assertCount(3, $finder);
 
         $expectedPathnames = [
