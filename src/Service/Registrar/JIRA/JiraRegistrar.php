@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\JIRA;
 
-use Aeliot\TodoRegistrar\Dto\Comment\CommentPart;
+use Aeliot\TodoRegistrar\Dto\Registrar\Todo;
 use Aeliot\TodoRegistrar\Service\Registrar\RegistrarInterface;
 use JiraRestApi\Issue\IssueField;
 use JiraRestApi\Issue\IssueService;
@@ -17,38 +17,36 @@ class JiraRegistrar implements RegistrarInterface
     ) {
     }
 
-    public function isRegistered(CommentPart $commentPart): bool
+    public function isRegistered(Todo $todo): bool
     {
-        $lineWithoutPrefix = substr($commentPart->getFirstLine(), $commentPart->getPrefixLength());
-
-        return preg_match('/^\\s*\\b[A-Z]+-\\d+\\b/i', $lineWithoutPrefix);
+        return preg_match('/^\\s*\\b[A-Z]+-\\d+\\b/i', $todo->getSummary());
     }
 
-    public function register(CommentPart $commentPart): void
+    public function register(Todo $todo): string
     {
-        $issueField = $this->createIssueField($commentPart);
-        $issue = $this->issueService->create($issueField);
-        $commentPart->injectKey($issue->key);
+        $issueField = $this->createIssueField($todo);
+
+        return $this->issueService->create($issueField)->key;
     }
 
-    private function createIssueField(CommentPart $commentPart): IssueField
+    private function createIssueField(Todo $todo): IssueField
     {
         $issueField = new IssueField();
         $issueField
             ->setProjectKey($this->issueConfig->getProjectKey())
             ->setIssueTypeAsString($this->issueConfig->getIssueType())
-            ->setSummary($commentPart->getFirstLine())
-            ->setDescription($commentPart->getContent())
+            ->setSummary($todo->getSummary())
+            ->setDescription($todo->getDescription())
             ->addComponentsAsArray($this->issueConfig->getComponents());
 
-        $assignee = $commentPart->getTagMetadata()?->getAssignee();
+        $assignee = $todo->getAssignee();
         if ($assignee) {
             $issueField->setAssigneeNameAsString($assignee);
         }
 
         $labels = $this->issueConfig->getLabels();
         if ($this->issueConfig->addTagToLabels()) {
-            $labels[] = strtolower(sprintf('%s%s', $this->issueConfig->getTagPrefix(), $commentPart->getTag()));
+            $labels[] = strtolower(sprintf('%s%s', $this->issueConfig->getTagPrefix(), $todo->getTag()));
         }
 
         foreach ($labels as $label) {

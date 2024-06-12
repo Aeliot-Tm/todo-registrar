@@ -25,6 +25,18 @@ class CommentPart
         $this->lines[] = $line;
     }
 
+    public function getDescription(): string
+    {
+        if (!$this->lines) {
+            throw new NoLineException('Cannot get description till added one line');
+        }
+
+        $prefixLength = (int) $this->tagMetadata?->getPrefixLength();
+        $lines = array_map(static fn(string $line): string => substr($line, $prefixLength), $this->lines);
+
+        return implode('', $lines);
+    }
+
     public function getFirstLine(): string
     {
         if (!$this->lines) {
@@ -44,7 +56,13 @@ class CommentPart
 
     public function getPrefixLength(): ?int
     {
+        // THINK: throw exception when there is no prefix
         return $this->tagMetadata?->getPrefixLength();
+    }
+
+    public function getSummary(): string
+    {
+        return trim(substr($this->getFirstLine(), $this->getPrefixLength()));
     }
 
     public function getTag(): ?string

@@ -14,6 +14,7 @@ class CommentRegistrar
         private CommentDetector $commentDetector,
         private CommentExtractor $commentExtractor,
         private RegistrarInterface $registrar,
+        private TodoFactory $todoFactory,
     ) {
     }
 
@@ -39,10 +40,12 @@ class CommentRegistrar
         foreach ($tokens as $token) {
             $commentParts = $this->commentExtractor->extract($token->text);
             foreach ($commentParts->getTodos() as $commentPart) {
-                if ($this->registrar->isRegistered($commentPart)) {
+                $todo = $this->todoFactory->create($commentPart);
+                if ($this->registrar->isRegistered($todo)) {
                     continue;
                 }
-                $this->registrar->register($commentPart);
+                $key = $this->registrar->register($todo);
+                $commentPart->injectKey($key);
                 $hasNewTodo = true;
             }
 

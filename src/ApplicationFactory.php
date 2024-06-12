@@ -12,6 +12,7 @@ use Aeliot\TodoRegistrar\Service\File\Tokenizer;
 use Aeliot\TodoRegistrar\Service\FileProcessor;
 use Aeliot\TodoRegistrar\Service\Registrar\RegistrarFactory;
 use Aeliot\TodoRegistrar\Service\Registrar\RegistrarInterface;
+use Aeliot\TodoRegistrar\Service\TodoFactory;
 
 class ApplicationFactory
 {
@@ -33,6 +34,7 @@ class ApplicationFactory
             new Detector(),
             new Extractor(),
             $registrar,
+            new TodoFactory(),
         );
     }
 

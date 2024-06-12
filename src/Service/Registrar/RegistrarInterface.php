@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar;
 
-use Aeliot\TodoRegistrar\Dto\Comment\CommentPart;
+use Aeliot\TodoRegistrar\Dto\Registrar\Todo;
 
 interface RegistrarInterface
 {
-    public function isRegistered(CommentPart $commentPart): bool;
+    public function isRegistered(Todo $todo): bool;
 
-    public function register(CommentPart $commentPart): void;
+    public function register(Todo $todo): string;
 }

@@ -6,11 +6,13 @@ namespace Aeliot\TodoRegistrar\Test\Unit\Service;
 
 use Aeliot\TodoRegistrar\Dto\Comment\CommentPart;
 use Aeliot\TodoRegistrar\Dto\Comment\CommentParts;
+use Aeliot\TodoRegistrar\Dto\Registrar\Todo;
 use Aeliot\TodoRegistrar\Dto\Tag\TagMetadata;
 use Aeliot\TodoRegistrar\Service\Comment\Detector as CommentDetector;
 use Aeliot\TodoRegistrar\Service\Comment\Extractor as CommentExtractor;
 use Aeliot\TodoRegistrar\Service\CommentRegistrar;
 use Aeliot\TodoRegistrar\Service\Registrar\RegistrarInterface;
+use Aeliot\TodoRegistrar\Service\TodoFactory;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -25,7 +27,8 @@ final class CommentRegistrarTest extends TestCase
         $commentParts = $this->createCommentParts();
         $commentExtractor = $this->mockCommentExtractor($commentParts);
 
-        $todo = $commentParts->getTodos()[0];
+        $todoFactory = new TodoFactory();
+        $todo = $todoFactory->create($commentParts->getTodos()[0]);
 
         $registrar = $this->mockRegistrar($todo, true);
         $registrar
@@ -33,7 +36,7 @@ final class CommentRegistrarTest extends TestCase
             ->method('register')
             ->with($todo);
 
-        $commentRegistrar = new CommentRegistrar($commentDetector, $commentExtractor, $registrar);
+        $commentRegistrar = new CommentRegistrar($commentDetector, $commentExtractor, $registrar, $todoFactory);
         $commentRegistrar->register($tokens);
     }
 
@@ -44,16 +47,21 @@ final class CommentRegistrarTest extends TestCase
         $commentParts = $this->createCommentParts();
         $commentExtractor = $this->mockCommentExtractor($commentParts);
 
-        $todo = $commentParts->getTodos()[0];
+        $token = $commentParts->getTodos()[0];
+        $todoFactory = new TodoFactory();
+        $todo = $todoFactory->create($token);
 
         $registrar = $this->mockRegistrar($todo, false);
         $registrar
             ->expects($this->once())
             ->method('register')
-            ->with($todo);
+            ->with($todo)
+            ->willReturn('X-001');
 
-        $commentRegistrar = new CommentRegistrar($commentDetector, $commentExtractor, $registrar);
+        $commentRegistrar = new CommentRegistrar($commentDetector, $commentExtractor, $registrar, $todoFactory);
         $commentRegistrar->register($tokens);
+
+        self::assertSame('// TODO X-001 single line comment', $tokens[2]->text);
     }
 
     public function createCommentParts(): CommentParts
@@ -108,7 +116,7 @@ final class CommentRegistrarTest extends TestCase
         return $commentExtractor;
     }
 
-    public function mockRegistrar(CommentPart $todo, bool $isRegistered): RegistrarInterface&MockObject
+    public function mockRegistrar(Todo $todo, bool $isRegistered): RegistrarInterface&MockObject
     {
         $registrar = $this->createMock(RegistrarInterface::class);
         $registrar
