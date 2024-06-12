@@ -64,7 +64,7 @@ final class CommentRegistrarTest extends TestCase
         self::assertSame('// TODO X-001 single line comment', $tokens[2]->text);
     }
 
-    public function createCommentParts(): CommentParts
+    private function createCommentParts(): CommentParts
     {
         $commentPart = new CommentPart(new TagMetadata('TODO', 7));
         $commentPart->addLine('// TODO single line comment');
@@ -116,7 +116,7 @@ final class CommentRegistrarTest extends TestCase
         return $commentExtractor;
     }
 
-    public function mockRegistrar(Todo $todo, bool $isRegistered): RegistrarInterface&MockObject
+    private function mockRegistrar(Todo $todo, bool $isRegistered): RegistrarInterface&MockObject
     {
         $registrar = $this->createMock(RegistrarInterface::class);
         $registrar
