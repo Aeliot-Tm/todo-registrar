@@ -33,7 +33,7 @@ class IssueConfig
         $this->tagPrefix = $issue['tagPrefix'] ?? '';
     }
 
-    public function addTagToLabels(): bool
+    public function isAddTagToLabels(): bool
     {
         return $this->addTagToLabels;
     }

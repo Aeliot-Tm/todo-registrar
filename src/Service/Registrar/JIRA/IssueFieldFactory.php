@@ -30,7 +30,7 @@ final class IssueFieldFactory
         }
 
         $labels = $this->issueConfig->getLabels();
-        if ($this->issueConfig->addTagToLabels()) {
+        if ($this->issueConfig->isAddTagToLabels()) {
             $labels[] = strtolower(sprintf('%s%s', $this->issueConfig->getTagPrefix(), $todo->getTag()));
         }
 
