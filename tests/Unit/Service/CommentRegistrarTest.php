@@ -38,6 +38,8 @@ final class CommentRegistrarTest extends TestCase
 
         $commentRegistrar = new CommentRegistrar($commentDetector, $commentExtractor, $registrar, $todoFactory);
         $commentRegistrar->register($tokens);
+
+        self::assertSame('// TODO single line comment', $tokens[2]->text);
     }
 
     public function testRegisterNewTodos(): void
