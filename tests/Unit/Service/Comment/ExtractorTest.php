@@ -4,12 +4,21 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Test\Unit\Service\Comment;
 
+use Aeliot\TodoRegistrar\Dto\Comment\CommentPart;
+use Aeliot\TodoRegistrar\Dto\Comment\CommentParts;
+use Aeliot\TodoRegistrar\Dto\Tag\TagMetadata;
 use Aeliot\TodoRegistrar\Service\Comment\Extractor;
+use Aeliot\TodoRegistrar\Service\Tag\Detector;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(Extractor::class)]
+#[UsesClass(CommentPart::class)]
+#[UsesClass(CommentParts::class)]
+#[UsesClass(Detector::class)]
+#[UsesClass(TagMetadata::class)]
 final class ExtractorTest extends TestCase
 {
     public static function getDataForTestCountOfParts(): iterable

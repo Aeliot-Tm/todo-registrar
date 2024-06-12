@@ -10,9 +10,11 @@ use Aeliot\TodoRegistrar\Exception\NoLineException;
 use Aeliot\TodoRegistrar\Exception\NoPrefixException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(CommentPart::class)]
+#[UsesClass(TagMetadata::class)]
 final class CommentPartTest extends TestCase
 {
     /**

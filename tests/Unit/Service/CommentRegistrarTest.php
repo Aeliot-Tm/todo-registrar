@@ -14,10 +14,16 @@ use Aeliot\TodoRegistrar\Service\CommentRegistrar;
 use Aeliot\TodoRegistrar\Service\Registrar\RegistrarInterface;
 use Aeliot\TodoRegistrar\Service\TodoFactory;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(CommentRegistrar::class)]
+#[UsesClass(CommentPart::class)]
+#[UsesClass(CommentParts::class)]
+#[UsesClass(Todo::class)]
+#[UsesClass(TagMetadata::class)]
+#[UsesClass(TodoFactory::class)]
 final class CommentRegistrarTest extends TestCase
 {
     public function testDontRegisterTwice(): void
