@@ -9,7 +9,7 @@ use Aeliot\TodoRegistrar\Service\Registrar\RegistrarInterface;
 use JiraRestApi\Configuration\ArrayConfiguration;
 use JiraRestApi\Issue\IssueService;
 
-final class JiraRegistrarFactory implements RegistrarFactoryInterface
+class JiraRegistrarFactory implements RegistrarFactoryInterface
 {
     public function create(array $config): RegistrarInterface
     {

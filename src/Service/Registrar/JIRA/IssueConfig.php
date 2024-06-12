@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\JIRA;
 
-final class IssueConfig
+class IssueConfig
 {
     private bool $addTagToLabels;
     /**

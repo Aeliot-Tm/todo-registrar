@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\File;
 
-final class Saver
+class Saver
 {
     /**
      * @param \PhpToken[] $tokens

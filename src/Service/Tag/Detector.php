@@ -6,7 +6,7 @@ namespace Aeliot\TodoRegistrar\Service\Tag;
 
 use Aeliot\TodoRegistrar\Dto\Tag\TagMetadata;
 
-final class Detector
+class Detector
 {
     private string $pattern;
 

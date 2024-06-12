@@ -7,7 +7,7 @@ namespace Aeliot\TodoRegistrar\Service;
 use Aeliot\TodoRegistrar\Service\File\Saver;
 use Aeliot\TodoRegistrar\Service\File\Tokenizer;
 
-final class FileProcessor
+class FileProcessor
 {
     public function __construct(
         private CommentRegistrar $commentRegistrar,

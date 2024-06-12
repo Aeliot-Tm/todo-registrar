@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Dto\Tag;
 
-final class TagMetadata
+class TagMetadata
 {
     public function __construct(
         private ?string $tag = null,

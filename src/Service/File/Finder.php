@@ -6,7 +6,7 @@ namespace Aeliot\TodoRegistrar\Service\File;
 
 use Symfony\Component\Finder\Finder as SymfonyFinder;
 
-final class Finder extends SymfonyFinder
+class Finder extends SymfonyFinder
 {
     public function __construct()
     {

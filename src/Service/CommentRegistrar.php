@@ -8,7 +8,7 @@ use Aeliot\TodoRegistrar\Service\Comment\Detector as CommentDetector;
 use Aeliot\TodoRegistrar\Service\Comment\Extractor as CommentExtractor;
 use Aeliot\TodoRegistrar\Service\Registrar\RegistrarInterface;
 
-final class CommentRegistrar
+class CommentRegistrar
 {
     public function __construct(
         private CommentDetector $commentDetector,

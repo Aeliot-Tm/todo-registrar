@@ -7,7 +7,7 @@ namespace Aeliot\TodoRegistrar;
 use Aeliot\TodoRegistrar\Enum\RegistrarType;
 use Aeliot\TodoRegistrar\Service\File\Finder;
 
-final class Config
+class Config
 {
     private Finder $finder;
     /**

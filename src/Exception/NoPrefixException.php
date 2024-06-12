@@ -4,6 +4,6 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Exception;
 
-final class NoPrefixException extends \DomainException
+class NoPrefixException extends \DomainException
 {
 }

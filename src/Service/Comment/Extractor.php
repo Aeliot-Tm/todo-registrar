@@ -8,7 +8,7 @@ use Aeliot\TodoRegistrar\Dto\Comment\CommentPart;
 use Aeliot\TodoRegistrar\Dto\Comment\CommentParts;
 use Aeliot\TodoRegistrar\Service\Tag\Detector as TagDetector;
 
-final class Extractor
+class Extractor
 {
     public function __construct(private TagDetector $tagDetector = new TagDetector())
     {

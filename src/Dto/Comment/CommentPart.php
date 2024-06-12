@@ -8,7 +8,7 @@ use Aeliot\TodoRegistrar\Dto\Tag\TagMetadata;
 use Aeliot\TodoRegistrar\Exception\NoLineException;
 use Aeliot\TodoRegistrar\Exception\NoPrefixException;
 
-final class CommentPart
+class CommentPart
 {
     /**
      * @var string[]

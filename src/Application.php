@@ -7,7 +7,7 @@ namespace Aeliot\TodoRegistrar;
 use Aeliot\TodoRegistrar\Service\File\Finder;
 use Aeliot\TodoRegistrar\Service\FileProcessor;
 
-final class Application
+class Application
 {
     public function __construct(
         private Finder $finder,

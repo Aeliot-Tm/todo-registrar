@@ -7,7 +7,7 @@ namespace Aeliot\TodoRegistrar\Service\Registrar;
 use Aeliot\TodoRegistrar\Enum\RegistrarType;
 use Aeliot\TodoRegistrar\Service\Registrar\JIRA\JiraRegistrarFactory;
 
-final class RegistrarFactory
+class RegistrarFactory
 {
     /**
      * @param array<string,mixed> $config

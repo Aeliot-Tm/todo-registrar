@@ -13,7 +13,7 @@ use Aeliot\TodoRegistrar\Service\FileProcessor;
 use Aeliot\TodoRegistrar\Service\Registrar\RegistrarFactory;
 use Aeliot\TodoRegistrar\Service\Registrar\RegistrarInterface;
 
-final class ApplicationFactory
+class ApplicationFactory
 {
     public function create(Config $config): Application
     {

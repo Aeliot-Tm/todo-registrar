@@ -9,7 +9,7 @@ use Aeliot\TodoRegistrar\Service\Registrar\RegistrarInterface;
 use JiraRestApi\Issue\IssueField;
 use JiraRestApi\Issue\IssueService;
 
-final class JiraRegistrar implements RegistrarInterface
+class JiraRegistrar implements RegistrarInterface
 {
     public function __construct(
         private IssueConfig $issueConfig,

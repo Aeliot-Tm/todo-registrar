@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Dto\Comment;
 
-final class CommentParts
+class CommentParts
 {
     /**
      * @var CommentPart[]
