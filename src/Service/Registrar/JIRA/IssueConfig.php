@@ -17,6 +17,7 @@ class IssueConfig
      * @var string[]
      */
     private array $labels;
+    private ?string $priority;
     private string $projectKey;
     private string $tagPrefix;
 
@@ -30,6 +31,7 @@ class IssueConfig
             'assignee' => null,
             'components' => [],
             'labels' => [],
+            'priority' => null,
             'tagPrefix' => '',
         ];
         $issue = $config['issue'] + $issueDefaults;
@@ -38,6 +40,7 @@ class IssueConfig
         $this->components = (array) $issue['components'];
         $this->issueType = $issue['type'];
         $this->labels = (array) $issue['labels'];
+        $this->priority = $issue['priority'];
         $this->projectKey = $config['projectKey'];
         $this->tagPrefix = $issue['tagPrefix'];
     }
@@ -71,6 +74,11 @@ class IssueConfig
     public function getLabels(): array
     {
         return $this->labels;
+    }
+
+    public function getPriority(): ?string
+    {
+        return $this->priority;
     }
 
     public function getProjectKey(): string

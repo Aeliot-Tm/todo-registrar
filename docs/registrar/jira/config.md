@@ -9,6 +9,7 @@ $jiraConfig = [
                                                     // when "assignee-suffix" was not used with tag.
         'components' => ['a-component'],            // list of components which will be set to issue 
         'labels' => ['a-label'],                    // list of labels which will be set to issue
+        'priority' => 'string',                     // priority of issue
         'tagPrefix' => 'tag-',                      // prefix which will be added to tag when "addTagToLabels=true"
         'type' => 'Bug',                            // type of issue
     ],

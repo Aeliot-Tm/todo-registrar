@@ -18,6 +18,7 @@ final class IssueConfigTest extends TestCase
                 'addTagToLabels' => true,
                 'components' => ['Component-1', 'Component-2'],
                 'labels' => ['Label-1', 'Label-2'],
+                'priority' => 'Low',
                 'tagPrefix' => 'tag-',
                 'type' => 'Bug',
             ],
@@ -27,6 +28,7 @@ final class IssueConfigTest extends TestCase
 
         self::assertTrue($config->isAddTagToLabels());
         self::assertSame('Bug', $config->getIssueType());
+        self::assertSame('Low', $config->getPriority());
         self::assertSame('tag-', $config->getTagPrefix());
         self::assertSame(['Component-1', 'Component-2'], $config->getComponents());
         self::assertSame(['Label-1', 'Label-2'], $config->getLabels());

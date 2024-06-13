@@ -29,6 +29,11 @@ final class IssueFieldFactory
             $issueField->setAssigneeNameAsString($assignee);
         }
 
+        $priority = $this->issueConfig->getPriority();
+        if ($priority) {
+            $issueField->setPriorityNameAsString($priority);
+        }
+
         $labels = $this->issueConfig->getLabels();
         if ($this->issueConfig->isAddTagToLabels()) {
             $labels[] = strtolower(sprintf('%s%s', $this->issueConfig->getTagPrefix(), $todo->getTag()));
