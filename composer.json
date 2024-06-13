@@ -1,6 +1,6 @@
 {
     "name": "aeliot/todo-registrar",
-    "type": "library",
+    "type": "application",
     "description": "Register TODOs from source code in issue tracker",
     "license": "MIT",
     "minimum-stability": "dev",
