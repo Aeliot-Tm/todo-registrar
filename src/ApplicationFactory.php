@@ -13,6 +13,7 @@ use Aeliot\TodoRegistrar\Service\FileProcessor;
 use Aeliot\TodoRegistrar\Service\Registrar\RegistrarFactoryInterface;
 use Aeliot\TodoRegistrar\Service\Registrar\RegistrarFactoryRegistry;
 use Aeliot\TodoRegistrar\Service\Registrar\RegistrarInterface;
+use Aeliot\TodoRegistrar\Service\Tag\Detector as TagDetector;
 use Aeliot\TodoRegistrar\Service\TodoFactory;
 
 class ApplicationFactory
@@ -20,7 +21,7 @@ class ApplicationFactory
     public function create(Config $config): Application
     {
         $registrar = $this->createRegistrar($config);
-        $commentRegistrar = $this->createCommentRegistrar($registrar);
+        $commentRegistrar = $this->createCommentRegistrar($registrar, $config);
         $fileProcessor = $this->createFileProcessor($commentRegistrar);
 
         return new Application(
@@ -29,11 +30,11 @@ class ApplicationFactory
         );
     }
 
-    private function createCommentRegistrar(RegistrarInterface $registrar): CommentRegistrar
+    private function createCommentRegistrar(RegistrarInterface $registrar, Config $config): CommentRegistrar
     {
         return new CommentRegistrar(
             new Detector(),
-            new Extractor(),
+            new Extractor(new TagDetector($config->getTags())),
             $registrar,
             new TodoFactory(),
         );

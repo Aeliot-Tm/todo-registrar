@@ -8,7 +8,7 @@ use Aeliot\TodoRegistrar\Dto\Comment\CommentPart;
 use Aeliot\TodoRegistrar\Dto\Comment\CommentParts;
 use Aeliot\TodoRegistrar\Dto\Tag\TagMetadata;
 use Aeliot\TodoRegistrar\Service\Comment\Extractor;
-use Aeliot\TodoRegistrar\Service\Tag\Detector;
+use Aeliot\TodoRegistrar\Service\Tag\Detector as TagDetector;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\UsesClass;
@@ -17,7 +17,7 @@ use PHPUnit\Framework\TestCase;
 #[CoversClass(Extractor::class)]
 #[UsesClass(CommentPart::class)]
 #[UsesClass(CommentParts::class)]
-#[UsesClass(Detector::class)]
+#[UsesClass(TagDetector::class)]
 #[UsesClass(TagMetadata::class)]
 final class ExtractorTest extends TestCase
 {
@@ -65,7 +65,7 @@ CONT,
     #[DataProvider('getDataForTestCountOfParts')]
     public function testCountOfParts(int $expectedTotalCount, int $expectedTodoCount, string $comment): void
     {
-        $parts = (new Extractor())->extract($comment);
+        $parts = (new Extractor(new TagDetector()))->extract($comment);
         self::assertCount($expectedTotalCount, $parts->getParts());
         self::assertCount($expectedTodoCount, $parts->getTodos());
     }

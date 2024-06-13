@@ -16,6 +16,10 @@ class Config
      */
     private array $registrarConfig;
     private RegistrarType|RegistrarFactoryInterface $registrarType;
+    /**
+     * @var string[]
+     */
+    private array $tags = ['todo', 'fixme'];
 
     public function getFinder(): Finder
     {
@@ -49,6 +53,24 @@ class Config
     {
         $this->registrarType = $type;
         $this->registrarConfig = $config;
+
+        return $this;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getTags(): array
+    {
+        return $this->tags;
+    }
+
+    /**
+     * @param string[] $tags
+     */
+    public function setTags(array $tags): self
+    {
+        $this->tags = $tags;
 
         return $this;
     }

@@ -23,10 +23,13 @@ Package responsible for registration of issues in Issue Trackers.
 
 Config file is php-file which returns instance of class `\Aeliot\TodoRegistrar\Config`. See [example](.todo-registrar.dist.php).
 
-It has 2 setters:
+It has setters:
 1. `setFinder` - accepts instance of configured finder of php-files.
 2. `setRegistrar` - responsible for configuration of registrar factory. It accepts as type of registrar with its config
    as instans of custom registrar factory.
+3. `setTags` - array of detected tags. It supports "todo" and "fixme" by default. 
+   You don't need to configure it when you want to use only this tags. Nevertheless, you have to set them 
+   when you want to use them together with your custom tags.
 
 ## Supported Issue Trackers
 

@@ -22,4 +22,5 @@ return (new Config())
             'personalAccessToken' => $_ENV['JIRA_PERSONAL_ACCESS_TOKEN'] ?? null,
             'tokenBasedAuth' => true,
         ]
-    ]);
+    ])
+    ->setTags(['todo', 'fixme', 'a_custom_tag']);

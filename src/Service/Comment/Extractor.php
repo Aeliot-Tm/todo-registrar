@@ -10,7 +10,7 @@ use Aeliot\TodoRegistrar\Service\Tag\Detector as TagDetector;
 
 class Extractor
 {
-    public function __construct(private TagDetector $tagDetector = new TagDetector())
+    public function __construct(private TagDetector $tagDetector)
     {
     }
 
