@@ -26,7 +26,7 @@ Config file is php-file which returns instance of class `\Aeliot\TodoRegistrar\C
 It has setters:
 1. `setFinder` - accepts instance of configured finder of php-files.
 2. `setRegistrar` - responsible for configuration of registrar factory. It accepts as type of registrar with its config
-   as instans of custom registrar factory.
+   as instance of custom registrar factory.
 3. `setTags` - array of detected tags. It supports "todo" and "fixme" by default. 
    You don't need to configure it when you want to use only this tags. Nevertheless, you have to set them 
    when you want to use them together with your custom tags.
