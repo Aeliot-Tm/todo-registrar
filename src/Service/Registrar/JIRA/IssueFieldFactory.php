@@ -24,7 +24,7 @@ final class IssueFieldFactory
             ->setDescription($todo->getDescription())
             ->addComponentsAsArray($this->issueConfig->getComponents());
 
-        $assignee = $todo->getAssignee();
+        $assignee = $todo->getAssignee() ?? $this->issueConfig->getAssignee();
         if ($assignee) {
             $issueField->setAssigneeNameAsString($assignee);
         }

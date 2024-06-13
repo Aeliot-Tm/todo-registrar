@@ -7,6 +7,7 @@ namespace Aeliot\TodoRegistrar\Service\Registrar\JIRA;
 class IssueConfig
 {
     private bool $addTagToLabels;
+    private ?string $assignee;
     /**
      * @var string[]
      */
@@ -24,18 +25,31 @@ class IssueConfig
      */
     public function __construct(array $config)
     {
-        $issue = $config['issue'];
-        $this->addTagToLabels = $issue['addTagToLabels'] ?? false;
-        $this->components = (array) ($issue['components'] ?? []);
+        $issueDefaults = [
+            'addTagToLabels' => false,
+            'assignee' => null,
+            'components' => [],
+            'labels' => [],
+            'tagPrefix' => '',
+        ];
+        $issue = $config['issue'] + $issueDefaults;
+        $this->addTagToLabels = (bool) $issue['addTagToLabels'];
+        $this->assignee = $issue['assignee'];
+        $this->components = (array) $issue['components'];
         $this->issueType = $issue['type'];
-        $this->labels = (array) ($issue['labels'] ?? []);
+        $this->labels = (array) $issue['labels'];
         $this->projectKey = $config['projectKey'];
-        $this->tagPrefix = $issue['tagPrefix'] ?? '';
+        $this->tagPrefix = $issue['tagPrefix'];
     }
 
     public function isAddTagToLabels(): bool
     {
         return $this->addTagToLabels;
+    }
+
+    public function getAssignee(): ?string
+    {
+        return $this->assignee;
     }
 
     /**
