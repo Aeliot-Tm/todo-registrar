@@ -32,7 +32,8 @@
     },
     "require-dev": {
         "dg/bypass-finals": "^1.7",
-        "phpunit/phpunit": "^11.1"
+        "phpunit/phpunit": "^11.1",
+        "roave/security-advisories": "dev-latest"
     },
     "scripts": {
         "phpunit": "vendor/bin/phpunit"
