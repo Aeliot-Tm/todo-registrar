@@ -107,6 +107,6 @@ System pass it in payload to registrar with aim to be used as "identifier" of as
 
 Currently, todo-registrar supports the following issue trackers:
 
-| Issue Tracker                                   | Description              |
-|-------------------------------------------------|--------------------------|
-| [Jira](https://www.atlassian.com/software/jira) | Supported via API tokens |
+| Issue Tracker                                   | Description                                                                                 |
+|-------------------------------------------------|---------------------------------------------------------------------------------------------|
+| [Jira](https://www.atlassian.com/software/jira) | Supported via API tokens. See [description of configuration](docs/registrar/jira/config.md) |
