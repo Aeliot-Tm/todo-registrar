@@ -31,6 +31,73 @@ It has setters:
    You don't need to configure it when you want to use only this tags. Nevertheless, you have to set them 
    when you want to use them together with your custom tags.
 
+### Supported patters of comments (examples):
+
+It detects TODO-tags in single-line comments started with both `//` and `#` symbols
+and multiple-line comments `/* ... */` and phpDoc `/** ... **/`.
+
+1. Tag and comment separated by semicolon
+   ```php
+   // TODO: comment summary
+   ```
+2. Tag and comment does not separated by semicolon
+   ```php
+   // TODO comment summary
+   ```
+3. Tag with assignee and comment separated by semicolon
+   ```php
+   // TODO@assigne: comment summary
+   ```
+4. Tag with assignee and comment does not separated by semicolon
+   ```php
+   // TODO@assigne comment summary
+   ```
+5. Multiline comment with complex description. All lines after the first one with tag MUST have indentation
+   same to the text of the first line. So, all af them will be detected af part of description of TODO.
+   Multiple line comments may have assignee and semicolon same as single-line comments/.
+   ```php
+   /**
+    * TODO: comment summary
+    *       and some complex description
+    *       which must have indentation same as end of one presented:
+    *       - semicolon
+    *       - assignee
+    *       - tag
+    *       So, all this text will be passed to registrar as description
+    *       without not meaning indentations (" *      " in this case).
+    * This line (and all after) will not be detected as part (description) of "TODO"
+    * case they don't have expected indentation.
+    */
+   ```
+
+As a result of processing of such comments, ID of ISSUE will be injected before comment summary
+and after semicolon and assignee when they are presented. For example:
+1. Tag and comment separated by semicolon
+   ```php
+   // TODO: XX-001 comment summary
+   ```
+2. Tag and comment does not separated by semicolon
+   ```php
+   // TODO XX-001 comment summary
+   ```
+3. Tag with assignee and comment separated by semicolon
+   ```php
+   // TODO@assigne: XX-001 comment summary
+   ```
+4. Tag with assignee and comment does not separated by semicolon
+   ```php
+   // TODO@assigne XX-001 comment summary
+   ```
+5. Multiline comment with complex description. All lines after the first one with tag MUST have indentation
+   same to the text of the first line. So, all af them will be detected af part of description of TODO.
+   Multiple line comments may have assignee and semicolon same as single-line comments/.
+   ```php
+   /**
+    * TODO: XX-001 comment summary
+    *       and some complex description
+    */
+   ```
+
 ## Supported Issue Trackers
 
 Currently, todo-registrar supports the following issue trackers:
