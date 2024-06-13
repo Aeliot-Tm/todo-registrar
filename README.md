@@ -98,6 +98,11 @@ and after semicolon and assignee when they are presented. For example:
     */
    ```
 
+### Assignee-part
+
+It is some "username" which separated of tag by symbol "@". It sticks to pattern `/[a-z0-9._-]+/i`.
+System pass it in payload to registrar with aim to be used as "identifier" of assignee in issue tracker.
+
 ## Supported Issue Trackers
 
 Currently, todo-registrar supports the following issue trackers:
