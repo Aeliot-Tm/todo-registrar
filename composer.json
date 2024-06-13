@@ -1,10 +1,23 @@
 {
     "name": "aeliot/todo-registrar",
-    "type": "library",
+    "type": "application",
     "description": "Register TODOs from source code in issue tracker",
     "license": "MIT",
     "minimum-stability": "dev",
     "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Aeliot\\TodoRegistrar\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Aeliot\\TodoRegistrar\\Test\\": "tests/"
+        }
+    },
+    "bin": [
+        "bin/todo-registrar"
+    ],
     "config": {
         "allow-plugins": {
             "composer/*": true
@@ -12,6 +25,23 @@
         "sort-packages": true
     },
     "require": {
-        "php": "^8.2"
+        "php": "^8.2",
+        "ext-tokenizer": "*",
+        "lesstif/php-jira-rest-client": "^5.8",
+        "symfony/finder": "^5.4|^6.0|^7.0"
+    },
+    "require-dev": {
+        "dg/bypass-finals": "^1.7",
+        "phpunit/phpunit": "^11.1",
+        "roave/security-advisories": "dev-latest"
+    },
+    "scripts": {
+        "phpunit": "vendor/bin/phpunit"
+    },
+    "suggest": {
+        "staabm/phpstan-todo-by": "For the monitoring of outdated comments when ticket closed and TODO-comment should be removed"
+    },
+    "support": {
+        "issues": "https://github.com/Aeliot-Tm/todo-registrar/issues"
     }
 }

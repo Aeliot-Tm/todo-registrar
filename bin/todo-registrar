@@ -1,0 +1,83 @@
+#!/usr/bin/env php
+<?php
+
+use Aeliot\TodoRegistrar\ApplicationFactory;
+use Aeliot\TodoRegistrar\Config;
+
+$autoloaderPath = (static function (): string {
+    $paths = [
+        __DIR__ . '/vendor/autoload.php',
+        __DIR__ . '/../vendor/autoload.php',
+        __DIR__ . '/../../vendor/autoload.php',
+        __DIR__ . '/../../../vendor/autoload.php',
+        __DIR__ . '/../../../../vendor/autoload.php',
+    ];
+
+    foreach ($paths as $path) {
+        if (file_exists($path)) {
+            return realpath($path);
+        }
+    }
+
+    throw new RuntimeException('Cannot find autoloader');
+})();
+
+require_once $autoloaderPath;
+
+$projectPath = dirname($autoloaderPath, 2);
+
+$absolutePathMaker = static function (string $path) use ($projectPath): string {
+    if (preg_match('#^(?:[[:alpha:]]:[/\\\\]|/)#', $path)) {
+        return $path;
+    }
+
+    return $projectPath . '/' . $path;
+};
+
+$configGuess = static function () use ($absolutePathMaker): string {
+    $candidates = [
+        '.todo-registrar.php',
+        '.todo-registrar.dist.php',
+    ];
+    foreach ($candidates as $candidate) {
+        $path = $absolutePathMaker($candidate);
+        if (file_exists($path)) {
+            return $path;
+        }
+    }
+
+    throw new \DomainException('Cannot detect default config file');
+};
+
+$options = (static function () use ($absolutePathMaker, $configGuess): array {
+    $values = [];
+    $options = getopt('c:', ['config']);
+    $defaults = [
+        'config' => ['c', null],
+    ];
+
+    foreach ($defaults as $long => [$short, $default]) {
+        if (isset($options[$short], $options[$long])) {
+            throw new InvalidArgumentException(sprintf('Option %s is duplicated', $long));
+        }
+        $values[$long] = $options[$short] ?? $options[$long] ?? $default;
+    }
+
+    if (!isset($values['config'])) {
+        $values['config'] = $configGuess();
+    }
+
+    return $values;
+})();
+
+if (!file_exists($options['config'])) {
+    throw new RuntimeException(sprintf('Config file "%s" does not exist', $options['config']));
+}
+
+/** @var Config $config */
+$config = require $options['config'];
+if (!$config instanceof Config) {
+    throw new RuntimeException(sprintf('Config file "%s" does not return instance of config', $options['config']));
+}
+
+(new ApplicationFactory())->create($config)->run();
