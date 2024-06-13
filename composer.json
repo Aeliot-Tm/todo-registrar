@@ -36,5 +36,8 @@
     },
     "scripts": {
         "phpunit": "vendor/bin/phpunit"
+    },
+    "suggest": {
+        "staabm/phpstan-todo-by": "For the monitoring of outdated comments when ticket closed and TODO-comment should be removed"
     }
 }
