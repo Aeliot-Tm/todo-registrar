@@ -29,13 +29,12 @@ class IssueServiceArrayConfigPreparer
         $this->addLogOptions($serviceConfig, $config);
         $this->addProxyOptions($serviceConfig, $config);
 
-        if ($config['serviceDeskId']) {
+        if (isset($config['serviceDeskId'])) {
             $serviceConfig['serviceDeskId'] = $config['serviceDeskId'];
         }
 
         return $serviceConfig;
     }
-
 
     /**
      * @param array<string, mixed> $serviceConfig
@@ -43,11 +42,11 @@ class IssueServiceArrayConfigPreparer
      */
     private function addAuthOptions(array &$serviceConfig, array $config): void
     {
-        if ($serviceConfig['tokenBasedAuth']) {
+        if ($serviceConfig['useTokenBasedAuth']) {
+            $serviceConfig['personalAccessToken'] = $config['personalAccessToken'];
+        } else {
             $serviceConfig['jiraUser'] = $config['jiraUser'];
             $serviceConfig['jiraPassword'] = $config['jiraPassword'];
-        } else {
-            $serviceConfig['personalAccessToken'] = $config['personalAccessToken'];
         }
     }
 
