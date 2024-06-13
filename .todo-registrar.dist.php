@@ -7,7 +7,7 @@ use Aeliot\TodoRegistrar\Enum\RegistrarType;
 use Aeliot\TodoRegistrar\Service\File\Finder;
 
 return (new Config())
-    ->setFinder(new Finder())
+    ->setFinder((new Finder())->in(__DIR__))
     ->setRegistrar(RegistrarType::JIRA, [
         'issue' => [
             'addTagToLabels' => true,
