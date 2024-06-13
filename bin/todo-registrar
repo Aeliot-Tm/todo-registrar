@@ -10,6 +10,7 @@ $autoloaderPath = (static function (): string {
         __DIR__ . '/../vendor/autoload.php',
         __DIR__ . '/../../vendor/autoload.php',
         __DIR__ . '/../../../vendor/autoload.php',
+        __DIR__ . '/../../../../vendor/autoload.php',
     ];
 
     foreach ($paths as $path) {
@@ -59,7 +60,7 @@ $options = (static function () use ($absolutePathMaker, $configGuess): array {
         if (isset($options[$short], $options[$long])) {
             throw new InvalidArgumentException(sprintf('Option %s is duplicated', $long));
         }
-        $values[$long] = $absolutePathMaker($options[$short] ?? $options[$long] ?? $default);
+        $values[$long] = $options[$short] ?? $options[$long] ?? $default;
     }
 
     if (!isset($values['config'])) {
