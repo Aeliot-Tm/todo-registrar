@@ -18,7 +18,7 @@ class JiraRegistrar implements RegistrarInterface
 
     public function isRegistered(Todo $todo): bool
     {
-        return preg_match('/^\\s*\\b[A-Z]+-\\d+\\b/i', $todo->getSummary());
+        return (bool) preg_match('/^\\s*\\b[A-Z]+-\\d+\\b/i', $todo->getSummary());
     }
 
     public function register(Todo $todo): string
