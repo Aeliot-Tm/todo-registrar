@@ -39,5 +39,8 @@
     },
     "suggest": {
         "staabm/phpstan-todo-by": "For the monitoring of outdated comments when ticket closed and TODO-comment should be removed"
+    },
+    "support": {
+        "issues": "https://github.com/Aeliot-Tm/todo-registrar/issues"
     }
 }
