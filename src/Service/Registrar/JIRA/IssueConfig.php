@@ -26,23 +26,16 @@ class IssueConfig
      */
     public function __construct(array $config)
     {
-        $issueDefaults = [
-            'addTagToLabels' => false,
-            'assignee' => null,
-            'components' => [],
-            'labels' => [],
-            'priority' => null,
-            'tagPrefix' => '',
-        ];
-        $issue = $config + $issueDefaults;
-        $this->addTagToLabels = (bool) $issue['addTagToLabels'];
-        $this->assignee = $issue['assignee'];
-        $this->components = (array) $issue['components'];
-        $this->issueType = $issue['type'];
-        $this->labels = (array) $issue['labels'];
-        $this->priority = $issue['priority'];
-        $this->projectKey = $issue['projectKey'];
-        $this->tagPrefix = $issue['tagPrefix'];
+        $config = $this->normalizeConfig($config);
+
+        $this->addTagToLabels = $config['addTagToLabels'];
+        $this->assignee = $config['assignee'];
+        $this->components = $config['components'];
+        $this->issueType = $config['type'];
+        $this->labels = $config['labels'];
+        $this->priority = $config['priority'];
+        $this->projectKey = $config['projectKey'];
+        $this->tagPrefix = $config['tagPrefix'];
     }
 
     public function isAddTagToLabels(): bool
@@ -89,5 +82,28 @@ class IssueConfig
     public function getTagPrefix(): string
     {
         return $this->tagPrefix;
+    }
+
+    /**
+     * @param array<string,mixed> $config
+     *
+     * @return array<string,mixed>
+     */
+    public function normalizeConfig(array $config): array
+    {
+        $config += [
+            'addTagToLabels' => false,
+            'assignee' => null,
+            'components' => [],
+            'labels' => [],
+            'priority' => null,
+            'tagPrefix' => '',
+        ];
+
+        $config['addTagToLabels'] = (bool) $config['addTagToLabels'];
+        $config['components'] = (array) $config['components'];
+        $config['labels'] = (array) $config['labels'];
+
+        return $config;
     }
 }
