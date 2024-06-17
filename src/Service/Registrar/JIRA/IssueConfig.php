@@ -34,14 +34,14 @@ class IssueConfig
             'priority' => null,
             'tagPrefix' => '',
         ];
-        $issue = $config['issue'] + $issueDefaults;
+        $issue = $config + $issueDefaults;
         $this->addTagToLabels = (bool) $issue['addTagToLabels'];
         $this->assignee = $issue['assignee'];
         $this->components = (array) $issue['components'];
         $this->issueType = $issue['type'];
         $this->labels = (array) $issue['labels'];
         $this->priority = $issue['priority'];
-        $this->projectKey = $config['projectKey'];
+        $this->projectKey = $issue['projectKey'];
         $this->tagPrefix = $issue['tagPrefix'];
     }
 

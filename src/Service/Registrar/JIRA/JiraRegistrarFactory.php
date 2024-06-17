@@ -13,8 +13,9 @@ class JiraRegistrarFactory implements RegistrarFactoryInterface
 {
     public function create(array $config): RegistrarInterface
     {
+        $issueConfig = ($config['issue'] ?? []) + ['projectKey' => $config['projectKey']];
         return new JiraRegistrar(
-            new IssueFieldFactory(new IssueConfig($config)),
+            new IssueFieldFactory(new IssueConfig($issueConfig)),
             $this->createIssueService($config['service']),
         );
     }

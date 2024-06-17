@@ -14,14 +14,13 @@ final class IssueConfigTest extends TestCase
     public function testValueAssigning(): void
     {
         $values = [
-            'issue' => [
-                'addTagToLabels' => true,
-                'components' => ['Component-1', 'Component-2'],
-                'labels' => ['Label-1', 'Label-2'],
-                'priority' => 'Low',
-                'tagPrefix' => 'tag-',
-                'type' => 'Bug',
-            ],
+            'addTagToLabels' => true,
+            'components' => ['Component-1', 'Component-2'],
+            'labels' => ['Label-1', 'Label-2'],
+            'priority' => 'Low',
+            'tagPrefix' => 'tag-',
+            'type' => 'Bug',
+            // extra key added in factory
             'projectKey' => 'Todo',
         ];
         $config = new IssueConfig($values);
