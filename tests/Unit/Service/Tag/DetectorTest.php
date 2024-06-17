@@ -43,6 +43,8 @@ final class DetectorTest extends TestCase
         yield ['TODO', ' # TODO', ['todo']];
         yield ['TODO', '* TODO', ['todo']];
         yield ['TODO', ' * TODO', ['todo']];
+        yield ['TODO', ' /* TODO', ['todo']];
+        yield ['TODO', ' /** TODO', ['todo']];
         yield ['TODO', ' TODO', ['todo']];
         yield ['TODO', 'TODO', ['todo']];
 
@@ -61,6 +63,15 @@ final class DetectorTest extends TestCase
         yield ['// TODO', ['fixme']];
     }
 
+    public static function getDataForTestPrefixLength(): iterable
+    {
+        // line formats
+        yield [7, '// TODO text of comment'];
+        yield [8, '// TODO: text of comment'];
+        yield [19, '// TODO@an_assignee text of comment'];
+        yield [20, '// TODO@an_assignee: text of comment'];
+    }
+
     public static function getDataForTestTagUppercased(): iterable
     {
         yield ['TAG', '// tag', ['tag']];
@@ -76,25 +87,25 @@ final class DetectorTest extends TestCase
     #[DataProvider('getDataForTestAssigneeDetection')]
     public function testAssigneeDetection(string $expectedAssignee, string $line): void
     {
-        $tagMetadata = (new Detector())->getTagMetadata($line);
-        self::assertInstanceOf(TagMetadata::class, $tagMetadata);
-        self::assertSame($expectedAssignee, $tagMetadata->getAssignee());
+        self::assertSame($expectedAssignee, $this->getTagMetadata($line)->getAssignee());
     }
 
     #[DataProvider('getDataForTestAssigneeNotDetected')]
     public function testAssigneeNotDetected(string $line): void
     {
-        $tagMetadata = (new Detector())->getTagMetadata($line);
-        self::assertInstanceOf(TagMetadata::class, $tagMetadata);
-        self::assertNull($tagMetadata->getAssignee());
+        self::assertNull($this->getTagMetadata($line)->getAssignee());
+    }
+
+    #[DataProvider('getDataForTestPrefixLength')]
+    public function testPrefixLength(int $expectedPrefixLength, string $line): void
+    {
+        self::assertSame($expectedPrefixLength, $this->getTagMetadata($line)->getPrefixLength());
     }
 
     #[DataProvider('getDataForTestTagDetection')]
     public function testTagDetection(string $expectedTag, string $line, array $tags): void
     {
-        $tagMetadata = (new Detector($tags))->getTagMetadata($line);
-        self::assertInstanceOf(TagMetadata::class, $tagMetadata);
-        self::assertSame($expectedTag, $tagMetadata->getTag());
+        self::assertSame($expectedTag, $this->getTagMetadata($line, $tags)->getTag());
     }
 
     #[DataProvider('getDataForTestTagNotDetected')]
@@ -107,7 +118,15 @@ final class DetectorTest extends TestCase
     #[DataProvider('getDataForTestTagUppercased')]
     public function testTagUppercased(string $expectedTag, string $line, array $tags): void
     {
-        $tagMetadata = (new Detector($tags))->getTagMetadata($line);
-        self::assertSame($expectedTag, $tagMetadata->getTag());
+        self::assertSame($expectedTag, $this->getTagMetadata($line, $tags)->getTag());
+    }
+
+    private function getTagMetadata(string $line, array $tags = []): TagMetadata
+    {
+        $detector = $tags ? new Detector($tags) : new Detector();
+        $tagMetadata = $detector->getTagMetadata($line);
+        self::assertInstanceOf(TagMetadata::class, $tagMetadata);
+
+        return $tagMetadata;
     }
 }

@@ -24,9 +24,14 @@ final class IssueFieldFactory
             ->setDescription($todo->getDescription())
             ->addComponentsAsArray($this->issueConfig->getComponents());
 
-        $assignee = $todo->getAssignee();
+        $assignee = $todo->getAssignee() ?? $this->issueConfig->getAssignee();
         if ($assignee) {
             $issueField->setAssigneeNameAsString($assignee);
+        }
+
+        $priority = $this->issueConfig->getPriority();
+        if ($priority) {
+            $issueField->setPriorityNameAsString($priority);
         }
 
         $labels = $this->issueConfig->getLabels();

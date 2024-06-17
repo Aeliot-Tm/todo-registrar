@@ -24,6 +24,6 @@ class Detector
             return null;
         }
 
-        return new TagMetadata(strtoupper($matches[2]), strlen($matches[1]), $matches[3] ?? null);
+        return new TagMetadata(strtoupper($matches[2]), strlen(rtrim($matches[1])), $matches[3] ?? null);
     }
 }

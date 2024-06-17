@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\JIRA;
 
+use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
+
 class IssueConfig
 {
     private bool $addTagToLabels;
+    private ?string $assignee;
     /**
      * @var string[]
      */
@@ -16,6 +19,7 @@ class IssueConfig
      * @var string[]
      */
     private array $labels;
+    private ?string $priority;
     private string $projectKey;
     private string $tagPrefix;
 
@@ -24,18 +28,31 @@ class IssueConfig
      */
     public function __construct(array $config)
     {
-        $issue = $config['issue'];
-        $this->addTagToLabels = $issue['addTagToLabels'] ?? false;
-        $this->components = (array) ($issue['components'] ?? []);
-        $this->issueType = $issue['type'];
-        $this->labels = (array) ($issue['labels'] ?? []);
-        $this->projectKey = $config['projectKey'];
-        $this->tagPrefix = $issue['tagPrefix'] ?? '';
+        if (array_key_exists('issueType', $config) && array_key_exists('type', $config)) {
+            throw new InvalidConfigException(
+                'Conflicting config. Both properties "issueType" and "type" added to config of issue'
+            );
+        }
+
+        $config = $this->normalizeConfig($config);
+        foreach ((new \ReflectionClass($this))->getProperties() as $property) {
+            $key = $property->getName();
+            if (!array_key_exists($key, $config)) {
+                throw new InvalidConfigException("Undefined property of issue config: {$key}");
+            }
+
+            $this->$key = $config[$key];
+        }
     }
 
     public function isAddTagToLabels(): bool
     {
         return $this->addTagToLabels;
+    }
+
+    public function getAssignee(): ?string
+    {
+        return $this->assignee;
     }
 
     /**
@@ -59,6 +76,11 @@ class IssueConfig
         return $this->labels;
     }
 
+    public function getPriority(): ?string
+    {
+        return $this->priority;
+    }
+
     public function getProjectKey(): string
     {
         return $this->projectKey;
@@ -67,5 +89,33 @@ class IssueConfig
     public function getTagPrefix(): string
     {
         return $this->tagPrefix;
+    }
+
+    /**
+     * @param array<string,mixed> $config
+     *
+     * @return array<string,mixed>
+     */
+    public function normalizeConfig(array $config): array
+    {
+        $config += [
+            'addTagToLabels' => false,
+            'assignee' => null,
+            'components' => [],
+            'labels' => [],
+            'priority' => null,
+            'tagPrefix' => '',
+        ];
+
+        $config['addTagToLabels'] = (bool) $config['addTagToLabels'];
+        $config['components'] = (array) $config['components'];
+        $config['labels'] = (array) $config['labels'];
+
+        if (array_key_exists('type', $config)) {
+            $config['issueType'] = $config['type'];
+            unset($config['type']);
+        }
+
+        return $config;
     }
 }
