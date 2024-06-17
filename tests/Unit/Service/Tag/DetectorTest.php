@@ -76,25 +76,19 @@ final class DetectorTest extends TestCase
     #[DataProvider('getDataForTestAssigneeDetection')]
     public function testAssigneeDetection(string $expectedAssignee, string $line): void
     {
-        $tagMetadata = (new Detector())->getTagMetadata($line);
-        self::assertInstanceOf(TagMetadata::class, $tagMetadata);
-        self::assertSame($expectedAssignee, $tagMetadata->getAssignee());
+        self::assertSame($expectedAssignee, $this->getTagMetadata($line)->getAssignee());
     }
 
     #[DataProvider('getDataForTestAssigneeNotDetected')]
     public function testAssigneeNotDetected(string $line): void
     {
-        $tagMetadata = (new Detector())->getTagMetadata($line);
-        self::assertInstanceOf(TagMetadata::class, $tagMetadata);
-        self::assertNull($tagMetadata->getAssignee());
+        self::assertNull($this->getTagMetadata($line)->getAssignee());
     }
 
     #[DataProvider('getDataForTestTagDetection')]
     public function testTagDetection(string $expectedTag, string $line, array $tags): void
     {
-        $tagMetadata = (new Detector($tags))->getTagMetadata($line);
-        self::assertInstanceOf(TagMetadata::class, $tagMetadata);
-        self::assertSame($expectedTag, $tagMetadata->getTag());
+        self::assertSame($expectedTag, $this->getTagMetadata($line, $tags)->getTag());
     }
 
     #[DataProvider('getDataForTestTagNotDetected')]
@@ -107,7 +101,15 @@ final class DetectorTest extends TestCase
     #[DataProvider('getDataForTestTagUppercased')]
     public function testTagUppercased(string $expectedTag, string $line, array $tags): void
     {
-        $tagMetadata = (new Detector($tags))->getTagMetadata($line);
-        self::assertSame($expectedTag, $tagMetadata->getTag());
+        self::assertSame($expectedTag, $this->getTagMetadata($line, $tags)->getTag());
+    }
+
+    private function getTagMetadata(string $line, array $tags = []): TagMetadata
+    {
+        $detector = $tags ? new Detector($tags) : new Detector();
+        $tagMetadata = $detector->getTagMetadata($line);
+        self::assertInstanceOf(TagMetadata::class, $tagMetadata);
+
+        return $tagMetadata;
     }
 }
