@@ -15,7 +15,7 @@ class Detector
      */
     public function __construct(array $tags = ['todo', 'fixme'])
     {
-        $this->pattern = sprintf('/^(.*(%s)(?:@([a-z0-9._-]+))?\b\s*:?)/i', implode('|', $tags));
+        $this->pattern = sprintf('~^([\s\#*/]*(%s)(?:@([a-z0-9._-]+))?\b\s*:?)~i', implode('|', $tags));
     }
 
     public function getTagMetadata(string $line): ?TagMetadata
