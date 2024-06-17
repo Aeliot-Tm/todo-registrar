@@ -43,6 +43,8 @@ final class DetectorTest extends TestCase
         yield ['TODO', ' # TODO', ['todo']];
         yield ['TODO', '* TODO', ['todo']];
         yield ['TODO', ' * TODO', ['todo']];
+        yield ['TODO', ' /* TODO', ['todo']];
+        yield ['TODO', ' /** TODO', ['todo']];
         yield ['TODO', ' TODO', ['todo']];
         yield ['TODO', 'TODO', ['todo']];
 
@@ -59,6 +61,15 @@ final class DetectorTest extends TestCase
     {
         yield ['// FIXME', ['todo']];
         yield ['// TODO', ['fixme']];
+    }
+
+    public static function getDataForTestPrefixLength(): iterable
+    {
+        // line formats
+        yield [7, '// TODO text of comment'];
+        yield [8, '// TODO: text of comment'];
+        yield [19, '// TODO@an_assignee text of comment'];
+        yield [20, '// TODO@an_assignee: text of comment'];
     }
 
     public static function getDataForTestTagUppercased(): iterable
@@ -83,6 +94,12 @@ final class DetectorTest extends TestCase
     public function testAssigneeNotDetected(string $line): void
     {
         self::assertNull($this->getTagMetadata($line)->getAssignee());
+    }
+
+    #[DataProvider('getDataForTestPrefixLength')]
+    public function testPrefixLength(int $expectedPrefixLength, string $line): void
+    {
+        self::assertSame($expectedPrefixLength, $this->getTagMetadata($line)->getPrefixLength());
     }
 
     #[DataProvider('getDataForTestTagDetection')]
