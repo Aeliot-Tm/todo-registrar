@@ -21,6 +21,7 @@
         </include>
     </source>
 
+    <!--
     <coverage includeUncoveredFiles="true"
               pathCoverage="true"
               ignoreDeprecatedCodeUnits="true"
@@ -35,4 +36,5 @@
             <xml outputDirectory=".phpunit/report/xml-coverage"/>
         </report>
     </coverage>
+    -->
 </phpunit>
