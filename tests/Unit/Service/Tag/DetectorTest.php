@@ -84,6 +84,45 @@ final class DetectorTest extends TestCase
         yield ['TAG', '// TAG', ['tag']];
     }
 
+    public static function getDataForTestTicketKeyMatch(): iterable
+    {
+        yield [
+            '2023-12-14',
+            '// TODO: 2023-12-14 This comment turns into a PHPStan error as of 14th december 2023',
+        ];
+
+        yield [
+            'https://github.com/staabm/phpstan-td-by/issues/91',
+            '// TODO https://github.com/staabm/phpstan-td-by/issues/91 fix me when this GitHub issue is closed',
+        ];
+
+        // url with expected tag as part of URL
+        yield [
+            'https://github.com/staabm/phpstan-todo-by/issues/91',
+            '// TODO https://github.com/staabm/phpstan-todo-by/issues/91 fix me when this GitHub issue is closed',
+        ];
+
+        yield [
+            '<1.0.0',
+            '// TODO: <1.0.0 This has to be in the first major release of this repo',
+        ];
+
+        yield [
+            'phpunit/phpunit:5.3',
+            '// TODO: phpunit/phpunit:5.3 This has to be fixed when updating phpunit to 5.3.x or higher',
+        ];
+
+        yield [
+            'php:8',
+            '// TODO: php:8 drop this polyfill when php 8.x is required',
+        ];
+
+        yield [
+            'APP-2137',
+            '// TODO: APP-2137 A comment which errors when the issue tracker ticket gets resolved',
+        ];
+    }
+
     #[DataProvider('getDataForTestAssigneeDetection')]
     public function testAssigneeDetection(string $expectedAssignee, string $line): void
     {
@@ -119,6 +158,13 @@ final class DetectorTest extends TestCase
     public function testTagUppercased(string $expectedTag, string $line, array $tags): void
     {
         self::assertSame($expectedTag, $this->getTagMetadata($line, $tags)->getTag());
+    }
+
+    // vendor/bin/phpunit --filter='DetectorTest::testTicketKeyMatch'
+    #[DataProvider('getDataForTestTicketKeyMatch')]
+    public function testTicketKeyMatch(string $expectedTicketKey, string $line): void
+    {
+        self::assertSame($expectedTicketKey, $this->getTagMetadata($line)->getTicketKey());
     }
 
     private function getTagMetadata(string $line, array $tags = []): TagMetadata
