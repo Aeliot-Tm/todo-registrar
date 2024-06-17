@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\JIRA;
 
+use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
+
 class IssueConfig
 {
     private bool $addTagToLabels;
@@ -26,16 +28,21 @@ class IssueConfig
      */
     public function __construct(array $config)
     {
-        $config = $this->normalizeConfig($config);
+        if (array_key_exists('issueType', $config) && array_key_exists('type', $config)) {
+            throw new InvalidConfigException(
+                'Conflicting config. Both properties "issueType" and "type" added to config of issue'
+            );
+        }
 
-        $this->addTagToLabels = $config['addTagToLabels'];
-        $this->assignee = $config['assignee'];
-        $this->components = $config['components'];
-        $this->issueType = $config['type'];
-        $this->labels = $config['labels'];
-        $this->priority = $config['priority'];
-        $this->projectKey = $config['projectKey'];
-        $this->tagPrefix = $config['tagPrefix'];
+        $config = $this->normalizeConfig($config);
+        foreach ((new \ReflectionClass($this))->getProperties() as $property) {
+            $key = $property->getName();
+            if (!array_key_exists($key, $config)) {
+                throw new InvalidConfigException("Undefined property of issue config: {$key}");
+            }
+
+            $this->$key = $config[$key];
+        }
     }
 
     public function isAddTagToLabels(): bool
@@ -103,6 +110,11 @@ class IssueConfig
         $config['addTagToLabels'] = (bool) $config['addTagToLabels'];
         $config['components'] = (array) $config['components'];
         $config['labels'] = (array) $config['labels'];
+
+        if (array_key_exists('type', $config)) {
+            $config['issueType'] = $config['type'];
+            unset($config['type']);
+        }
 
         return $config;
     }
