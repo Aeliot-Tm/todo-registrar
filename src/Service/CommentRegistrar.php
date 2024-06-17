@@ -40,6 +40,9 @@ class CommentRegistrar
         foreach ($tokens as $token) {
             $commentParts = $this->commentExtractor->extract($token->text);
             foreach ($commentParts->getTodos() as $commentPart) {
+                if ($commentPart->getTagMetadata()?->getTicketKey()) {
+                    continue;
+                }
                 $todo = $this->todoFactory->create($commentPart);
                 if ($this->registrar->isRegistered($todo)) {
                     continue;
