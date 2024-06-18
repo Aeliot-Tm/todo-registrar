@@ -130,6 +130,7 @@ final class DetectorTest extends TestCase
         yield ['2023-12-14', '// TODO@staabm 2023-12-14 - fix it'];
         yield ['2023-12-14', '// TODO@markus: 2023-12-14 - fix it'];
         yield ['>123.4', '// TODO >123.4: Must fix this or bump the version'];
+        yield ['>v123.4', '// TODO >v123.4: Must fix this or bump the version'];
         yield ['phpunit/phpunit:<5', '// TODO: phpunit/phpunit:<5 This has to be fixed before updating to phpunit 5.x'];
 
         yield [
