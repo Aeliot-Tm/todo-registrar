@@ -50,20 +50,19 @@ REGEXP;
     {
         return [
             // date consisting of YYYY-MM-DD format
-            '(?P<date>\d{4}-\d\d?-\d\d?)',
+            '(?:\d{4}-\d\d?-\d\d?)',
             // Github issue URL
-            '(?P<url>https://github.com/(?P<owner>[\S]{2,})/(?P<repo>[\S]+)/issues/(?P<issueNumber>\d+))',
+            '(?:https://github\.com/\S{2,}/\S+/issues/\d+)',
             // Github issue slag
-            '(?:[\S]{2,}/[\S]+\#\d+)',
+            '(?:\S{2,}/\S+\#\d+)',
             // Github issue number
             '(?:\#\d+)',
             // JIRA & YouTack issue
-            '(?<issueKey>[A-Z0-9]+-\d+)',
+            '(?:[A-Z0-9]+-\d+)',
             // "php" or a composer package name, followed by ":" and version
-            '(?:(?P<package>(php|[a-z0-9]([_.-]?[a-z0-9]++)*+/[a-z0-9](([_.]|-{1,2})?[a-z0-9]++)*+)):)'
-            . '(?P<package_version>[<>=]?[^\s:\-]+)',
+            '(?:php|[a-z0-9](?:[_.-]?[a-z0-9]++)*+/[a-z0-9](?:(?:[_.]|-{1,2})?[a-z0-9]++)*+):(?:[<>=]?[^\s:\-]+)',
             // version
-            '(?P<app_version>[<>=]?v?[0-9]+\.[0-9]+(\.[0-9]+)?)',
+            '(?:[<>=]?v?[0-9]+\.[0-9]+(\.[0-9]+)?)',
         ];
     }
 }
