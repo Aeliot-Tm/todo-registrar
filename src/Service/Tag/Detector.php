@@ -53,7 +53,7 @@ REGEXP;
             '(?:\d{4}-\d\d?-\d\d?)',
             // Github issue URL
             '(?:https://github\.com/\S{2,}/\S+/issues/\d+)',
-            // Github issue slag
+            // Github pull request number of exact repo
             '(?:\S{2,}/\S+\#\d+)',
             // Github issue number
             '(?:\#\d+)',
