@@ -121,6 +121,29 @@ final class DetectorTest extends TestCase
             'APP-2137',
             '// TODO: APP-2137 A comment which errors when the issue tracker ticket gets resolved',
         ];
+
+        yield ['2023-12-14', '// todo 2023-12-14'];
+        yield ['2023-12-14', '// @todo: 2023-12-14 fix it'];
+        yield ['2023-12-14', '// @todo 2023-12-14: fix it'];
+        yield ['2023-12-14', '// TODO - 2023-12-14 fix it'];
+        yield ['2023-12-14', '// FIXME 2023-12-14 - fix it'];
+        yield ['2023-12-14', '// TODO@staabm 2023-12-14 - fix it'];
+        yield ['2023-12-14', '// TODO@markus: 2023-12-14 - fix it'];
+        yield ['>123.4', '// TODO >123.4: Must fix this or bump the version'];
+        yield ['phpunit/phpunit:<5', '// TODO: phpunit/phpunit:<5 This has to be fixed before updating to phpunit 5.x'];
+
+        yield [
+            'phpunit/phpunit:5.3',
+            '// TODO@markus: phpunit/phpunit:5.3 This has to be fixed when updating phpunit to 5.3.x or higher',
+        ];
+
+        yield ['APP-123', '// TODO: APP-123 fix it when this Jira ticket is closed'];
+        yield ['#123', '// TODO: #123 fix it when this GitHub issue is closed'];
+        yield ['GH-123', '// TODO: GH-123 fix it when this GitHub issue is closed'];
+        yield [
+            'some-organization/some-repo#123',
+            '// TODO: some-organization/some-repo#123 change me if this GitHub pull request is closed'
+        ];
     }
 
     #[DataProvider('getDataForTestAssigneeDetection')]

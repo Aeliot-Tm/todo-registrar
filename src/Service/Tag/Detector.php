@@ -51,9 +51,12 @@ REGEXP;
         return [
             // date consisting of YYYY-MM-DD format
             '(?P<date>\d{4}-\d\d?-\d\d?)',
-            // github issue URL
-            // https://github.com/staabm/phpstan-tod-o-by/issues/91
+            // Github issue URL
             '(?P<url>https://github.com/(?P<owner>[\S]{2,})/(?P<repo>[\S]+)/issues/(?P<issueNumber>\d+))',
+            // Github issue slag
+            '(?:[\S]{2,}/[\S]+\#\d+)',
+            // Github issue number
+            '(?:\#\d+)',
             // JIRA & YouTack issue
             '(?<issueKey>[A-Z0-9]+-\d+)',
             // "php" or a composer package name, followed by ":" and version
