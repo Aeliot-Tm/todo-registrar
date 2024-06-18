@@ -84,6 +84,69 @@ final class DetectorTest extends TestCase
         yield ['TAG', '// TAG', ['tag']];
     }
 
+    public static function getDataForTestTicketKeyMatch(): iterable
+    {
+        yield [
+            '2023-12-14',
+            '// TODO: 2023-12-14 This comment turns into a PHPStan error as of 14th december 2023',
+        ];
+
+        yield [
+            'https://github.com/staabm/phpstan-td-by/issues/91',
+            '// TODO https://github.com/staabm/phpstan-td-by/issues/91 fix me when this GitHub issue is closed',
+        ];
+
+        // url with expected tag as part of URL
+        yield [
+            'https://github.com/staabm/phpstan-todo-by/issues/91',
+            '// TODO https://github.com/staabm/phpstan-todo-by/issues/91 fix me when this GitHub issue is closed',
+        ];
+
+        yield [
+            '<1.0.0',
+            '// TODO: <1.0.0 This has to be in the first major release of this repo',
+        ];
+
+        yield [
+            'phpunit/phpunit:5.3',
+            '// TODO: phpunit/phpunit:5.3 This has to be fixed when updating phpunit to 5.3.x or higher',
+        ];
+
+        yield [
+            'php:8',
+            '// TODO: php:8 drop this polyfill when php 8.x is required',
+        ];
+
+        yield [
+            'APP-2137',
+            '// TODO: APP-2137 A comment which errors when the issue tracker ticket gets resolved',
+        ];
+
+        yield ['2023-12-14', '// todo 2023-12-14'];
+        yield ['2023-12-14', '// @todo: 2023-12-14 fix it'];
+        yield ['2023-12-14', '// @todo 2023-12-14: fix it'];
+        yield ['2023-12-14', '// TODO - 2023-12-14 fix it'];
+        yield ['2023-12-14', '// FIXME 2023-12-14 - fix it'];
+        yield ['2023-12-14', '// TODO@staabm 2023-12-14 - fix it'];
+        yield ['2023-12-14', '// TODO@markus: 2023-12-14 - fix it'];
+        yield ['>123.4', '// TODO >123.4: Must fix this or bump the version'];
+        yield ['>v123.4', '// TODO >v123.4: Must fix this or bump the version'];
+        yield ['phpunit/phpunit:<5', '// TODO: phpunit/phpunit:<5 This has to be fixed before updating to phpunit 5.x'];
+
+        yield [
+            'phpunit/phpunit:5.3',
+            '// TODO@markus: phpunit/phpunit:5.3 This has to be fixed when updating phpunit to 5.3.x or higher',
+        ];
+
+        yield ['APP-123', '// TODO: APP-123 fix it when this Jira ticket is closed'];
+        yield ['#123', '// TODO: #123 fix it when this GitHub issue is closed'];
+        yield ['GH-123', '// TODO: GH-123 fix it when this GitHub issue is closed'];
+        yield [
+            'some-organization/some-repo#123',
+            '// TODO: some-organization/some-repo#123 change me if this GitHub pull request is closed'
+        ];
+    }
+
     #[DataProvider('getDataForTestAssigneeDetection')]
     public function testAssigneeDetection(string $expectedAssignee, string $line): void
     {
@@ -119,6 +182,13 @@ final class DetectorTest extends TestCase
     public function testTagUppercased(string $expectedTag, string $line, array $tags): void
     {
         self::assertSame($expectedTag, $this->getTagMetadata($line, $tags)->getTag());
+    }
+
+    // vendor/bin/phpunit --filter='DetectorTest::testTicketKeyMatch'
+    #[DataProvider('getDataForTestTicketKeyMatch')]
+    public function testTicketKeyMatch(string $expectedTicketKey, string $line): void
+    {
+        self::assertSame($expectedTicketKey, $this->getTagMetadata($line)->getTicketKey());
     }
 
     private function getTagMetadata(string $line, array $tags = []): TagMetadata

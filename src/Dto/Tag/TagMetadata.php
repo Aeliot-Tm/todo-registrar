@@ -10,6 +10,7 @@ class TagMetadata
         private ?string $tag = null,
         private ?int $prefixLength = null,
         private ?string $assignee = null,
+        private ?string $ticketKey = null,
     ) {
     }
 
@@ -26,5 +27,10 @@ class TagMetadata
     public function getTag(): ?string
     {
         return $this->tag;
+    }
+
+    public function getTicketKey(): ?string
+    {
+        return $this->ticketKey;
     }
 }

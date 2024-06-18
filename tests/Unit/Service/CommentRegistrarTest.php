@@ -30,7 +30,7 @@ final class CommentRegistrarTest extends TestCase
     {
         $tokens = $this->getTokens();
         $commentDetector = $this->mockCommentDetector($tokens);
-        $commentParts = $this->createCommentParts();
+        $commentParts = $this->createCommentParts($tokens[2]->text);
         $commentExtractor = $this->mockCommentExtractor($commentParts);
 
         $todoFactory = new TodoFactory();
@@ -48,11 +48,34 @@ final class CommentRegistrarTest extends TestCase
         self::assertSame('// TODO single line comment', $tokens[2]->text);
     }
 
+    public function testDontRegisterTwiceWithIssueKey(): void
+    {
+        $tokens = $this->getTokens();
+        $tokens[2]->text = '// TODO X-001 single line comment';
+
+        $commentDetector = $this->mockCommentDetector($tokens);
+        $commentParts = $this->createCommentParts($tokens[2]->text, 'X-001');
+        $commentExtractor = $this->mockCommentExtractor($commentParts);
+
+        $todoFactory = new TodoFactory();
+
+        $registrar = $this->createMock(RegistrarInterface::class);
+        $registrar
+            ->expects($this->never())
+            ->method('isRegistered');
+        $registrar
+            ->expects($this->never())
+            ->method('register');
+
+        $commentRegistrar = new CommentRegistrar($commentDetector, $commentExtractor, $registrar, $todoFactory);
+        $commentRegistrar->register($tokens);
+    }
+
     public function testRegisterNewTodos(): void
     {
         $tokens = $this->getTokens();
         $commentDetector = $this->mockCommentDetector($tokens);
-        $commentParts = $this->createCommentParts();
+        $commentParts = $this->createCommentParts($tokens[2]->text);
         $commentExtractor = $this->mockCommentExtractor($commentParts);
 
         $token = $commentParts->getTodos()[0];
@@ -72,10 +95,10 @@ final class CommentRegistrarTest extends TestCase
         self::assertSame('// TODO X-001 single line comment', $tokens[2]->text);
     }
 
-    private function createCommentParts(): CommentParts
+    private function createCommentParts(string $line, ?string $ticketKey = null): CommentParts
     {
-        $commentPart = new CommentPart(new TagMetadata('TODO', 7));
-        $commentPart->addLine('// TODO single line comment');
+        $commentPart = new CommentPart(new TagMetadata('TODO', 7, null, $ticketKey));
+        $commentPart->addLine($line);
         $commentParts = new CommentParts();
         $commentParts->addPart($commentPart);
 
