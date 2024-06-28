@@ -6,11 +6,15 @@ namespace Aeliot\TodoRegistrar\Dto\Registrar;
 
 class Todo
 {
+    /**
+     * @param array<array-key,mixed> $inlineConfig
+     */
     public function __construct(
         private string $tag,
         private string $summary,
         private string $description,
         private ?string $assignee,
+        private array $inlineConfig,
     ) {
     }
 
@@ -22,6 +26,11 @@ class Todo
     public function getDescription(): string
     {
         return $this->description;
+    }
+
+    public function getInlineConfig(): array
+    {
+        return $this->inlineConfig;
     }
 
     public function getSummary(): string
