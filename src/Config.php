@@ -11,6 +11,7 @@ use Aeliot\TodoRegistrar\Service\Registrar\RegistrarFactoryInterface;
 class Config
 {
     private Finder $finder;
+    private ?InlineConfigFactoryInterface $InlineConfigFactory = null;
     private ?InlineConfigReaderInterface $inlineConfigReader = null;
     /**
      * @var array<string,mixed>
@@ -32,6 +33,26 @@ class Config
         $this->finder = $finder;
 
         return $this;
+    }
+
+    public function getInlineConfigFactory(): ?InlineConfigFactoryInterface
+    {
+        return $this->InlineConfigFactory;
+    }
+
+    public function setInlineConfigFactory(?InlineConfigFactoryInterface $InlineConfigFactory): void
+    {
+        $this->InlineConfigFactory = $InlineConfigFactory;
+    }
+
+    public function getInlineConfigReader(): ?InlineConfigReaderInterface
+    {
+        return $this->inlineConfigReader;
+    }
+
+    public function setInlineConfigReader(?InlineConfigReaderInterface $inlineConfigReader): void
+    {
+        $this->inlineConfigReader = $inlineConfigReader;
     }
 
     /**
@@ -74,15 +95,5 @@ class Config
         $this->tags = $tags;
 
         return $this;
-    }
-
-    public function getInlineConfigReader(): ?InlineConfigReaderInterface
-    {
-        return $this->inlineConfigReader;
-    }
-
-    public function setInlineConfigReader(?InlineConfigReaderInterface $inlineConfigReader): void
-    {
-        $this->inlineConfigReader = $inlineConfigReader;
     }
 }

@@ -6,11 +6,16 @@ namespace Aeliot\TodoRegistrar\Service;
 
 use Aeliot\TodoRegistrar\Dto\Comment\CommentPart;
 use Aeliot\TodoRegistrar\Dto\Registrar\Todo;
+use Aeliot\TodoRegistrar\InlineConfigFactoryInterface;
+use Aeliot\TodoRegistrar\InlineConfigInterface;
 use Aeliot\TodoRegistrar\InlineConfigReaderInterface;
 
 class TodoFactory
 {
-    public function __construct(private InlineConfigReaderInterface $inlineConfigReader)
+    public function __construct(
+        private InlineConfigFactoryInterface $inlineConfigFactory,
+        private InlineConfigReaderInterface $inlineConfigReader,
+    )
     {
     }
 
@@ -23,7 +28,12 @@ class TodoFactory
             $commentPart->getSummary(),
             $commentPart->getDescription(),
             $commentPart->getTagMetadata()?->getAssignee(),
-            $this->inlineConfigReader->getInlineConfig($description),
+            $this->getInlineConfig($description),
         );
+    }
+
+    private function getInlineConfig(string $description): InlineConfigInterface
+    {
+        return $this->inlineConfigFactory->getInlineConfig($this->inlineConfigReader->getInlineConfig($description));
     }
 }
