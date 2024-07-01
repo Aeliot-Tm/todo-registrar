@@ -7,19 +7,19 @@ namespace Aeliot\TodoRegistrar\Test\Unit\Service\InlineConfig;
 use Aeliot\TodoRegistrar\Dto\InlineConfig\IndexedCollection;
 use Aeliot\TodoRegistrar\Dto\InlineConfig\NamedCollection;
 use Aeliot\TodoRegistrar\Dto\InlineConfig\Token;
-use Aeliot\TodoRegistrar\Service\InlineConfig\ArrayFromJsonLexerBuilder;
-use Aeliot\TodoRegistrar\Service\InlineConfig\JsonLexer;
+use Aeliot\TodoRegistrar\Service\InlineConfig\ArrayFromJsonLikeLexerBuilder;
+use Aeliot\TodoRegistrar\Service\InlineConfig\JsonLikeLexer;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(ArrayFromJsonLexerBuilder::class)]
-#[UsesClass(JsonLexer::class)]
+#[CoversClass(ArrayFromJsonLikeLexerBuilder::class)]
+#[UsesClass(JsonLikeLexer::class)]
 #[UsesClass(Token::class)]
 #[UsesClass(NamedCollection::class)]
 #[UsesClass(IndexedCollection::class)]
-final class ArrayFromJsonLexerBuilderTest extends TestCase
+final class ArrayFromJsonLikeLexerBuilderTest extends TestCase
 {
     /**
      * @return iterable<array{0: array<array-key,mixed>, 1: string}>
@@ -33,7 +33,7 @@ final class ArrayFromJsonLexerBuilderTest extends TestCase
     #[DataProvider('getDataForTestPositiveFlow')]
     public function testPositiveFlow(array $expected, string $input): void
     {
-        $actual = (new ArrayFromJsonLexerBuilder())->build(new JsonLexer($input));
+        $actual = (new ArrayFromJsonLikeLexerBuilder())->build(new JsonLikeLexer($input));
         self::assertSame($expected, $actual);
     }
 }

@@ -12,7 +12,7 @@ use Aeliot\TodoRegistrar\Exception\InvalidInlineConfigFormatException;
  *
  * @implements \Iterator<Token>
  */
-final class JsonLexer implements \Iterator, \Countable
+final class JsonLikeLexer implements \Iterator, \Countable
 {
     public const T_NONE = 1;
     public const T_STRING = 2;

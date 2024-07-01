@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Test\Unit\Service\InlineConfig;
 
 use Aeliot\TodoRegistrar\Dto\InlineConfig\Token;
-use Aeliot\TodoRegistrar\Service\InlineConfig\JsonLexer;
+use Aeliot\TodoRegistrar\Service\InlineConfig\JsonLikeLexer;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(JsonLexer::class)]
+#[CoversClass(JsonLikeLexer::class)]
 #[UsesClass(Token::class)]
-final class JsonLexerTest extends TestCase
+final class JsonLikeLexerTest extends TestCase
 {
     /**
      * @return iterable<array{0: array<int>, 1: string}>
@@ -23,27 +23,27 @@ final class JsonLexerTest extends TestCase
         yield [
             [
                 [
-                    't' => JsonLexer::T_CURLY_BRACES_OPEN,
+                    't' => JsonLikeLexer::T_CURLY_BRACES_OPEN,
                     'v' => '{',
                     'p' => 0,
                 ],
                 [
-                    't' => JsonLexer::T_KEY,
+                    't' => JsonLikeLexer::T_KEY,
                     'v' => 'key',
                     'p' => 1,
                 ],
                 [
-                    't' => JsonLexer::T_COLON,
+                    't' => JsonLikeLexer::T_COLON,
                     'v' => ':',
                     'p' => 4,
                 ],
                 [
-                    't' => JsonLexer::T_STRING,
+                    't' => JsonLikeLexer::T_STRING,
                     'v' => 'value',
                     'p' => 6,
                 ],
                 [
-                    't' => JsonLexer::T_CURLY_BRACES_CLOSE,
+                    't' => JsonLikeLexer::T_CURLY_BRACES_CLOSE,
                     'v' => '}',
                     'p' => 11,
                 ],
@@ -54,37 +54,37 @@ final class JsonLexerTest extends TestCase
         yield [
             [
                 [
-                    't' => JsonLexer::T_CURLY_BRACES_OPEN,
+                    't' => JsonLikeLexer::T_CURLY_BRACES_OPEN,
                     'v' => '{',
                     'p' => 0,
                 ],
                 [
-                    't' => JsonLexer::T_KEY,
+                    't' => JsonLikeLexer::T_KEY,
                     'v' => 'key',
                     'p' => 1,
                 ],
                 [
-                    't' => JsonLexer::T_COLON,
+                    't' => JsonLikeLexer::T_COLON,
                     'v' => ':',
                     'p' => 4,
                 ],
                 [
-                    't' => JsonLexer::T_SQUARE_BRACKET_OPEN,
+                    't' => JsonLikeLexer::T_SQUARE_BRACKET_OPEN,
                     'v' => '[',
                     'p' => 6,
                 ],
                 [
-                    't' => JsonLexer::T_STRING,
+                    't' => JsonLikeLexer::T_STRING,
                     'v' => 'value',
                     'p' => 7,
                 ],
                 [
-                    't' => JsonLexer::T_SQUARE_BRACKET_CLOSE,
+                    't' => JsonLikeLexer::T_SQUARE_BRACKET_CLOSE,
                     'v' => ']',
                     'p' => 12,
                 ],
                 [
-                    't' => JsonLexer::T_CURLY_BRACES_CLOSE,
+                    't' => JsonLikeLexer::T_CURLY_BRACES_CLOSE,
                     'v' => '}',
                     'p' => 13,
                 ],
@@ -95,37 +95,37 @@ final class JsonLexerTest extends TestCase
         yield [
             [
                 [
-                    't' => JsonLexer::T_CURLY_BRACES_OPEN,
+                    't' => JsonLikeLexer::T_CURLY_BRACES_OPEN,
                     'v' => '{',
                     'p' => 0,
                 ],
                 [
-                    't' => JsonLexer::T_KEY,
+                    't' => JsonLikeLexer::T_KEY,
                     'v' => 'key',
                     'p' => 3,
                 ],
                 [
-                    't' => JsonLexer::T_COLON,
+                    't' => JsonLikeLexer::T_COLON,
                     'v' => ':',
                     'p' => 6,
                 ],
                 [
-                    't' => JsonLexer::T_SQUARE_BRACKET_OPEN,
+                    't' => JsonLikeLexer::T_SQUARE_BRACKET_OPEN,
                     'v' => '[',
                     'p' => 8,
                 ],
                 [
-                    't' => JsonLexer::T_STRING,
+                    't' => JsonLikeLexer::T_STRING,
                     'v' => 'value',
                     'p' => 9,
                 ],
                 [
-                    't' => JsonLexer::T_SQUARE_BRACKET_CLOSE,
+                    't' => JsonLikeLexer::T_SQUARE_BRACKET_CLOSE,
                     'v' => ']',
                     'p' => 14,
                 ],
                 [
-                    't' => JsonLexer::T_CURLY_BRACES_CLOSE,
+                    't' => JsonLikeLexer::T_CURLY_BRACES_CLOSE,
                     'v' => '}',
                     'p' => 15,
                 ],
@@ -136,27 +136,27 @@ final class JsonLexerTest extends TestCase
         yield [
             [
                 [
-                    't' => JsonLexer::T_CURLY_BRACES_OPEN,
+                    't' => JsonLikeLexer::T_CURLY_BRACES_OPEN,
                     'v' => '{',
                     'p' => 0,
                 ],
                 [
-                    't' => JsonLexer::T_KEY,
+                    't' => JsonLikeLexer::T_KEY,
                     'v' => '_key',
                     'p' => 1,
                 ],
                 [
-                    't' => JsonLexer::T_COLON,
+                    't' => JsonLikeLexer::T_COLON,
                     'v' => ':',
                     'p' => 5,
                 ],
                 [
-                    't' => JsonLexer::T_STRING,
+                    't' => JsonLikeLexer::T_STRING,
                     'v' => 'value-parted',
                     'p' => 8,
                 ],
                 [
-                    't' => JsonLexer::T_CURLY_BRACES_CLOSE,
+                    't' => JsonLikeLexer::T_CURLY_BRACES_CLOSE,
                     'v' => '}',
                     'p' => 21,
                 ],
@@ -170,12 +170,12 @@ final class JsonLexerTest extends TestCase
      */
     public static function getDataForTestSymbolMatch(): iterable
     {
-        yield [JsonLexer::T_COMMA, ','];
-        yield [JsonLexer::T_COLON, ':'];
-        yield [JsonLexer::T_SQUARE_BRACKET_OPEN, '['];
-        yield [JsonLexer::T_SQUARE_BRACKET_CLOSE, ']'];
-        yield [JsonLexer::T_CURLY_BRACES_OPEN, '{'];
-        yield [JsonLexer::T_CURLY_BRACES_CLOSE, '}'];
+        yield [JsonLikeLexer::T_COMMA, ','];
+        yield [JsonLikeLexer::T_COLON, ':'];
+        yield [JsonLikeLexer::T_SQUARE_BRACKET_OPEN, '['];
+        yield [JsonLikeLexer::T_SQUARE_BRACKET_CLOSE, ']'];
+        yield [JsonLikeLexer::T_CURLY_BRACES_OPEN, '{'];
+        yield [JsonLikeLexer::T_CURLY_BRACES_CLOSE, '}'];
     }
 
     #[DataProvider('getDataForTestStructureMatch')]
@@ -187,7 +187,7 @@ final class JsonLexerTest extends TestCase
                 'v' => $token->getValue(),
                 'p' => $token->getPosition(),
             ],
-            iterator_to_array(new JsonLexer($input)),
+            iterator_to_array(new JsonLikeLexer($input)),
         );
 
         self::assertSame($expectedTokenValues, $actualTokenValues);
@@ -196,7 +196,7 @@ final class JsonLexerTest extends TestCase
     #[DataProvider('getDataForTestSymbolMatch')]
     public function testSymbolMatch(int $expectedType, string $input): void
     {
-        $lexer = new JsonLexer($input);
+        $lexer = new JsonLikeLexer($input);
         self::assertCount(1, $lexer);
 
         $token = $lexer->current();

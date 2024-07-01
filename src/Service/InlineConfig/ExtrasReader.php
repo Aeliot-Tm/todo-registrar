@@ -9,7 +9,7 @@ use Aeliot\TodoRegistrar\InlineConfigReaderInterface;
 
 final class ExtrasReader implements InlineConfigReaderInterface
 {
-    public function __construct(private ArrayFromJsonLexerBuilder $arrayBuilder)
+    public function __construct(private ArrayFromJsonLikeLexerBuilder $arrayBuilder)
     {
     }
 
@@ -23,7 +23,7 @@ final class ExtrasReader implements InlineConfigReaderInterface
             return [];
         }
 
-        $data = $this->arrayBuilder->build(new JsonLexer($input, (int) $matches[0][1]));
+        $data = $this->arrayBuilder->build(new JsonLikeLexer($input, (int) $matches[0][1]));
         if (count($data) !== 1) {
             throw new InvalidInlineConfigFormatException('EXTRAS must contain one and only one element');
         }

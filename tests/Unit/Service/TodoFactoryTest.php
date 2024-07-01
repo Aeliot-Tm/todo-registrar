@@ -6,7 +6,7 @@ namespace Aeliot\TodoRegistrar\Test\Unit\Service;
 
 use Aeliot\TodoRegistrar\Dto\Comment\CommentPart;
 use Aeliot\TodoRegistrar\Dto\Tag\TagMetadata;
-use Aeliot\TodoRegistrar\Service\InlineConfig\ArrayFromJsonLexerBuilder;
+use Aeliot\TodoRegistrar\Service\InlineConfig\ArrayFromJsonLikeLexerBuilder;
 use Aeliot\TodoRegistrar\Service\InlineConfig\ExtrasReader;
 use Aeliot\TodoRegistrar\Service\InlineConfig\InlineConfigFactory;
 use Aeliot\TodoRegistrar\Service\TodoFactory;
@@ -52,6 +52,6 @@ final class TodoFactoryTest extends TestCase
 
     private function createTodoFactory(): TodoFactory
     {
-        return new TodoFactory(new InlineConfigFactory(), new ExtrasReader(new ArrayFromJsonLexerBuilder()));
+        return new TodoFactory(new InlineConfigFactory(), new ExtrasReader(new ArrayFromJsonLikeLexerBuilder()));
     }
 }
