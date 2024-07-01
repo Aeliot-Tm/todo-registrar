@@ -6,6 +6,9 @@ namespace Aeliot\TodoRegistrar\Test\Unit\Service;
 
 use Aeliot\TodoRegistrar\Dto\Comment\CommentPart;
 use Aeliot\TodoRegistrar\Dto\Tag\TagMetadata;
+use Aeliot\TodoRegistrar\Service\InlineConfig\ArrayFromJsonLexerBuilder;
+use Aeliot\TodoRegistrar\Service\InlineConfig\ExtrasReader;
+use Aeliot\TodoRegistrar\Service\InlineConfig\InlineConfigFactory;
 use Aeliot\TodoRegistrar\Service\TodoFactory;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
@@ -24,7 +27,8 @@ final class TodoFactoryTest extends TestCase
         $commentPart->method('getTag')->willReturn('a-tag');
         $commentPart->method('getTagMetadata')->willReturn($tagMetadata);
 
-        $todo = (new TodoFactory())->create($commentPart);
+        $todoFactory = $this->createTodoFactory();
+        $todo = $todoFactory->create($commentPart);
 
         self::assertSame('a-tag', $todo->getTag());
         self::assertSame('summary', $todo->getSummary());
@@ -40,8 +44,14 @@ final class TodoFactoryTest extends TestCase
         $commentPart->method('getTag')->willReturn('a-tag');
         $commentPart->method('getTagMetadata')->willReturn(null);
 
-        $todo = (new TodoFactory())->create($commentPart);
+        $todoFactory = $this->createTodoFactory();
+        $todo = $todoFactory->create($commentPart);
 
         self::assertNull($todo->getAssignee());
+    }
+
+    private function createTodoFactory(): TodoFactory
+    {
+        return new TodoFactory(new InlineConfigFactory(), new ExtrasReader(new ArrayFromJsonLexerBuilder()));
     }
 }

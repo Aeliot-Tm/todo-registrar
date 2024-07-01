@@ -13,6 +13,7 @@ use Aeliot\TodoRegistrar\Service\Comment\Extractor as CommentExtractor;
 use Aeliot\TodoRegistrar\Service\CommentRegistrar;
 use Aeliot\TodoRegistrar\Service\InlineConfig\ArrayFromJsonLexerBuilder;
 use Aeliot\TodoRegistrar\Service\InlineConfig\ExtrasReader;
+use Aeliot\TodoRegistrar\Service\InlineConfig\InlineConfigFactory;
 use Aeliot\TodoRegistrar\Service\Registrar\RegistrarInterface;
 use Aeliot\TodoRegistrar\Service\TodoFactory;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -35,7 +36,7 @@ final class CommentRegistrarTest extends TestCase
         $commentParts = $this->createCommentParts($tokens[2]->text);
         $commentExtractor = $this->mockCommentExtractor($commentParts);
 
-        $todoFactory = new TodoFactory(new ExtrasReader(new ArrayFromJsonLexerBuilder()));
+        $todoFactory = $this->createTodoFactory();
         $todo = $todoFactory->create($commentParts->getTodos()[0]);
 
         $registrar = $this->mockRegistrar($todo, true);
@@ -59,7 +60,7 @@ final class CommentRegistrarTest extends TestCase
         $commentParts = $this->createCommentParts($tokens[2]->text, 'X-001');
         $commentExtractor = $this->mockCommentExtractor($commentParts);
 
-        $todoFactory = new TodoFactory(new ExtrasReader(new ArrayFromJsonLexerBuilder()));
+        $todoFactory = $this->createTodoFactory();
 
         $registrar = $this->createMock(RegistrarInterface::class);
         $registrar
@@ -81,7 +82,7 @@ final class CommentRegistrarTest extends TestCase
         $commentExtractor = $this->mockCommentExtractor($commentParts);
 
         $token = $commentParts->getTodos()[0];
-        $todoFactory = new TodoFactory(new ExtrasReader(new ArrayFromJsonLexerBuilder()));
+        $todoFactory = $this->createTodoFactory();
         $todo = $todoFactory->create($token);
 
         $registrar = $this->mockRegistrar($todo, false);
@@ -159,5 +160,10 @@ final class CommentRegistrarTest extends TestCase
             ->willReturn($isRegistered);
 
         return $registrar;
+    }
+
+    private function createTodoFactory(): TodoFactory
+    {
+        return new TodoFactory(new InlineConfigFactory(), new ExtrasReader(new ArrayFromJsonLexerBuilder()));
     }
 }
