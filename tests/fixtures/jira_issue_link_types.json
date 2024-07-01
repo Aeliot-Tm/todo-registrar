@@ -1,0 +1,109 @@
+{
+    "issueLinkTypes": [
+        {
+            "id": "10000",
+            "name": "Blocks",
+            "inward": "is blocked by",
+            "outward": "blocks",
+            "self": "https://jira.work/rest/api/2/issueLinkType/10000"
+        },
+        {
+            "id": "10001",
+            "name": "Cloners",
+            "inward": "is cloned by",
+            "outward": "clones",
+            "self": "https://jira.work/rest/api/2/issueLinkType/10001"
+        },
+        {
+            "id": "10002",
+            "name": "Duplicate",
+            "inward": "is duplicated by",
+            "outward": "duplicates",
+            "self": "https://jira.work/rest/api/2/issueLinkType/10002"
+        },
+        {
+            "id": "10300",
+            "name": "End -> End [Gantt]",
+            "inward": "has to be finished together with",
+            "outward": "has to be finished together with",
+            "self": "https://jira.work/rest/api/2/issueLinkType/10300"
+        },
+        {
+            "id": "10604",
+            "name": "Gantt End to End",
+            "inward": "has to be finished together with",
+            "outward": "has to be finished together with",
+            "self": "https://jira.work/rest/api/2/issueLinkType/10604"
+        },
+        {
+            "id": "10603",
+            "name": "Gantt End to Start",
+            "inward": "has to be done after",
+            "outward": "has to be done before",
+            "self": "https://jira.work/rest/api/2/issueLinkType/10603"
+        },
+        {
+            "id": "10601",
+            "name": "Gantt Start to End",
+            "inward": "earliest end is start of",
+            "outward": "start is earliest end of",
+            "self": "https://jira.work/rest/api/2/issueLinkType/10601"
+        },
+        {
+            "id": "10602",
+            "name": "Gantt Start to Start",
+            "inward": "has to be started together with",
+            "outward": "has to be started together with",
+            "self": "https://jira.work/rest/api/2/issueLinkType/10602"
+        },
+        {
+            "id": "10303",
+            "name": "Hierarchy [Gantt]",
+            "inward": "is parent of",
+            "outward": "is child of",
+            "self": "https://jira.work/rest/api/2/issueLinkType/10303"
+        },
+        {
+            "id": "10500",
+            "name": "Issue split",
+            "inward": "split from",
+            "outward": "split to",
+            "self": "https://jira.work/rest/api/2/issueLinkType/10500"
+        },
+        {
+            "id": "10600",
+            "name": "Parent-Child",
+            "inward": "is child of",
+            "outward": "is parent of",
+            "self": "https://jira.work/rest/api/2/issueLinkType/10600"
+        },
+        {
+            "id": "10200",
+            "name": "Problem/Incident",
+            "inward": "is caused by",
+            "outward": "causes",
+            "self": "https://jira.work/rest/api/2/issueLinkType/10200"
+        },
+        {
+            "id": "10003",
+            "name": "Relates",
+            "inward": "relates to",
+            "outward": "relates to",
+            "self": "https://jira.work/rest/api/2/issueLinkType/10003"
+        },
+        {
+            "id": "10301",
+            "name": "Start -> End [Gantt]",
+            "inward": "start is earliest end of",
+            "outward": "earliest end is start of",
+            "self": "https://jira.work/rest/api/2/issueLinkType/10301"
+        },
+        {
+            "id": "10302",
+            "name": "Start -> Start [Gantt]",
+            "inward": "has to be started together with",
+            "outward": "has to be started together with",
+            "self": "https://jira.work/rest/api/2/issueLinkType/10302"
+        }
+    ]
+}
