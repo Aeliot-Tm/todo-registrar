@@ -32,7 +32,9 @@ class CommentPart
         }
 
         $prefixLength = (int) $this->tagMetadata?->getPrefixLength();
-        $lines = array_map(static fn(string $line): string => substr($line, $prefixLength), $this->lines);
+        $lines = $this->lines;
+        array_shift($lines);
+        $lines = array_map(static fn (string $line): string => substr($line, $prefixLength), $lines);
 
         return implode('', $lines);
     }
