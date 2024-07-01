@@ -11,7 +11,7 @@ use Aeliot\TodoRegistrar\Dto\Tag\TagMetadata;
 use Aeliot\TodoRegistrar\Service\Comment\Detector as CommentDetector;
 use Aeliot\TodoRegistrar\Service\Comment\Extractor as CommentExtractor;
 use Aeliot\TodoRegistrar\Service\CommentRegistrar;
-use Aeliot\TodoRegistrar\Service\InlineConfig\ArrayFromJsonLexerBuilder;
+use Aeliot\TodoRegistrar\Service\InlineConfig\ArrayFromJsonLikeLexerBuilder;
 use Aeliot\TodoRegistrar\Service\InlineConfig\ExtrasReader;
 use Aeliot\TodoRegistrar\Service\InlineConfig\InlineConfigFactory;
 use Aeliot\TodoRegistrar\Service\Registrar\RegistrarInterface;
@@ -164,6 +164,6 @@ final class CommentRegistrarTest extends TestCase
 
     private function createTodoFactory(): TodoFactory
     {
-        return new TodoFactory(new InlineConfigFactory(), new ExtrasReader(new ArrayFromJsonLexerBuilder()));
+        return new TodoFactory(new InlineConfigFactory(), new ExtrasReader(new ArrayFromJsonLikeLexerBuilder()));
     }
 }
