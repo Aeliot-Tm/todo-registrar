@@ -33,6 +33,55 @@ final class CommentPartTest extends TestCase
     }
 
     /**
+     * @return iterable<array{0: string, 1: array<string>, 2: int}>
+     */
+    public static function getDataForTestGetDescription(): iterable
+    {
+        yield [
+            " second line of description\n" .
+            " third line of description\n",
+            [
+                " * TODO: first line of description\n",
+                " *       second line of description\n",
+                " *       third line of description\n",
+            ],
+            8,
+        ];
+
+        yield [
+            '',
+            [
+                ' # TODO: one line of description',
+            ],
+            8,
+        ];
+    }
+
+    /**
+     * @return iterable<array{0: string, 1: array<string>, 2: int}>
+     */
+    public static function getDataForTestGetSummary(): iterable
+    {
+        yield [
+            'first line of description',
+            [
+                " * TODO: first line of description\n",
+                " *       second line of description\n",
+                " *       third line of description\n",
+            ],
+            8,
+        ];
+
+        yield [
+            'one line of description',
+            [
+                ' # TODO: one line of description',
+            ],
+            8,
+        ];
+    }
+
+    /**
      * @return iterable<array{0: string, 1: string, 2: int, 3: array<string>}>
      */
     public static function getDataForTestInjectKey(): iterable
@@ -45,7 +94,7 @@ final class CommentPartTest extends TestCase
             [
                 " * TODO: first line of description\n",
                 " *       second line of description\n",
-            ]
+            ],
         ];
     }
 
@@ -86,6 +135,34 @@ final class CommentPartTest extends TestCase
     /**
      * @param string[] $lines
      */
+    #[DataProvider('getDataForTestGetDescription')]
+    public function testGetDescription(string $expected, array $lines, int $prefixLength): void
+    {
+        $metadata = $this->createMock(TagMetadata::class);
+        $metadata->method('getPrefixLength')->willReturn($prefixLength);
+        $commentPart = new CommentPart($metadata);
+        array_walk($lines, static fn (string $line) => $commentPart->addLine($line));
+
+        self::assertEquals($expected, $commentPart->getDescription());
+    }
+
+    /**
+     * @param string[] $lines
+     */
+    #[DataProvider('getDataForTestGetSummary')]
+    public function testGetSummary(string $expected, array $lines, int $prefixLength): void
+    {
+        $metadata = $this->createMock(TagMetadata::class);
+        $metadata->method('getPrefixLength')->willReturn($prefixLength);
+        $commentPart = new CommentPart($metadata);
+        array_walk($lines, static fn (string $line) => $commentPart->addLine($line));
+
+        self::assertEquals($expected, $commentPart->getSummary());
+    }
+
+    /**
+     * @param string[] $lines
+     */
     #[DataProvider('getDataForTestInjectKey')]
     public function testInjectKey(string $expectedContent, string $key, int $prefixLength, array $lines): void
     {
@@ -121,6 +198,7 @@ final class CommentPartTest extends TestCase
         foreach ($lines as $line) {
             $commentPart->addLine($line);
         }
+
         return $commentPart;
     }
 }

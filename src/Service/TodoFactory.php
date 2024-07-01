@@ -13,8 +13,8 @@ class TodoFactory
     {
         return new Todo(
             $commentPart->getTag(),
-            $commentPart->getFirstLine(),
-            $commentPart->getContent(),
+            $commentPart->getSummary(),
+            $commentPart->getDescription(),
             $commentPart->getTagMetadata()?->getAssignee(),
         );
     }
