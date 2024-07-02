@@ -32,14 +32,6 @@ And injected marks helps to find proper places in code quickly.
    Otherwise, it tries to use one of default paths to config file.
 2. Commit updated files. You may config your pipeline/job on CI which commits updates.
 
-## Configuration file
-
-It expects that file `.todo-registrar.php` or `.todo-registrar.dist.php` added in the root directory of project.
-It may be put in any other place, but you have to define path to it with option `--config=/custom/path/to/cofig`
-while call the script. Config file is php-file which returns instance of class `\Aeliot\TodoRegistrar\Config`.
-
-[See full documentation about config](docs/config.md)
-
 ## Supported todo-tags
 
 It detects `TODO` and `FIXME` by default. But you may config your custom set of tags in config file.
@@ -71,3 +63,11 @@ Currently, todo-registrar supports the following issue trackers:
 | Issue Tracker                                   | Description                                                                                 |
 |-------------------------------------------------|---------------------------------------------------------------------------------------------|
 | [Jira](https://www.atlassian.com/software/jira) | Supported via API tokens. See [description of configuration](docs/registrar/jira/config.md) |
+
+## Configuration file
+
+It expects that file `.todo-registrar.php` or `.todo-registrar.dist.php` added in the root directory of project.
+It may be put in any other place, but you have to define path to it with option `--config=/custom/path/to/cofig`
+while call the script. Config file is php-file which returns instance of class `\Aeliot\TodoRegistrar\Config`.
+
+[See full documentation about config](docs/config.md)
