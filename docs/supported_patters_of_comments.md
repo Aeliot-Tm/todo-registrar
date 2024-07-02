@@ -69,3 +69,10 @@ and after colon and assignee when they are presented. For example:
 
 It is some "username" which separated of tag by symbol "@". It sticks to pattern `/[a-z0-9._-]+/i`.
 System pass it in payload to registrar with aim to be used as "identifier" of assignee in issue tracker.
+
+## Compatibility
+
+Script implemented to support formats of "comments with expiration" provided by [staabm/phpstan-todo-by](https://github.com/staabm/phpstan-todo-by).
+On my point of view, it is cool feature which I'd like to use in my projects.
+
+So, script ignores comments which already have mark of "expiration".
