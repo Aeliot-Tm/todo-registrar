@@ -28,7 +28,104 @@ final class ExtrasReaderTest extends TestCase
      */
     public static function getDataForTestPositiveFlow(): iterable
     {
-        yield [['key' => ['value']], '{EXTRAS:{key:[value]}}'];
+        yield 'simple value' => [
+            ['key' => 'value'],
+            '{EXTRAS:{key:value}}',
+        ];
+
+        yield 'indexed array with one element as value' => [
+            ['key' => ['value']],
+            '{EXTRAS:{key:[value]}}',
+        ];
+
+        yield 'indexed array with two elements as value' => [
+            ['key' => ['value1', 'value2']],
+            '{EXTRAS:{key:[value1, value2]}}',
+        ];
+
+        yield 'indexed array with two elements on second level' => [
+            ['level_1' => ['level_2' => ['v1', 'v2']]],
+            '{EXTRAS:{level_1:{level_2:[v1,v2]}}}',
+        ];
+
+        yield 'indexed array with two elements on third level' => [
+            ['level_1' => ['level_2' => ['level_3' => ['v1', 'v2']]]],
+            '{EXTRAS:{level_1:{level_2:{level_3:[v1,v2]}}}}',
+        ];
+
+        yield 'two keys with simple values' => [
+            ['key1' => 'value1', 'key2' => 'value2'],
+            '{EXTRAS:{key1:value1,key2:value2}}',
+        ];
+
+        yield 'some complex collection' => [
+            ['level_1' => ['level_2' => ['level_3' => ['v1', 'v2'], 'level_3p2' => 'v3']]],
+            '{EXTRAS:{level_1:{level_2:{level_3:[v1,v2],level_3p2: v3}}}}',
+        ];
+
+        yield 'some complex collection with multi-line formatting' => [
+            ['level_1' => ['level_2' => ['level_3' => ['v1', 'v2'], 'level_3p2' => 'v3']]],
+            <<<COMMENT
+            {
+                EXTRAS: {
+                    level_1: {
+                        level_2: {
+                            level_3: [v1,v2],
+                            level_3p2: v3,
+                        }
+                    }
+                }
+            }
+            COMMENT,
+        ];
+
+        yield 'strange indents and spaces, but nevertheless it may be for some reason' => [
+            [
+                'level_1' => [
+                    'level_2' => [
+                        'level_3' => ['v1', 'v2'],
+                        'level_3p2' => 'v3',
+                    ],
+                    'level_2p2' => 'v4',
+                ],
+                'level_1p2' => 'v5',
+            ],
+            <<<COMMENT
+            {
+                EXTRAS
+                :
+                 {
+                    level_1
+                    :
+                     {
+                        level_2
+                        :
+                         {
+                            level_3
+                            : 
+                            [
+                                v1
+                                ,
+                                v2
+                            ]
+                            ,
+                            level_3p2 
+                            : 
+                            v3,
+                        }
+                        ,
+                            level_2p2 
+                            : 
+                            v4
+                    }
+                    ,
+                        level_1p2 
+                        : 
+                        v5
+                }
+            }
+            COMMENT,
+        ];
     }
 
     #[DataProvider('getDataForTestPositiveFlow')]
