@@ -66,3 +66,10 @@ It may be put in any other place, but you have to define path to it with option 
 while call the script. Config file is php-file which returns instance of class `\Aeliot\TodoRegistrar\Config`.
 
 [See full documentation about config](docs/config.md)
+
+## Inline Configuration
+
+Script supports inline configuration of each TODO-comment. It helps flexibly configure different aspects of created issues.
+Like relations to other issues, labels, components and so on. So, it becomes very powerful instrument. 😊
+
+[See documentation about inline config](docs/inline_config.md)
