@@ -6,6 +6,9 @@ namespace Aeliot\TodoRegistrar\Test\Unit\Service;
 
 use Aeliot\TodoRegistrar\Dto\Comment\CommentPart;
 use Aeliot\TodoRegistrar\Dto\Comment\CommentParts;
+use Aeliot\TodoRegistrar\Dto\InlineConfig\IndexedCollection;
+use Aeliot\TodoRegistrar\Dto\InlineConfig\NamedCollection;
+use Aeliot\TodoRegistrar\Dto\InlineConfig\Token;
 use Aeliot\TodoRegistrar\Dto\Registrar\Todo;
 use Aeliot\TodoRegistrar\Dto\Tag\TagMetadata;
 use Aeliot\TodoRegistrar\Service\Comment\Detector as CommentDetector;
@@ -14,6 +17,7 @@ use Aeliot\TodoRegistrar\Service\CommentRegistrar;
 use Aeliot\TodoRegistrar\Service\InlineConfig\ArrayFromJsonLikeLexerBuilder;
 use Aeliot\TodoRegistrar\Service\InlineConfig\ExtrasReader;
 use Aeliot\TodoRegistrar\Service\InlineConfig\InlineConfigFactory;
+use Aeliot\TodoRegistrar\Service\InlineConfig\JsonLikeLexer;
 use Aeliot\TodoRegistrar\Service\Registrar\RegistrarInterface;
 use Aeliot\TodoRegistrar\Service\TodoFactory;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -22,11 +26,17 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(CommentRegistrar::class)]
+#[UsesClass(ArrayFromJsonLikeLexerBuilder::class)]
 #[UsesClass(CommentPart::class)]
 #[UsesClass(CommentParts::class)]
-#[UsesClass(Todo::class)]
+#[UsesClass(ExtrasReader::class)]
+#[UsesClass(IndexedCollection::class)]
+#[UsesClass(JsonLikeLexer::class)]
+#[UsesClass(NamedCollection::class)]
 #[UsesClass(TagMetadata::class)]
+#[UsesClass(Todo::class)]
 #[UsesClass(TodoFactory::class)]
+#[UsesClass(Token::class)]
 final class CommentRegistrarTest extends TestCase
 {
     public function testDontRegisterTwice(): void

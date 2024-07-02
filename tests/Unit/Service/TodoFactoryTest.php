@@ -5,15 +5,26 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Test\Unit\Service;
 
 use Aeliot\TodoRegistrar\Dto\Comment\CommentPart;
+use Aeliot\TodoRegistrar\Dto\InlineConfig\IndexedCollection;
+use Aeliot\TodoRegistrar\Dto\InlineConfig\NamedCollection;
+use Aeliot\TodoRegistrar\Dto\InlineConfig\Token;
 use Aeliot\TodoRegistrar\Dto\Tag\TagMetadata;
 use Aeliot\TodoRegistrar\Service\InlineConfig\ArrayFromJsonLikeLexerBuilder;
 use Aeliot\TodoRegistrar\Service\InlineConfig\ExtrasReader;
 use Aeliot\TodoRegistrar\Service\InlineConfig\InlineConfigFactory;
+use Aeliot\TodoRegistrar\Service\InlineConfig\JsonLikeLexer;
 use Aeliot\TodoRegistrar\Service\TodoFactory;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(TodoFactory::class)]
+#[UsesClass(ArrayFromJsonLikeLexerBuilder::class)]
+#[UsesClass(ExtrasReader::class)]
+#[UsesClass(IndexedCollection::class)]
+#[UsesClass(JsonLikeLexer::class)]
+#[UsesClass(NamedCollection::class)]
+#[UsesClass(Token::class)]
 final class TodoFactoryTest extends TestCase
 {
     public function testMappingOfBaseFields(): void
