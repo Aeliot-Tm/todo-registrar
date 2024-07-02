@@ -112,6 +112,7 @@ class IssueConfig
         $config['labels'] = (array) $config['labels'];
 
         if (array_key_exists('type', $config)) {
+            // TODO: throw exception when exists key "issueType"
             $config['issueType'] = $config['type'];
             unset($config['type']);
         }
