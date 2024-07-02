@@ -37,7 +37,7 @@ Whey will be detected case insensitively.
 It detects TODO-tags in single-line comments started with both `//` and `#` symbols
 and multiple-line comments `/* ... */` and phpDoc `/** ... **/`.
 
-Which can be formatted differently:
+Comments can be formatted differently:
 ```php
 // TODO: comment summary
 // TODO comment summary
