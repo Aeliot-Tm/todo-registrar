@@ -15,8 +15,7 @@ class TodoFactory
     public function __construct(
         private InlineConfigFactoryInterface $inlineConfigFactory,
         private InlineConfigReaderInterface $inlineConfigReader,
-    )
-    {
+    ) {
     }
 
     public function create(CommentPart $commentPart): Todo
@@ -26,7 +25,7 @@ class TodoFactory
         return new Todo(
             $commentPart->getTag(),
             $commentPart->getSummary(),
-            $commentPart->getDescription(),
+            $description,
             $commentPart->getTagMetadata()?->getAssignee(),
             $this->getInlineConfig($description),
         );
