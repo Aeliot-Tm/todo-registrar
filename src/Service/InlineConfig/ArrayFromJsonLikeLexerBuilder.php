@@ -28,7 +28,7 @@ final class ArrayFromJsonLikeLexerBuilder
 
         $this->populate($lexer, $collection, $level);
 
-        if (0 !== $level) {
+        if (0 !== $level || $lexer->valid()) {
             throw new InvalidInlineConfigFormatException('Unexpected end of tags list');
         }
 
@@ -122,7 +122,6 @@ final class ArrayFromJsonLikeLexerBuilder
                 $childCollection = new NamedCollection();
                 $this->populate($lexer, $childCollection, $level);
                 $this->addValue($collection, $key, $childCollection);
-                $key = null;
             } elseif (JsonLikeLexer::T_SQUARE_BRACKET_OPEN === $token->getType()) {
                 ++$level;
                 $childCollection = new IndexedCollection();
@@ -130,7 +129,7 @@ final class ArrayFromJsonLikeLexerBuilder
                 $this->addValue($collection, $key, $childCollection);
             } elseif ($this->isCloseCollection($token)) {
                 --$level;
-                $key = null;
+                break;
             } elseif (!$this->isSkippable($token)) {
                 throw new InvalidInlineConfigFormatException('Unexpected token detected');
             }
