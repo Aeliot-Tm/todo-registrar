@@ -15,7 +15,7 @@ And injected marks helps to find proper places in code quickly.
    ```shell
    composer require --dev aeliot/todo-registrar
    ```
-2. Create configuration file. It expects ".todo-registrar.php" or ".todo-registrar.dist.php" at the root of the project.
+2. Create [configuration file](docs/config.md). It expects ".todo-registrar.php" or ".todo-registrar.dist.php" at the root of the project.
 
 ## Using
 
@@ -24,7 +24,7 @@ And injected marks helps to find proper places in code quickly.
    vendor/bin/todo-registrar
    ```
    You may pass option with path to config `--config=/custom/path/to/config`.
-   Otherwise, it tries to use one of default paths to config file.
+   Otherwise, it tries to use one of default paths to [config file](docs/config.md).
 2. Commit updated files. You may config your pipeline/job on CI which commits updates.
 
 ## Supported todo-tags
