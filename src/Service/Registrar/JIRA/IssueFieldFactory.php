@@ -33,7 +33,7 @@ final class IssueFieldFactory
 
     private function setAssignee(IssueField $issueField, Todo $todo): void
     {
-        $assignee = $todo->getInlineConfig()['priority']
+        $assignee = $todo->getInlineConfig()['assignee']
             ?? $todo->getAssignee()
             ?? $this->issueConfig->getAssignee();
 
