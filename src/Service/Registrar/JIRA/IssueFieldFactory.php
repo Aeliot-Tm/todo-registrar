@@ -63,7 +63,7 @@ final class IssueFieldFactory
     private function setLabels(IssueField $issueField, Todo $todo): void
     {
         $labels = [
-            ...($todo->getInlineConfig()['labels'] ?? []),
+            ...(array) ($todo->getInlineConfig()['labels'] ?? []),
             ...$this->issueConfig->getLabels(),
         ];
 

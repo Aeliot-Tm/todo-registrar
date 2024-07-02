@@ -17,7 +17,7 @@ final class IssueLinkRegistrar
 
     public function registerLinks(string $inwardIssueKey, Todo $todo): void
     {
-        $linkedIssues = $todo->getInlineConfig()['linkedIssues'] ?? [];
+        $linkedIssues = (array) ($todo->getInlineConfig()['linkedIssues'] ?? []);
         if (!$linkedIssues) {
             return;
         }
