@@ -1,6 +1,13 @@
 # TODO Registrar
 
-Package responsible for registration of issues in Issue Trackers.
+Package is responsible for registration of your TODO/FIXME and other notes in code as issues in Issue Trackers like
+JIRA.
+It injects IDs/Keys of created issues into proper comments in code. So, they will not be created twice when you commit
+changes.
+
+So, you don't spend time to fill lots of fields in issue-tracking system and lots of times for each issue.
+After that you may use all power of management to plan solving of lacks of your code.
+And injected marks helps to find proper places in code quickly.
 
 ## Installation
 
