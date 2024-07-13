@@ -38,6 +38,21 @@ This script do it for you. It registers issues with all necessary params. Then i
    Otherwise, it tries to use one of default paths to [config file](docs/config.md).
 2. Commit updated files. You may config your pipeline/job on CI which commits updates.
 
+## Configuration file
+
+It expects that file `.todo-registrar.php` or `.todo-registrar.dist.php` added in the root directory of project.
+It may be put in any other place, but you have to define path to it with option `--config=/custom/path/to/cofig`
+while call the script. Config file is php-file which returns instance of class `\Aeliot\TodoRegistrar\Config`.
+
+[See full documentation about config](docs/config.md)
+
+## Inline Configuration
+
+Script supports inline configuration of each TODO-comment. It helps flexibly configure different aspects of created issues.
+Like relations to other issues, labels, components and so on. So, it becomes very powerful instrument. 😊
+
+[See documentation about inline config](docs/inline_config.md)
+
 ## Supported todo-tags
 
 It detects `TODO` and `FIXME` by default. But you may config your custom set of tags in config file.
@@ -70,17 +85,3 @@ Currently, todo-registrar supports the following issue trackers:
 |-------------------------------------------------|---------------------------------------------------------------------------------------------|
 | [Jira](https://www.atlassian.com/software/jira) | Supported via API tokens. See [description of configuration](docs/registrar/jira/config.md) |
 
-## Configuration file
-
-It expects that file `.todo-registrar.php` or `.todo-registrar.dist.php` added in the root directory of project.
-It may be put in any other place, but you have to define path to it with option `--config=/custom/path/to/cofig`
-while call the script. Config file is php-file which returns instance of class `\Aeliot\TodoRegistrar\Config`.
-
-[See full documentation about config](docs/config.md)
-
-## Inline Configuration
-
-Script supports inline configuration of each TODO-comment. It helps flexibly configure different aspects of created issues.
-Like relations to other issues, labels, components and so on. So, it becomes very powerful instrument. 😊
-
-[See documentation about inline config](docs/inline_config.md)
