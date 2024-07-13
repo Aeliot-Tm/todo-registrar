@@ -1,18 +1,24 @@
 # TODO Registrar
 
+It takes TODO/FIXME and other comments from your php-code and register them as issues in Issue Trackers like
+JIRA. With all necessary labels, linked issues and so on.
+
 [![GitHub Release](https://img.shields.io/github/v/release/Aeliot-Tm/todo-registrar?label=Release&labelColor=black)](https://packagist.org/packages/aeliot/todo-registrar)
 [![GitHub License](https://img.shields.io/github/license/Aeliot-Tm/todo-registrar?label=License&labelColor=black)](LICENSE)
 [![WFS](https://github.com/Aeliot-Tm/todo-registrar/actions/workflows/automated_testing.yml/badge.svg?branch=main)](https://github.com/Aeliot-Tm/todo-registrar/actions)
 [![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/Aeliot-Tm/todo-registrar?labelColor=black&label=Issues)](https://github.com/Aeliot-Tm/todo-registrar/issues)
 
-Package is responsible for registration of your TODO/FIXME and other notes in code as issues in Issue Trackers like
-JIRA.
-It injects IDs/Keys of created issues into proper comments in code. So, they will not be created twice when you commit
-changes.
+## Motivation
 
-So, you don't spend time to fill lots of fields in issue-tracking system and lots of times for each issue.
-After that you may use all power of management to plan solving of lacks of your code.
-And injected marks helps to find proper places in code quickly.
+Time to time developers left notes in code to not forget to do something. And they forget to do it. One of the most reason is that it is difficult to manage them.
+
+Why do developers left comment in code instead of registering of isdues? It is convenient. You don't need to deal with UI of Issue Tracker and to fill lots of field. And lots of times to register each issue. It takes time. The second reason, comment in code permit to mark exact place which have to be modified. And many other reasons. No matter why they do it. They do it and leave this comments for years.
+
+Somebody have to manage it.
+
+So, we need in tool which will be responsible for registering of issues and save time of developers. After that you may use all power of management to plan solving of lacks of your code.
+
+This script do it for you. It registers issues with all necessary params. Then injects IDs/Keys of created issues into comment in code. This prevents creating of issues twice and injected marks helps to find proper places in code quickly.
 
 ## Installation
 
