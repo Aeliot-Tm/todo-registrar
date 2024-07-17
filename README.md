@@ -1,9 +1,9 @@
 # TODO Registrar
 
-![GitHub Release](https://img.shields.io/github/v/release/Aeliot-Tm/todo-registrar?label=Release&labelColor=black)
-![GitHub License](https://img.shields.io/github/license/Aeliot-Tm/todo-registrar?label=License&labelColor=black)
-![WFS](https://github.com/Aeliot-Tm/todo-registrar/actions/workflows/automated_testing.yml/badge.svg?branch=main)
-![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/Aeliot-Tm/todo-registrar?labelColor=black&label=Issues)
+[![GitHub Release](https://img.shields.io/github/v/release/Aeliot-Tm/todo-registrar?label=Release&labelColor=black)](https://packagist.org/packages/aeliot/todo-registrar)
+[![GitHub License](https://img.shields.io/github/license/Aeliot-Tm/todo-registrar?label=License&labelColor=black)](LICENSE)
+[![WFS](https://github.com/Aeliot-Tm/todo-registrar/actions/workflows/automated_testing.yml/badge.svg?branch=main)](https://github.com/Aeliot-Tm/todo-registrar/actions)
+[![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/Aeliot-Tm/todo-registrar?labelColor=black&label=Issues)](https://github.com/Aeliot-Tm/todo-registrar/issues)
 
 Package responsible for registration of issues in Issue Trackers.
 
