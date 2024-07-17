@@ -1,6 +1,7 @@
 # TODO Registrar
 
 ![GitHub Release](https://img.shields.io/github/v/release/Aeliot-Tm/todo-registrar?label=Release&labelColor=black)
+![GitHub License](https://img.shields.io/github/license/Aeliot-Tm/todo-registrar?label=License&labelColor=black)
 
 Package responsible for registration of issues in Issue Trackers.
 
