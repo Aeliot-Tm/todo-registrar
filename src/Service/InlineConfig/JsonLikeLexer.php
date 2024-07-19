@@ -147,7 +147,7 @@ final class JsonLikeLexer implements \Iterator, \Countable
     {
         return [
             '[,:\[\]\{\}]',
-            '[0-9a-z_-]+',
+            '[0-9a-z_.-]+',
         ];
     }
 
