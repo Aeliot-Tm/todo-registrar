@@ -26,6 +26,7 @@
     },
     "require": {
         "php": "^8.2",
+        "ext-mbstring": "*",
         "ext-tokenizer": "*",
         "lesstif/php-jira-rest-client": "^5.8",
         "symfony/finder": "^5.4|^6.0|^7.0"

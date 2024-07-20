@@ -6,13 +6,13 @@ namespace Aeliot\TodoRegistrar\Service\Registrar\JIRA;
 
 use Aeliot\TodoRegistrar\Dto\Registrar\Todo;
 use Aeliot\TodoRegistrar\Service\Registrar\RegistrarInterface;
-use JiraRestApi\Issue\IssueService;
 
 class JiraRegistrar implements RegistrarInterface
 {
     public function __construct(
         private IssueFieldFactory $issueFieldFactory,
-        private IssueService $issueService,
+        private ServiceFactory $serviceFactory,
+        private IssueLinkRegistrar $issueLinkRegistrar,
     ) {
     }
 
@@ -25,6 +25,9 @@ class JiraRegistrar implements RegistrarInterface
     {
         $issueField = $this->issueFieldFactory->create($todo);
 
-        return $this->issueService->create($issueField)->key;
+        $issueKey = $this->serviceFactory->createIssueService()->create($issueField)->key;
+        $this->issueLinkRegistrar->registerLinks($issueKey, $todo);
+
+        return $issueKey;
     }
 }

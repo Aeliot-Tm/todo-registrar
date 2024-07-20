@@ -10,6 +10,9 @@ use Aeliot\TodoRegistrar\Service\CommentRegistrar;
 use Aeliot\TodoRegistrar\Service\File\Saver;
 use Aeliot\TodoRegistrar\Service\File\Tokenizer;
 use Aeliot\TodoRegistrar\Service\FileProcessor;
+use Aeliot\TodoRegistrar\Service\InlineConfig\ArrayFromJsonLikeLexerBuilder;
+use Aeliot\TodoRegistrar\Service\InlineConfig\ExtrasReader;
+use Aeliot\TodoRegistrar\Service\InlineConfig\InlineConfigFactory;
 use Aeliot\TodoRegistrar\Service\Registrar\RegistrarFactoryInterface;
 use Aeliot\TodoRegistrar\Service\Registrar\RegistrarFactoryRegistry;
 use Aeliot\TodoRegistrar\Service\Registrar\RegistrarInterface;
@@ -32,11 +35,14 @@ class ApplicationFactory
 
     private function createCommentRegistrar(RegistrarInterface $registrar, Config $config): CommentRegistrar
     {
+        $inlineConfigReader = $config->getInlineConfigReader() ?? new ExtrasReader(new ArrayFromJsonLikeLexerBuilder());
+        $inlineConfigFactory = $config->getInlineConfigFactory() ?? new InlineConfigFactory();
+
         return new CommentRegistrar(
             new Detector(),
             new Extractor(new TagDetector($config->getTags())),
             $registrar,
-            new TodoFactory(),
+            new TodoFactory($inlineConfigFactory, $inlineConfigReader),
         );
     }
 

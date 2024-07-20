@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Dto\Registrar;
 
+use Aeliot\TodoRegistrar\InlineConfigInterface;
+
 class Todo
 {
     public function __construct(
@@ -11,6 +13,7 @@ class Todo
         private string $summary,
         private string $description,
         private ?string $assignee,
+        private InlineConfigInterface $inlineConfig,
     ) {
     }
 
@@ -22,6 +25,11 @@ class Todo
     public function getDescription(): string
     {
         return $this->description;
+    }
+
+    public function getInlineConfig(): InlineConfigInterface
+    {
+        return $this->inlineConfig;
     }
 
     public function getSummary(): string

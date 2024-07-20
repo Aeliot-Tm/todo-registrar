@@ -63,6 +63,25 @@ class Extractor
      */
     private function splitLines(string $comment): array
     {
-        return preg_split("/[\r\n]+/", $comment, -1, PREG_SPLIT_DELIM_CAPTURE);
+        $lines = preg_split("/([\r\n]+)/", $comment, -1, PREG_SPLIT_DELIM_CAPTURE);
+        $count = count($lines);
+        $currentLineIndex = 0;
+        for ($i = 0; $i < $count;) {
+            $nextLineIndex = $i + 1;
+            if (!array_key_exists($nextLineIndex, $lines)) {
+                break;
+            }
+            $nextLine = $lines[$nextLineIndex];
+            if (preg_match("/^[\r\n]+$/", $nextLine)) {
+                $lines[$currentLineIndex] .= $nextLine;
+                // skip next line
+                unset($lines[$nextLineIndex]);
+                ++$i;
+            } else {
+                $currentLineIndex = $i = $nextLineIndex;
+            }
+        }
+
+        return array_values($lines);
     }
 }

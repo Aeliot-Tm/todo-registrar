@@ -6,11 +6,18 @@ namespace Aeliot\TodoRegistrar\Test\Unit\Service;
 
 use Aeliot\TodoRegistrar\Dto\Comment\CommentPart;
 use Aeliot\TodoRegistrar\Dto\Comment\CommentParts;
+use Aeliot\TodoRegistrar\Dto\InlineConfig\IndexedCollection;
+use Aeliot\TodoRegistrar\Dto\InlineConfig\NamedCollection;
+use Aeliot\TodoRegistrar\Dto\InlineConfig\Token;
 use Aeliot\TodoRegistrar\Dto\Registrar\Todo;
 use Aeliot\TodoRegistrar\Dto\Tag\TagMetadata;
 use Aeliot\TodoRegistrar\Service\Comment\Detector as CommentDetector;
 use Aeliot\TodoRegistrar\Service\Comment\Extractor as CommentExtractor;
 use Aeliot\TodoRegistrar\Service\CommentRegistrar;
+use Aeliot\TodoRegistrar\Service\InlineConfig\ArrayFromJsonLikeLexerBuilder;
+use Aeliot\TodoRegistrar\Service\InlineConfig\ExtrasReader;
+use Aeliot\TodoRegistrar\Service\InlineConfig\InlineConfigFactory;
+use Aeliot\TodoRegistrar\Service\InlineConfig\JsonLikeLexer;
 use Aeliot\TodoRegistrar\Service\Registrar\RegistrarInterface;
 use Aeliot\TodoRegistrar\Service\TodoFactory;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -19,11 +26,17 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(CommentRegistrar::class)]
+#[UsesClass(ArrayFromJsonLikeLexerBuilder::class)]
 #[UsesClass(CommentPart::class)]
 #[UsesClass(CommentParts::class)]
-#[UsesClass(Todo::class)]
+#[UsesClass(ExtrasReader::class)]
+#[UsesClass(IndexedCollection::class)]
+#[UsesClass(JsonLikeLexer::class)]
+#[UsesClass(NamedCollection::class)]
 #[UsesClass(TagMetadata::class)]
+#[UsesClass(Todo::class)]
 #[UsesClass(TodoFactory::class)]
+#[UsesClass(Token::class)]
 final class CommentRegistrarTest extends TestCase
 {
     public function testDontRegisterTwice(): void
@@ -33,7 +46,7 @@ final class CommentRegistrarTest extends TestCase
         $commentParts = $this->createCommentParts($tokens[2]->text);
         $commentExtractor = $this->mockCommentExtractor($commentParts);
 
-        $todoFactory = new TodoFactory();
+        $todoFactory = $this->createTodoFactory();
         $todo = $todoFactory->create($commentParts->getTodos()[0]);
 
         $registrar = $this->mockRegistrar($todo, true);
@@ -57,7 +70,7 @@ final class CommentRegistrarTest extends TestCase
         $commentParts = $this->createCommentParts($tokens[2]->text, 'X-001');
         $commentExtractor = $this->mockCommentExtractor($commentParts);
 
-        $todoFactory = new TodoFactory();
+        $todoFactory = $this->createTodoFactory();
 
         $registrar = $this->createMock(RegistrarInterface::class);
         $registrar
@@ -79,7 +92,7 @@ final class CommentRegistrarTest extends TestCase
         $commentExtractor = $this->mockCommentExtractor($commentParts);
 
         $token = $commentParts->getTodos()[0];
-        $todoFactory = new TodoFactory();
+        $todoFactory = $this->createTodoFactory();
         $todo = $todoFactory->create($token);
 
         $registrar = $this->mockRegistrar($todo, false);
@@ -112,7 +125,7 @@ final class CommentRegistrarTest extends TestCase
     {
         $json = file_get_contents(__DIR__ . '/../../fixtures/tokens_of_single_line_php.json');
         $values = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
-        return array_map(static fn(array $value): \PhpToken => new \PhpToken(
+        return array_map(static fn (array $value): \PhpToken => new \PhpToken(
             $value['id'],
             $value['text'],
             $value['line'],
@@ -157,5 +170,10 @@ final class CommentRegistrarTest extends TestCase
             ->willReturn($isRegistered);
 
         return $registrar;
+    }
+
+    private function createTodoFactory(): TodoFactory
+    {
+        return new TodoFactory(new InlineConfigFactory(), new ExtrasReader(new ArrayFromJsonLikeLexerBuilder()));
     }
 }

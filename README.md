@@ -1,11 +1,24 @@
 # TODO Registrar
 
 [![GitHub Release](https://img.shields.io/github/v/release/Aeliot-Tm/todo-registrar?label=Release&labelColor=black)](https://packagist.org/packages/aeliot/todo-registrar)
-[![GitHub License](https://img.shields.io/github/license/Aeliot-Tm/todo-registrar?label=License&labelColor=black)](LICENSE)
 [![WFS](https://github.com/Aeliot-Tm/todo-registrar/actions/workflows/automated_testing.yml/badge.svg?branch=main)](https://github.com/Aeliot-Tm/todo-registrar/actions)
 [![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/Aeliot-Tm/todo-registrar?labelColor=black&label=Issues)](https://github.com/Aeliot-Tm/todo-registrar/issues)
+[![GitHub License](https://img.shields.io/github/license/Aeliot-Tm/todo-registrar?label=License&labelColor=black)](LICENSE)
 
-Package responsible for registration of issues in Issue Trackers.
+It takes TODO/FIXME and other comments from your php-code and register them as issues in Issue Trackers like
+JIRA. With all necessary labels, linked issues and so on.
+
+## Motivation
+
+Time to time developers left notes in code to not forget to do something. And they forget to do it. One of the most reason is that it is difficult to manage them.
+
+Why do developers left comment in code instead of registering of isdues? It is convenient. You don't need to deal with UI of Issue Tracker and to fill lots of field. And lots of times to register each issue. It takes time. The second reason, comment in code permit to mark exact place which have to be modified. And many other reasons. No matter why they do it. They do it and leave this comments for years.
+
+Somebody have to manage it.
+
+So, we need in tool which will be responsible for registering of issues and save time of developers. After that you may use all power of management to plan solving of lacks of your code.
+
+This script do it for you. It registers issues with all necessary params. Then injects IDs/Keys of created issues into comment in code. This prevents creating of issues twice and injected marks helps to find proper places in code quickly.
 
 ## Installation
 
@@ -13,7 +26,7 @@ Package responsible for registration of issues in Issue Trackers.
    ```shell
    composer require --dev aeliot/todo-registrar
    ```
-2. Create configuration file. It expects ".todo-registrar.php" or ".todo-registrar.dist.php" at the root of the project.
+2. Create [configuration file](docs/config.md). It expects ".todo-registrar.php" or ".todo-registrar.dist.php" at the root of the project.
 
 ## Using
 
@@ -21,92 +34,48 @@ Package responsible for registration of issues in Issue Trackers.
    ```shell
    vendor/bin/todo-registrar
    ```
-   You may pass option with it `--config=/custom/path/to/config`. Otherwise, it tries to use one of default files. 
+   You may pass option with path to config `--config=/custom/path/to/config`.
+   Otherwise, it tries to use one of default paths to [config file](docs/config.md).
 2. Commit updated files. You may config your pipeline/job on CI which commits updates.
 
 ## Configuration file
 
-Config file is php-file which returns instance of class `\Aeliot\TodoRegistrar\Config`. See [example](.todo-registrar.dist.php).
+It expects that file `.todo-registrar.php` or `.todo-registrar.dist.php` added in the root directory of project.
+It may be put in any other place, but you have to define path to it with option `--config=/custom/path/to/cofig`
+while call the script. Config file is php-file which returns instance of class `\Aeliot\TodoRegistrar\Config`.
 
-It has setters:
-1. `setFinder` - accepts instance of configured finder of php-files.
-2. `setRegistrar` - responsible for configuration of registrar factory. It accepts as type of registrar with its config
-   as instance of custom registrar factory.
-3. `setTags` - array of detected tags. It supports "todo" and "fixme" by default. 
-   You don't need to configure it when you want to use only this tags. Nevertheless, you have to set them 
-   when you want to use them together with your custom tags.
+[See full documentation about config](docs/config.md)
 
-### Supported patters of comments (examples):
+## Inline Configuration
+
+Script supports inline configuration of each TODO-comment. It helps flexibly configure different aspects of created issues.
+Like relations to other issues, labels, components and so on. So, it becomes very powerful instrument. 😊
+
+[See documentation about inline config](docs/inline_config.md)
+
+## Supported todo-tags
+
+It detects `TODO` and `FIXME` by default. But you may config your custom set of tags in config file.
+Whey will be detected case insensitively.
+
+## Supported formats of comments:
 
 It detects TODO-tags in single-line comments started with both `//` and `#` symbols
 and multiple-line comments `/* ... */` and phpDoc `/** ... **/`.
 
-1. Tag and comment separated by colon
-   ```php
-   // TODO: comment summary
-   ```
-2. Tag and comment does not separated by colon
-   ```php
-   // TODO comment summary
-   ```
-3. Tag with assignee and comment separated by colon
-   ```php
-   // TODO@assigne: comment summary
-   ```
-4. Tag with assignee and comment does not separated by colon
-   ```php
-   // TODO@assigne comment summary
-   ```
-5. Multiline comment with complex description. All lines after the first one with tag MUST have indentation
-   same to the text of the first line. So, all af them will be detected af part of description of TODO.
-   Multiple line comments may have assignee and colon same as single-line comments/.
-   ```php
-   /**
-    * TODO: comment summary
-    *       and some complex description
-    *       which must have indentation same as end of one presented:
-    *       - colon
-    *       - assignee
-    *       - tag
-    *       So, all this text will be passed to registrar as description
-    *       without not meaning indentations (" *      " in this case).
-    * This line (and all after) will not be detected as part (description) of "TODO"
-    * case they don't have expected indentation.
-    */
-   ```
+Comments can be formatted differently:
+```php
+// TODO: comment summary
+// TODO comment summary
+// TODO@assigne: comment summary
 
-As a result of processing of such comments, ID of ISSUE will be injected before comment summary
-and after colon and assignee when they are presented. For example:
-1. Tag and comment separated by colon
-   ```php
-   // TODO: XX-001 comment summary
-   ```
-2. Tag and comment does not separated by colon
-   ```php
-   // TODO XX-001 comment summary
-   ```
-3. Tag with assignee and comment separated by colon
-   ```php
-   // TODO@assigne: XX-001 comment summary
-   ```
-4. Tag with assignee and comment does not separated by colon
-   ```php
-   // TODO@assigne XX-001 comment summary
-   ```
-5. Multiline comment with complex description. All lines after the first one with tag MUST have indentation
-   same to the text of the first line. So, all af them will be detected af part of description of TODO.
-   Multiple line comments may have assignee and colon same as single-line comments/.
-   ```php
-   /**
-    * TODO: XX-001 comment summary
-    *       and some complex description
-    */
-   ```
+/**
+ * TODO: XX-001 comment summary
+ *       with some complex description
+ */
+```
 
-### Assignee-part
-
-It is some "username" which separated of tag by symbol "@". It sticks to pattern `/[a-z0-9._-]+/i`.
-System pass it in payload to registrar with aim to be used as "identifier" of assignee in issue tracker.
+And others. [See all supported formats](docs/supported_patters_of_comments.md).
 
 ## Supported Issue Trackers
 
@@ -115,3 +84,4 @@ Currently, todo-registrar supports the following issue trackers:
 | Issue Tracker                                   | Description                                                                                 |
 |-------------------------------------------------|---------------------------------------------------------------------------------------------|
 | [Jira](https://www.atlassian.com/software/jira) | Supported via API tokens. See [description of configuration](docs/registrar/jira/config.md) |
+

@@ -19,30 +19,70 @@ final class IssueFieldFactory
         $issueField = new IssueField();
         $issueField
             ->setProjectKey($this->issueConfig->getProjectKey())
-            ->setIssueTypeAsString($this->issueConfig->getIssueType())
             ->setSummary($todo->getSummary())
-            ->setDescription($todo->getDescription())
-            ->addComponentsAsArray($this->issueConfig->getComponents());
+            ->setDescription($todo->getDescription());
 
-        $assignee = $todo->getAssignee() ?? $this->issueConfig->getAssignee();
+        $this->setIssueType($issueField, $todo);
+        $this->setAssignee($issueField, $todo);
+        $this->setComponents($issueField, $todo);
+        $this->setLabels($issueField, $todo);
+        $this->setPriority($issueField, $todo);
+
+        return $issueField;
+    }
+
+    private function setAssignee(IssueField $issueField, Todo $todo): void
+    {
+        $assignee = $todo->getInlineConfig()['assignee']
+            ?? $todo->getAssignee()
+            ?? $this->issueConfig->getAssignee();
+
         if ($assignee) {
             $issueField->setAssigneeNameAsString($assignee);
         }
+    }
 
-        $priority = $this->issueConfig->getPriority();
-        if ($priority) {
-            $issueField->setPriorityNameAsString($priority);
-        }
+    private function setComponents(IssueField $issueField, Todo $todo): void
+    {
+        $component = [
+            ...($todo->getInlineConfig()['components'] ?? []),
+            ...$this->issueConfig->getComponents(),
+        ];
+        $issueField->addComponentsAsArray(array_unique($component));
+    }
 
-        $labels = $this->issueConfig->getLabels();
+    private function setIssueType(IssueField $issueField, Todo $todo): void
+    {
+        $inlineConfig = $todo->getInlineConfig();
+        $issueType = $inlineConfig['issue_type']
+            ?? $this->issueConfig->getIssueType();
+
+        $issueField->setIssueTypeAsString($issueType);
+    }
+
+    private function setLabels(IssueField $issueField, Todo $todo): void
+    {
+        $labels = [
+            ...(array) ($todo->getInlineConfig()['labels'] ?? []),
+            ...$this->issueConfig->getLabels(),
+        ];
+
         if ($this->issueConfig->isAddTagToLabels()) {
             $labels[] = strtolower(sprintf('%s%s', $this->issueConfig->getTagPrefix(), $todo->getTag()));
         }
 
-        foreach ($labels as $label) {
+        foreach (array_unique($labels) as $label) {
             $issueField->addLabelAsString($label);
         }
+    }
 
-        return $issueField;
+    private function setPriority(IssueField $issueField, Todo $todo): void
+    {
+        $priority = $todo->getInlineConfig()['priority']
+            ?? $this->issueConfig->getPriority();
+
+        if ($priority) {
+            $issueField->setPriorityNameAsString($priority);
+        }
     }
 }
