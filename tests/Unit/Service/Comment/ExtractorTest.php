@@ -21,6 +21,18 @@ use PHPUnit\Framework\TestCase;
 #[UsesClass(TagMetadata::class)]
 final class ExtractorTest extends TestCase
 {
+    public static function getDataForTestCatchLineSeparator(): iterable
+    {
+        yield [
+            <<<CONT
+/*
+ * TODO: multi line comment
+ *       with some extra description.
+ */
+CONT,
+        ];
+    }
+
     public static function getDataForTestCountOfParts(): iterable
     {
         yield [
@@ -64,6 +76,13 @@ CONT,
  */
 CONT,
         ];
+    }
+
+    #[DataProvider('getDataForTestCatchLineSeparator')]
+    public function testCatchLineSeparator(string $comment): void
+    {
+        $parts = (new Extractor(new TagDetector()))->extract($comment);
+        self::assertSame($comment, $parts->getContent());
     }
 
     #[DataProvider('getDataForTestCountOfParts')]
