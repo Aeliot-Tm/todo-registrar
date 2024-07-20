@@ -4,9 +4,9 @@ It takes TODO/FIXME and other comments from your php-code and register them as i
 JIRA. With all necessary labels, linked issues and so on.
 
 [![GitHub Release](https://img.shields.io/github/v/release/Aeliot-Tm/todo-registrar?label=Release&labelColor=black)](https://packagist.org/packages/aeliot/todo-registrar)
-[![GitHub License](https://img.shields.io/github/license/Aeliot-Tm/todo-registrar?label=License&labelColor=black)](LICENSE)
 [![WFS](https://github.com/Aeliot-Tm/todo-registrar/actions/workflows/automated_testing.yml/badge.svg?branch=main)](https://github.com/Aeliot-Tm/todo-registrar/actions)
 [![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/Aeliot-Tm/todo-registrar?labelColor=black&label=Issues)](https://github.com/Aeliot-Tm/todo-registrar/issues)
+[![GitHub License](https://img.shields.io/github/license/Aeliot-Tm/todo-registrar?label=License&labelColor=black)](LICENSE)
 
 ## Motivation
 
