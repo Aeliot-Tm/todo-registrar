@@ -37,9 +37,8 @@ jobs:
         uses: actions/cache@v4
         with:
           path: vendor
-          key: "${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}"
-          restore-keys: |
-            ${{ runner.os }}-php-
+          key: "php-${{ runner.php-version }}-composer-${{ hashFiles('**/composer.lock') }}"
+          restore-keys: "php-${{ runner.php-version }}-composer-"
 
       - name: Install dependencies
         uses: ramsey/composer-install@v3
@@ -63,18 +62,31 @@ jobs:
         uses: actions/cache@v4
         with:
           path: vendor
-          key: "${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}"
-          restore-keys: |
-            ${{ runner.os }}-php-
+          key: "php-${{ runner.php-version }}-composer-${{ hashFiles('**/composer.lock') }}"
+          restore-keys: "php-${{ runner.php-version }}-composer-"
 
       - name: Install dependencies
         uses: ramsey/composer-install@v3
 
+      - name: Cache tools installed with PHIVE
+        uses: actions/cache@v4
+        with:
+          path: "${{ runner.temp }}/.phive"
+          key: "php-${{ runner.php-version }}-phive-${{ hashFiles('.phive/phars.xml') }}"
+          restore-keys: "php-${{ runner.php-version }}-phive-"
+
       - name: Install PHIVE
         uses: szepeviktor/phive@v1
+        with:
+          home: "${{ runner.temp }}/.phive"
+          binPath: "${{ github.workspace }}/tools/phive"
 
-      - name: Install PHPUnit with PHIVE
-        run: ./tools/phive --no-progress install --trust-gpg-keys 4AA394086372C20A phpunit
+      - name: Install PHP tools with PHIVE
+        uses: szepeviktor/phive-install@v1
+        with:
+          home: "${{ runner.temp }}/.phive"
+          binPath: "${{ github.workspace }}/tools/phive"
+          trustGpgKeys: "4AA394086372C20A"
 
       - name: 'Run all PHPUnit tests'
         run: composer run phpunit
