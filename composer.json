@@ -33,10 +33,19 @@
     },
     "require-dev": {
         "dg/bypass-finals": "^1.7",
+        "friendsofphp/php-cs-fixer": "^3.60",
         "phpunit/phpunit": "^11.1",
         "roave/security-advisories": "dev-latest"
     },
     "scripts": {
+        "check-all": [
+            "@cs-fixer-check",
+            "@phpunit"
+        ],
+        "cs-check": "@cs-fixer-check",
+        "cs-fix": "@cs-fixer-fix",
+        "cs-fixer-check": "@cs-fixer-fix --dry-run",
+        "cs-fixer-fix": "vendor/bin/php-cs-fixer fix -vv",
         "phpunit": "vendor/bin/phpunit"
     },
     "suggest": {
