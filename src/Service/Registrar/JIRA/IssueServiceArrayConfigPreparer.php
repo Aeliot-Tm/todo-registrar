@@ -79,8 +79,8 @@ class IssueServiceArrayConfigPreparer
         ];
 
         $options = array_intersect_key($config['curl'] ?? [], array_flip($fields));
-        $options = array_filter($options, static fn(mixed $x): bool => isset($x));
-        $keys = array_map(static fn(string $x): string => 'curlOpt' . ucfirst($x), array_keys($options));
+        $options = array_filter($options, static fn (mixed $x): bool => isset($x));
+        $keys = array_map(static fn (string $x): string => 'curlOpt' . ucfirst($x), array_keys($options));
 
         $serviceConfig += array_combine($keys, $options);
     }

@@ -143,7 +143,7 @@ final class DetectorTest extends TestCase
         yield ['GH-123', '// TODO: GH-123 fix it when this GitHub issue is closed'];
         yield [
             'some-organization/some-repo#123',
-            '// TODO: some-organization/some-repo#123 change me if this GitHub pull request is closed'
+            '// TODO: some-organization/some-repo#123 change me if this GitHub pull request is closed',
         ];
     }
 

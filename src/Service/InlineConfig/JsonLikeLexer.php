@@ -8,7 +8,7 @@ use Aeliot\TodoRegistrar\Dto\InlineConfig\Token;
 use Aeliot\TodoRegistrar\Exception\InvalidInlineConfigFormatException;
 
 /**
- * Inspired by package "doctrine/annotations"
+ * Inspired by package "doctrine/annotations".
  *
  * @implements \Iterator<Token>
  */
@@ -117,13 +117,13 @@ final class JsonLikeLexer implements \Iterator, \Countable
      */
     private function getMatches(string $input, int $offset): array
     {
-        $regex = sprintf(
+        $regex = \sprintf(
             '/(%s)/%s',
             implode('|', $this->getRegexCatchablePatterns()),
             $this->getRegexModifiers(),
         );
 
-        $flags = PREG_UNMATCHED_AS_NULL | PREG_OFFSET_CAPTURE;
+        $flags = \PREG_UNMATCHED_AS_NULL | \PREG_OFFSET_CAPTURE;
         if (false === preg_match_all($regex, $input, $matches, $flags, $offset)) {
             throw new InvalidInlineConfigFormatException('Cannot match config tokens');
         }

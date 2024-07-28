@@ -53,14 +53,13 @@ final class ArrayFromJsonLikeLexerBuilder
     }
 
     /**
-     * TODO: move it into JsonLikeLexer
+     * TODO: move it into JsonLikeLexer.
      */
     private function checkPredecessorType(int $current, ?int $predecessor): void
     {
         if (JsonLikeLexer::T_COLON === $current && JsonLikeLexer::T_KEY !== $predecessor) {
-            throw new InvalidInlineConfigFormatException(
-                sprintf('Colon must be after key, but passed %d', $predecessor),
-            );
+            $exceptionMessage = \sprintf('Colon must be after key, but passed %d', $predecessor);
+            throw new InvalidInlineConfigFormatException($exceptionMessage);
         }
 
         if (JsonLikeLexer::T_COMMA === $current && JsonLikeLexer::T_COMMA === $predecessor) {
@@ -84,9 +83,8 @@ final class ArrayFromJsonLikeLexerBuilder
         if (JsonLikeLexer::T_COLON === $predecessor
             && \in_array($current, [JsonLikeLexer::T_CURLY_BRACES_CLOSE, JsonLikeLexer::T_SQUARE_BRACKET_CLOSE], true)
         ) {
-            throw new InvalidInlineConfigFormatException(
-                'Colon cannot be before closing curly braces or closing square brackets',
-            );
+            $exceptionMessage = 'Colon cannot be before closing curly braces or closing square brackets';
+            throw new InvalidInlineConfigFormatException($exceptionMessage);
         }
     }
 

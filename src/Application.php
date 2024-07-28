@@ -51,3 +51,4 @@ class Application
         fwrite(STDERR, $message);
     }
 }
+

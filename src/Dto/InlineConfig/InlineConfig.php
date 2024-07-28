@@ -21,7 +21,7 @@ class InlineConfig implements InlineConfigInterface
      */
     public function offsetExists(mixed $offset): bool
     {
-        return array_key_exists($offset, $this->data);
+        return \array_key_exists($offset, $this->data);
     }
 
     /**

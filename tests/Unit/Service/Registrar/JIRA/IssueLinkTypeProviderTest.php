@@ -107,7 +107,6 @@ final class IssueLinkTypeProviderTest extends TestCase
         self::assertSame($expectedId, $issueLinkType->id);
     }
 
-
     private function createLinkTypeProvider(): IssueLinkTypeProvider
     {
         $service = $this->createMock(IssueLinkService::class);
@@ -125,7 +124,7 @@ final class IssueLinkTypeProviderTest extends TestCase
     {
         $linkTypes = [];
         $contents = file_get_contents(__DIR__ . '/../../../../fixtures/jira_issue_link_types.json');
-        $data = json_decode($contents, true, 5, JSON_THROW_ON_ERROR);
+        $data = json_decode($contents, true, 5, \JSON_THROW_ON_ERROR);
         foreach ($data['issueLinkTypes'] as $datum) {
             $linkType = new IssueLinkType();
             $linkType->id = $datum['id'];
