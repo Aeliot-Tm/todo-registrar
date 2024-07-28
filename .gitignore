@@ -1,5 +1,6 @@
 .idea
 .phpunit
+/tools
 /var
 /vendor
 /.php-cs-fixer.cache

@@ -70,5 +70,11 @@ jobs:
       - name: Install dependencies
         uses: ramsey/composer-install@v3
 
+      - name: Install PHIVE
+        uses: szepeviktor/phive@v1
+
+      - name: Install PHPUnit with PHIVE
+        run: ./tools/phive --no-progress install --trust-gpg-keys 4AA394086372C20A phpunit
+
       - name: 'Run all PHPUnit tests'
         run: composer run phpunit
