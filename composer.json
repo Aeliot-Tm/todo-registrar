@@ -43,8 +43,8 @@
         "cs-check": "@cs-fixer-check",
         "cs-fix": "@cs-fixer-fix",
         "cs-fixer-check": "@cs-fixer-fix --dry-run",
-        "cs-fixer-fix": "tools/php-cs-fixer fix -vv",
-        "phpunit": "tools/phpunit"
+        "cs-fixer-fix": "tools/php-cs-fixer.phar fix -vv",
+        "phpunit": "tools/phpunit.phar"
     },
     "suggest": {
         "staabm/phpstan-todo-by": "For the monitoring of outdated comments when ticket closed and TODO-comment should be removed"
