@@ -28,16 +28,15 @@ class IssueConfig
      */
     public function __construct(array $config)
     {
-        if (array_key_exists('issueType', $config) && array_key_exists('type', $config)) {
-            throw new InvalidConfigException(
-                'Conflicting config. Both properties "issueType" and "type" added to config of issue'
-            );
+        if (\array_key_exists('issueType', $config) && \array_key_exists('type', $config)) {
+            $exceptionMessage = 'Conflicting config. Both properties "issueType" and "type" added to config of issue';
+            throw new InvalidConfigException($exceptionMessage);
         }
 
         $config = $this->normalizeConfig($config);
         foreach ((new \ReflectionClass($this))->getProperties() as $property) {
             $key = $property->getName();
-            if (!array_key_exists($key, $config)) {
+            if (!\array_key_exists($key, $config)) {
                 throw new InvalidConfigException("Undefined property of issue config: {$key}");
             }
 
@@ -111,7 +110,7 @@ class IssueConfig
         $config['components'] = (array) $config['components'];
         $config['labels'] = (array) $config['labels'];
 
-        if (array_key_exists('type', $config)) {
+        if (\array_key_exists('type', $config)) {
             // TODO: throw exception when exists key "issueType"
             $config['issueType'] = $config['type'];
             unset($config['type']);

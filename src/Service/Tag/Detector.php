@@ -31,13 +31,13 @@ REGEXP;
 
     public function getTagMetadata(string $line): ?TagMetadata
     {
-        if (!preg_match($this->pattern, $line, $matches, PREG_UNMATCHED_AS_NULL)) {
+        if (!preg_match($this->pattern, $line, $matches, \PREG_UNMATCHED_AS_NULL)) {
             return null;
         }
 
         return new TagMetadata(
             strtoupper($matches['tag']),
-            strlen(rtrim($matches[1])),
+            \strlen(rtrim($matches[1])),
             $matches['assignee'],
             $matches['ticketKey'],
         );

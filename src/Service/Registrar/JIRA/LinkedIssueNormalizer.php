@@ -45,7 +45,7 @@ final class LinkedIssueNormalizer
         try {
             $issueLinkType = $this->issueLinkTypeProvider->getLinkType($alias);
         } catch (JIRANotSupportedLinkTypeException) {
-            throw new InvalidInlineConfigFormatException(sprintf('Not supported issue link type "%s"', $alias));
+            throw new InvalidInlineConfigFormatException(\sprintf('Not supported issue link type "%s"', $alias));
         }
 
         return $issueLinkType;

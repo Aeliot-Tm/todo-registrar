@@ -18,13 +18,13 @@ final class ExtrasReader implements InlineConfigReaderInterface
      */
     public function getInlineConfig(string $input): array
     {
-        preg_match('/\{\s*EXTRAS\s*:/ui', $input, $matches, PREG_OFFSET_CAPTURE);
+        preg_match('/\{\s*EXTRAS\s*:/ui', $input, $matches, \PREG_OFFSET_CAPTURE);
         if (!$matches) {
             return [];
         }
 
         $data = $this->arrayBuilder->build(new JsonLikeLexer($input, (int) $matches[0][1]));
-        if (count($data) !== 1) {
+        if (1 !== \count($data)) {
             throw new InvalidInlineConfigFormatException('EXTRAS must contain one and only one element');
         }
 

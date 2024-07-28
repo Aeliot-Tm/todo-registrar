@@ -8,6 +8,6 @@ final class CollectionDuplicatedKeyException extends \DomainException
 {
     public function __construct(string $key)
     {
-        parent::__construct(sprintf('Key "%s" is duplicated', $key));
+        parent::__construct(\sprintf('Key "%s" is duplicated', $key));
     }
 }

@@ -11,7 +11,7 @@ class Saver
      */
     public function save(\SplFileInfo $file, array $tokens): void
     {
-        $content = implode('', array_map(static fn(\PhpToken $x): string => $x->text, $tokens));
+        $content = implode('', array_map(static fn (\PhpToken $x): string => $x->text, $tokens));
         file_put_contents($file->getPathname(), $content);
     }
 }

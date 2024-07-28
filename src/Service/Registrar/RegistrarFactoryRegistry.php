@@ -14,7 +14,7 @@ class RegistrarFactoryRegistry
         return match ($type) {
             RegistrarType::JIRA => new JiraRegistrarFactory(),
             // TODO add factory of different registrars
-            default => throw new \DomainException(sprintf('Not supported registrar type "%s"', $type->value)),
+            default => throw new \DomainException(\sprintf('Not supported registrar type "%s"', $type->value)),
         };
     }
 }

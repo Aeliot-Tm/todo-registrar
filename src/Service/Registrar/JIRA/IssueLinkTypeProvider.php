@@ -54,8 +54,8 @@ final class IssueLinkTypeProvider
     private function isMatch(IssueLinkType $lintType, string $alias): bool
     {
         $quotedAlis = preg_quote($alias, '/');
-        $regex1 = sprintf('/^%s/i', str_replace('_', '[^0-9a-z]+', $quotedAlis));
-        $regex2 = sprintf('/^%s/i', str_replace('_', '[^0-9a-z]+', str_replace('_to_', ' -> ', $quotedAlis)));
+        $regex1 = \sprintf('/^%s/i', str_replace('_', '[^0-9a-z]+', $quotedAlis));
+        $regex2 = \sprintf('/^%s/i', str_replace('_', '[^0-9a-z]+', str_replace('_to_', ' -> ', $quotedAlis)));
 
         return $alias === $lintType->name
             || $alias === $lintType->inward

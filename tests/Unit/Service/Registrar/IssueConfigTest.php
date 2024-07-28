@@ -19,14 +19,14 @@ final class IssueConfigTest extends TestCase
             [
                 'projectKey' => 'any string',
                 'issueType' => 'Bug',
-            ]
+            ],
         ];
 
         yield [
             [
                 'projectKey' => 'any string',
                 'type' => 'Bug',
-            ]
+            ],
         ];
     }
 
@@ -60,7 +60,6 @@ final class IssueConfigTest extends TestCase
             'issueType' => 'any string',
         ];
         new IssueConfig($values);
-
     }
 
     #[DataProvider('getDataForTestThrowExceptionWhenMissedRequiredProperty')]

@@ -46,10 +46,10 @@ $configGuess = static function () use ($absolutePathMaker): string {
         }
     }
 
-    throw new \DomainException('Cannot detect default config file');
+    throw new DomainException('Cannot detect default config file');
 };
 
-$options = (static function () use ($absolutePathMaker, $configGuess): array {
+$options = (static function () use ($configGuess): array {
     $values = [];
     $options = getopt('c:', ['config']);
     $defaults = [

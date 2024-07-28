@@ -102,25 +102,25 @@ final class ExtrasReaderTest extends TestCase
                         :
                          {
                             level_3
-                            : 
+                            :
                             [
                                 v1
                                 ,
                                 v2
                             ]
                             ,
-                            level_3p2 
-                            : 
+                            level_3p2
+                            :
                             v3,
                         }
                         ,
-                            level_2p2 
-                            : 
+                            level_2p2
+                            :
                             v4
                     }
                     ,
-                        level_1p2 
-                        : 
+                        level_1p2
+                        :
                         v5
                 }
             }
