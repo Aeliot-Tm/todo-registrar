@@ -34,7 +34,6 @@
     "require-dev": {
         "dg/bypass-finals": "^1.7",
         "friendsofphp/php-cs-fixer": "^3.60",
-        "phpunit/phpunit": "^11.1",
         "roave/security-advisories": "dev-latest"
     },
     "scripts": {
@@ -46,7 +45,7 @@
         "cs-fix": "@cs-fixer-fix",
         "cs-fixer-check": "@cs-fixer-fix --dry-run",
         "cs-fixer-fix": "vendor/bin/php-cs-fixer fix -vv",
-        "phpunit": "vendor/bin/phpunit"
+        "phpunit": "./tools/phpunit"
     },
     "suggest": {
         "staabm/phpstan-todo-by": "For the monitoring of outdated comments when ticket closed and TODO-comment should be removed"
