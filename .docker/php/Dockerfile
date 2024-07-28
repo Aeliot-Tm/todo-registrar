@@ -8,6 +8,7 @@ ENV COMPOSER_NO_INTERACTION 1
 ENV COMPOSER_VERSION 2.7.6
 ENV DEBIAN_FRONTEND noninteractive
 ENV DOCKER_PHP_DEPS \
+    gnupg \
     libxml2-dev \
     libzip-dev \
     unzip
@@ -30,6 +31,15 @@ COPY .docker/php/conf.d/*.ini /usr/local/etc/php/conf.d/
 RUN set -xe; \
     curl -sS https://getcomposer.org/installer | php -- --filename=composer --install-dir=/usr/local/bin --version=${COMPOSER_VERSION} > /dev/null 2>&1 && \
     chmod +x /usr/local/bin/composer
+
+# Install PHIVE
+RUN set -xe; \
+    curl -sSL -o phive.phar https://phar.io/releases/phive.phar && \
+    curl -sSL -o phive.phar.asc https://phar.io/releases/phive.phar.asc && \
+    gpg --keyserver hkps://keys.openpgp.org --recv-keys 0x9D8A98B29B2D5D79 && \
+    gpg --verify phive.phar.asc phive.phar && \
+    chmod +x phive.phar && \
+    mv phive.phar /usr/local/bin/phive
 
 WORKDIR /app
 
