@@ -43,6 +43,26 @@ jobs:
       - name: Install dependencies
         uses: ramsey/composer-install@v3
 
+      - name: Cache tools installed with PHIVE
+        uses: actions/cache@v4
+        with:
+          path: "${{ runner.temp }}/.phive"
+          key: "php-${{ runner.php-version }}-phive-${{ hashFiles('.phive/phars.xml') }}"
+          restore-keys: "php-${{ runner.php-version }}-phive-"
+
+      - name: Install PHIVE
+        uses: szepeviktor/phive@v1
+        with:
+          home: "${{ runner.temp }}/.phive"
+          binPath: "${{ github.workspace }}/tools/phive"
+
+      - name: Install PHP tools with PHIVE
+        uses: szepeviktor/phive-install@v1
+        with:
+          home: "${{ runner.temp }}/.phive"
+          binPath: "${{ github.workspace }}/tools/phive"
+          trustGpgKeys: "4AA394086372C20A,E82B2FB314E9906E"
+
       - name: 'Run all PHPUnit tests'
         run: composer run cs-fixer-check
 
@@ -86,7 +106,7 @@ jobs:
         with:
           home: "${{ runner.temp }}/.phive"
           binPath: "${{ github.workspace }}/tools/phive"
-          trustGpgKeys: "4AA394086372C20A"
+          trustGpgKeys: "4AA394086372C20A,E82B2FB314E9906E"
 
       - name: 'Run all PHPUnit tests'
         run: composer run phpunit
