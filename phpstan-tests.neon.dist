@@ -1,0 +1,17 @@
+includes:
+	- phpstan-tests-baseline.neon
+
+parameters:
+	level: 7
+	reportUnmatchedIgnoredErrors: false
+	bootstrapFiles:
+		- %rootDir%/../tests/bootstrap-phpstan-tests.php
+
+	parallel:
+		processTimeout: 300.0
+
+	paths:
+		- tests/
+		- .php-cs-fixer.dist.php
+		- .php-cs-fixer-finder.php
+		- .todo-registrar.dist.php
