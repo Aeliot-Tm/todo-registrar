@@ -44,6 +44,7 @@
         "cs-fix": "@cs-fixer-fix",
         "cs-fixer-check": "@cs-fixer-fix --dry-run",
         "cs-fixer-fix": "tools/php-cs-fixer.phar fix -vv",
+        "phive-install": "phive install --trust-gpg-keys $(cat .phive/trust-gpg-keys.txt)",
         "phpunit": "tools/phpunit.phar"
     },
     "suggest": {
