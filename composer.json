@@ -38,6 +38,7 @@
     "scripts": {
         "check-all": [
             "@cs-fixer-check",
+            "@phpstan",
             "@phpunit"
         ],
         "cs-check": "@cs-fixer-check",
@@ -45,6 +46,16 @@
         "cs-fixer-check": "@cs-fixer-fix --dry-run",
         "cs-fixer-fix": "tools/php-cs-fixer.phar fix -vv",
         "phive-install": "phive install --trust-gpg-keys $(cat .phive/trust-gpg-keys.txt)",
+        "phpstan": [
+            "@phpstan-clear",
+            "@phpstan-analyse"
+        ],
+        "phpstan-analyse": "tools/phpstan.phar analyse",
+        "phpstan-baseline": [
+            "@phpstan-clear",
+            "@phpstan-analyse --generate-baseline phpstan-baseline.neon --allow-empty-baseline"
+        ],
+        "phpstan-clear": "tools/phpstan.phar clear-result-cache",
         "phpunit": "tools/phpunit.phar"
     },
     "suggest": {

@@ -1,0 +1,66 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Property Aeliot\\\\TodoRegistrar\\\\Dto\\\\InlineConfig\\\\IndexedCollection\\:\\:\\$data type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Dto/InlineConfig/IndexedCollection.php
+
+		-
+			message: "#^Property Aeliot\\\\TodoRegistrar\\\\Dto\\\\InlineConfig\\\\NamedCollection\\:\\:\\$data type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Dto/InlineConfig/NamedCollection.php
+
+		-
+			message: "#^Interface Aeliot\\\\TodoRegistrar\\\\InlineConfigInterface extends generic interface ArrayAccess but does not specify its types\\: TKey, TValue$#"
+			count: 1
+			path: src/InlineConfigInterface.php
+
+		-
+			message: "#^Cannot access offset int\\<0, max\\> on array\\<int, string\\>\\|false\\.$#"
+			count: 1
+			path: src/Service/Comment/Extractor.php
+
+		-
+			message: "#^Cannot assign offset int\\<0, max\\> to array\\<int, string\\>\\|false\\.$#"
+			count: 1
+			path: src/Service/Comment/Extractor.php
+
+		-
+			message: "#^Parameter \\#1 \\$array of function array_values expects array, array\\<int, string\\>\\|false given\\.$#"
+			count: 1
+			path: src/Service/Comment/Extractor.php
+
+		-
+			message: "#^Parameter \\#1 \\$value of function count expects array\\|Countable, array\\<int, string\\>\\|false given\\.$#"
+			count: 1
+			path: src/Service/Comment/Extractor.php
+
+		-
+			message: "#^Parameter \\#2 \\$array of function array_key_exists expects array, array\\<int, string\\>\\|false given\\.$#"
+			count: 1
+			path: src/Service/Comment/Extractor.php
+
+		-
+			message: "#^Parameter \\#1 \\$code of static method Symfony\\\\Polyfill\\\\Php80\\\\PhpToken\\:\\:tokenize\\(\\) expects string, string\\|false given\\.$#"
+			count: 1
+			path: src/Service/File/Tokenizer.php
+
+		-
+			message: "#^Instanceof between array\\<int, JiraRestApi\\\\IssueLink\\\\IssueLinkType\\> and IteratorAggregate will always evaluate to false\\.$#"
+			count: 1
+			path: src/Service/Registrar/JIRA/IssueLinkTypeProvider.php
+
+		-
+			message: "#^Instanceof between array\\<int, JiraRestApi\\\\IssueLink\\\\IssueLinkType\\> and Traversable will always evaluate to false\\.$#"
+			count: 1
+			path: src/Service/Registrar/JIRA/IssueLinkTypeProvider.php
+
+		-
+			message: "#^Method Aeliot\\\\TodoRegistrar\\\\Service\\\\Registrar\\\\JIRA\\\\LinkedIssueNormalizer\\:\\:normalizeLinkedIssues\\(\\) should return array\\<string, array\\<string\\>\\> but returns array\\<string, array\\<int, array\\<string\\>\\|string\\>\\>\\.$#"
+			count: 1
+			path: src/Service/Registrar/JIRA/LinkedIssueNormalizer.php
+
+		-
+			message: "#^Parameter \\#1 \\$array of function array_is_list expects array, array\\<array\\<string\\>\\|string\\>\\|string given\\.$#"
+			count: 1
+			path: src/Service/Registrar/JIRA/LinkedIssueNormalizer.php
