@@ -63,7 +63,7 @@ jobs:
           binPath: "${{ github.workspace }}/tools/phive"
           trustGpgKeys: '$(cat ./.phive/trust-gpg-keys.txt)'
 
-      - name: 'Run all PHPUnit tests'
+      - name: 'Run PHP CS Fixer: check'
         run: composer run cs-fixer-check
 
   phpstan:
