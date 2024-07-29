@@ -61,7 +61,7 @@ jobs:
         with:
           home: "${{ runner.temp }}/.phive"
           binPath: "${{ github.workspace }}/tools/phive"
-          trustGpgKeys: "4AA394086372C20A,E82B2FB314E9906E"
+          trustGpgKeys: '$(cat ./.phive/trust-gpg-keys.txt)'
 
       - name: 'Run all PHPUnit tests'
         run: composer run cs-fixer-check
@@ -106,7 +106,7 @@ jobs:
         with:
           home: "${{ runner.temp }}/.phive"
           binPath: "${{ github.workspace }}/tools/phive"
-          trustGpgKeys: "4AA394086372C20A,E82B2FB314E9906E"
+          trustGpgKeys: '$(cat ./.phive/trust-gpg-keys.txt)'
 
       - name: 'Run all PHPUnit tests'
         run: composer run phpunit
