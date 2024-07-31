@@ -126,6 +126,16 @@ final class ExtrasReaderTest extends TestCase
             }
             COMMENT,
         ];
+
+        yield 'with trailing dot' => [
+            ['some_key' => 'TD-123'],
+            <<<COMMENT
+            /**
+              * TODO: some comment 
+              *       with inline config {EXTRAS: {some_key: TD-123}}.
+              */
+            COMMENT,
+        ];
     }
 
     #[DataProvider('getDataForTestPositiveFlow')]
