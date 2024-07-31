@@ -23,7 +23,10 @@ final class ExtrasReader implements InlineConfigReaderInterface
             return [];
         }
 
-        $data = $this->arrayBuilder->build(new JsonLikeLexer($input, (int) $matches[0][1]));
+        $firstPosition = (int) $matches[0][1];
+        $lastPosition = strrpos($input, '}');
+        $inlineConfigString = substr($input, $firstPosition, $lastPosition - $firstPosition + 1);
+        $data = $this->arrayBuilder->build(new JsonLikeLexer($inlineConfigString, 0));
         if (count($data) !== 1) {
             throw new InvalidInlineConfigFormatException('EXTRAS must contain one and only one element');
         }
