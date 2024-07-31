@@ -29,6 +29,7 @@ final class LinkedIssueNormalizer
 
         $result = [];
 
+        /** @var array<string,array<string>> $linkedIssues */
         foreach ($linkedIssues as $issueLinkTypeAlias => $issueKeys) {
             if (!array_is_list($issueKeys)) {
                 throw new InvalidInlineConfigFormatException('List of liked issues must be indexed array of strings');

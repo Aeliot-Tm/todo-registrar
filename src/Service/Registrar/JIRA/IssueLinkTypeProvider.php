@@ -35,7 +35,7 @@ final class IssueLinkTypeProvider
     private function getSupportedLinkTypes(): array
     {
         if (null === $this->supportedLinkTypes) {
-            /** @var \ArrayObject<int,IssueLinkType>|IssueLinkType[] $issueLinkTypes */
+            /** @var \ArrayObject<int,IssueLinkType>|iterable<IssueLinkType>|IssueLinkType[] $issueLinkTypes */
             $issueLinkTypes = $this->serviceFactory->createIssueLinkService()->getIssueLinkTypes();
             if ($issueLinkTypes instanceof \ArrayObject) {
                 $issueLinkTypes = $issueLinkTypes->getArrayCopy();

@@ -9,7 +9,7 @@ use Aeliot\TodoRegistrar\Service\InlineConfig\CollectionInterface;
 final class IndexedCollection implements CollectionInterface
 {
     /**
-     * @return array<array-key,mixed>
+     * @var array<int,mixed>
      */
     private array $data = [];
 

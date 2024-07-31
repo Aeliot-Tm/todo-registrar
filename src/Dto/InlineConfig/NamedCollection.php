@@ -10,7 +10,7 @@ use Aeliot\TodoRegistrar\Service\InlineConfig\CollectionInterface;
 final class NamedCollection implements CollectionInterface
 {
     /**
-     * @return array<array-key,mixed>
+     * @var array<string,mixed>
      */
     private array $data = [];
 
