@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service;
 
+use Aeliot\TodoRegistrar\Exception\CommentRegistrationException;
 use Aeliot\TodoRegistrar\Service\Comment\Detector as CommentDetector;
 use Aeliot\TodoRegistrar\Service\Comment\Extractor as CommentExtractor;
 use Aeliot\TodoRegistrar\Service\Registrar\RegistrarInterface;
@@ -47,7 +48,11 @@ class CommentRegistrar
                 if ($this->registrar->isRegistered($todo)) {
                     continue;
                 }
-                $key = $this->registrar->register($todo);
+                try {
+                    $key = $this->registrar->register($todo);
+                } catch (\Throwable $exception) {
+                    throw new CommentRegistrationException($commentPart, $token, $exception);
+                }
                 $commentPart->injectKey($key);
                 $hasNewTodo = true;
             }
