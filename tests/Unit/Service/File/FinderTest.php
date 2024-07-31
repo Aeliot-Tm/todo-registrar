@@ -24,7 +24,7 @@ final class FinderTest extends TestCase
             __DIR__ . '/../../../fixtures/multi_line_doc_block.php',
             __DIR__ . '/../../../fixtures/single_line.php',
         ];
-        $actualPathnames = array_map(static fn(\SplFileInfo $file) => $file->getPathname(), iterator_to_array($finder));
+        $actualPathnames = array_map(static fn (\SplFileInfo $file) => $file->getPathname(), iterator_to_array($finder));
         self::assertSame($expectedPathnames, array_values($actualPathnames));
     }
 }

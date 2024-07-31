@@ -48,6 +48,6 @@ class Application
             $message .= "Stack trace:\n {$exception->getTraceAsString()} \n";
         }
 
-        fwrite(STDERR, $message);
+        fwrite(\STDERR, $message);
     }
 }

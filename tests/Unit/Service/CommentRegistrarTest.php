@@ -124,7 +124,8 @@ final class CommentRegistrarTest extends TestCase
     private function getTokens(): array
     {
         $json = file_get_contents(__DIR__ . '/../../fixtures/tokens_of_single_line_php.json');
-        $values = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
+        $values = json_decode($json, true, 512, \JSON_THROW_ON_ERROR);
+
         return array_map(static fn (array $value): \PhpToken => new \PhpToken(
             $value['id'],
             $value['text'],

@@ -22,13 +22,8 @@ class Detector
         return $tokens;
     }
 
-    /**
-     * @param \PhpToken $token
-     *
-     * @return bool
-     */
     private function isComment(\PhpToken $token): bool
     {
-        return \in_array($token->id, [T_COMMENT, T_DOC_COMMENT], true);
+        return \in_array($token->id, [\T_COMMENT, \T_DOC_COMMENT], true);
     }
 }

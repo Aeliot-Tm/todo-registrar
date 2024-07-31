@@ -35,7 +35,7 @@ final class IssueLinkTypeProvider
     private function getSupportedLinkTypes(): array
     {
         if (null === $this->supportedLinkTypes) {
-            /** @var \ArrayObject<int,IssueLinkType>|IssueLinkType[] $issueLinkTypes */
+            /** @var \ArrayObject<int,IssueLinkType>|iterable<IssueLinkType>|IssueLinkType[] $issueLinkTypes */
             $issueLinkTypes = $this->serviceFactory->createIssueLinkService()->getIssueLinkTypes();
             if ($issueLinkTypes instanceof \ArrayObject) {
                 $issueLinkTypes = $issueLinkTypes->getArrayCopy();
@@ -54,8 +54,8 @@ final class IssueLinkTypeProvider
     private function isMatch(IssueLinkType $lintType, string $alias): bool
     {
         $quotedAlis = preg_quote($alias, '/');
-        $regex1 = sprintf('/^%s/i', str_replace('_', '[^0-9a-z]+', $quotedAlis));
-        $regex2 = sprintf('/^%s/i', str_replace('_', '[^0-9a-z]+', str_replace('_to_', ' -> ', $quotedAlis)));
+        $regex1 = \sprintf('/^%s/i', str_replace('_', '[^0-9a-z]+', $quotedAlis));
+        $regex2 = \sprintf('/^%s/i', str_replace('_', '[^0-9a-z]+', str_replace('_to_', ' -> ', $quotedAlis)));
 
         return $alias === $lintType->name
             || $alias === $lintType->inward

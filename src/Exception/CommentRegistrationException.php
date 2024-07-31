@@ -13,7 +13,7 @@ final class CommentRegistrationException extends \RuntimeException
         private \PhpToken $token,
         \Throwable $previous,
     ) {
-        parent::__construct(sprintf('Cannot register %s-comment', $this->commentPart->getTag()), 0, $previous);
+        parent::__construct(\sprintf('Cannot register %s-comment', $this->commentPart->getTag()), 0, $previous);
     }
 
     public function getCommentPart(): CommentPart

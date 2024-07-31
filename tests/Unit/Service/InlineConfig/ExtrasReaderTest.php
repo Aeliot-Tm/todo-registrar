@@ -102,25 +102,25 @@ final class ExtrasReaderTest extends TestCase
                         :
                          {
                             level_3
-                            : 
+                            :
                             [
                                 v1
                                 ,
                                 v2
                             ]
                             ,
-                            level_3p2 
-                            : 
+                            level_3p2
+                            :
                             v3,
                         }
                         ,
-                            level_2p2 
-                            : 
+                            level_2p2
+                            :
                             v4
                     }
                     ,
-                        level_1p2 
-                        : 
+                        level_1p2
+                        :
                         v5
                 }
             }
@@ -131,7 +131,7 @@ final class ExtrasReaderTest extends TestCase
             ['some_key' => 'TD-123'],
             <<<COMMENT
             /**
-              * TODO: some comment 
+              * TODO: some comment
               *       with inline config {EXTRAS: {some_key: TD-123}}.
               */
             COMMENT,

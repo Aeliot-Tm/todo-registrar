@@ -21,8 +21,8 @@ jobs:
       - name: Validate composer.json and composer.lock
         run: composer validate --strict
 
-  phpunit:
-    name: 'Tests: Unit'
+  php-cs-check:
+    name: 'PHP CS Fixer: check'
     runs-on: ubuntu-latest
 
     steps:
@@ -37,12 +37,121 @@ jobs:
         uses: actions/cache@v4
         with:
           path: vendor
-          key: "${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}"
-          restore-keys: |
-            ${{ runner.os }}-php-
+          key: "os-${{ runner.os }}-php-${{ runner.php-version }}-composer-${{ hashFiles('**/composer.lock') }}"
+          restore-keys: "os-${{ runner.os }}-php-${{ runner.php-version }}-composer-"
 
-      - name: Install dependencies
+      - name: Install packages by Composer
         uses: ramsey/composer-install@v3
+
+      - name: Cache tools installed with PHIVE
+        uses: actions/cache@v4
+        with:
+          path: "${{ runner.temp }}/.phive"
+          key: "os-${{ runner.os }}-php-${{ runner.php-version }}-phive-${{ hashFiles('**/.phive/phars.xml', '**/.phive/trust-gpg-keys.txt') }}"
+          restore-keys: "os-${{ runner.os }}-php-${{ runner.php-version }}-phive-"
+
+      - name: Install PHIVE
+        uses: szepeviktor/phive@v1
+        with:
+          home: "${{ runner.temp }}/.phive"
+          binPath: "${{ github.workspace }}/tools/phive"
+
+      - name: Install PHP tools by PHIVE
+        uses: szepeviktor/phive-install@v1
+        with:
+          home: "${{ runner.temp }}/.phive"
+          binPath: "${{ github.workspace }}/tools/phive"
+          trustGpgKeys: '$(cat ./.phive/trust-gpg-keys.txt)'
+
+      - name: 'Run PHP CS Fixer: check'
+        run: composer run cs-fixer-check
+
+  phpstan:
+    name: 'PHPStan: analyse'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+
+      - uses: actions/checkout@v4
+
+      - name: Cache Composer packages
+        id: composer-cache
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: "os-${{ runner.os }}-php-${{ runner.php-version }}-composer-${{ hashFiles('**/composer.lock') }}"
+          restore-keys: "os-${{ runner.os }}-php-${{ runner.php-version }}-composer-"
+
+      - name: Install packages by Composer
+        uses: ramsey/composer-install@v3
+
+      - name: Cache tools installed with PHIVE
+        uses: actions/cache@v4
+        with:
+          path: "${{ runner.temp }}/.phive"
+          key: "os-${{ runner.os }}-php-${{ runner.php-version }}-phive-${{ hashFiles('**/.phive/phars.xml', '**/.phive/trust-gpg-keys.txt') }}"
+          restore-keys: "os-${{ runner.os }}-php-${{ runner.php-version }}-phive-"
+
+      - name: Install PHIVE
+        uses: szepeviktor/phive@v1
+        with:
+          home: "${{ runner.temp }}/.phive"
+          binPath: "${{ github.workspace }}/tools/phive"
+
+      - name: Install PHP tools by PHIVE
+        uses: szepeviktor/phive-install@v1
+        with:
+          home: "${{ runner.temp }}/.phive"
+          binPath: "${{ github.workspace }}/tools/phive"
+          trustGpgKeys: '$(cat ./.phive/trust-gpg-keys.txt)'
+
+      - name: 'Run PHPStan analyse'
+        run: composer run phpstan-analyse
+
+  phpunit:
+    name: 'Tests: Unit'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+
+      - uses: actions/checkout@v4
+
+      - name: Cache Installed Dependencies
+        id: composer-cache
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: "os-${{ runner.os }}-php-${{ runner.php-version }}-composer-${{ hashFiles('**/composer.lock') }}"
+          restore-keys: "os-${{ runner.os }}-php-${{ runner.php-version }}-composer-"
+
+      - name: Install packages by Composer
+        uses: ramsey/composer-install@v3
+
+      - name: Cache tools installed with PHIVE
+        uses: actions/cache@v4
+        with:
+          path: "${{ runner.temp }}/.phive"
+          key: "os-${{ runner.os }}-php-${{ runner.php-version }}-phive-${{ hashFiles('**/.phive/phars.xml', '**/.phive/trust-gpg-keys.txt') }}"
+          restore-keys: "os-${{ runner.os }}-php-${{ runner.php-version }}-phive-"
+
+      - name: Install PHIVE
+        uses: szepeviktor/phive@v1
+        with:
+          home: "${{ runner.temp }}/.phive"
+          binPath: "${{ github.workspace }}/tools/phive"
+
+      - name: Install PHP tools by PHIVE
+        uses: szepeviktor/phive-install@v1
+        with:
+          home: "${{ runner.temp }}/.phive"
+          binPath: "${{ github.workspace }}/tools/phive"
+          trustGpgKeys: '$(cat ./.phive/trust-gpg-keys.txt)'
 
       - name: 'Run all PHPUnit tests'
         run: composer run phpunit

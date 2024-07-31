@@ -29,6 +29,7 @@ final class LinkedIssueNormalizer
 
         $result = [];
 
+        /** @var array<string,array<string>> $linkedIssues */
         foreach ($linkedIssues as $issueLinkTypeAlias => $issueKeys) {
             if (!array_is_list($issueKeys)) {
                 throw new InvalidInlineConfigFormatException('List of liked issues must be indexed array of strings');
@@ -45,7 +46,7 @@ final class LinkedIssueNormalizer
         try {
             $issueLinkType = $this->issueLinkTypeProvider->getLinkType($alias);
         } catch (JIRANotSupportedLinkTypeException) {
-            throw new InvalidInlineConfigFormatException(sprintf('Not supported issue link type "%s"', $alias));
+            throw new InvalidInlineConfigFormatException(\sprintf('Not supported issue link type "%s"', $alias));
         }
 
         return $issueLinkType;

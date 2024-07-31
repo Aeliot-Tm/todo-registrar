@@ -10,13 +10,13 @@ use Aeliot\TodoRegistrar\Service\InlineConfig\CollectionInterface;
 final class NamedCollection implements CollectionInterface
 {
     /**
-     * @return array<array-key,mixed>
+     * @var array<string,mixed>
      */
     private array $data = [];
 
     public function add(string $key, mixed $value): void
     {
-        if (array_key_exists($key, $this->data)) {
+        if (\array_key_exists($key, $this->data)) {
             throw new CollectionDuplicatedKeyException($key);
         }
 
