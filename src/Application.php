@@ -44,6 +44,10 @@ class Application
         }
         $message .= "\n";
 
+        if (!$previousException) {
+            $message .= "Stack trace:\n {$exception->getTraceAsString()} \n";
+        }
+
         fwrite(STDERR, $message);
     }
 }
