@@ -33,6 +33,13 @@ class TodoFactory
 
     private function getInlineConfig(string $description): InlineConfigInterface
     {
-        return $this->inlineConfigFactory->getInlineConfig($this->inlineConfigReader->getInlineConfig($description));
+        try {
+            $config = $this->inlineConfigReader->getInlineConfig($description);
+        } catch (\Throwable $exception) {
+            fwrite(STDERR, "[ERROR] Cannot parse inline config: {$exception->getMessage()} for $description \n");
+            $config = [];
+        }
+
+        return $this->inlineConfigFactory->getInlineConfig($config);
     }
 }
