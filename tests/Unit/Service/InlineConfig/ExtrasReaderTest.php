@@ -131,7 +131,7 @@ final class ExtrasReaderTest extends TestCase
             ['some_key' => 'TD-123'],
             <<<COMMENT
             /**
-              * TODO: some comment 
+              * TODO: some comment
               *       with inline config {EXTRAS: {some_key: TD-123}}.
               */
             COMMENT,

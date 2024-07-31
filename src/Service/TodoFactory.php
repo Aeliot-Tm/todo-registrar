@@ -36,7 +36,7 @@ class TodoFactory
         try {
             $config = $this->inlineConfigReader->getInlineConfig($description);
         } catch (\Throwable $exception) {
-            fwrite(STDERR, "[ERROR] {$exception->getMessage()}. Cannot parse inline config for: $description \n");
+            fwrite(\STDERR, "[ERROR] {$exception->getMessage()}. Cannot parse inline config for: $description \n");
             $config = [];
         }
 
