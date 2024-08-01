@@ -5,6 +5,13 @@
     "license": "MIT",
     "minimum-stability": "dev",
     "prefer-stable": true,
+    "keywords": [
+        "static analysis",
+        "TODO registrar",
+        "create issue",
+        "comments",
+        "JIRA API"
+    ],
     "autoload": {
         "psr-4": {
             "Aeliot\\TodoRegistrar\\": "src/"
