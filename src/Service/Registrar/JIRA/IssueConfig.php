@@ -101,7 +101,7 @@ class IssueConfig
      *
      * @return array<string,mixed>
      */
-    public function normalizeConfig(array $config): array
+    private function normalizeConfig(array $config): array
     {
         $config += [
             'addTagToLabels' => false,
