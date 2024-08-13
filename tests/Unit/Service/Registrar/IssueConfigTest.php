@@ -62,6 +62,18 @@ final class IssueConfigTest extends TestCase
         new IssueConfig($values);
     }
 
+    public function testThrowExceptionWithNotSupportedSymbols(): void
+    {
+        $this->expectException(InvalidConfigException::class);
+        $this->expectExceptionMessageMatches('/Not supported config for issues detected:/');
+        $values = [
+            'projectKey' => 'any string',
+            'type' => 'any string',
+            'not_supported_key' => 'any string',
+        ];
+        new IssueConfig($values);
+    }
+
     #[DataProvider('getDataForTestThrowExceptionWhenMissedRequiredProperty')]
     public function testThrowExceptionWhenMissedRequiredProperty(array $values): void
     {

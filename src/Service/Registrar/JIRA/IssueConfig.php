@@ -42,6 +42,12 @@ class IssueConfig
             }
 
             $this->$key = $config[$key];
+            unset($config[$key]);
+        }
+
+        if ($config) {
+            $invalidKeys = implode(', ', array_keys($config));
+            throw new InvalidConfigException("Not supported config for issues detected: $invalidKeys");
         }
     }
 
