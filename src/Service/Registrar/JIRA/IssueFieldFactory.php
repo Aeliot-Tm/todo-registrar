@@ -19,7 +19,7 @@ final class IssueFieldFactory
         $issueField = new IssueField();
         $issueField
             ->setProjectKey($this->issueConfig->getProjectKey())
-            ->setSummary($todo->getSummary())
+            ->setSummary($this->issueConfig->getSummaryPrefix() . $todo->getSummary())
             ->setDescription($todo->getDescription());
 
         $this->setIssueType($issueField, $todo);
