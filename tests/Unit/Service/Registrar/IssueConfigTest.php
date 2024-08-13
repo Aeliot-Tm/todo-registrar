@@ -76,6 +76,7 @@ final class IssueConfigTest extends TestCase
             'components' => ['Component-1', 'Component-2'],
             'labels' => ['Label-1', 'Label-2'],
             'priority' => 'Low',
+            'summaryPrefix' => 'a-summary-prefix. ',
             'tagPrefix' => 'tag-',
             'type' => 'Bug',
             // extra key added in factory
@@ -86,6 +87,7 @@ final class IssueConfigTest extends TestCase
         self::assertTrue($config->isAddTagToLabels());
         self::assertSame('Bug', $config->getIssueType());
         self::assertSame('Low', $config->getPriority());
+        self::assertSame('a-summary-prefix. ', $config->getSummaryPrefix());
         self::assertSame('tag-', $config->getTagPrefix());
         self::assertSame(['Component-1', 'Component-2'], $config->getComponents());
         self::assertSame(['Label-1', 'Label-2'], $config->getLabels());
