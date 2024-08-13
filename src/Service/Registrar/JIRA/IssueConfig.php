@@ -22,6 +22,7 @@ class IssueConfig
     private ?string $priority;
     private string $projectKey;
     private string $tagPrefix;
+    private ?string $summaryPrefix;
 
     /**
      * @param array<string,mixed> $config
@@ -85,6 +86,11 @@ class IssueConfig
         return $this->projectKey;
     }
 
+    public function getSummaryPrefix(): string
+    {
+        return $this->summaryPrefix;
+    }
+
     public function getTagPrefix(): string
     {
         return $this->tagPrefix;
@@ -95,7 +101,7 @@ class IssueConfig
      *
      * @return array<string,mixed>
      */
-    public function normalizeConfig(array $config): array
+    private function normalizeConfig(array $config): array
     {
         $config += [
             'addTagToLabels' => false,
@@ -103,6 +109,7 @@ class IssueConfig
             'components' => [],
             'labels' => [],
             'priority' => null,
+            'summaryPrefix' => '',
             'tagPrefix' => '',
         ];
 
