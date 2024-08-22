@@ -51,7 +51,7 @@ $configGuess = static function () use ($absolutePathMaker): string {
 
 $options = (static function () use ($absolutePathMaker, $configGuess): array {
     $values = [];
-    $options = getopt('c:', ['config']);
+    $options = getopt('c:', ['config:']);
     $defaults = [
         'config' => ['c', null],
     ];
