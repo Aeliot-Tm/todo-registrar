@@ -1,0 +1,96 @@
+name: Release
+
+on:
+  release:
+    types: [ created ]
+
+# See https://stackoverflow.com/a/72408109
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-phar:
+    runs-on: ubuntu-latest
+    name: Build PHAR
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+          ini-values: phar.readonly=0
+          tools: composer
+          coverage: none
+
+      - name: Cache Composer packages
+        id: composer-cache
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: "os-${{ runner.os }}-php-${{ runner.php-version }}-composer-${{ hashFiles('**/composer.lock') }}"
+          restore-keys: "os-${{ runner.os }}-php-${{ runner.php-version }}-composer-"
+
+      - name: Install Composer dependencies
+        uses: ramsey/composer-install@v3
+        with:
+          composer-options: '--no-dev'
+
+      - name: Cache tools installed with PHIVE
+        uses: actions/cache@v4
+        with:
+          path: "${{ runner.temp }}/.phive"
+          key: "os-${{ runner.os }}-php-${{ runner.php-version }}-phive-${{ hashFiles('**/.phive/phars.xml', '**/.phive/trust-gpg-keys.txt') }}"
+          restore-keys: "os-${{ runner.os }}-php-${{ runner.php-version }}-phive-"
+
+      - name: Install PHIVE
+        uses: szepeviktor/phive@v1
+        with:
+          home: "${{ runner.temp }}/.phive"
+          binPath: "${{ github.workspace }}/tools/phive"
+
+      - name: Install PHP tools by PHIVE
+        uses: szepeviktor/phive-install@v1
+        with:
+          home: "${{ runner.temp }}/.phive"
+          binPath: "${{ github.workspace }}/tools/phive"
+          trustGpgKeys: '$(cat ./.phive/trust-gpg-keys.txt)'
+
+      - name: Build PHAR
+        run: composer build
+
+      # Smoke test.
+      # It is recommended ot have some sorts of tests for your PHAR.
+      #- name: Ensure the PHAR works
+      #  run: todo-registrar.phar --version
+
+      # The following section is done only for releases
+      - name: Import GPG key
+        if: github.event_name == 'release'
+        uses: crazy-max/ghaction-import-gpg@v6
+        with:
+          gpg_private_key: ${{ secrets.GPG_KEY_47DB2BEBFFE7CF39CD0E91FB1BAD6A09DE0F2DED }}
+          passphrase: "${{ secrets.GPG_KEY_47DB2BEBFFE7CF39CD0E91FB1BAD6A09DE0F2DED_PASSPHRASE }}"
+
+      - name: Sign the PHAR
+        if: github.event_name == 'release'
+        run: |
+          gpg --local-user 47DB2BEBFFE7CF39CD0E91FB1BAD6A09DE0F2DED \
+              --batch \
+              --yes \
+              --passphrase="${{ secrets.GPG_KEY_47DB2BEBFFE7CF39CD0E91FB1BAD6A09DE0F2DED_PASSPHRASE }}" \
+              --detach-sign \
+              --output todo-registrar.phar.asc \
+              todo-registrar.phar
+
+      - name: Upload PHAR to the release
+        uses: softprops/action-gh-release@v2
+        with:
+          token: ${{ secrets.GH_RELEASE_TOKEN }}
+          files: |
+            todo-registrar.phar
+            todo-registrar.phar.asc

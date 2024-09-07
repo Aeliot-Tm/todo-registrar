@@ -22,11 +22,58 @@ This script do it for you. It registers issues with all necessary params. Then i
 
 ## Installation
 
-1. Require package via Composer:
-   ```shell
-   composer require --dev aeliot/todo-registrar
-   ```
-2. Create [configuration file](docs/config.md). It expects ".todo-registrar.php" or ".todo-registrar.dist.php" at the root of the project.
+There are few ways of installation:
+1. [Phive](#phive)
+2. [Composer](#composer)
+3. [Downloading of PHAR directly](#downloading-of-phar-directly)
+
+#### Phive
+
+You can install this package with [Phive](https://phar.io/). It permits you to install package by one console command
+without extending dependencies in your composer-files.
+```shell
+phive install todo-registrar
+```
+
+Sometimes you may need to update database of package-aliases of PHIVE. See [issue #3](https://github.com/Aeliot-Tm/php-cs-fixer-baseline/issues/3)
+So, just call console command for it:
+```shell
+phive update-repository-list
+```
+
+To upgrade this package use the following command:
+```shell
+phive update todo-registrar
+```
+
+#### Composer
+
+You can install this package with [Composer](https://getcomposer.org/doc/03-cli.md#install-i):
+```shell
+composer require --dev aeliot/todo-registrar
+```
+
+#### Downloading of PHAR directly
+
+Download PHAR directly to root directory of the project or in another place as you wish.
+```shell
+# Do adjust the URL if you need a release other than the latest
+wget -O todo-registrar.phar "https://github.com/Aeliot-Tm/todo-registrar/releases/latest/download/todo-registrar.phar"
+wget -O todo-registrar.phar "https://github.com/Aeliot-Tm/todo-registrar/releases/latest/download/todo-registrar.phar.asc"
+
+# Check that the signature matches
+gpg --verify todo-registrar.phar.asc todo-registrar.phar
+
+# Check the issuer (the ID can also be found from the previous command)
+gpg --keyserver hkps://keys.openpgp.org --recv-keys 47DB2BEBFFE7CF39CD0E91FB1BAD6A09DE0F2DED
+
+rm todo-registrar.phar
+chmod +x todo-registrar.phar
+```
+
+## Configuration
+
+Create [configuration file](docs/config.md). It expects ".todo-registrar.php" or ".todo-registrar.dist.php" at the root of the project.
 
 ## Using
 
@@ -85,3 +132,6 @@ Currently, todo-registrar supports the following issue trackers:
 |-------------------------------------------------|---------------------------------------------------------------------------------------------|
 | [Jira](https://www.atlassian.com/software/jira) | Supported via API tokens. See [description of configuration](docs/registrar/jira/config.md) |
 
+## Dev Notes
+
+Signing of PHAR: https://box-project.github.io/box/phar-signing/

@@ -1,0 +1,31 @@
+{
+    "alias": "todo-registrar.phar",
+    "base-path": "/app/",
+    "directories": [
+        "src"
+    ],
+    "files": [
+        "composer.json",
+        "composer.lock",
+        "LICENSE",
+        "README.md",
+        "SECURITY.md"
+    ],
+    "finder": [
+        {
+            "name": "*.php",
+            "exclude": [
+                ".github",
+                "doc",
+                "test",
+                "test_old",
+                "tests",
+                "Tests",
+                "vendor-bin"
+            ],
+            "in": "vendor"
+        }
+    ],
+    "main": "bin/todo-registrar",
+    "output": "todo-registrar.phar"
+}
