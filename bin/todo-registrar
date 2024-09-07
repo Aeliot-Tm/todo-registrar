@@ -1,6 +1,8 @@
 #!/usr/bin/env php
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the TODO Registrar project.
  *
@@ -14,8 +16,15 @@ use Aeliot\TodoRegistrar\ApplicationFactory;
 use Aeliot\TodoRegistrar\Config;
 
 $autoloaderPath = (static function (): string {
+    if (Phar::running()) {
+        return __DIR__ . '/../vendor/autoload.php';
+    }
+
+    if (isset($GLOBALS['_composer_autoload_path'])) {
+        return $GLOBALS['_composer_autoload_path'];
+    }
+
     $paths = [
-        __DIR__ . '/vendor/autoload.php',
         __DIR__ . '/../vendor/autoload.php',
         __DIR__ . '/../../vendor/autoload.php',
         __DIR__ . '/../../../vendor/autoload.php',
@@ -33,14 +42,12 @@ $autoloaderPath = (static function (): string {
 
 require_once $autoloaderPath;
 
-$projectPath = dirname($autoloaderPath, 2);
-
-$absolutePathMaker = static function (string $path) use ($projectPath): string {
+$absolutePathMaker = static function (string $path): string {
     if (preg_match('#^(?:[[:alpha:]]:[/\\\\]|/)#', $path)) {
         return $path;
     }
 
-    return $projectPath . '/' . $path;
+    return getcwd() . '/' . $path;
 };
 
 $configGuess = static function () use ($absolutePathMaker): string {
