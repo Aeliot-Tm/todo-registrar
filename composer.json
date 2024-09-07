@@ -3,6 +3,12 @@
     "type": "application",
     "description": "Register TODOs from source code in issue tracker",
     "license": "MIT",
+    "authors": [
+        {
+            "name": "Anatoliy Melnikov",
+            "email": "5785276@gmail.com"
+        }
+    ],
     "minimum-stability": "dev",
     "prefer-stable": true,
     "keywords": [
