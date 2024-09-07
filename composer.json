@@ -14,8 +14,9 @@
     "keywords": [
         "static analysis",
         "TODO registrar",
+        "TODO comment",
         "create issue",
-        "comments",
+        "issue tracking",
         "JIRA API"
     ],
     "autoload": {
