@@ -71,10 +71,6 @@ rm todo-registrar.phar.asc
 chmod +x todo-registrar.phar
 ```
 
-## Configuration
-
-Create [configuration file](docs/config.md). It expects ".todo-registrar.php" or ".todo-registrar.dist.php" at the root of the project.
-
 ## Using
 
 1. Call script:
