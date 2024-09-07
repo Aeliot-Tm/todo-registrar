@@ -67,7 +67,7 @@ gpg --verify todo-registrar.phar.asc todo-registrar.phar
 # Check the issuer (the ID can also be found from the previous command)
 gpg --keyserver hkps://keys.openpgp.org --recv-keys 47DB2BEBFFE7CF39CD0E91FB1BAD6A09DE0F2DED
 
-rm todo-registrar.phar
+rm todo-registrar.phar.asc
 chmod +x todo-registrar.phar
 ```
 
