@@ -71,10 +71,6 @@ rm todo-registrar.phar.asc
 chmod +x todo-registrar.phar
 ```
 
-## Configuration
-
-Create [configuration file](docs/config.md). It expects ".todo-registrar.php" or ".todo-registrar.dist.php" at the root of the project.
-
 ## Using
 
 1. Call script:
@@ -84,6 +80,16 @@ Create [configuration file](docs/config.md). It expects ".todo-registrar.php" or
    You may pass option with path to config `--config=/custom/path/to/config`.
    Otherwise, it tries to use one of default paths to [config file](docs/config.md).
 2. Commit updated files. You may config your pipeline/job on CI which commits updates.
+
+## Integration on CI
+
+The main idea is monitoring of new TODOs on single branch of repository to avoid creation of duplicated issues and
+merge conflicts. The branch should be quite stable. At least, without development directly in it. And should be
+near development as close as possible for earlier catching of tech-debt. Soon of all, it is called `development`.
+
+So, you have to configure you integration depending on used git-server:
+
+1. [GitLab pipelines](docs/gitlab/gitlab.md)
 
 ## Configuration file
 
@@ -135,3 +141,7 @@ Currently, todo-registrar supports the following issue trackers:
 ## Dev Notes
 
 Signing of PHAR: https://box-project.github.io/box/phar-signing/
+
+## Articles
+
+RU: https://habr.com/ru/articles/832994/
