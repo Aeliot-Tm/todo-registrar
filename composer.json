@@ -62,7 +62,7 @@
         "cs-check": "@cs-fixer-check",
         "cs-fix": "@cs-fixer-fix",
         "cs-fixer-check": "@cs-fixer-fix --dry-run",
-        "cs-fixer-fix": "tools/php-cs-fixer.phar fix -vv",
+        "cs-fixer-fix": "tools/php-cs-fixer.phar fix -vv --config=scripts/php-cs-fixer/config.php",
         "phive-install": "phive install --trust-gpg-keys $(cat .phive/trust-gpg-keys.txt)",
         "phpstan": [
             "@phpstan-clear",

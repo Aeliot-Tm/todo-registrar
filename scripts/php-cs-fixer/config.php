@@ -25,10 +25,10 @@ $rules = [
 
 $config = (new PhpCsFixer\Config())
     ->setRiskyAllowed(true)
-    ->setCacheFile(__DIR__ . '/var/.php-cs-fixer.cache')
+    ->setCacheFile(dirname(__DIR__, 2) . '/var/.php-cs-fixer.cache')
     ->setRules($rules);
 
 /** @var PhpCsFixer\Finder $finder */
-$finder = require __DIR__ . '/.php-cs-fixer-finder.php';
+$finder = require __DIR__ . '/finder.php';
 
 return $config->setFinder($finder);
