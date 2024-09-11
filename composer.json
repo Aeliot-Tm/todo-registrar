@@ -68,12 +68,12 @@
             "@phpstan-clear",
             "@phpstan-analyse"
         ],
-        "phpstan-analyse": "tools/phpstan.phar analyse",
+        "phpstan-analyse": "tools/phpstan.phar analyse  -c scripts/phpstan/config.neon ",
         "phpstan-baseline": [
             "@phpstan-clear",
-            "@phpstan-analyse --generate-baseline phpstan-baseline.neon --allow-empty-baseline"
+            "@phpstan-analyse --generate-baseline scripts/phpstan/baseline.neon --allow-empty-baseline"
         ],
-        "phpstan-clear": "tools/phpstan.phar clear-result-cache",
+        "phpstan-clear": "tools/phpstan.phar clear-result-cache -c scripts/phpstan/config.neon",
         "phpunit": "tools/phpunit.phar -c scripts/phpunit/phpunit.xml"
     },
     "suggest": {
