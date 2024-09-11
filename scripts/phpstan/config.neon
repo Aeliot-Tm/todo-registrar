@@ -1,5 +1,5 @@
 includes:
-	- phpstan-baseline.neon
+	- ../../scripts/phpstan/baseline.neon
 
 parameters:
 	level: 7
@@ -9,5 +9,5 @@ parameters:
 		processTimeout: 300.0
 
 	paths:
-		- bin/
-		- src/
+		- ../../bin/
+		- ../../src/
