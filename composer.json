@@ -74,7 +74,7 @@
             "@phpstan-analyse --generate-baseline phpstan-baseline.neon --allow-empty-baseline"
         ],
         "phpstan-clear": "tools/phpstan.phar clear-result-cache",
-        "phpunit": "tools/phpunit.phar"
+        "phpunit": "tools/phpunit.phar -c scripts/phpunit/phpunit.xml"
     },
     "suggest": {
         "staabm/phpstan-todo-by": "For the monitoring of outdated comments when ticket closed and TODO-comment should be removed"
