@@ -75,7 +75,8 @@
         ],
         "phpstan-clear": "tools/phpstan.phar clear-result-cache -c scripts/phpstan/config.neon",
         "phpunit": "tools/phpunit.phar -c scripts/phpunit/phpunit.xml",
-        "require-check": "tools/composer-require-checker.phar check --config-file=scripts/composer-require-checker/config.json composer.json --output=text"
+        "require-check": "tools/composer-require-checker.phar check --config-file=scripts/composer-require-checker/config.json composer.json --output=text",
+        "unused": "XDEBUG_MODE=off tools/composer-unused.phar unused -c ./scripts/composer-unused/config.php"
     },
     "suggest": {
         "staabm/phpstan-todo-by": "For the monitoring of outdated comments when ticket closed and TODO-comment should be removed"
