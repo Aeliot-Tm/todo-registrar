@@ -13,6 +13,11 @@ jobs:
   build-phar:
     runs-on: ubuntu-latest
     name: Build PHAR
+
+    env:
+      TODO_REGISTRAR_PHAR: todo-registrar.phar
+      TODO_REGISTRAR_SIGN: todo-registrar.phar.asc
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -66,7 +71,7 @@ jobs:
       # Smoke test.
       # It is recommended ot have some sorts of tests for your PHAR.
       #- name: Ensure the PHAR works
-      #  run: todo-registrar.phar --version
+      #  run: ${{ env.TODO_REGISTRAR_PHAR }} --version
 
       # The following section is done only for releases
       - name: Import GPG key
@@ -84,13 +89,16 @@ jobs:
               --yes \
               --passphrase="${{ secrets.GPG_KEY_47DB2BEBFFE7CF39CD0E91FB1BAD6A09DE0F2DED_PASSPHRASE }}" \
               --detach-sign \
-              --output todo-registrar.phar.asc \
-              todo-registrar.phar
+              --output ${{ env.TODO_REGISTRAR_SIGN }} \
+              ${{ env.TODO_REGISTRAR_PHAR }}
+
+      - name: Verify signature
+        run: gpg --verify ${{ env.TODO_REGISTRAR_SIGN }} ${{ env.TODO_REGISTRAR_PHAR }}
 
       - name: Upload PHAR to the release
         uses: softprops/action-gh-release@v2
         with:
           token: ${{ secrets.GH_RELEASE_TOKEN }}
           files: |
-            todo-registrar.phar
-            todo-registrar.phar.asc
+            ${{ env.TODO_REGISTRAR_PHAR }}
+            ${{ env.TODO_REGISTRAR_SIGN }}
