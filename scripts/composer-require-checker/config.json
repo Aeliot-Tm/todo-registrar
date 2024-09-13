@@ -1,0 +1,5 @@
+{
+    "scan-files": [
+        "bin/todo-registrar"
+    ]
+}
