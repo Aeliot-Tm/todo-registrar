@@ -44,3 +44,14 @@ Call script to use:
 ```shell
 composer phpstan
 ```
+
+### Security vulnerabilities check
+
+Package [enlightn/security-checker](https://github.com/enlightn/security-checker) is responsible for detection of components
+with security vulnerabilities.
+
+
+Call script to use:
+```shell
+composer check-security
+```
