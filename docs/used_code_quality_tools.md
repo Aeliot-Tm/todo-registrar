@@ -6,7 +6,7 @@ The next Code Quality Tools are used by project
 ### Composer Requirements Checker
 
 Package [composer-require-checker](https://github.com/maglnet/ComposerRequireChecker) checks
-that all necessary requirements are added into [composer.json](../composer.json) file.
+that all necessary requirements are added obviously into [composer.json](../composer.json) file.
 
 Call script to use:
 ```shell
@@ -45,11 +45,19 @@ Call script to use:
 composer phpstan
 ```
 
+### PHPUnit
+
+Package [PHPUnit](https://phpunit.de/index.html) is testing framework. Used to write tests.
+
+Call script to run test:
+```shell
+composer phpunit
+```
+
 ### Security vulnerabilities check
 
 Package [enlightn/security-checker](https://github.com/enlightn/security-checker) is responsible for detection of components
 with security vulnerabilities.
-
 
 Call script to use:
 ```shell
