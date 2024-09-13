@@ -245,3 +245,28 @@ jobs:
 
       - name: 'Run all PHPUnit tests'
         run: composer run phpunit
+
+  security-vulnerabilities:
+    name: 'Security vulnerabilities check'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+
+      - uses: actions/checkout@v4
+
+      - name: Cache Installed Dependencies
+        id: composer-cache
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: "os-${{ runner.os }}-php-${{ runner.php-version }}-composer-${{ hashFiles('**/composer.lock') }}"
+          restore-keys: "os-${{ runner.os }}-php-${{ runner.php-version }}-composer-"
+
+      - name: Install packages by Composer
+        uses: ramsey/composer-install@v3
+
+      - name: 'Check security vulnerabilities'
+        run: composer check-security

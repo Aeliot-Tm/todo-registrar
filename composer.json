@@ -47,6 +47,7 @@
     },
     "require-dev": {
         "dg/bypass-finals": "^1.7",
+        "enlightn/security-checker": "^2.0",
         "roave/security-advisories": "dev-latest"
     },
     "scripts": {
@@ -63,6 +64,7 @@
         "cs-fix": "@cs-fixer-fix",
         "cs-fixer-check": "@cs-fixer-fix --dry-run",
         "cs-fixer-fix": "tools/php-cs-fixer.phar fix -vv --config=scripts/php-cs-fixer/config.php",
+        "check-security": "XDEBUG_MODE=off vendor/bin/security-checker security:check composer.lock",
         "phive-install": "phive install --trust-gpg-keys $(cat .phive/trust-gpg-keys.txt)",
         "phpstan": [
             "@phpstan-clear",
