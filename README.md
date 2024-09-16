@@ -59,7 +59,7 @@ Download PHAR directly to root directory of the project or in another place as y
 ```shell
 # Do adjust the URL if you need a release other than the latest
 wget -O todo-registrar.phar "https://github.com/Aeliot-Tm/todo-registrar/releases/latest/download/todo-registrar.phar"
-wget -O todo-registrar.phar "https://github.com/Aeliot-Tm/todo-registrar/releases/latest/download/todo-registrar.phar.asc"
+wget -O todo-registrar.phar.asc "https://github.com/Aeliot-Tm/todo-registrar/releases/latest/download/todo-registrar.phar.asc"
 
 # Check that the signature matches
 gpg --verify todo-registrar.phar.asc todo-registrar.phar
