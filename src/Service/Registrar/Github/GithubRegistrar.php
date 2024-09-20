@@ -9,6 +9,12 @@ use Aeliot\TodoRegistrar\Service\Registrar\RegistrarInterface;
 
 final class GithubRegistrar implements RegistrarInterface
 {
+    public function __construct(
+        private IssueFactory $issueFactory,
+        private ServiceFactory $serviceFactory,
+    ) {
+    }
+
     public function isRegistered(Todo $todo): bool
     {
         return (bool) preg_match('/^\\s*\\b#\\d+\\b/i', $todo->getSummary());
@@ -16,25 +22,23 @@ final class GithubRegistrar implements RegistrarInterface
 
     public function register(Todo $todo): string
     {
-        $client = new \Github\Client();
-        // TODO add authentication
+        $params = $this->issueFactory->create($todo);
 
-        $params = [
-            'title' => $todo->getSummary(),
-            'body' => $todo->getDescription(),
-        ];
-        if ($assignee = $todo->getAssignee()) {
-            $params['assignee'] = $assignee;
+        if ($params->getLabels()) {
+            $this->registerLabels($params->getLabels());
         }
-        if ($labels = $todo->getInlineConfig()['labels'] ?? null) {
-            $params['labels'] = $labels;
-            // TODO create labels when not exists
-            // https://github.com/KnpLabs/php-github-api/blob/master/doc/issue/labels.md
-        }
-        // TODO get username and repo from config
-        $response = $client->api('issue')->create('KnpLabs', 'php-github-api-example', $params);
-        // TODO: Implement register() method.
+
+        $response = $this->serviceFactory->createIssueService()->create($params);
 
         return (string) $response['number'];
+    }
+
+    /**
+     * @param string[] $labels
+     */
+    private function registerLabels(array $labels): void
+    {
+        // TODO create labels when not exists
+        // https://github.com/KnpLabs/php-github-api/blob/master/doc/issue/labels.md
     }
 }
