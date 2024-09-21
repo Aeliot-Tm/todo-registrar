@@ -4,19 +4,22 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\Github;
 
-use Github\Api\Issue;
+use Github\Api\Issue as IssueApi;
 
 final class IssueService
 {
     public function __construct(
-        private Issue $issueAPI,
+        private IssueApi $issueAPI,
         private string $owner,
         private string $repository,
     ) {
     }
 
-    public function create(array $params): array
+    /**
+     * @return array<string,mixed>
+     */
+    public function create(Issue $issue): array
     {
-        return $this->issueAPI->create($this->owner, $this->repository, $params);
+        return $this->issueAPI->create($this->owner, $this->repository, $issue->getData());
     }
 }

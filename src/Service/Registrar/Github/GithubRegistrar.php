@@ -22,13 +22,13 @@ final class GithubRegistrar implements RegistrarInterface
 
     public function register(Todo $todo): string
     {
-        $params = $this->issueFactory->create($todo);
+        $issue = $this->issueFactory->create($todo);
 
-        if ($params->getLabels()) {
-            $this->registerLabels($params->getLabels());
+        if ($issue->getLabels()) {
+            $this->registerLabels($issue->getLabels());
         }
 
-        $response = $this->serviceFactory->createIssueService()->create($params);
+        $response = $this->serviceFactory->createIssueService()->create($issue);
 
         return (string) $response['number'];
     }
