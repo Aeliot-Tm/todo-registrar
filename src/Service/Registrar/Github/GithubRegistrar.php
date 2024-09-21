@@ -30,7 +30,7 @@ final class GithubRegistrar implements RegistrarInterface
 
         $response = $this->serviceFactory->createIssueService()->create($issue);
 
-        return (string) $response['number'];
+        return '#' . $response['number'];
     }
 
     /**
@@ -38,7 +38,8 @@ final class GithubRegistrar implements RegistrarInterface
      */
     private function registerLabels(array $labels): void
     {
-        // TODO create labels when not exists
-        // https://github.com/KnpLabs/php-github-api/blob/master/doc/issue/labels.md
+        $labelsService = $this->serviceFactory->createLabelService();
+        $labels = array_diff($labels, $labelsService->getAll());
+        array_walk($labels, fn (string $label) => $labelsService->create($label));
     }
 }

@@ -19,9 +19,9 @@ return (new Config())
     ->setFinder((new Finder())->in(__DIR__))
     ->setRegistrar(RegistrarType::Github, [
         'issue' => [
-//            'addTagToLabels' => true,
-//            'labels' => ['Label-1', 'Label-2'],
-//            'tagPrefix' => 'tag-',
+            'addTagToLabels' => true,
+            'labels' => ['Label-1', 'Label-2'],
+            'tagPrefix' => 'tag-',
         ],
         'projectKey' => 'Todo',
         'service' => [
