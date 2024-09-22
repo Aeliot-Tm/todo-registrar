@@ -15,7 +15,7 @@ namespace Aeliot\TodoRegistrar\Service\Registrar\Github;
 
 use Aeliot\TodoRegistrar\Service\Registrar\AbstractIssueConfig;
 
-class IssueConfig extends AbstractIssueConfig
+final class IssueConfig extends AbstractIssueConfig
 {
     /**
      * @var string[]

@@ -36,9 +36,6 @@ final class ServiceFactory
         );
     }
 
-    /**
-     * @return Authentication
-     */
     private function createAuthenticationPlugin(): Authentication
     {
         return new Authentication(
@@ -48,9 +45,6 @@ final class ServiceFactory
         );
     }
 
-    /**
-     * @return GithubClient
-     */
     private function createGithubClient(): GithubClient
     {
         $httpClientBuilder = new Builder();
