@@ -11,15 +11,21 @@ JIRA. With all necessary labels, linked issues and so on.
 
 ## Motivation
 
-Time to time developers left notes in code to not forget to do something. And they forget to do it. One of the most reason is that it is difficult to manage them.
+Time to time developers left notes in code to not forget to do something. And they forget to do it.
+One of the main reason is that it is difficult to manage them.
 
-Why do developers left comment in code instead of registering of isdues? It is convenient. You don't need to deal with UI of Issue Tracker and to fill lots of field. And lots of times to register each issue. It takes time. The second reason, comment in code permit to mark exact place which have to be modified. And many other reasons. No matter why they do it. They do it and leave this comments for years.
+Why do developers left comment in code instead of registering of issues? It is convenient. You don't need to deal
+with UI of Issue Tracker and to fill lots of field. And lots of times to register each issue. It takes time.
+The second reason, comment in code permit to mark exact place which have to be modified. And many other reasons.
+No matter why they do it. They do it and leave this comments for years.
 
 Somebody have to manage it.
 
-So, we need in tool which will be responsible for registering of issues and save time of developers. After that you may use all power of management to plan solving of lacks of your code.
+So, we need in tool which will be responsible for registering of issues and save time of developers. After that
+you may use all power of management to plan solving of lacks of your code.
 
-This script do it for you. It registers issues with all necessary params. Then injects IDs/Keys of created issues into comment in code. This prevents creating of issues twice and injected marks helps to find proper places in code quickly.
+This script do it for you. It registers issues with all necessary params. Then injects IDs/Keys of created issues
+into comment in code. This prevents creating of issues twice and injected marks helps to find proper places in code quickly.
 
 ## Installation
 
