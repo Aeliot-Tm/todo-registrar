@@ -19,7 +19,7 @@ use Github\Api\Issue\Labels as LabelsApi;
  * TODO: cache list of labels
  *       It reduce API-calls and speed up processing of issues with labels.
  */
-final class LabelService
+final class LabelApiClient
 {
     public function __construct(
         private LabelsApi $labelsApi,

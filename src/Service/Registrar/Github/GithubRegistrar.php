@@ -20,7 +20,7 @@ final class GithubRegistrar implements RegistrarInterface
 {
     public function __construct(
         private IssueFactory $issueFactory,
-        private ServiceFactory $serviceFactory,
+        private ApiClientFactory $serviceFactory,
     ) {
     }
 

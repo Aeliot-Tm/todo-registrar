@@ -24,7 +24,7 @@ final class GithubRegistrarFactory implements RegistrarFactoryInterface
 
         return new GithubRegistrar(
             new IssueFactory(new IssueConfig($issueConfig)),
-            new ServiceFactory($config['service'])
+            new ApiClientFactory($config['service'])
         );
     }
 }

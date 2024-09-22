@@ -18,7 +18,7 @@ use Github\Client as GithubClient;
 use Github\HttpClient\Builder;
 use Github\HttpClient\Plugin\Authentication;
 
-final class ServiceFactory
+final class ApiClientFactory
 {
     /**
      * @param array<string,mixed> $config
@@ -27,18 +27,18 @@ final class ServiceFactory
     {
     }
 
-    public function createIssueService(): IssueService
+    public function createIssueService(): IssueApiClient
     {
-        return new IssueService(
+        return new IssueApiClient(
             $this->createGithubClient()->api('issue'),
             $this->config['owner'],
             $this->config['repository'],
         );
     }
 
-    public function createLabelService(): LabelService
+    public function createLabelService(): LabelApiClient
     {
-        return new LabelService(
+        return new LabelApiClient(
             $this->createGithubClient()->api('issue')->labels(),
             $this->config['owner'],
             $this->config['repository'],
