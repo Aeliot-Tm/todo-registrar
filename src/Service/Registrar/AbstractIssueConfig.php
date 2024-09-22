@@ -76,6 +76,9 @@ abstract class AbstractIssueConfig
         return $config;
     }
 
+    /**
+     * @param array<string,mixed> $config
+     */
     protected function setProperties(array $config): void
     {
         foreach ((new \ReflectionClass($this))->getProperties() as $property) {
