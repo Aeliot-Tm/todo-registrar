@@ -1,8 +1,10 @@
 # Configuration of GitHub-registrar
 
-See [example](../../../examples/config.github.php)
+## General config
 
-Description of keys:
+Put config php-file `.todo-registrar.php` in the root directory. See [example](../../../examples/config.github.php).
+
+Description of keys of general config:
 ```php
 $githubConfig = [
     'issue' => [
@@ -19,3 +21,12 @@ $githubConfig = [
     ]
 ];
 ```
+
+## Inline config
+
+Supported keys of inline config:
+
+| Kye       | Description                                                               |
+|-----------|---------------------------------------------------------------------------|
+| assignees | List of identifiers of Github-users, which will be assigned to the issue. |
+| labels    | List of labels which will be assigned to the issue.                       |
