@@ -27,8 +27,8 @@ final class IssueFactory
     private function setAssignees(Issue $issue, Todo $todo): void
     {
         $assignees = array_filter([
-            $todo->getInlineConfig()['assignee'] ?? null,
             $todo->getAssignee(),
+            ...$todo->getInlineConfig()['assignees'] ?? [],
             ...$this->issueConfig->getAssignees(),
         ]);
 
