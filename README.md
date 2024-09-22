@@ -135,9 +135,10 @@ And others. [See all supported formats](docs/supported_patters_of_comments.md).
 
 Currently, todo-registrar supports the following issue trackers:
 
-| Issue Tracker                                   | Description                                                                                 |
-|-------------------------------------------------|---------------------------------------------------------------------------------------------|
-| [Jira](https://www.atlassian.com/software/jira) | Supported via API tokens. See [description of configuration](docs/registrar/jira/config.md) |
+| Issue Tracker                                   | Description                                                                                   |
+|-------------------------------------------------|-----------------------------------------------------------------------------------------------|
+| [Jira](https://www.atlassian.com/software/jira) | Supported via API tokens. See [description of configuration](docs/registrar/jira/config.md)   |
+| Github issues                                   | Supported via API tokens. See [description of configuration](docs/registrar/github/config.md) |
 
 ## Dev Notes
 
