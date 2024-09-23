@@ -2,7 +2,8 @@
 
 ## General config
 
-Put config php-file `.todo-registrar.php` in the root directory. See [example](../../../examples/config.jira.php).
+Put config php-file `.todo-registrar.php` in the root directory.
+See [example](../../../examples/JIRA/.todo-registrar.php).
 
 Description of keys of general config:
 ```php
