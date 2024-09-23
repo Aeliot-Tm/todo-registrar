@@ -2,7 +2,8 @@
 
 ## General config
 
-Put config php-file `.todo-registrar.php` in the root directory. See [example](../../../examples/config.github.php).
+Put config php-file `.todo-registrar.php` in the root directory.
+See [example](../../../examples/GitHub/.todo-registrar.php).
 
 Description of keys of general config:
 ```php

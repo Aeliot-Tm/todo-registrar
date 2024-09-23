@@ -3,7 +3,8 @@
 It expects that file `.todo-registrar.php` or `.todo-registrar.dist.php` added in the root directory of project.
 It may be put in any other place, but you have to define path to it when call the script with option `--config=/path/to/cofig`.
 
-Config file is php-file which returns instance of class `\Aeliot\TodoRegistrar\Config`. See [example](../examples/config.jira.php).
+Config file is php-file which returns instance of class `\Aeliot\TodoRegistrar\Config`.
+See [example](../examples/JIRA/.todo-registrar.php).
 
 ## Methods
 

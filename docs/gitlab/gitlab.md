@@ -7,7 +7,7 @@ Config env-variables:
 
 ### Configuration of GitLab CI pipeline
 
-You have to describe pipeline in `.gitlab-ci.yml`. See [example](.gitlab-ci.yml)
+You have to describe pipeline in `.gitlab-ci.yml`. See [example](../../examples/GitLab/.gitlab-ci.yml)
 The example based on Docker container which contains all necessary dependencies. So installation of them is skipped in it.
 
 For the duties of example it added into stages `tasts`. Usually it is quite good place.
@@ -24,8 +24,8 @@ For the duties of example it added into stages `tasts`. Usually it is quite good
 
 The script presented in the example depends on additional bash-scripts:
 
-1. [mr_check_existing.sh](scripts/mr_check_existing.sh) - check if opened MR exists from source depending on some patter
-   to traget branch.
-2. [commit_and_push.sh](scripts/commit_and_push.sh) - responsible for creating of new branch, configuring of author
-   of commit, commiting and pushing of IDs of created issues.
-3. [mr_create.sh](scripts/mr_create.sh) - creates merge request.
+1. [mr_check_existing.sh](../../examples/GitLab/scripts/mr_check_existing.sh) - check if opened MR exists
+   from source depending on some patter to target branch.
+2. [commit_and_push.sh](../../examples/GitLab/scripts/commit_and_push.sh) - responsible for creating of new branch,
+   configuring of author of commit, commiting and pushing of IDs of created issues.
+3. [mr_create.sh](../../examples/GitLab/scripts/mr_create.sh) - creates merge request.
