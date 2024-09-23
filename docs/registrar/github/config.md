@@ -26,7 +26,7 @@ $githubConfig = [
 
 Supported keys of inline config:
 
-| Kye       | Description                                                               |
+| Key       | Description                                                               |
 |-----------|---------------------------------------------------------------------------|
 | assignees | List of identifiers of Github-users, which will be assigned to the issue. |
 | labels    | List of labels which will be assigned to the issue.                       |
