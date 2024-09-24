@@ -16,18 +16,18 @@ It may be split to multiple lines. But don't forget about indents of each line.
  *                   And some complex description on second line and below.
  *                   Fell you free to add any complex description as you wish.
  *                        But don't forget to start each line on same column as summary (title) or later.
- *                   And suit same rule for EXTRAS, which can be split to multiple lines with any spaces. 
+ *                   And suit same rule for EXTRAS, which can be split to multiple lines with any spaces.
  *                   See below.
  *                   {EXTRAS: {
  *                      someKey: [value1, value2],
  *                      moreComplexData: {key1: [v3], key2: {
  *                            neverMindHowManyLevels: [v4]
  *                      }}
- *                   }}        
+ *                   }}
  */
 ```
 
-### Example
+### Examples
 
 Below are examples of settings supported by the implemented JIRA-registrar.
 
@@ -47,6 +47,12 @@ Below are examples of settings supported by the implemented JIRA-registrar.
    ```
    {EXTRAS: {labels: [label-a, label-b], components: [component-a, component-b]}}
    ```
+
+### Inline configs specific for issue trackers
+
+1. [GitHub](registrar/github/config.md#inline-config)
+2. [JIRA](registrar/jira/config.md#inline-config)
+
 
 ## The order of applying of configs
 1. `@assignee` joined to TODO-tag.
