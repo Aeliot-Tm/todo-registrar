@@ -146,10 +146,6 @@ Currently, todo-registrar supports the following issue trackers:
 | [Jira](https://www.atlassian.com/software/jira) | Supported via API tokens. See [description of configuration](docs/registrar/jira/config.md)   |
 | Github issues                                   | Supported via API tokens. See [description of configuration](docs/registrar/github/config.md) |
 
-## Dev Notes
-
-Signing of PHAR: https://box-project.github.io/box/phar-signing/
-
 ## Articles
 
 RU: https://habr.com/ru/articles/832994/

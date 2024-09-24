@@ -1,13 +1,13 @@
 Local development
 =================
 
-**Preconditions:**
+### Preconditions
 
 To get started, ensure [docker](https://docs.docker.com/engine/install/)
 and [docker-compose](https://docs.docker.com/compose/install/) are installed.
 It is expected that you are familiar with them.
 
-**Start up project:**
+### Start up project
 
 1. Start the docker container:
     ```shell
@@ -26,3 +26,7 @@ It is expected that you are familiar with them.
    ```shell
    docker compose exec php-fpm bash
    ```
+
+### Dev Notes
+
+Signing of PHAR: https://box-project.github.io/box/phar-signing/
