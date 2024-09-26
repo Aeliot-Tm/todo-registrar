@@ -1,0 +1,46 @@
+name: TODO Registrar
+
+
+on:
+  push:
+    branches: [ "main" ]
+
+# See https://stackoverflow.com/a/72408109
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  todo-registrar:
+    runs-on: ubuntu-latest
+    name: Register TODO
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+          ini-values: phar.readonly=0
+          tools: composer
+          coverage: none
+
+      - name: Cache Composer packages
+        id: composer-cache
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: "os-${{ runner.os }}-php-${{ runner.php-version }}-composer-${{ hashFiles('**/composer.lock') }}"
+          restore-keys: "os-${{ runner.os }}-php-${{ runner.php-version }}-composer-"
+
+      - name: Install Composer dependencies
+        uses: ramsey/composer-install@v3
+        with:
+          composer-options: '--no-dev'
+
+      - name: Register TODOs
+        run: bin/todo-registrar -c scripts/todo-registrar/config.php
