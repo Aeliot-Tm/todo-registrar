@@ -37,4 +37,4 @@ return (new Config())
                 strlen($_ENV['GITHUB_REPOSITORY_OWNER'] ?? '') + 1),
         ],
     ])
-    ->setTags(['todo', 'fixme']);
+    ->setTags(['G_TEST']);
