@@ -15,7 +15,17 @@ jobs:
     runs-on: ubuntu-latest
     name: Register TODO
 
+    # Define the permissions for the action
+    permissions:
+      contents: write
+      pull-requests: write
+      actions: write
+      issues: write
+
     steps:
+      - name: Print environment variables and event payload
+        uses: hmarr/debug-action@v3
+
       - name: Checkout
         uses: actions/checkout@v4
         with:
@@ -42,5 +52,69 @@ jobs:
         with:
           composer-options: '--no-dev'
 
+      - name: Generate new branch name
+        id: branch_name
+        run: |
+          export TR_NEW_BRANCH=todo-registrar-$(echo "$RANDOM$RANDOM$RANDOM" | base64 | head -c 8; echo)
+          echo "branch_name=$TR_NEW_BRANCH" >>  "$GITHUB_OUTPUT"
+
       - name: Register TODOs
-        run: bin/todo-registrar -c scripts/todo-registrar/config.php
+        run: |
+          export GITHUB_PERSONAL_ACCESS_TOKEN=${{ secrets.GITHUB_TOKEN }}
+          php bin/todo-registrar -c scripts/todo-registrar/config.php
+
+      #      - name: Commit changes
+      #        uses: EndBug/add-and-commit@v9
+      #        with:
+      #          author_name: Your Name
+      #          author_email: mail@example.com
+      #          message: 'Your commit message'
+      #          add: '*.js'
+      #          new_branch: ${{ todo-registrar }}
+      #          push: true
+
+      #      - name: Commit
+      #        run: |
+      #          git config --global user.email "todo-registrar@example.com"
+      #          git config --global user.name "CI Bot"
+      #          git checkout -b $NEW_BRANCH 1> /dev/null
+      #          git add .
+      #          export TR_NOTHING_TO_COMMIT=$(git commit -m "$TITLE" | grep "nothing to commit")
+      #          if [[ -z  $TR_NOTHING_TO_COMMIT ]]; then
+      #            git push origin_ci $NEW_BRANCH 1> /dev/null
+      #            echo 1
+      #          else
+      #            git checkout -b $CI_COMMIT_REF_SLUG 1> /dev/null
+      #            git branch -D $NEW_BRANCH 1> /dev/null
+      #            echo 0
+      #          fi
+
+      - name: Checkout new branch
+        run: git checkout -b ${{ steps.branch_name.outputs.branch_name }} 1> /dev/null
+
+      - name: Add changes to Git tracking
+        run: git add -A .
+
+      - name: Commit changes
+        id: commit
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          export TR_NOTHING_TO_COMMIT=$(git commit -m "TODO-REGISTRAR: automated registering of new TODOs" | grep "nothing to commit")
+          echo "result=$TR_NOTHING_TO_COMMIT" >> "$GITHUB_OUTPUT"
+
+      - name: Push changes
+        if: ${{ steps.commit.outputs.result }}
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ steps.branch_name.outputs.branch_name }}
+
+#      - name: Initialize Pull Request
+#        uses: gha-utilities/init-pull-request@9fd0080b21e8d37308e480d27362110b4ea7d69d
+#        with:
+#          verbose: true
+#          pull_request_token: ${{ secrets.GITHUB_TOKEN }}
+#          head: ${{ env.TR_NEW_BRANCH }}
+#          base: main
+#          title: 'TODO-REGISTRAR: automated registering of new TODOs'
