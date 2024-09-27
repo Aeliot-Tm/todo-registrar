@@ -3,7 +3,7 @@ name: TODO Registrar
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "github-registrar" ]
 
 # See https://stackoverflow.com/a/72408109
 concurrency:
