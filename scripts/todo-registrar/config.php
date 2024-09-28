@@ -31,10 +31,10 @@ return (new Config())
             'tagPrefix' => 'tag-',
         ],
         'service' => [
-            'personalAccessToken' => $_ENV['GITHUB_PERSONAL_ACCESS_TOKEN'] ?? null,
-            'owner' => $_ENV['GITHUB_REPOSITORY_OWNER'] ?? null,
-            'repository' => substr($_ENV['GITHUB_REPOSITORY'] ?? '',
-                strlen($_ENV['GITHUB_REPOSITORY_OWNER'] ?? '') + 1),
+            'personalAccessToken' => $_ENV['GH_PERSONAL_ACCESS_TOKEN'] ?? $_SERVER['GH_PERSONAL_ACCESS_TOKEN'] ?? null,
+            'owner' => $_ENV['GITHUB_REPOSITORY_OWNER'] ?? $_SERVER['GITHUB_REPOSITORY_OWNER'] ?? null,
+            'repository' => substr($_ENV['GITHUB_REPOSITORY'] ?? $_SERVER['GITHUB_REPOSITORY'] ?? '',
+                strlen($_ENV['GITHUB_REPOSITORY_OWNER'] ?? $_SERVER['GITHUB_REPOSITORY_OWNER'] ?? '') + 1),
         ],
     ])
     ->setTags(['G_TEST']);

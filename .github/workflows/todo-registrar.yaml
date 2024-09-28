@@ -15,8 +15,9 @@ jobs:
     runs-on: ubuntu-latest
     name: Register TODO
     env:
-      GITHUB_REPOSITORY: ${{ github.GITHUB_REPOSITORY }}
-      GITHUB_REPOSITORY_OWNER: ${{ github.GITHUB_REPOSITORY_OWNER }}
+      GH_PERSONAL_ACCESS_TOKEN: ${{ secrets.GH_TODO_REGISTRAR_ACCESS_TOKEN }}
+      GH_REPOSITORY: ${{ vars.GITHUB_REPOSITORY }}
+      GH_REPOSITORY_OWNER: ${{ vars.GITHUB_REPOSITORY_OWNER }}
 
     # Define the permissions for the action
     permissions:
@@ -63,7 +64,6 @@ jobs:
 
       - name: Register TODOs
         run: |
-          export GITHUB_PERSONAL_ACCESS_TOKEN=${{ secrets.GITHUB_TOKEN }}
           php bin/todo-registrar -c scripts/todo-registrar/config.php
 
       #      - name: Commit changes
