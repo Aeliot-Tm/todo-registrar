@@ -63,7 +63,7 @@ jobs:
 
       - name: Register TODOs
         run: |
-          export GITHUB_PERSONAL_ACCESS_TOKEN=${{ secrets.GITHUB_TOKEN }}
+          echo "GITHUB_PERSONAL_ACCESS_TOKEN=${{ secrets.GH_TODO_REGISTRAR_ACCESS_TOKEN }}" >> "$GITHUB_ENV"
           php bin/todo-registrar -c scripts/todo-registrar/config.php
 
       #      - name: Commit changes
