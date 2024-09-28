@@ -103,7 +103,7 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          export TR_NOTHING_TO_COMMIT=$(git commit -m "$TITLE" | grep "nothing to commit")
+          export TR_NOTHING_TO_COMMIT=$(git commit -m "TODO-REGISTRAR: automated registering of new TODOs" | grep "nothing to commit")
           echo "result=$TR_NOTHING_TO_COMMIT" >> "$GITHUB_OUTPUT"
 
       - name: Push changes
