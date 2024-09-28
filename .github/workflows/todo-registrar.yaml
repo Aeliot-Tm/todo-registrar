@@ -15,8 +15,8 @@ jobs:
     runs-on: ubuntu-latest
     name: Register TODO
     env:
-      GITHUB_REPOSITORY: ${{ envs.GITHUB_REPOSITORY }}
-      GITHUB_REPOSITORY_OWNER: ${{ envs.GITHUB_REPOSITORY_OWNER }}
+      GITHUB_REPOSITORY: ${{ github.GITHUB_REPOSITORY }}
+      GITHUB_REPOSITORY_OWNER: ${{ github.GITHUB_REPOSITORY_OWNER }}
 
     # Define the permissions for the action
     permissions:
