@@ -42,6 +42,8 @@
         "php": "^8.2",
         "ext-mbstring": "*",
         "ext-tokenizer": "*",
+        "guzzlehttp/guzzle": "^7.9",
+        "http-interop/http-factory-guzzle": "^1.2",
         "knplabs/github-api": "^3.14",
         "lesstif/php-jira-rest-client": "^5.8",
         "symfony/finder": "^5.4|^6.0|^7.0"
