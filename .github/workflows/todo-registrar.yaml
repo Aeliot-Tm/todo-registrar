@@ -114,10 +114,18 @@ jobs:
           branch: ${{ steps.branch_name.outputs.branch_name }}
 
 #      - name: Initialize Pull Request
-#        uses: gha-utilities/init-pull-request@9fd0080b21e8d37308e480d27362110b4ea7d69d
+#        uses: gha-utilities/init-pull-request@ae3022303d20c680b00fa090bfac230964236725
 #        with:
 #          verbose: true
 #          pull_request_token: ${{ secrets.GITHUB_TOKEN }}
-#          head: ${{ env.TR_NEW_BRANCH }}
+#          head: ${{ steps.branch_name.outputs.branch_name }}
 #          base: main
 #          title: 'TODO-REGISTRAR: automated registering of new TODOs'
+
+      - name: Create pull request
+        run: |
+          gh pr create -B main -H ${{ steps.branch_name.outputs.branch_name }} \
+          --title '[TODO Registrar] automated registering of new TODOs' \
+          --body 'Created by Github action'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TODO_REGISTRAR_ACCESS_TOKEN }}
