@@ -108,7 +108,7 @@ jobs:
           echo "result=$TR_NOTHING_TO_COMMIT" >> "$GITHUB_OUTPUT"
 
       - name: Push changes
-        if: ${{ steps.commit.outputs.result }}
+        if: ${{ ! steps.commit.outputs.result }}
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
