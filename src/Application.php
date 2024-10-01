@@ -25,15 +25,19 @@ class Application
     ) {
     }
 
-    public function run(): void
+    public function run(): int
     {
+        $result = 0;
         foreach ($this->finder as $file) {
             try {
                 $this->fileProcessor->process($file);
             } catch (\Throwable $exception) {
                 $this->writeError($exception, $file);
+                $result = 1;
             }
         }
+
+        return $result;
     }
 
     private function writeError(\Throwable $exception, ?\SplFileInfo $file = null): void

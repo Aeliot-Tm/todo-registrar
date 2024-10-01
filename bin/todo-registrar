@@ -98,4 +98,4 @@ if (!$config instanceof Config) {
     throw new RuntimeException(sprintf('Config file "%s" does not return instance of config', $options['config']));
 }
 
-(new ApplicationFactory())->create($config)->run();
+exit((new ApplicationFactory())->create($config)->run());
