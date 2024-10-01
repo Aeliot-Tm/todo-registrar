@@ -121,3 +121,8 @@ jobs:
 #          head: ${{ steps.branch_name.outputs.branch_name }}
 #          base: main
 #          title: 'TODO-REGISTRAR: automated registering of new TODOs'
+
+      - name: Create pull request
+        run: gh pr create -B main -H ${{ steps.branch_name.outputs.branch_name }} --title '[TODO Registrar] automated registering of new TODOs' --body 'Created by Github action'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
