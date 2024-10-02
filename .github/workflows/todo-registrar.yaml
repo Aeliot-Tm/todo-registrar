@@ -11,8 +11,8 @@ concurrency:
 
 jobs:
   preflight:
-    runs-on: ubuntu-latest
     name: Check opened pull requests
+    runs-on: ubuntu-latest
 
     # Define the permissions for the action
     permissions:
@@ -37,10 +37,11 @@ jobs:
           echo "Count of opened PRs: $TODO_PR_COUNT" >> $GITHUB_STEP_SUMMARY
 
   todo-registrar:
+    name: Register TODO
     needs: preflight
     if: 0 == needs.preflight.outputs.count
     runs-on: ubuntu-latest
-    name: Register TODO
+
     env:
       GH_PERSONAL_ACCESS_TOKEN: ${{ secrets.GH_TODO_REGISTRAR_ACCESS_TOKEN }}
       GH_REPOSITORY: ${{ vars.GITHUB_REPOSITORY }}
