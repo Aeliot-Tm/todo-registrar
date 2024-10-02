@@ -29,7 +29,7 @@ jobs:
         run: |
           export TODO_PR_COUNT=$(gh pr list --base main --state open --search TODO-REGISTRAR | wc -l)
           echo "count=$TODO_PR_COUNT" >> "$GITHUB_OUTPUT"
-          echo '**Count of opened PRs: $TODO_PR_COUNT**' >> $GITHUB_STEP_SUMMARY
+          echo "**Count of opened PRs: $TODO_PR_COUNT**" >> $GITHUB_STEP_SUMMARY
 
   todo-registrar:
     needs: preflight
@@ -49,6 +49,9 @@ jobs:
       issues: write
 
     steps:
+      - name: Show count from preflight
+        run: echo "count=${{ needs.preflight.outputs.count }}"
+
       - name: Print environment variables and event payload
         uses: hmarr/debug-action@v3
 
