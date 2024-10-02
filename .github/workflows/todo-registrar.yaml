@@ -26,6 +26,14 @@ jobs:
       issues: write
 
     steps:
+      - run: gh pr list --base main --state open --search TODO-REGISTRAR
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TODO_REGISTRAR_ACCESS_TOKEN }}
+
+      - run: echo "count=$(gh pr list --base main --state open --search TODO-REGISTRAR | grep -oE '#[0-9]+' | wc -l)"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TODO_REGISTRAR_ACCESS_TOKEN }}
+
       - name: Print environment variables and event payload
         uses: hmarr/debug-action@v3
 
