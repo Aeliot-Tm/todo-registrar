@@ -54,9 +54,6 @@ jobs:
       issues: write
 
     steps:
-      - name: Print environment variables and event payload
-        uses: hmarr/debug-action@v3
-
       - name: Checkout
         uses: actions/checkout@v4
         with:
