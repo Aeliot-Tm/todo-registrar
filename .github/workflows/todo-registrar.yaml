@@ -112,6 +112,7 @@ jobs:
           git config --local user.name "GitHub Action"
           export TR_NOTHING_TO_COMMIT=$(git commit -m "TODO-REGISTRAR: automated registering of new TODOs" | grep "nothing to commit")
           echo "result=$TR_NOTHING_TO_COMMIT" >> "$GITHUB_OUTPUT"
+          echo "Result of commiting: $TR_NOTHING_TO_COMMIT" >> $GITHUB_STEP_SUMMARY
 
       - name: Push changes
         if: ${{ ! steps.commit.outputs.result }}
