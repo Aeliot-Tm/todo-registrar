@@ -26,14 +26,6 @@ jobs:
       issues: write
 
     steps:
-      - run: gh pr list --base main --state open --search TODO-REGISTRAR
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TODO_REGISTRAR_ACCESS_TOKEN }}
-
-      - run: echo "count=$(gh pr list --base main --state open --search TODO-REGISTRAR | grep -oE '#[0-9]+' | wc -l)"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TODO_REGISTRAR_ACCESS_TOKEN }}
-
       - name: Print environment variables and event payload
         uses: hmarr/debug-action@v3
 
@@ -41,6 +33,14 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - run: gh pr list --base main --state open --search TODO-REGISTRAR
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TODO_REGISTRAR_ACCESS_TOKEN }}
+
+      - run: echo "count=$(gh pr list --base main --state open --search TODO-REGISTRAR | grep -oE '#[0-9]+' | wc -l)"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TODO_REGISTRAR_ACCESS_TOKEN }}
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
