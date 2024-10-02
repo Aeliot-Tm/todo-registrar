@@ -10,7 +10,35 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    name: Check opened pull requests
+
+    # Define the permissions for the action
+    permissions:
+      pull-requests: read
+
+    outputs:
+      count: ${{ steps.get_count.outputs.count }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get count of opened PRs
+        id: get_count
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          export TODO_PR_COUNT=$(gh pr list --base main --state open --search TODO-REGISTRAR | wc -l)
+          echo "count=$TODO_PR_COUNT" >> "$GITHUB_OUTPUT"
+          echo "Count of opened PRs: $TODO_PR_COUNT" >> $GITHUB_STEP_SUMMARY
+
   todo-registrar:
+    needs: preflight
+    if: 0 == needs.preflight.outputs.count
     runs-on: ubuntu-latest
     name: Register TODO
     env:
