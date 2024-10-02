@@ -38,7 +38,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TODO_REGISTRAR_ACCESS_TOKEN }}
 
-      - run: echo "count=$(gh pr list --base main --state open --search TODO-REGISTRAR | grep -oE '#[0-9]+' | wc -l)"
+      - run: echo "count=$(gh pr list --base main --state open --search TODO-REGISTRAR | wc -l)"
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TODO_REGISTRAR_ACCESS_TOKEN }}
 
