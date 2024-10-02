@@ -62,7 +62,7 @@ final class ArrayFromJsonLikeLexerBuilder
     }
 
     /**
-     * TODO: move it into JsonLikeLexer.
+     * TODO: #126 move it into JsonLikeLexer.
      */
     private function checkPredecessorType(int $current, ?int $predecessor): void
     {
