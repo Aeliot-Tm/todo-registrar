@@ -25,7 +25,7 @@ jobs:
       - name: Get count of opened PRs
         id: get_count
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_TODO_REGISTRAR_ACCESS_TOKEN }}
         run: |
           export TODO_PR_COUNT=$(gh pr list --base main --state open --search TODO-REGISTRAR | wc -l)
           echo "count=$TODO_PR_COUNT" >> "$GITHUB_OUTPUT"
