@@ -1,0 +1,122 @@
+name: TODO Registrar
+
+on:
+  push:
+    branches: [ "main" ]
+
+# See https://stackoverflow.com/a/72408109
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  preflight:
+    name: Check opened pull requests
+    runs-on: ubuntu-latest
+
+    # Define the permissions for the action
+    permissions:
+      pull-requests: read
+
+    outputs:
+      count: ${{ steps.get_count.outputs.count }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get count of opened PRs
+        id: get_count
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          export TODO_PR_COUNT=$(gh pr list --base main --state open --search TODO-REGISTRAR | wc -l)
+          echo "count=$TODO_PR_COUNT" >> "$GITHUB_OUTPUT"
+          echo "Count of opened PRs: $TODO_PR_COUNT" >> $GITHUB_STEP_SUMMARY
+
+  todo-registrar:
+    name: Register TODO
+    needs: preflight
+    if: 0 == needs.preflight.outputs.count
+    runs-on: ubuntu-latest
+
+    env:
+      GH_PERSONAL_ACCESS_TOKEN: ${{ secrets.GH_TODO_REGISTRAR_ACCESS_TOKEN }}
+      GH_REPOSITORY: ${{ vars.GITHUB_REPOSITORY }}
+      GH_REPOSITORY_OWNER: ${{ vars.GITHUB_REPOSITORY_OWNER }}
+
+    # Define the permissions for the action
+    permissions:
+      contents: write
+      pull-requests: write
+      actions: write
+      issues: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+          ini-values: phar.readonly=0
+          tools: composer
+          coverage: none
+
+      - name: Cache Composer packages
+        id: composer-cache
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: "os-${{ runner.os }}-php-${{ runner.php-version }}-composer-${{ hashFiles('**/composer.lock') }}"
+          restore-keys: "os-${{ runner.os }}-php-${{ runner.php-version }}-composer-"
+
+      - name: Install Composer dependencies
+        uses: ramsey/composer-install@v3
+        with:
+          composer-options: '--no-dev'
+
+      - name: Generate new branch name
+        id: branch_name
+        run: |
+          export TR_NEW_BRANCH=todo-registrar-$(echo "$RANDOM$RANDOM$RANDOM" | base64 | head -c 8; echo)
+          echo "branch_name=$TR_NEW_BRANCH" >>  "$GITHUB_OUTPUT"
+
+      - name: Register TODOs
+        run: |
+          php bin/todo-registrar -c scripts/todo-registrar/config.php
+
+      - name: Checkout new branch
+        run: git checkout -b ${{ steps.branch_name.outputs.branch_name }} 1> /dev/null
+
+      - name: Add changes to Git tracking
+        run: git add -A .
+
+      - name: Commit changes
+        id: commit
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          export TR_NOTHING_TO_COMMIT=$(git commit -m "TODO-REGISTRAR: automated registering of new TODOs" | grep "nothing to commit")
+          echo "result=$TR_NOTHING_TO_COMMIT" >> "$GITHUB_OUTPUT"
+          echo "Result of commiting: $TR_NOTHING_TO_COMMIT" >> $GITHUB_STEP_SUMMARY
+
+      - name: Push changes
+        if: ${{ ! steps.commit.outputs.result }}
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ steps.branch_name.outputs.branch_name }}
+
+      - name: Create pull request
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TODO_REGISTRAR_ACCESS_TOKEN }}
+        run: |
+          gh pr create -B main -H ${{ steps.branch_name.outputs.branch_name }} \
+          --title '[TODO Registrar] automated registering of new TODOs' \
+          --body 'Created by Github action'
