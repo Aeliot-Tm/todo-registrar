@@ -85,7 +85,7 @@ class IssueConfig extends AbstractIssueConfig
         $config['components'] = (array) $config['components'];
 
         if (\array_key_exists('type', $config)) {
-            // TODO: throw exception when exists key "issueType"
+            // TODO: #127 throw exception when exists key "issueType"
             $config['issueType'] = $config['type'];
             unset($config['type']);
         }

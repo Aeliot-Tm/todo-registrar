@@ -24,7 +24,7 @@ class RegistrarFactoryRegistry
         return match ($type) {
             RegistrarType::Github => new GithubRegistrarFactory(),
             RegistrarType::JIRA => new JiraRegistrarFactory(),
-            // TODO add factory of different registrars
+            // TODO #129 add factory of different registrars
             default => throw new \DomainException(\sprintf('Not supported registrar type "%s"', $type->value)),
         };
     }
