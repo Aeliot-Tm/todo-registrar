@@ -1,0 +1,246 @@
+{
+    "config_hash": 2695472770,
+    "relative": true,
+    "hashes": {
+        "bin\/todo-registrar": {
+            "hash": 3169601229
+        },
+        "scripts\/box\/prepare-config.php": {
+            "hash": 897298482
+        },
+        "scripts\/composer-unused\/config.php": {
+            "hash": 3644645831
+        },
+        "scripts\/php-cs-fixer\/config.php": {
+            "hash": 1705903584
+        },
+        "scripts\/php-cs-fixer\/finder.php": {
+            "hash": 1895290745
+        },
+        "scripts\/todo-registrar\/config.php": {
+            "hash": 1199485383
+        },
+        "src\/Application.php": {
+            "hash": 2407248549
+        },
+        "src\/ApplicationFactory.php": {
+            "hash": 1159250558
+        },
+        "src\/Config.php": {
+            "hash": 248702361
+        },
+        "src\/Dto\/Comment\/CommentPart.php": {
+            "hash": 393103539
+        },
+        "src\/Dto\/Comment\/CommentParts.php": {
+            "hash": 2039272904
+        },
+        "src\/Dto\/InlineConfig\/IndexedCollection.php": {
+            "hash": 219197057
+        },
+        "src\/Dto\/InlineConfig\/InlineConfig.php": {
+            "hash": 2893097990
+        },
+        "src\/Dto\/InlineConfig\/NamedCollection.php": {
+            "hash": 37201471
+        },
+        "src\/Dto\/InlineConfig\/Token.php": {
+            "hash": 2115725355
+        },
+        "src\/Dto\/Registrar\/Todo.php": {
+            "hash": 3510938764
+        },
+        "src\/Dto\/Tag\/TagMetadata.php": {
+            "hash": 183392406
+        },
+        "src\/Enum\/RegistrarType.php": {
+            "hash": 303413872
+        },
+        "src\/Exception\/CollectionDuplicatedKeyException.php": {
+            "hash": 11596347
+        },
+        "src\/Exception\/CommentRegistrationException.php": {
+            "hash": 2860383647
+        },
+        "src\/Exception\/InvalidConfigException.php": {
+            "hash": 3332560212
+        },
+        "src\/Exception\/InvalidInlineConfigFormatException.php": {
+            "hash": 531731029
+        },
+        "src\/Exception\/NoLineException.php": {
+            "hash": 3408971401
+        },
+        "src\/Exception\/NoPrefixException.php": {
+            "hash": 2246059011
+        },
+        "src\/InlineConfigFactoryInterface.php": {
+            "hash": 3284702447
+        },
+        "src\/InlineConfigInterface.php": {
+            "hash": 2088018077
+        },
+        "src\/InlineConfigReaderInterface.php": {
+            "hash": 3117880548
+        },
+        "src\/Service\/Comment\/Detector.php": {
+            "hash": 2761165403
+        },
+        "src\/Service\/Comment\/Extractor.php": {
+            "hash": 2231284157
+        },
+        "src\/Service\/CommentRegistrar.php": {
+            "hash": 1631152924
+        },
+        "src\/Service\/File\/Finder.php": {
+            "hash": 1872550161
+        },
+        "src\/Service\/File\/Saver.php": {
+            "hash": 1105039547
+        },
+        "src\/Service\/File\/Tokenizer.php": {
+            "hash": 834353710
+        },
+        "src\/Service\/FileProcessor.php": {
+            "hash": 1315367365
+        },
+        "src\/Service\/InlineConfig\/ArrayFromJsonLikeLexerBuilder.php": {
+            "hash": 2506317379
+        },
+        "src\/Service\/InlineConfig\/CollectionInterface.php": {
+            "hash": 80740876
+        },
+        "src\/Service\/InlineConfig\/ExtrasReader.php": {
+            "hash": 2446928041
+        },
+        "src\/Service\/InlineConfig\/InlineConfigFactory.php": {
+            "hash": 2488245331
+        },
+        "src\/Service\/InlineConfig\/JIRANotSupportedLinkTypeException.php": {
+            "hash": 481162564
+        },
+        "src\/Service\/InlineConfig\/JsonLikeLexer.php": {
+            "hash": 1557386099
+        },
+        "src\/Service\/Registrar\/AbstractIssueConfig.php": {
+            "hash": 1528753214
+        },
+        "src\/Service\/Registrar\/Github\/ApiClientFactory.php": {
+            "hash": 3174191168
+        },
+        "src\/Service\/Registrar\/Github\/GithubRegistrar.php": {
+            "hash": 2851033346
+        },
+        "src\/Service\/Registrar\/Github\/GithubRegistrarFactory.php": {
+            "hash": 224695018
+        },
+        "src\/Service\/Registrar\/Github\/Issue.php": {
+            "hash": 3945416898
+        },
+        "src\/Service\/Registrar\/Github\/IssueApiClient.php": {
+            "hash": 453333599
+        },
+        "src\/Service\/Registrar\/Github\/IssueConfig.php": {
+            "hash": 3420049987
+        },
+        "src\/Service\/Registrar\/Github\/IssueFactory.php": {
+            "hash": 3814030650
+        },
+        "src\/Service\/Registrar\/Github\/LabelApiClient.php": {
+            "hash": 2666335577
+        },
+        "src\/Service\/Registrar\/JIRA\/IssueConfig.php": {
+            "hash": 4144297573
+        },
+        "src\/Service\/Registrar\/JIRA\/IssueFieldFactory.php": {
+            "hash": 661864814
+        },
+        "src\/Service\/Registrar\/JIRA\/IssueLinkRegistrar.php": {
+            "hash": 341482026
+        },
+        "src\/Service\/Registrar\/JIRA\/IssueLinkTypeProvider.php": {
+            "hash": 2554169065
+        },
+        "src\/Service\/Registrar\/JIRA\/IssueServiceArrayConfigPreparer.php": {
+            "hash": 2745389393
+        },
+        "src\/Service\/Registrar\/JIRA\/JiraRegistrar.php": {
+            "hash": 2210352376
+        },
+        "src\/Service\/Registrar\/JIRA\/JiraRegistrarFactory.php": {
+            "hash": 3067493686
+        },
+        "src\/Service\/Registrar\/JIRA\/LinkedIssueNormalizer.php": {
+            "hash": 3120711816
+        },
+        "src\/Service\/Registrar\/JIRA\/ServiceFactory.php": {
+            "hash": 3811085786
+        },
+        "src\/Service\/Registrar\/RegistrarFactoryInterface.php": {
+            "hash": 1237206508
+        },
+        "src\/Service\/Registrar\/RegistrarFactoryRegistry.php": {
+            "hash": 2612888739
+        },
+        "src\/Service\/Registrar\/RegistrarInterface.php": {
+            "hash": 154608395
+        },
+        "src\/Service\/Tag\/Detector.php": {
+            "hash": 1586927943
+        },
+        "src\/Service\/TodoFactory.php": {
+            "hash": 3583397615
+        },
+        "tests\/Unit\/Dto\/Comment\/CommentPartTest.php": {
+            "hash": 1448685166
+        },
+        "tests\/Unit\/Dto\/Comment\/CommentPartsTest.php": {
+            "hash": 1707390199
+        },
+        "tests\/Unit\/Dto\/InlineConfig\/TokenTest.php": {
+            "hash": 3417222240
+        },
+        "tests\/Unit\/Service\/Comment\/DetectorTest.php": {
+            "hash": 1196377818
+        },
+        "tests\/Unit\/Service\/Comment\/ExtractorTest.php": {
+            "hash": 385216321
+        },
+        "tests\/Unit\/Service\/CommentRegistrarTest.php": {
+            "hash": 2244823197
+        },
+        "tests\/Unit\/Service\/File\/FinderTest.php": {
+            "hash": 4208662655
+        },
+        "tests\/Unit\/Service\/File\/TokenizerAndSaverTest.php": {
+            "hash": 1759882062
+        },
+        "tests\/Unit\/Service\/FileProcessorTest.php": {
+            "hash": 582200816
+        },
+        "tests\/Unit\/Service\/InlineConfig\/ArrayFromJsonLikeLexerBuilderTest.php": {
+            "hash": 691832200
+        },
+        "tests\/Unit\/Service\/InlineConfig\/ExtrasReaderTest.php": {
+            "hash": 3953665875
+        },
+        "tests\/Unit\/Service\/InlineConfig\/JsonLikeLexerTest.php": {
+            "hash": 196793774
+        },
+        "tests\/Unit\/Service\/Registrar\/IssueConfigTest.php": {
+            "hash": 301897578
+        },
+        "tests\/Unit\/Service\/Registrar\/JIRA\/IssueLinkTypeProviderTest.php": {
+            "hash": 440333680
+        },
+        "tests\/Unit\/Service\/Tag\/DetectorTest.php": {
+            "hash": 3289469194
+        },
+        "tests\/Unit\/Service\/TodoFactoryTest.php": {
+            "hash": 432085102
+        },
+        "tests\/bootstrap.php": {
+            "hash": 1164284435
+        }
+    }
+}
