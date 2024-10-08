@@ -78,16 +78,16 @@ jobs:
         if: github.event_name == 'release'
         uses: crazy-max/ghaction-import-gpg@v6
         with:
-          gpg_private_key: ${{ secrets.GPG_KEY_47DB2BEBFFE7CF39CD0E91FB1BAD6A09DE0F2DED }}
-          passphrase: "${{ secrets.GPG_KEY_47DB2BEBFFE7CF39CD0E91FB1BAD6A09DE0F2DED_PASSPHRASE }}"
+          gpg_private_key: ${{ secrets.GPG_KEY_9D0DD6FCB92C84688B777DF59204DEE8CAE9C22C }}
+          passphrase: "${{ secrets.GPG_KEY_9D0DD6FCB92C84688B777DF59204DEE8CAE9C22C_PASSPHRASE }}"
 
       - name: Sign the PHAR
         if: github.event_name == 'release'
         run: |
-          gpg --local-user 47DB2BEBFFE7CF39CD0E91FB1BAD6A09DE0F2DED \
+          gpg --local-user 9D0DD6FCB92C84688B777DF59204DEE8CAE9C22C \
               --batch \
               --yes \
-              --passphrase="${{ secrets.GPG_KEY_47DB2BEBFFE7CF39CD0E91FB1BAD6A09DE0F2DED_PASSPHRASE }}" \
+              --passphrase="${{ secrets.GPG_KEY_9D0DD6FCB92C84688B777DF59204DEE8CAE9C22C_PASSPHRASE }}" \
               --detach-sign \
               --output ${{ env.TODO_REGISTRAR_SIGN }} \
               ${{ env.TODO_REGISTRAR_PHAR }}
