@@ -63,8 +63,10 @@
             "@phpstan",
             "@phpunit"
         ],
+        "cs-baseline": "@cs-fixer-baseline",
         "cs-check": "@cs-fixer-check",
         "cs-fix": "@cs-fixer-fix",
+        "cs-fixer-baseline": "XDEBUG_MODE=off tools/pcsf-baseline.phar -b scripts/php-cs-fixer/baseline.json -c scripts/php-cs-fixer/config.php -f scripts/php-cs-fixer/finder.php",
         "cs-fixer-check": "@cs-fixer-fix --dry-run",
         "cs-fixer-fix": "tools/php-cs-fixer.phar fix -vv --config=scripts/php-cs-fixer/config.php",
         "check-security": "XDEBUG_MODE=off vendor/bin/security-checker security:check composer.lock",

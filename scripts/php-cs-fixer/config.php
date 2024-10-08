@@ -9,6 +9,11 @@
  * with this source code in the file LICENSE.
  */
 
+use Aeliot\PhpCsFixerBaseline\Service\FilterFactory;
+
+Phar::loadPhar(dirname(__DIR__, 2) . '/tools/pcsf-baseline.phar', 'pcsf-baseline.phar');
+require_once 'phar://pcsf-baseline.phar/vendor/autoload.php';
+
 $rules = [
     '@Symfony' => true,
     '@Symfony:risky' => true,
@@ -39,5 +44,6 @@ $config = (new PhpCsFixer\Config())
 
 /** @var PhpCsFixer\Finder $finder */
 $finder = require __DIR__ . '/finder.php';
+$finder->filter((new FilterFactory())->createFilter(__DIR__ . '/.php-cs-fixer-baseline.json', $config));
 
 return $config->setFinder($finder);
