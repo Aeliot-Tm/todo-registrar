@@ -81,8 +81,12 @@ class ApplicationFactory
     {
         $absolutePathMaker = new AbsolutePathMaker();
         $options = (new OptionsReader())->getOptions();
-        $options['config'] ??= (new ConfigFileGuesser($absolutePathMaker))->guess();
+        $path = $options['config'] ?? null;
+        if ($path) {
+            $path = $absolutePathMaker->prepare($path);
+        }
+        $path ??= (new ConfigFileGuesser($absolutePathMaker))->guess();
 
-        return (new ConfigFactory())->create($options['config']);
+        return (new ConfigFactory())->create($path);
     }
 }
