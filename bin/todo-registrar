@@ -13,7 +13,6 @@ declare(strict_types=1);
  */
 
 use Aeliot\TodoRegistrar\ApplicationFactory;
-use Aeliot\TodoRegistrar\Config;
 
 $autoloaderPath = (static function (): string {
     if (Phar::running()) {
@@ -42,60 +41,4 @@ $autoloaderPath = (static function (): string {
 
 require_once $autoloaderPath;
 
-$absolutePathMaker = static function (string $path): string {
-    if (preg_match('#^(?:[[:alpha:]]:[/\\\\]|/)#', $path)) {
-        return $path;
-    }
-
-    return getcwd() . '/' . $path;
-};
-
-$configGuess = static function () use ($absolutePathMaker): string {
-    $candidates = [
-        '.todo-registrar.php',
-        '.todo-registrar.dist.php',
-    ];
-    foreach ($candidates as $candidate) {
-        $path = $absolutePathMaker($candidate);
-        if (file_exists($path)) {
-            return $path;
-        }
-    }
-
-    throw new DomainException('Cannot detect default config file');
-};
-
-$options = (static function () use ($absolutePathMaker, $configGuess): array {
-    $values = [];
-    $options = getopt('c:', ['config:']);
-    $defaults = [
-        'config' => ['c', null],
-    ];
-
-    foreach ($defaults as $long => [$short, $default]) {
-        if (isset($options[$short], $options[$long])) {
-            throw new InvalidArgumentException(sprintf('Option %s is duplicated', $long));
-        }
-        $values[$long] = $options[$short] ?? $options[$long] ?? $default;
-    }
-
-    if (!isset($values['config'])) {
-        $values['config'] = $configGuess();
-    } else {
-        $values['config'] = $absolutePathMaker($values['config']);
-    }
-
-    return $values;
-})();
-
-if (!file_exists($options['config'])) {
-    throw new RuntimeException(sprintf('Config file "%s" does not exist', $options['config']));
-}
-
-/** @var Config $config */
-$config = require $options['config'];
-if (!$config instanceof Config) {
-    throw new RuntimeException(sprintf('Config file "%s" does not return instance of config', $options['config']));
-}
-
-exit((new ApplicationFactory())->create($config)->run());
+exit((new ApplicationFactory())->create()->run());
