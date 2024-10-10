@@ -102,6 +102,6 @@ class ApplicationFactory
         }
         $path ??= (new ConfigFileGuesser($absolutePathMaker))->guess();
 
-        return (new ConfigFactory())->create($path);
+        return (new ConfigFactory(new ArrayConfigFactory()))->create($path);
     }
 }

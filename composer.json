@@ -46,7 +46,8 @@
         "http-interop/http-factory-guzzle": "^1.2",
         "knplabs/github-api": "^3.14",
         "lesstif/php-jira-rest-client": "^5.8",
-        "symfony/finder": "^5.4|^6.0|^7.0"
+        "symfony/finder": "^5.4|^6.0|^7.0",
+        "symfony/yaml": "^3.4|^4.0|^5.0|^6.0|^7.0"
     },
     "require-dev": {
         "dg/bypass-finals": "^1.7",

@@ -16,6 +16,9 @@ namespace Aeliot\TodoRegistrar\Service\Registrar\JIRA;
 use Aeliot\TodoRegistrar\Service\Registrar\RegistrarFactoryInterface;
 use Aeliot\TodoRegistrar\Service\Registrar\RegistrarInterface;
 
+/**
+ * TODO: make assertion of JIRA config with symfony/validator component
+ */
 class JiraRegistrarFactory implements RegistrarFactoryInterface
 {
     public function create(array $config): RegistrarInterface
