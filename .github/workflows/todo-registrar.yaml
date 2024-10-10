@@ -114,6 +114,7 @@ jobs:
           branch: ${{ steps.branch_name.outputs.branch_name }}
 
       - name: Create pull request
+        if: ${{ ! steps.commit.outputs.result }}
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TODO_REGISTRAR_ACCESS_TOKEN }}
         run: |
