@@ -18,9 +18,13 @@ namespace Aeliot\TodoRegistrar;
  */
 final class OptionsReader
 {
+    /**
+     * @return array<string,string|null>
+     */
     public function getOptions(): array
     {
         $values = [];
+        /** @var array<string,string> $options */
         $options = getopt('c:', ['config:']);
         $defaults = [
             'config' => ['c', null],
