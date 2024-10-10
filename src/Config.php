@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar;
 
 use Aeliot\TodoRegistrar\Enum\RegistrarType;
+use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
 use Aeliot\TodoRegistrar\Service\File\Finder;
 use Aeliot\TodoRegistrar\Service\Registrar\RegistrarFactoryInterface;
 
@@ -72,7 +73,7 @@ class Config
         return $this->registrarConfig;
     }
 
-    public function getRegistrarType(): RegistrarType|RegistrarFactoryInterface
+    public function getRegistrarType(): RegistrarType|RegistrarFactoryInterface|string
     {
         return $this->registrarType;
     }
@@ -80,7 +81,7 @@ class Config
     /**
      * @param array<string,mixed> $config
      */
-    public function setRegistrar(RegistrarType|RegistrarFactoryInterface $type, array $config): self
+    public function setRegistrar(RegistrarType|RegistrarFactoryInterface|string $type, array $config): self
     {
         $this->registrarType = $type;
         $this->registrarConfig = $config;

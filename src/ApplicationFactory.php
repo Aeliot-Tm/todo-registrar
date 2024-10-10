@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar;
 
+use Aeliot\TodoRegistrar\Enum\RegistrarType;
+use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
 use Aeliot\TodoRegistrar\Service\Comment\Detector;
 use Aeliot\TodoRegistrar\Service\Comment\Extractor;
 use Aeliot\TodoRegistrar\Service\CommentRegistrar;
@@ -68,6 +70,19 @@ class ApplicationFactory
     private function createRegistrar(Config $config): RegistrarInterface
     {
         $registrarType = $config->getRegistrarType();
+
+        if (\is_string($registrarType)) {
+            if (class_exists($registrarType) && is_a($registrarType, RegistrarFactoryInterface::class, true)) {
+                $registrarType = new $registrarType();
+            } else {
+                $newType = RegistrarType::tryFrom($registrarType);
+                if (!$newType) {
+                    throw new InvalidConfigException(sprintf('Invalid type of registrar configured: %s', $registrarType));
+                }
+                $registrarType = $newType;
+            }
+        }
+
         if ($registrarType instanceof RegistrarFactoryInterface) {
             $registrarFactory = $registrarType;
         } else {
