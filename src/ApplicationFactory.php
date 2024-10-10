@@ -30,8 +30,9 @@ use Aeliot\TodoRegistrar\Service\TodoFactory;
 
 class ApplicationFactory
 {
-    public function create(Config $config): Application
+    public function create(): Application
     {
+        $config = $this->getConfig();
         $registrar = $this->createRegistrar($config);
         $commentRegistrar = $this->createCommentRegistrar($registrar, $config);
         $fileProcessor = $this->createFileProcessor($commentRegistrar);
@@ -74,5 +75,14 @@ class ApplicationFactory
         }
 
         return $registrarFactory->create($config->getRegistrarConfig());
+    }
+
+    private function getConfig(): Config
+    {
+        $absolutePathMaker = new AbsolutePathMaker();
+        $options = (new OptionsReader())->getOptions();
+        $options['config'] ??= (new ConfigFileGuesser($absolutePathMaker))->guess();
+
+        return (new ConfigFactory())->create($options['config']);
     }
 }
