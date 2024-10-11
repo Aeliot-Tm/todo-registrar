@@ -44,8 +44,13 @@ final class ConfigFactory
 
     private function getFromYAML(string $path): Config
     {
+        $contents = file_get_contents($path);
+        if (false === $contents) {
+            throw new \RuntimeException(\sprintf('Config file "%s" does not exist', $path));
+        }
+
         return $this->arrayConfigFactory->create(Yaml::parse(
-            file_get_contents($path),
+            $contents,
             Yaml::PARSE_CONSTANT | Yaml::PARSE_EXCEPTION_ON_INVALID_TYPE | Yaml::PARSE_OBJECT,
         ));
     }
