@@ -17,7 +17,7 @@ use Aeliot\TodoRegistrar\Service\Registrar\RegistrarFactoryInterface;
 use Aeliot\TodoRegistrar\Service\Registrar\RegistrarInterface;
 
 /**
- * TODO: make assertion of JIRA config with symfony/validator component.
+ * TODO: #145 make assertion of JIRA config with symfony/validator component.
  */
 class JiraRegistrarFactory implements RegistrarFactoryInterface
 {
