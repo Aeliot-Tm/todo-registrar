@@ -1,0 +1,18 @@
+paths:
+  append: bin/todo-registrar
+  exclude:
+    - tests/fixtures
+    - var
+
+registrar:
+  type: App\RegistrarFactory
+  options:
+    issue:
+      labels: tech-debt
+    service:
+      personalAccessToken: a-token
+      owner: am-i
+      repository: am-i/a-repo
+
+tags:
+  - my_tag

@@ -16,6 +16,9 @@ namespace Aeliot\TodoRegistrar\Service\Registrar\Github;
 use Aeliot\TodoRegistrar\Service\Registrar\RegistrarFactoryInterface;
 use Aeliot\TodoRegistrar\Service\Registrar\RegistrarInterface;
 
+/**
+ * TODO: make assertion of Github config with symfony/validator component.
+ */
 final class GithubRegistrarFactory implements RegistrarFactoryInterface
 {
     public function create(array $config): RegistrarInterface
