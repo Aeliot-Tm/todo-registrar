@@ -26,7 +26,7 @@ class Config
      * @var array<string,mixed>
      */
     private array $registrarConfig;
-    private RegistrarType|RegistrarFactoryInterface $registrarType;
+    private RegistrarType|RegistrarFactoryInterface|string $registrarType;
     /**
      * @var string[]
      */
@@ -72,7 +72,7 @@ class Config
         return $this->registrarConfig;
     }
 
-    public function getRegistrarType(): RegistrarType|RegistrarFactoryInterface
+    public function getRegistrarType(): RegistrarType|RegistrarFactoryInterface|string
     {
         return $this->registrarType;
     }
@@ -80,7 +80,7 @@ class Config
     /**
      * @param array<string,mixed> $config
      */
-    public function setRegistrar(RegistrarType|RegistrarFactoryInterface $type, array $config): self
+    public function setRegistrar(RegistrarType|RegistrarFactoryInterface|string $type, array $config): self
     {
         $this->registrarType = $type;
         $this->registrarConfig = $config;
