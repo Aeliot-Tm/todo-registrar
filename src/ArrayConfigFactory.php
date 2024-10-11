@@ -64,6 +64,9 @@ final class ArrayConfigFactory
         return $finder;
     }
 
+    /**
+     * @param array<string,mixed> $options
+     */
     private function validate(array $options): void
     {
         if (!isset($options['registrar']['type'])) {
