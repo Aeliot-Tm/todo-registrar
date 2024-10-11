@@ -17,7 +17,7 @@ use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
 use Aeliot\TodoRegistrar\Service\File\Finder;
 
 /**
- * TODO: use component symfony/validator to show all violations of array config.
+ * TODO: #144 use component symfony/validator to show all violations of array config.
  *
  * @internal
  */
