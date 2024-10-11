@@ -2,13 +2,22 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of the TODO Registrar project.
+ *
+ * (c) Anatoliy Melnikov <5785276@gmail.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Aeliot\TodoRegistrar;
 
 use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
 use Aeliot\TodoRegistrar\Service\File\Finder;
 
 /**
- * TODO: use component symfony/validator to show all violations of array config
+ * TODO: use component symfony/validator to show all violations of array config.
  *
  * @internal
  */

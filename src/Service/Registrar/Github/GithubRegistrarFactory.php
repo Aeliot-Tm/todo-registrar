@@ -17,7 +17,7 @@ use Aeliot\TodoRegistrar\Service\Registrar\RegistrarFactoryInterface;
 use Aeliot\TodoRegistrar\Service\Registrar\RegistrarInterface;
 
 /**
- * TODO: make assertion of Github config with symfony/validator component
+ * TODO: make assertion of Github config with symfony/validator component.
  */
 final class GithubRegistrarFactory implements RegistrarFactoryInterface
 {

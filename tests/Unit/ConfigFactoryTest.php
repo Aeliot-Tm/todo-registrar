@@ -2,12 +2,20 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of the TODO Registrar project.
+ *
+ * (c) Anatoliy Melnikov <5785276@gmail.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Aeliot\TodoRegistrar\Test\Unit;
 
 use Aeliot\TodoRegistrar\ArrayConfigFactory;
 use Aeliot\TodoRegistrar\ConfigFactory;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Finder\Finder as SymfonyFinder;
 
@@ -37,11 +45,11 @@ final class ConfigFactoryTest extends TestCase
 
         $propertyDirs = $reflection->getProperty('dirs');
         $propertyDirs->setAccessible(true);
-        self::assertSame([dirname(__DIR__, 2)], $propertyDirs->getValue($finder));
+        self::assertSame([\dirname(__DIR__, 2)], $propertyDirs->getValue($finder));
 
         $propertyExclude = $reflection->getProperty('exclude');
         $propertyExclude->setAccessible(true);
-        self::assertSame(['vendor', 'tests/fixtures', 'var',], $propertyExclude->getValue($finder));
+        self::assertSame(['vendor', 'tests/fixtures', 'var'], $propertyExclude->getValue($finder));
 
         $propertyIterators = $reflection->getProperty('iterators');
         $propertyIterators->setAccessible(true);
