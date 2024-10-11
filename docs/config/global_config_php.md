@@ -4,7 +4,7 @@ It expects that file `.todo-registrar.php` or `.todo-registrar.dist.php` added i
 It may be put in any other place, but you have to define path to it when call the script with option `--config=/path/to/cofig`.
 
 Config file is php-file which returns instance of class `\Aeliot\TodoRegistrar\Config`.
-See [example](../examples/JIRA/.todo-registrar.php).
+See [example](../../examples/JIRA/.todo-registrar.php).
 
 ## Methods
 
@@ -42,7 +42,7 @@ Responsible for configuration of registrar factory.
 It accepts two arguments:
 1. First one is registrar type (`\Aeliot\TodoRegistrar\Enum\RegistrarType`)
    or instance of registrar factory (`\Aeliot\TodoRegistrar\Service\Registrar\RegistrarFactoryInterface`).
-2. Second one is array of config for registrar. See [example for JIRA](registrar/jira/config.md).
+2. Second one is array of config for registrar. See [example for JIRA](../registrar/jira/config.md).
 
 So, you can use build-in registrar or pass your own.
 

@@ -85,7 +85,7 @@ chmod +x todo-registrar.phar
    vendor/bin/todo-registrar
    ```
    You may pass option with path to config `--config=/custom/path/to/config`.
-   Otherwise, it tries to use one of default paths to [config file](docs/config.md).
+   Otherwise, it tries to use one of default paths to [config file](docs/config/global_config_php.md).
 2. Commit updated files. You may config your pipeline/job on CI which commits updates.
 
 ## Integration on CI
@@ -101,11 +101,11 @@ So, you have to configure you integration depending on used git-server:
 
 ## Configuration file
 
-It expects that file `.todo-registrar.php` or `.todo-registrar.dist.php` added in the root directory of project.
+It expects that PHP file `.todo-registrar.php` or `.todo-registrar.dist.php` added in the root directory of project
+by default. [See full documentation about config PHP-file](docs/config/global_config_php.md).
+
 It may be put in any other place, but you have to define path to it with option `--config=/custom/path/to/cofig`
 while call the script. Config file is php-file which returns instance of class `\Aeliot\TodoRegistrar\Config`.
-
-[See full documentation about config](docs/config.md)
 
 ## Inline Configuration
 
