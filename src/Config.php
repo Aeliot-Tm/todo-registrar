@@ -26,7 +26,7 @@ class Config
      * @var array<string,mixed>
      */
     private array $registrarConfig;
-    private RegistrarType|RegistrarFactoryInterface $registrarType;
+    private RegistrarType|RegistrarFactoryInterface|string $registrarType;
     /**
      * @var string[]
      */
