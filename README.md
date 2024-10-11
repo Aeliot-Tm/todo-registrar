@@ -102,7 +102,8 @@ So, you have to configure you integration depending on used git-server:
 ## Configuration file
 
 It expects that PHP file `.todo-registrar.php` or `.todo-registrar.dist.php` added in the root directory of project
-by default. [See full documentation about config PHP-file](docs/config/global_config_php.md).
+by default. [See full documentation about config PHP-file](docs/config/global_config_php.md). Alternatively, you can define
+config in YAML format. [See full documentation about config YAML-file](docs/config/global_config_yaml.md)
 
 It may be put in any other place, but you have to define path to it with option `--config=/custom/path/to/cofig`
 while call the script. Config file is php-file which returns instance of class `\Aeliot\TodoRegistrar\Config`.
