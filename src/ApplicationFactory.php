@@ -77,7 +77,7 @@ class ApplicationFactory
             } else {
                 $newType = RegistrarType::tryFrom($registrarType);
                 if (!$newType) {
-                    throw new InvalidConfigException(sprintf('Invalid type of registrar configured: %s', $registrarType));
+                    throw new InvalidConfigException(\sprintf('Invalid type of registrar configured: %s', $registrarType));
                 }
                 $registrarType = $newType;
             }

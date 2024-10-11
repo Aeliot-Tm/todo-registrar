@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar;
 
 use Aeliot\TodoRegistrar\Enum\RegistrarType;
-use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
 use Aeliot\TodoRegistrar\Service\File\Finder;
 use Aeliot\TodoRegistrar\Service\Registrar\RegistrarFactoryInterface;
 
