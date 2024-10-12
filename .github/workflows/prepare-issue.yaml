@@ -20,6 +20,10 @@ jobs:
       repository-projects: write
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Add Project
         env:
