@@ -20,5 +20,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TODO_REGISTRAR_ACCESS_TOKEN }}
         run: |
-          gh auth refresh -s project
+          gh auth refresh -s project -h github.com
           gh issue edit ${{ github.event.issue.number }} --add-project "${{ secrets.GH_TODO_REGISTRAR_PROJECT }}"
