@@ -25,8 +25,13 @@ final class ConfigFileGuesser
     public function guess(): string
     {
         $candidates = [
+            '.todo-registrar.yaml',
+            '.todo-registrar.dist.yaml',
             '.todo-registrar.php',
             '.todo-registrar.dist.php',
+            // support of old extension
+            '.todo-registrar.yml',
+            '.todo-registrar.dist.yml',
         ];
         foreach ($candidates as $candidate) {
             $path = $this->absolutePathMaker->prepare($candidate);
