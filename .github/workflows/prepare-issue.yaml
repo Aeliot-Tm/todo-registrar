@@ -14,13 +14,15 @@ jobs:
     name: Prepare Issue
     runs-on: ubuntu-latest
 
+    # Define the permissions for the action
+    permissions:
+      issues: write
+      repository-projects: write
+
     steps:
 
       - name: Add Project
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TODO_REGISTRAR_ACCESS_TOKEN }}
         run: |
-          # See https://github.com/cli/cli/issues/3799 for more details
-          alias gh="env -u GITHUB_TOKEN gh $1"
-          gh auth refresh -s project -h github.com
           gh issue edit ${{ github.event.issue.number }} --add-project "${{ secrets.GH_TODO_REGISTRAR_PROJECT }}"
