@@ -1,0 +1,24 @@
+name: Prepare Issue
+
+on:
+  issues:
+    types: [ opened ]
+
+# See https://stackoverflow.com/a/72408109
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.issue.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  prepare-issue:
+    name: Prepare Issue
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Add Project
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TODO_REGISTRAR_ACCESS_TOKEN }}
+        run: |
+          gh auth refresh -s project
+          gh issue edit ${{ github.event.issue.number }} --add-project "${{ secrets.GH_TODO_REGISTRAR_PROJECT }}"
