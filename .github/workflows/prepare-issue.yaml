@@ -14,6 +14,11 @@ jobs:
     name: Prepare Issue
     runs-on: ubuntu-latest
 
+    # Define the permissions for the action
+    permissions:
+      issues: write
+      repository-projects: write
+
     steps:
 
       - name: Add Project
