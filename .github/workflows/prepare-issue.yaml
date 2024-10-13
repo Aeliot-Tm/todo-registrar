@@ -20,8 +20,8 @@ jobs:
       repository-projects: write
 
     steps:
-      - name: Add Project
-        uses: actions/add-to-project@v1
+      - name: Add To GitHub projects
+        uses: actions/add-to-project@v1.0.2
         with:
           project-url: ${{ secrets.GH_TODO_REGISTRAR_PROJECT_URL }}
           github-token: ${{ secrets.GH_TODO_REGISTRAR_PROJECT }}
