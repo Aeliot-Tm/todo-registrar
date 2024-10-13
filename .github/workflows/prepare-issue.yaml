@@ -1,4 +1,4 @@
-name: Prepare Issue
+name: Prepare Opened Issue
 
 on:
   issues:
@@ -20,13 +20,8 @@ jobs:
       repository-projects: write
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
       - name: Add Project
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TODO_REGISTRAR_ACCESS_TOKEN }}
-        run: |
-          gh issue edit ${{ github.event.issue.number }} --add-project "${{ secrets.GH_TODO_REGISTRAR_PROJECT }}"
+        uses: actions/add-to-project@v1
+        with:
+          project-url: ${{ secret.GH_TODO_REGISTRAR_PROJECT_URL }}
+          github-token: ${{ secrets.GH_TODO_REGISTRAR_PROJECT }}
