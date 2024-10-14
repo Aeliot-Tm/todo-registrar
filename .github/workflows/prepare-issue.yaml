@@ -10,6 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Add To GitHub projects
+        if: 1 == 0 # forbid the step temporary
         uses: actions/add-to-project@v1.0.2
         with:
           project-url: ${{ secrets.GH_TODO_REGISTRAR_PROJECT_URL }}
