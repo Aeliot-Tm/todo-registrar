@@ -13,4 +13,4 @@ jobs:
         uses: actions/add-to-project@v1.0.2
         with:
           project-url: ${{ secrets.GH_TODO_REGISTRAR_PROJECT_URL }}
-          github-token: ${{ secrets.GH_TODO_REGISTRAR_PROJECT }}
+          github-token: ${{ secrets.GH_TODO_REGISTRAR_ACCESS_TOKEN }}
