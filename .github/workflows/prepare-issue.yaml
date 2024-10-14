@@ -4,21 +4,10 @@ on:
   issues:
     types: [ opened ]
 
-# See https://stackoverflow.com/a/72408109
-concurrency:
-  group: ${{ github.workflow }}-${{ github.event.issue.number || github.ref }}
-  cancel-in-progress: true
-
 jobs:
   prepare-issue:
     name: Prepare Issue
     runs-on: ubuntu-latest
-
-    # Define the permissions for the action
-    permissions:
-      issues: write
-      repository-projects: write
-
     steps:
       - name: Add To GitHub projects
         uses: actions/add-to-project@v1.0.2
