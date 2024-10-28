@@ -1,7 +1,7 @@
 ---
 name: ⚠️ PHP Compatibility Issue
 about: A change in PHP requires adaption in TODO Registrar?
-labels: type/change-in-php-requires-adaptation
+labels: compatibility
 ---
 
 <!--
