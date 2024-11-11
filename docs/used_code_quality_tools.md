@@ -56,10 +56,7 @@ composer phpunit
 
 ### Security vulnerabilities check
 
-Package [enlightn/security-checker](https://github.com/enlightn/security-checker) is responsible for detection of components
-with security vulnerabilities.
-
-Call script to use:
+Use built in command:
 ```shell
-composer check-security
+composer audit
 ```
