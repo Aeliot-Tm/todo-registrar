@@ -52,6 +52,7 @@
     "require-dev": {
         "dg/bypass-finals": "^1.7",
         "enlightn/security-checker": "^2.0",
+        "phpstan/phpstan": "^2.0",
         "roave/security-advisories": "dev-latest"
     },
     "scripts": {
@@ -76,12 +77,12 @@
             "@phpstan-clear",
             "@phpstan-analyse"
         ],
-        "phpstan-analyse": "tools/phpstan.phar analyse  -c scripts/phpstan/config.neon ",
+        "phpstan-analyse": "vendor/bin/phpstan analyse  -c scripts/phpstan/config.neon ",
         "phpstan-baseline": [
             "@phpstan-clear",
             "@phpstan-analyse --generate-baseline scripts/phpstan/baseline.neon --allow-empty-baseline"
         ],
-        "phpstan-clear": "tools/phpstan.phar clear-result-cache -c scripts/phpstan/config.neon",
+        "phpstan-clear": "vendor/bin/phpstan clear-result-cache -c scripts/phpstan/config.neon",
         "phpunit": "tools/phpunit.phar -c scripts/phpunit/phpunit.xml",
         "require-check": "tools/composer-require-checker.phar check --config-file=scripts/composer-require-checker/config.json composer.json --output=text",
         "unused": "XDEBUG_MODE=off tools/composer-unused.phar unused -c ./scripts/composer-unused/config.php"
