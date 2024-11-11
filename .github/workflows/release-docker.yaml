@@ -1,0 +1,141 @@
+#
+name: Create and publish a Docker image
+
+# Configures this workflow to run every time a change is pushed to the branch called `release`.
+on:
+  release:
+    types: [ created ]
+
+# Defines two custom environment variables for the workflow. These are used for the Container registry domain, and a name for the Docker image that this workflow builds.
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+  TODO_REGISTRAR_PHAR: todo-registrar.phar
+
+# There is a single job in this workflow. It's configured to run on the latest available version of Ubuntu.
+jobs:
+  build-phar:
+    runs-on: ubuntu-latest
+    name: Build PHAR
+
+    env:
+      TODO_REGISTRAR_SIGN: todo-registrar.phar.asc
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+          ini-values: phar.readonly=0
+          tools: composer, box
+          coverage: none
+
+      - name: Cache Composer packages
+        id: composer-cache
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: "os-${{ runner.os }}-php-${{ runner.php-version }}-composer-${{ hashFiles('**/composer.lock') }}"
+          restore-keys: "os-${{ runner.os }}-php-${{ runner.php-version }}-composer-"
+
+      - name: Install Composer dependencies
+        uses: ramsey/composer-install@v3
+        with:
+          composer-options: '--no-dev'
+
+      - name: Build PHAR
+        run: composer build
+
+      # The following section is done only for releases
+      - name: Import GPG key
+        uses: crazy-max/ghaction-import-gpg@v6
+        with:
+          gpg_private_key: ${{ secrets.GPG_KEY_9D0DD6FCB92C84688B777DF59204DEE8CAE9C22C }}
+          passphrase: "${{ secrets.GPG_KEY_9D0DD6FCB92C84688B777DF59204DEE8CAE9C22C_PASSPHRASE }}"
+
+      - name: Sign the PHAR
+        #        if: github.event_name == 'release'
+        run: |
+          gpg --local-user 9D0DD6FCB92C84688B777DF59204DEE8CAE9C22C \
+              --batch \
+              --yes \
+              --passphrase="${{ secrets.GPG_KEY_9D0DD6FCB92C84688B777DF59204DEE8CAE9C22C_PASSPHRASE }}" \
+              --detach-sign \
+              --output ${{ env.TODO_REGISTRAR_SIGN }} \
+              ${{ env.TODO_REGISTRAR_PHAR }}
+
+      - name: Verify signature
+        run: gpg --verify ${{ env.TODO_REGISTRAR_SIGN }} ${{ env.TODO_REGISTRAR_PHAR }}
+
+      - uses: actions/upload-artifact@master
+        with:
+          name: ${{ env.TODO_REGISTRAR_PHAR }}
+          path: "${{ github.workspace }}/${{ env.TODO_REGISTRAR_PHAR }}"
+
+  build-and-push-image:
+    needs: build-phar
+    runs-on: ubuntu-latest
+    # Sets the permissions granted to the `GITHUB_TOKEN` for the actions in this job.
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+      id-token: write
+      #
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@master
+        with:
+          name: ${{ env.TODO_REGISTRAR_PHAR }}
+          path: "${{ github.workspace }}/${{ env.TODO_REGISTRAR_PHAR }}"
+
+      # Uses the `docker/login-action` action to log in to the Container registry using the account
+      # and password that will publish the packages. Once published, the packages are scoped to the account defined here.
+      - name: Log in to the Container registry
+        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # This step uses [docker/metadata-action](https://github.com/docker/metadata-action#about) to extract tags
+      # and labels that will be applied to the specified image. The `id` "meta" allows the output of this step
+      # to be referenced in a subsequent step. The `images` value provides the base name for the tags and labels.
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+
+      # This step uses the `docker/build-push-action` action to build the image, based on your repository's `Dockerfile`.
+      # If the build succeeds, it pushes the image to GitHub Packages.
+      # It uses the `context` parameter to define the build's context as the set of files located in the specified path.
+      # For more information, see "[Usage](https://github.com/docker/build-push-action#usage)" in the README
+      # of the `docker/build-push-action` repository.
+      # It uses the `tags` and `labels` parameters to tag and label the image with the output from the "meta" step.
+      - name: Build and push Docker image
+        id: push
+        uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
+        with:
+          context: .
+          file: ./.docker/release/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+      # This step generates an artifact attestation for the image, which is an unforgeable statement about where
+      # and how it was built. It increases supply chain security for people who consume the image. For more information,
+      # see "[AUTOTITLE](/actions/security-guides/using-artifact-attestations-to-establish-provenance-for-builds)."
+      - name: Generate artifact attestation
+        uses: actions/attest-build-provenance@v1
+        with:
+          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME}}
+          subject-digest: ${{ steps.push.outputs.digest }}
+          push-to-registry: true
