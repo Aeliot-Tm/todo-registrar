@@ -15,5 +15,5 @@
   <phar name="phpunit" version="^11.2.8" installed="11.2.8" location="./tools/phpunit.phar" copy="true"/>
   <phar name="php-cs-fixer" version="^3.60.0" installed="3.60.0" location="./tools/php-cs-fixer.phar" copy="true"/>
   <phar name="php-cs-fixer-baseline" version="^2.1.2" installed="2.1.2" location="./tools/pcsf-baseline.phar" copy="true"/>
-  <phar name="phpstan" version="^1.11.8" installed="1.11.8" location="./tools/phpstan.phar" copy="true"/>
+  <phar name="phpstan" version="^2.0.1" installed="2.0.1" location="./tools/phpstan.phar" copy="true"/>
 </phive>
