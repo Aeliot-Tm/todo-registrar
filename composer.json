@@ -57,7 +57,7 @@
     "scripts": {
         "build": [
             "php scripts/box/prepare-config.php",
-            "tools/box.phar compile --config=scripts/box/config.json"
+            "box compile --config=scripts/box/config.json"
         ],
         "check-all": [
             "@cs-fixer-check",

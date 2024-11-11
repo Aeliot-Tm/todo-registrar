@@ -41,6 +41,9 @@ RUN set -xe; \
     chmod +x phive.phar && \
     mv phive.phar /usr/local/bin/phive
 
+COPY --from=boxproject/box:latest /box.phar /usr/bin/box
+RUN chmod +x /usr/bin/box
+
 WORKDIR /app
 
 COPY composer.* ./
