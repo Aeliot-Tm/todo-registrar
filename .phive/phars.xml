@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phive xmlns="https://phar.io/phive">
   <phar name="composer-require-checker"
-        version="^4.12.0"
-        installed="4.12.0"
+        version="^4.13.0"
+        installed="4.13.0"
         location="./tools/composer-require-checker.phar"
         copy="true"
   />
