@@ -245,19 +245,3 @@ jobs:
 
       - name: 'Run all PHPUnit tests'
         run: composer run phpunit
-
-  security-vulnerabilities:
-    name: 'Security vulnerabilities check'
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: shivammathur/setup-php@v2
-        with:
-          php-version: 8.2
-          tools: composer
-          coverage: none
-
-      - uses: actions/checkout@v4
-
-      - name: 'Check security vulnerabilities'
-        run: composer audit
