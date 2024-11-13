@@ -2,6 +2,8 @@ name: Security Audit
 
 on:
   push:
+  schedule:
+    - cron: '45 12 * * *'
 
 permissions:
   contents: read
