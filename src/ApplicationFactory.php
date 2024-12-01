@@ -14,8 +14,10 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar;
 
 use Aeliot\TodoRegistrar\Console\OptionsReader;
+use Aeliot\TodoRegistrar\Console\Output;
 use Aeliot\TodoRegistrar\Enum\RegistrarType;
 use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
+use Aeliot\TodoRegistrar\Exception\InvalidOptionException;
 use Aeliot\TodoRegistrar\Service\Comment\Detector;
 use Aeliot\TodoRegistrar\Service\Comment\Extractor;
 use Aeliot\TodoRegistrar\Service\CommentRegistrar;
@@ -31,18 +33,22 @@ use Aeliot\TodoRegistrar\Service\Registrar\RegistrarInterface;
 use Aeliot\TodoRegistrar\Service\Tag\Detector as TagDetector;
 use Aeliot\TodoRegistrar\Service\TodoFactory;
 
+/**
+ * @internal
+ */
 class ApplicationFactory
 {
     public function create(): Application
     {
-        $config = $this->getConfig();
-        $registrar = $this->createRegistrar($config);
-        $commentRegistrar = $this->createCommentRegistrar($registrar, $config);
-        $fileProcessor = $this->createFileProcessor($commentRegistrar);
+        $options = (new OptionsReader())->getOptions();
+        $config = $this->getConfig($options);
+        $output = $this->getOutput($options);
+        $fileProcessor = $this->getProcessor($config);
 
         return new Application(
             $config->getFinder(),
             $fileProcessor,
+            $output,
         );
     }
 
@@ -78,7 +84,8 @@ class ApplicationFactory
             } else {
                 $newType = RegistrarType::tryFrom($registrarType);
                 if (!$newType) {
-                    throw new InvalidConfigException(\sprintf('Invalid type of registrar configured: %s', $registrarType));
+                    throw new InvalidConfigException(\sprintf('Invalid type of registrar configured: %s',
+                        $registrarType));
                 }
                 $registrarType = $newType;
             }
@@ -93,10 +100,12 @@ class ApplicationFactory
         return $registrarFactory->create($config->getRegistrarConfig());
     }
 
-    private function getConfig(): Config
+    /**
+     * @param array<string,mixed> $options
+     */
+    private function getConfig(array $options): Config
     {
         $absolutePathMaker = new AbsolutePathMaker();
-        $options = (new OptionsReader())->getOptions();
         $path = $options['config'] ?? null;
         if ($path) {
             $path = $absolutePathMaker->prepare($path);
@@ -104,5 +113,30 @@ class ApplicationFactory
         $path ??= (new ConfigFileGuesser($absolutePathMaker))->guess();
 
         return (new ConfigFactory(new ArrayConfigFactory()))->create($path);
+    }
+
+    public function getProcessor(Config $config): FileProcessor
+    {
+        $registrar = $this->createRegistrar($config);
+        $commentRegistrar = $this->createCommentRegistrar($registrar, $config);
+
+        return $this->createFileProcessor($commentRegistrar);
+    }
+
+    /**
+     * @param array<string,mixed> $options
+     */
+    private function getOutput(array $options): Output
+    {
+        $verbosity = (string) ($options['verbose'] ?? (int) getenv('SHELL_VERBOSITY'));
+
+        return new Output(match ($verbosity) {
+            '3', 'vv', 'debug' => Output::VERBOSITY_DEBUG,
+            '2', 'v', 'very', 'very verbose', 'very_verbose', 'very-verbose' => Output::VERBOSITY_VERY_VERBOSE,
+            '1', '', 'verbose' => Output::VERBOSITY_VERBOSE,
+            '0', 'normal', => Output::VERBOSITY_NORMAL,
+            '-1', => Output::VERBOSITY_QUIET,
+            default => throw new InvalidOptionException(sprintf('Unexpected value "%s" for verbosity', $verbosity))
+        });
     }
 }

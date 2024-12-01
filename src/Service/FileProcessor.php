@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service;
 
+use Aeliot\TodoRegistrar\Console\Output;
 use Aeliot\TodoRegistrar\Service\File\Saver;
 use Aeliot\TodoRegistrar\Service\File\Tokenizer;
 
@@ -25,13 +26,24 @@ class FileProcessor
     ) {
     }
 
-    public function process(\SplFileInfo $file): void
+    public function process(\SplFileInfo $file, Output $output): int
     {
         $tokens = $this->tokenizer->tokenize($file);
-        if (!$this->commentRegistrar->register($tokens)) {
-            return;
+        $countNewTodos = $this->commentRegistrar->register($tokens, $output);
+        if (!$countNewTodos) {
+            if ($output->isDebug()) {
+                $output->writeln("No one TODO registered for file: {$file->getPathname()}");
+            }
+
+            return $countNewTodos;
+        }
+
+        if ($output->isDebug()) {
+            $output->writeln("Save changes of file: {$file->getPathname()}");
         }
 
         $this->saver->save($file, $tokens);
+
+        return $countNewTodos;
     }
 }
