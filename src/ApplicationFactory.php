@@ -84,8 +84,7 @@ class ApplicationFactory
             } else {
                 $newType = RegistrarType::tryFrom($registrarType);
                 if (!$newType) {
-                    throw new InvalidConfigException(\sprintf('Invalid type of registrar configured: %s',
-                        $registrarType));
+                    throw new InvalidConfigException(\sprintf('Invalid type of registrar: %s', $registrarType));
                 }
                 $registrarType = $newType;
             }
@@ -136,7 +135,7 @@ class ApplicationFactory
             '1', '', 'verbose' => Output::VERBOSITY_VERBOSE,
             '0', 'normal', => Output::VERBOSITY_NORMAL,
             '-1', => Output::VERBOSITY_QUIET,
-            default => throw new InvalidOptionException(sprintf('Unexpected value "%s" for verbosity', $verbosity))
+            default => throw new InvalidOptionException(\sprintf('Unexpected value "%s" for verbosity', $verbosity))
         });
     }
 }

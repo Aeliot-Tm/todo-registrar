@@ -52,9 +52,9 @@ final class OptionsReader
         }
 
         if (false === $values['verbose']) {
-            if (array_key_exists('verbose', $options)) {
+            if (\array_key_exists('verbose', $options)) {
                 $values['verbose'] = '0';
-            } elseif (array_key_exists('v', $options)) {
+            } elseif (\array_key_exists('v', $options)) {
                 $values['verbose'] = '1';
             }
         }
