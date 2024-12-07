@@ -114,7 +114,7 @@ class ApplicationFactory
         return (new ConfigFactory(new ArrayConfigFactory()))->create($path);
     }
 
-    public function getProcessor(Config $config): FileProcessor
+    private function getProcessor(Config $config): FileProcessor
     {
         $registrar = $this->createRegistrar($config);
         $commentRegistrar = $this->createCommentRegistrar($registrar, $config);
