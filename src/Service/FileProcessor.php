@@ -30,19 +30,14 @@ class FileProcessor
     {
         $tokens = $this->tokenizer->tokenize($file);
         $countNewTodos = $this->commentRegistrar->register($tokens, $output);
-        if (!$countNewTodos) {
+        if ($countNewTodos) {
             if ($output->isDebug()) {
-                $output->writeln("No one TODO registered for file: {$file->getPathname()}");
+                $output->writeln("Save changes of file: {$file->getPathname()}");
             }
-
-            return $countNewTodos;
+            $this->saver->save($file, $tokens);
+        } elseif ($output->isDebug()) {
+            $output->writeln("No one TODO registered for file: {$file->getPathname()}");
         }
-
-        if ($output->isDebug()) {
-            $output->writeln("Save changes of file: {$file->getPathname()}");
-        }
-
-        $this->saver->save($file, $tokens);
 
         return $countNewTodos;
     }
