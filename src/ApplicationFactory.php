@@ -100,7 +100,11 @@ class ApplicationFactory
     }
 
     /**
-     * @param array<string,mixed> $options
+     * @param array{
+     *      config: string|null,
+     *      quiet: bool|null,
+     *      verbose: int|string|null
+     *  } $options
      */
     private function getConfig(array $options): Config
     {

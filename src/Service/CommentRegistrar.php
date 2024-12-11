@@ -51,9 +51,10 @@ class CommentRegistrar
         foreach ($tokens as $token) {
             $commentParts = $this->commentExtractor->extract($token->text);
             foreach ($commentParts->getTodos() as $commentPart) {
-                if ($commentPart->getTagMetadata()?->getTicketKey()) {
+                $ticketKey = $commentPart->getTagMetadata()?->getTicketKey();
+                if ($ticketKey) {
                     if ($output->isVeryVerbose()) {
-                        $output->writeln("Skip TODO with Key: {$commentPart->getTagMetadata()?->getTicketKey()}");
+                        $output->writeln("Skip TODO with Key: {$ticketKey}");
                     }
                     continue;
                 }

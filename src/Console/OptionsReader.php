@@ -29,6 +29,13 @@ final class OptionsReader
      */
     public function getOptions(): array
     {
+        /**
+         * @var array{
+         *     config: string|array<string>|null,
+         *     quiet: bool|array<bool>|string|array<string>|null,
+         *     verbose: bool|array<bool>|string|array<string>|int|null
+         * } $values
+         */
         $values = [];
         /** @var array<string,string> $options */
         $options = getopt('c:qv::', ['config:', 'quiet', 'verbose::']);
@@ -45,6 +52,10 @@ final class OptionsReader
             $values[$long] = $options[$short] ?? $options[$long] ?? $default;
         }
 
+        if (!(null === $values['config'] || is_string($values['config']))) {
+            throw new InvalidOptionException('Invalid value for option "config"');
+        }
+
         if (false === $values['quiet']) {
             $values['verbose'] = '-1';
         } elseif (null !== $values['quiet']) {
@@ -57,6 +68,10 @@ final class OptionsReader
             } elseif (\array_key_exists('v', $options)) {
                 $values['verbose'] = '1';
             }
+        }
+
+        if (!(null === $values['verbose'] || is_int($values['verbose']) || is_string($values['verbose']))) {
+            throw new InvalidOptionException('Invalid value for option "config"');
         }
 
         return $values;
