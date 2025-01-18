@@ -53,7 +53,7 @@ final class OptionsReader
             $values[$long] = $options[$short] ?? $options[$long] ?? $default;
         }
 
-        if (!(null === $values['config'] || is_string($values['config']))) {
+        if (!(null === $values['config'] || \is_string($values['config']))) {
             throw new InvalidOptionException('Invalid value for option "config"');
         }
 
@@ -71,7 +71,7 @@ final class OptionsReader
             }
         }
 
-        if (!(null === $values['verbose'] || is_int($values['verbose']) || is_string($values['verbose']))) {
+        if (!(null === $values['verbose'] || \is_int($values['verbose']) || \is_string($values['verbose']))) {
             throw new InvalidOptionException('Invalid value for option "config"');
         }
 
