@@ -42,6 +42,7 @@ final class OptionsReader
         $defaults = [
             'config' => ['c', null],
             'quiet' => ['q', null],
+            // TODO set default value to null
             'verbose' => ['v', '1'],
         ];
 
