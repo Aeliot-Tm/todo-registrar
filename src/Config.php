@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar;
 
 use Aeliot\TodoRegistrar\Enum\RegistrarType;
+use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
 use Aeliot\TodoRegistrar\Service\File\Finder;
 use Aeliot\TodoRegistrar\Service\Registrar\RegistrarFactoryInterface;
 
@@ -49,7 +50,7 @@ class Config
         return $this->InlineConfigFactory;
     }
 
-    public function setInlineConfigFactory(?InlineConfigFactoryInterface $InlineConfigFactory): void
+    public function setInlineConfigFactory(InlineConfigFactoryInterface $InlineConfigFactory): void
     {
         $this->InlineConfigFactory = $InlineConfigFactory;
     }
@@ -59,7 +60,7 @@ class Config
         return $this->inlineConfigReader;
     }
 
-    public function setInlineConfigReader(?InlineConfigReaderInterface $inlineConfigReader): void
+    public function setInlineConfigReader(InlineConfigReaderInterface $inlineConfigReader): void
     {
         $this->inlineConfigReader = $inlineConfigReader;
     }
@@ -101,6 +102,10 @@ class Config
      */
     public function setTags(array $tags): self
     {
+        if (!$tags) {
+            throw new InvalidConfigException('Empty list of tags');
+        }
+
         $this->tags = $tags;
 
         return $this;
