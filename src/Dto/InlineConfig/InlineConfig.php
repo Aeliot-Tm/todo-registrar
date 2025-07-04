@@ -14,15 +14,19 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Dto\InlineConfig;
 
 use Aeliot\TodoRegistrar\InlineConfigInterface;
+use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
 
 class InlineConfig implements InlineConfigInterface
 {
+    protected CamelCaseToSnakeCaseNameConverter $nameConverter;
+
     /**
      * @param array<array-key,mixed> $data
      */
     public function __construct(
         private array $data,
     ) {
+        $this->nameConverter = new CamelCaseToSnakeCaseNameConverter();
     }
 
     /**
@@ -30,7 +34,18 @@ class InlineConfig implements InlineConfigInterface
      */
     public function offsetExists(mixed $offset): bool
     {
-        return \array_key_exists($offset, $this->data);
+        if (array_key_exists($offset, $this->data)) {
+            return true;
+        }
+
+        $snakeCase = $this->nameConverter->normalize($offset);
+        if (array_key_exists($snakeCase, $this->data)) {
+            return true;
+        }
+
+        $camelCase = $this->nameConverter->denormalize($offset);
+
+        return array_key_exists($camelCase, $this->data);
     }
 
     /**
@@ -38,7 +53,18 @@ class InlineConfig implements InlineConfigInterface
      */
     public function offsetGet(mixed $offset): mixed
     {
-        return $this->data[$offset];
+        if (array_key_exists($offset, $this->data)) {
+            return $this->data[$offset];
+        }
+
+        $snakeCase = $this->nameConverter->normalize($offset);
+        if (array_key_exists($snakeCase, $this->data)) {
+            return $this->data[$snakeCase];
+        }
+
+        $camelCase = $this->nameConverter->denormalize($offset);
+
+        return $this->data[$camelCase];
     }
 
     /**
