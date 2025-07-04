@@ -63,7 +63,7 @@ final class IssueFieldFactory
     private function setIssueType(IssueField $issueField, Todo $todo): void
     {
         $inlineConfig = $todo->getInlineConfig();
-        $issueType = $inlineConfig['issue_type']
+        $issueType = $inlineConfig['issueType']
             ?? $this->issueConfig->getIssueType();
 
         $issueField->setIssueTypeAsString($issueType);
