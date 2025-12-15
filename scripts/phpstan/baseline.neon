@@ -13,6 +13,12 @@ parameters:
 			path: ../../src/Console/Output.php
 
 		-
+			message: '#^Parameter \#1 \$stream of function stream_set_write_buffer expects resource, resource\|false given\.$#'
+			identifier: argument.type
+			count: 4
+			path: ../../src/Console/Output.php
+
+		-
 			message: '#^Call to an undefined method Github\\Api\\AbstractApi\:\:labels\(\)\.$#'
 			identifier: method.notFound
 			count: 1
