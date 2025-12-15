@@ -143,11 +143,32 @@ final class Output
     private function openOutputStream()
     {
         if (!$this->hasStdoutSupport()) {
-            return fopen('php://output', 'w');
+            $stream = fopen('php://output', 'w');
+            stream_set_write_buffer($stream, 0);
+
+            return $stream;
         }
 
-        // Use STDOUT when possible to prevent from opening too many file descriptors
-        return \defined('STDOUT') ? \STDOUT : (@fopen('php://stdout', 'w') ?: fopen('php://output', 'w'));
+        // Try to use direct file descriptor first (unbuffered)
+        $stream = @fopen('php://fd/1', 'w');
+        if ($stream) {
+            stream_set_write_buffer($stream, 0);
+
+            return $stream;
+        }
+
+        // Fallback to STDOUT constant
+        if (\defined('STDOUT')) {
+            stream_set_write_buffer(\STDOUT, 0);
+
+            return \STDOUT;
+        }
+
+        // Fallback to php://stdout
+        $stream = @fopen('php://stdout', 'w') ?: fopen('php://output', 'w');
+        stream_set_write_buffer($stream, 0);
+
+        return $stream;
     }
 
     /**
@@ -156,10 +177,31 @@ final class Output
     private function openErrorStream()
     {
         if (!$this->hasStderrSupport()) {
-            return fopen('php://output', 'w');
+            $stream = fopen('php://output', 'w');
+            stream_set_write_buffer($stream, 0);
+
+            return $stream;
         }
 
-        // Use STDERR when possible to prevent from opening too many file descriptors
-        return \defined('STDERR') ? \STDERR : (@fopen('php://stderr', 'w') ?: fopen('php://output', 'w'));
+        // Try to use direct file descriptor first (unbuffered)
+        $stream = @fopen('php://fd/2', 'w');
+        if ($stream) {
+            stream_set_write_buffer($stream, 0);
+
+            return $stream;
+        }
+
+        // Fallback to STDERR constant
+        if (\defined('STDERR')) {
+            stream_set_write_buffer(\STDERR, 0);
+
+            return \STDERR;
+        }
+
+        // Fallback to php://stderr
+        $stream = @fopen('php://stderr', 'w') ?: fopen('php://output', 'w');
+        stream_set_write_buffer($stream, 0);
+
+        return $stream;
     }
 }
