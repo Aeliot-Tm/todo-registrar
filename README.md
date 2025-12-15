@@ -33,6 +33,7 @@ There are few ways of installation:
 1. [Phive](#phive)
 2. [Composer](#composer)
 3. [Downloading of PHAR directly](#downloading-of-phar-directly)
+4. [Docker](#docker)
 
 #### Phive
 
@@ -78,7 +79,49 @@ rm todo-registrar.phar.asc
 chmod +x todo-registrar.phar
 ```
 
+#### Docker
+
+You can use the pre-built Docker image from GitHub Container Registry:
+
+```shell
+# Pull the latest image
+docker pull ghcr.io/aeliot-tm/todo-registrar:latest
+
+# Or use a specific version tag
+docker pull ghcr.io/aeliot-tm/todo-registrar:v1.8.0
+```
+
+To analyze your project, mount your code directory and configuration file:
+
+```shell
+# Basic usage (config file should be in project root)
+docker run --rm \
+  -v $(pwd):/code \
+  ghcr.io/aeliot-tm/todo-registrar:latest
+
+# With custom config file path
+docker run --rm \
+  -v $(pwd):/code \
+  ghcr.io/aeliot-tm/todo-registrar:latest \
+  --config=/code/.todo-registrar.yaml
+
+# With verbose output
+docker run --rm \
+  -v $(pwd):/code \
+  ghcr.io/aeliot-tm/todo-registrar:latest \
+  --config=/code/.todo-registrar.yaml \
+  --verbose=very_verbose
+```
+
+**Important notes:**
+- Mount your project directory to `/code` (this is the working directory inside the container)
+- The config file can be inside your project directory (will be found automatically) or mounted separately
+- Use `-it` flags for interactive mode if you need to see real-time output
+- The container uses unbuffered output, so verbose messages will appear in real-time
+
 ## Using
+
+### Command Line
 
 1. Call script:
    ```shell
@@ -86,7 +129,38 @@ chmod +x todo-registrar.phar
    ```
    You may pass option with path to config `--config=/custom/path/to/config`.
    Otherwise, it tries to use one of default paths to [config file](docs/config/global_config_php.md).
+
 2. Commit updated files. You may config your pipeline/job on CI which commits updates.
+
+### Docker
+
+When using Docker, mount your project directory and run the container:
+
+```shell
+# Run with default config (searches for .todo-registrar.* files in project root)
+docker run --rm -it \
+  -v $(pwd):/code \
+  ghcr.io/aeliot-tm/todo-registrar:latest
+
+# Run with explicit config path
+docker run --rm -it \
+  -v $(pwd):/code \
+  ghcr.io/aeliot-tm/todo-registrar:latest \
+  --config=/code/.todo-registrar.yaml
+
+# Run with verbose output to see processing details
+docker run --rm -it \
+  -v $(pwd):/code \
+  ghcr.io/aeliot-tm/todo-registrar:latest \
+  --config=/code/.todo-registrar.yaml \
+  --verbose=very_verbose
+```
+
+**Available options:**
+- `--config=/path/to/config` - Path to configuration file (inside container)
+- `--verbose=very_verbose` or `-vv` - Enable very verbose output
+- `--verbose=debug` or `-vvv` - Enable debug output
+- `--quiet` or `-q` - Suppress all output except errors
 
 ## Integration on CI
 
