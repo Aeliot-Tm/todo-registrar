@@ -2,8 +2,7 @@ FROM php:8.2-cli
 
 RUN mkdir /code
 
-COPY todo-registrar.phar /usr/local/bin/todo-registrar
-RUN chmod +x /usr/local/bin/todo-registrar
+COPY --chmod=755 todo-registrar.phar /usr/local/bin/todo-registrar
 
 WORKDIR /code
 
