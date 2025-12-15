@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar;
 
+use Aeliot\TodoRegistrar\Console\Output;
 use Aeliot\TodoRegistrar\Exception\CommentRegistrationException;
 use Aeliot\TodoRegistrar\Service\File\Finder;
 use Aeliot\TodoRegistrar\Service\FileProcessor;
@@ -22,19 +23,33 @@ class Application
     public function __construct(
         private Finder $finder,
         private FileProcessor $fileProcessor,
+        private Output $output,
     ) {
     }
 
     public function run(): int
     {
         $result = 0;
+        $totalFiles = 0;
+        $totalNewTodos = 0;
         foreach ($this->finder as $file) {
+            if ($this->output->isDebug()) {
+                $this->output->writeln("Begin process file: {$file->getPathname()}");
+            }
             try {
-                $this->fileProcessor->process($file);
+                $totalNewTodos += $countNewTodos = $this->fileProcessor->process($file, $this->output);
+                if ($countNewTodos && $this->output->isVerbose()) {
+                    $this->output->writeln("Registered $countNewTodos for file: {$file->getPathname()}");
+                }
             } catch (\Throwable $exception) {
                 $this->writeError($exception, $file);
                 $result = 1;
             }
+            ++$totalFiles;
+        }
+
+        if (!$this->output->isQuiet()) {
+            $this->output->writeln("Registered $totalNewTodos for $totalFiles files");
         }
 
         return $result;
@@ -61,6 +76,6 @@ class Application
             $message .= "Stack trace:\n {$exception->getTraceAsString()} \n";
         }
 
-        fwrite(\STDERR, $message);
+        $this->output->writeErr($message);
     }
 }

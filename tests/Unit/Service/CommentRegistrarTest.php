@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Test\Unit\Service;
 
+use Aeliot\TodoRegistrar\Console\Output;
 use Aeliot\TodoRegistrar\Dto\Comment\CommentPart;
 use Aeliot\TodoRegistrar\Dto\Comment\CommentParts;
 use Aeliot\TodoRegistrar\Dto\InlineConfig\IndexedCollection;
@@ -64,8 +65,10 @@ final class CommentRegistrarTest extends TestCase
             ->method('register')
             ->with($todo);
 
+        $output = $this->createMock(Output::class);
+
         $commentRegistrar = new CommentRegistrar($commentDetector, $commentExtractor, $registrar, $todoFactory);
-        $commentRegistrar->register($tokens);
+        $commentRegistrar->register($tokens, $output);
 
         self::assertSame('// TODO single line comment', $tokens[2]->text);
     }
@@ -89,8 +92,10 @@ final class CommentRegistrarTest extends TestCase
             ->expects($this->never())
             ->method('register');
 
+        $output = $this->createMock(Output::class);
+
         $commentRegistrar = new CommentRegistrar($commentDetector, $commentExtractor, $registrar, $todoFactory);
-        $commentRegistrar->register($tokens);
+        $commentRegistrar->register($tokens, $output);
     }
 
     public function testRegisterNewTodos(): void
@@ -111,8 +116,10 @@ final class CommentRegistrarTest extends TestCase
             ->with($todo)
             ->willReturn('X-001');
 
+        $output = $this->createMock(Output::class);
+
         $commentRegistrar = new CommentRegistrar($commentDetector, $commentExtractor, $registrar, $todoFactory);
-        $commentRegistrar->register($tokens);
+        $commentRegistrar->register($tokens, $output);
 
         self::assertSame('// TODO X-001 single line comment', $tokens[2]->text);
     }
