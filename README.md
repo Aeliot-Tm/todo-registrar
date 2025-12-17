@@ -2,7 +2,6 @@
 
 [![GitHub Release](https://img.shields.io/github/v/release/Aeliot-Tm/todo-registrar?label=Release&labelColor=black)](https://packagist.org/packages/aeliot/todo-registrar)
 [![WFS](https://github.com/Aeliot-Tm/todo-registrar/actions/workflows/automated_testing.yml/badge.svg?branch=main)](https://github.com/Aeliot-Tm/todo-registrar/actions)
-[![Code Climate maintainability](https://img.shields.io/codeclimate/maintainability/Aeliot-Tm/todo-registrar?label=Maintainability&labelColor=black)](https://codeclimate.com/github/Aeliot-Tm/todo-registrar)
 [![GitHub Issues or Pull Requests](https://img.shields.io/github/issues-pr-closed/Aeliot-Tm/todo-registrar?label=Pull%20Requests&labelColor=black)](https://github.com/Aeliot-Tm/todo-registrar/pulls?q=is%3Apr+is%3Aclosed)
 [![GitHub License](https://img.shields.io/github/license/Aeliot-Tm/todo-registrar?label=License&labelColor=black)](LICENSE)
 
