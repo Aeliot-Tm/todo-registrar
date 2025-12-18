@@ -1,18 +1,14 @@
-ARG PHP_VERSION=8.2.7
-ARG DEBIAN_RELEASE=bullseye
+ARG PHP_VERSION=8.4.15
+ARG DEBIAN_RELEASE=bookworm
 
-FROM php:${PHP_VERSION}-fpm-${DEBIAN_RELEASE}
+FROM php:${PHP_VERSION}-cli-${DEBIAN_RELEASE}
 
-ENV COMPOSER_ALLOW_SUPERUSER 1
-ENV COMPOSER_NO_INTERACTION 1
-ENV COMPOSER_VERSION 2.7.6
-ENV DEBIAN_FRONTEND noninteractive
-ENV DOCKER_PHP_DEPS \
-    gnupg \
-    libxml2-dev \
-    libzip-dev \
-    unzip
-ENV XDEBUG_VERSION 3.2.1
+ARG COMPOSER_ALLOW_SUPERUSER=1
+ARG COMPOSER_NO_INTERACTION=1
+ARG COMPOSER_VERSION=2.7.6
+ARG DEBIAN_FRONTEND=noninteractive
+ARG DOCKER_PHP_DEPS='gnupg libxml2-dev libzip-dev unzip'
+ARG XDEBUG_VERSION=3.4.7
 
 RUN set -xe; \
     apt-get --allow-releaseinfo-change update && \
@@ -54,7 +50,5 @@ RUN set -xe; \
     rm -rf ./vendor/*/*/tests
 
 COPY . ./
-RUN chmod +x ./docker-entrypoint.sh && \
-    rm -rf ./.docker
 
 RUN composer dump-autoload --optimize
