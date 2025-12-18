@@ -2,7 +2,6 @@
 
 [![GitHub Release](https://img.shields.io/github/v/release/Aeliot-Tm/todo-registrar?label=Release&labelColor=black)](https://packagist.org/packages/aeliot/todo-registrar)
 [![WFS](https://github.com/Aeliot-Tm/todo-registrar/actions/workflows/automated_testing.yml/badge.svg?branch=main)](https://github.com/Aeliot-Tm/todo-registrar/actions)
-[![Code Climate maintainability](https://img.shields.io/codeclimate/maintainability/Aeliot-Tm/todo-registrar?label=Maintainability&labelColor=black)](https://codeclimate.com/github/Aeliot-Tm/todo-registrar)
 [![GitHub Issues or Pull Requests](https://img.shields.io/github/issues-pr-closed/Aeliot-Tm/todo-registrar?label=Pull%20Requests&labelColor=black)](https://github.com/Aeliot-Tm/todo-registrar/pulls?q=is%3Apr+is%3Aclosed)
 [![GitHub License](https://img.shields.io/github/license/Aeliot-Tm/todo-registrar?label=License&labelColor=black)](LICENSE)
 
@@ -29,15 +28,37 @@ into comment in code. This prevents creating of issues twice and injected marks 
 
 ## Installation
 
-There are few ways of installation:
-1. [Phive](#phive)
-2. [Composer](#composer)
+There are several ways of installation:
+1. [Docker](#installation-with-docker)
+2. [PHIVE](#installation-with-phive)
 3. [Downloading of PHAR directly](#downloading-of-phar-directly)
-4. [Docker](#docker)
+4. [Composer](#installation-with-composer)
 
-#### Phive
+First of all, I recommend Docker container case it provides fully isolated solution.
+It is no matter which version of PHP installed in yous system and which components required by Composer (no dependency hell).
 
-You can install this package with [Phive](https://phar.io/). It permits you to install package by one console command
+The next one is using of single `PHAR` file. It frees you from dependency hell,
+but you have to pay attention to version of PHP installed in you system and its modules.
+However, this may be more familiar to you. You can [automate it by using of PHIVE](#installation-with-phive)
+or [downloading do it manually](#downloading-of-phar-directly).
+
+The last one is [installing by Composer](#composer). The most common, but less flexible method case may lead to the dependency hell.
+
+### Installation with Docker
+
+You can use the pre-built Docker image from GitHub Container Registry:
+
+```shell
+# Pull the latest image
+docker pull ghcr.io/aeliot-tm/todo-registrar:latest
+
+# Or use a specific version tag
+docker pull ghcr.io/aeliot-tm/todo-registrar:v1.8.0
+```
+
+### Installation with PHIVE
+
+You can install this package with [PHIVE](https://phar.io/). It permits you to install package by one console command
 without extending dependencies in your composer-files.
 ```shell
 phive install todo-registrar
@@ -54,14 +75,7 @@ To upgrade this package use the following command:
 phive update todo-registrar
 ```
 
-#### Composer
-
-You can install this package with [Composer](https://getcomposer.org/doc/03-cli.md#install-i):
-```shell
-composer require --dev aeliot/todo-registrar
-```
-
-#### Downloading of PHAR directly
+### Downloading of PHAR directly
 
 Download PHAR directly to root directory of the project or in another place as you wish.
 ```shell
@@ -79,39 +93,56 @@ rm todo-registrar.phar.asc
 chmod +x todo-registrar.phar
 ```
 
-#### Docker
+### Installation with Composer
 
-You can use the pre-built Docker image from GitHub Container Registry:
-
+You can install this package with [Composer](https://getcomposer.org/doc/03-cli.md#install-i):
 ```shell
-# Pull the latest image
-docker pull ghcr.io/aeliot-tm/todo-registrar:latest
-
-# Or use a specific version tag
-docker pull ghcr.io/aeliot-tm/todo-registrar:v1.8.0
+composer require --dev aeliot/todo-registrar
 ```
 
-To analyze your project, mount your code directory and configuration file:
+## Using
 
-```shell
-# Basic usage (config file should be in project root)
-docker run --rm \
-  -v $(pwd):/code \
-  ghcr.io/aeliot-tm/todo-registrar:latest
+1. Create [configuration file](#configuration-file)
+2. Call shell script [in command line](#command-line).
+3. Commit updated files. You may config your pipeline/job on CI which commits updates.
 
-# With custom config file path
-docker run --rm \
-  -v $(pwd):/code \
-  ghcr.io/aeliot-tm/todo-registrar:latest \
-  --config=/code/.todo-registrar.yaml
+### Command Line
 
-# With verbose output
-docker run --rm \
-  -v $(pwd):/code \
-  ghcr.io/aeliot-tm/todo-registrar:latest \
-  --config=/code/.todo-registrar.yaml \
-  --verbose=very_verbose
-```
+First of all, pay attention to **available options:**
+
+| Long Form | Short From | Description |
+|---|---|---|
+| `--config=/path/to/config` | `-c /path/to/config` | Path to configuration file when it is not in default place |
+| `--verbose={verbosity_level}` | `-v{verbosity_level}` | Enable very verbose or debug output |
+| `--quiet` | `-q` | Suppress all output except errors |
+
+#### Using with Docker
+
+To analyze your project, mount your code directory and configuration file, and run the container.
+
+a. Basic usage with default config (searches for .todo-registrar.* files in project root)
+   ```shell
+   docker run --rm -it \
+     -v $(pwd):/code \
+     ghcr.io/aeliot-tm/todo-registrar:latest
+   ```
+
+b. With custom config file path (relative or absolute)
+   ```shell
+   docker run --rm -it \
+     -v $(pwd):/code \
+     ghcr.io/aeliot-tm/todo-registrar:latest \
+     --config=ci/code_quality/.todo-registrar.yaml
+   ```
+
+c. With verbose output to see processing details
+   ```shell
+   docker run --rm -it \
+     -v $(pwd):/code \
+     ghcr.io/aeliot-tm/todo-registrar:latest \
+     --config=/code/.todo-registrar.yaml \
+     --verbose=very_verbose
+   ```
 
 **Important notes:**
 - Mount your project directory to `/code` (this is the working directory inside the container)
@@ -119,50 +150,23 @@ docker run --rm \
 - Use `-it` flags for interactive mode if you need to see real-time output
 - The container uses unbuffered output, so verbose messages will appear in real-time
 
-## Using
+#### Using of PHAR file
 
-### Command Line
-
-1. Call script:
-   ```shell
-   vendor/bin/todo-registrar
-   ```
-   You may pass option with path to config `--config=/custom/path/to/config`.
-   Otherwise, it tries to use one of default paths to [config file](docs/config/global_config_php.md).
-
-2. Commit updated files. You may config your pipeline/job on CI which commits updates.
-
-### Docker
-
-When using Docker, mount your project directory and run the container:
+Call script similarly to [Docker](#using-with-docker) but without the mounting of the code.
 
 ```shell
-# Run with default config (searches for .todo-registrar.* files in project root)
-docker run --rm -it \
-  -v $(pwd):/code \
-  ghcr.io/aeliot-tm/todo-registrar:latest
-
-# Run with explicit config path
-docker run --rm -it \
-  -v $(pwd):/code \
-  ghcr.io/aeliot-tm/todo-registrar:latest \
-  --config=/code/.todo-registrar.yaml
-
-# Run with verbose output to see processing details
-docker run --rm -it \
-  -v $(pwd):/code \
-  ghcr.io/aeliot-tm/todo-registrar:latest \
-  --config=/code/.todo-registrar.yaml \
-  --verbose=very_verbose
+php todo-registrar.phar <options>
 ```
 
-**Available options:**
-- `--config=/path/to/config` - Path to configuration file (inside container)
-- `--verbose=very_verbose` or `-vv` - Enable very verbose output
-- `--verbose=debug` or `-vvv` - Enable debug output
-- `--quiet` or `-q` - Suppress all output except errors
+#### Using of Installed by Composer
 
-## Integration on CI
+Call script as usual:
+
+```shell
+vendor/bin/todo-registrar <options>
+```
+
+### Integration on CI
 
 The main idea is monitoring of new TODOs on single branch of repository to avoid creation of duplicated issues and
 merge conflicts. The branch should be quite stable. At least, without development directly in it. And should be
@@ -179,11 +183,14 @@ Configuration file can either in YAML format ([see documentation about config YA
 or PHP format ([see documentation about config PHP-file](docs/config/global_config_php.md)). You may define custom path
 to config with option `--config=/custom/path/to/cofig`. When option `--config` is omitted then script tries to find
 default config file in the root directory of project (exactly in directory from which the script was called).
-It ties to find one of files:
+
+The orders of files which are looked for:
 1. `.todo-registrar.yaml`
 2. `.todo-registrar.dist.yaml`
 3. `.todo-registrar.php`
 4. `.todo-registrar.dist.php`
+5. `.todo-registrar.yml`
+6. `.todo-registrar.dist.yml`
 
 ## Inline Configuration
 
