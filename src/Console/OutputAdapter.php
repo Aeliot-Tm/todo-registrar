@@ -27,11 +27,17 @@ final class OutputAdapter implements OutputInterface
     ) {
     }
 
+    /**
+     * @param string|iterable<string> $messages
+     */
     public function write(string|iterable $messages, bool $newline = false, int $options = 0): void
     {
         $this->output->write($messages, $newline, $options);
     }
 
+    /**
+     * @param string|iterable<string> $messages
+     */
     public function writeln(string|iterable $messages, int $options = 0): void
     {
         $this->output->writeln($messages, $options);
@@ -93,7 +99,7 @@ final class OutputAdapter implements OutputInterface
     }
 
     /**
-     * @param string|iterable $messages
+     * @param string|iterable<string> $messages
      */
     public function writeErr(string|iterable $messages, int $options = 0): void
     {
