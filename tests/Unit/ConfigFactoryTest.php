@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Test\Unit;
 
-use Aeliot\TodoRegistrar\ArrayConfigFactory;
-use Aeliot\TodoRegistrar\ConfigFactory;
+use Aeliot\TodoRegistrar\Service\Config\ArrayConfigFactory;
+use Aeliot\TodoRegistrar\Service\Config\ConfigFactory;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Finder\Finder as SymfonyFinder;

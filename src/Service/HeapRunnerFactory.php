@@ -13,24 +13,24 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service;
 
-use Aeliot\TodoRegistrar\AbsolutePathMaker;
-use Aeliot\TodoRegistrar\ArrayConfigFactory;
-use Aeliot\TodoRegistrar\Config;
-use Aeliot\TodoRegistrar\ConfigFactory;
-use Aeliot\TodoRegistrar\ConfigFileGuesser;
 use Aeliot\TodoRegistrar\Console\OutputAdapter;
+use Aeliot\TodoRegistrar\Contracts\GeneralConfigInterface;
+use Aeliot\TodoRegistrar\Contracts\RegistrarFactoryInterface;
+use Aeliot\TodoRegistrar\Contracts\RegistrarInterface;
 use Aeliot\TodoRegistrar\Enum\RegistrarType;
 use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
 use Aeliot\TodoRegistrar\Service\Comment\Detector;
 use Aeliot\TodoRegistrar\Service\Comment\Extractor;
+use Aeliot\TodoRegistrar\Service\Config\AbsolutePathMaker;
+use Aeliot\TodoRegistrar\Service\Config\ArrayConfigFactory;
+use Aeliot\TodoRegistrar\Service\Config\ConfigFactory;
+use Aeliot\TodoRegistrar\Service\Config\ConfigFileGuesser;
 use Aeliot\TodoRegistrar\Service\File\Saver;
 use Aeliot\TodoRegistrar\Service\File\Tokenizer;
 use Aeliot\TodoRegistrar\Service\InlineConfig\ArrayFromJsonLikeLexerBuilder;
 use Aeliot\TodoRegistrar\Service\InlineConfig\ExtrasReader;
 use Aeliot\TodoRegistrar\Service\InlineConfig\InlineConfigFactory;
-use Aeliot\TodoRegistrar\Service\Registrar\RegistrarFactoryInterface;
 use Aeliot\TodoRegistrar\Service\Registrar\RegistrarFactoryRegistry;
-use Aeliot\TodoRegistrar\Service\Registrar\RegistrarInterface;
 use Aeliot\TodoRegistrar\Service\Tag\Detector as TagDetector;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -51,7 +51,7 @@ class HeapRunnerFactory
         );
     }
 
-    private function createCommentRegistrar(RegistrarInterface $registrar, Config $config): CommentRegistrar
+    private function createCommentRegistrar(RegistrarInterface $registrar, GeneralConfigInterface $config): CommentRegistrar
     {
         $inlineConfigReader = $config->getInlineConfigReader() ?? new ExtrasReader(new ArrayFromJsonLikeLexerBuilder());
         $inlineConfigFactory = $config->getInlineConfigFactory() ?? new InlineConfigFactory();
@@ -73,7 +73,7 @@ class HeapRunnerFactory
         );
     }
 
-    private function createRegistrar(Config $config): RegistrarInterface
+    private function createRegistrar(GeneralConfigInterface $config): RegistrarInterface
     {
         $registrarType = $config->getRegistrarType();
 
@@ -98,7 +98,7 @@ class HeapRunnerFactory
         return $registrarFactory->create($config->getRegistrarConfig());
     }
 
-    private function getConfig(?string $configPath): Config
+    private function getConfig(?string $configPath): GeneralConfigInterface
     {
         $absolutePathMaker = new AbsolutePathMaker();
         $path = $configPath;
@@ -110,7 +110,7 @@ class HeapRunnerFactory
         return (new ConfigFactory(new ArrayConfigFactory()))->create($path);
     }
 
-    private function getProcessor(Config $config): FileProcessor
+    private function getProcessor(GeneralConfigInterface $config): FileProcessor
     {
         $registrar = $this->createRegistrar($config);
         $commentRegistrar = $this->createCommentRegistrar($registrar, $config);

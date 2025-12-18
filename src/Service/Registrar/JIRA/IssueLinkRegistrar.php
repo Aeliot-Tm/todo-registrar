@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\JIRA;
 
-use Aeliot\TodoRegistrar\Dto\Registrar\Todo;
+use Aeliot\TodoRegistrar\Contracts\TodoInterface;
 use JiraRestApi\IssueLink\IssueLink;
 
 final class IssueLinkRegistrar
@@ -24,7 +24,7 @@ final class IssueLinkRegistrar
     ) {
     }
 
-    public function registerLinks(string $inwardIssueKey, Todo $todo): void
+    public function registerLinks(string $inwardIssueKey, TodoInterface $todo): void
     {
         $linkedIssues = (array) ($todo->getInlineConfig()['linkedIssues'] ?? []);
         if (!$linkedIssues) {

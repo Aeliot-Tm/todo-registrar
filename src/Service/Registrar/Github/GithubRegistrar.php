@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\Github;
 
-use Aeliot\TodoRegistrar\Dto\Registrar\Todo;
-use Aeliot\TodoRegistrar\Service\Registrar\RegistrarInterface;
+use Aeliot\TodoRegistrar\Contracts\RegistrarInterface;
+use Aeliot\TodoRegistrar\Contracts\TodoInterface;
 
 final class GithubRegistrar implements RegistrarInterface
 {
@@ -24,12 +24,12 @@ final class GithubRegistrar implements RegistrarInterface
     ) {
     }
 
-    public function isRegistered(Todo $todo): bool
+    public function isRegistered(TodoInterface $todo): bool
     {
         return (bool) preg_match('/^\\s*\\b#\\d+\\b/i', $todo->getSummary());
     }
 
-    public function register(Todo $todo): string
+    public function register(TodoInterface $todo): string
     {
         $issue = $this->issueFactory->create($todo);
 

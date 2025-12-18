@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\JIRA;
 
-use Aeliot\TodoRegistrar\Dto\Registrar\Todo;
+use Aeliot\TodoRegistrar\Contracts\TodoInterface;
 use JiraRestApi\Issue\IssueField;
 
 final class IssueFieldFactory
@@ -23,7 +23,7 @@ final class IssueFieldFactory
     ) {
     }
 
-    public function create(Todo $todo): IssueField
+    public function create(TodoInterface $todo): IssueField
     {
         $issueField = new IssueField();
         $issueField
@@ -40,7 +40,7 @@ final class IssueFieldFactory
         return $issueField;
     }
 
-    private function setAssignee(IssueField $issueField, Todo $todo): void
+    private function setAssignee(IssueField $issueField, TodoInterface $todo): void
     {
         $assignee = $todo->getInlineConfig()['assignee']
             ?? $todo->getAssignee()
@@ -51,7 +51,7 @@ final class IssueFieldFactory
         }
     }
 
-    private function setComponents(IssueField $issueField, Todo $todo): void
+    private function setComponents(IssueField $issueField, TodoInterface $todo): void
     {
         $component = [
             ...($todo->getInlineConfig()['components'] ?? []),
@@ -60,7 +60,7 @@ final class IssueFieldFactory
         $issueField->addComponentsAsArray(array_unique($component));
     }
 
-    private function setIssueType(IssueField $issueField, Todo $todo): void
+    private function setIssueType(IssueField $issueField, TodoInterface $todo): void
     {
         $inlineConfig = $todo->getInlineConfig();
         $issueType = $inlineConfig['issue_type']
@@ -69,7 +69,7 @@ final class IssueFieldFactory
         $issueField->setIssueTypeAsString($issueType);
     }
 
-    private function setLabels(IssueField $issueField, Todo $todo): void
+    private function setLabels(IssueField $issueField, TodoInterface $todo): void
     {
         $labels = [
             ...(array) ($todo->getInlineConfig()['labels'] ?? []),
@@ -85,7 +85,7 @@ final class IssueFieldFactory
         }
     }
 
-    private function setPriority(IssueField $issueField, Todo $todo): void
+    private function setPriority(IssueField $issueField, TodoInterface $todo): void
     {
         $priority = $todo->getInlineConfig()['priority']
             ?? $this->issueConfig->getPriority();

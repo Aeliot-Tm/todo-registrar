@@ -13,9 +13,10 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Dto\Registrar;
 
-use Aeliot\TodoRegistrar\InlineConfigInterface;
+use Aeliot\TodoRegistrar\Contracts\InlineConfigInterface;
+use Aeliot\TodoRegistrar\Contracts\TodoInterface;
 
-class Todo
+class Todo implements TodoInterface
 {
     public function __construct(
         private string $tag,

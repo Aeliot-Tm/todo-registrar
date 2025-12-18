@@ -11,16 +11,17 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Aeliot\TodoRegistrar\Service\Registrar;
-
-use Aeliot\TodoRegistrar\Dto\Registrar\Todo;
+namespace Aeliot\TodoRegistrar\Contracts;
 
 interface RegistrarInterface
 {
     /**
      * @deprecated skip registered by metadata {@see \Aeliot\TodoRegistrar\Dto\Tag\TagMetadata::getTicketKey() }
      */
-    public function isRegistered(Todo $todo): bool;
+    public function isRegistered(TodoInterface $todo): bool;
 
-    public function register(Todo $todo): string;
+    /**
+     * @return string Key of registered ticket
+     */
+    public function register(TodoInterface $todo): string;
 }

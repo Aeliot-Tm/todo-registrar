@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\Github;
 
-use Aeliot\TodoRegistrar\Service\Registrar\RegistrarFactoryInterface;
-use Aeliot\TodoRegistrar\Service\Registrar\RegistrarInterface;
+use Aeliot\TodoRegistrar\Contracts\RegistrarFactoryInterface;
+use Aeliot\TodoRegistrar\Contracts\RegistrarInterface;
 
 /**
  * TODO: #146 make assertion of Github config with symfony/validator component.

@@ -13,10 +13,10 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service;
 
+use Aeliot\TodoRegistrar\Contracts\RegistrarInterface;
 use Aeliot\TodoRegistrar\Exception\CommentRegistrationException;
 use Aeliot\TodoRegistrar\Service\Comment\Detector as CommentDetector;
 use Aeliot\TodoRegistrar\Service\Comment\Extractor as CommentExtractor;
-use Aeliot\TodoRegistrar\Service\Registrar\RegistrarInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class CommentRegistrar

@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\JIRA;
 
-use Aeliot\TodoRegistrar\Service\Registrar\RegistrarFactoryInterface;
-use Aeliot\TodoRegistrar\Service\Registrar\RegistrarInterface;
+use Aeliot\TodoRegistrar\Contracts\RegistrarFactoryInterface;
+use Aeliot\TodoRegistrar\Contracts\RegistrarInterface;
 
 /**
  * TODO: #145 make assertion of JIRA config with symfony/validator component.

@@ -11,8 +11,10 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Aeliot\TodoRegistrar;
+namespace Aeliot\TodoRegistrar\Service\Config;
 
+use Aeliot\TodoRegistrar\Config;
+use Aeliot\TodoRegistrar\Contracts\GeneralConfigInterface;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -24,7 +26,7 @@ final class ConfigFactory
     {
     }
 
-    public function create(string $path): Config
+    public function create(string $path): GeneralConfigInterface
     {
         if (!file_exists($path)) {
             throw new \RuntimeException(\sprintf('Config file "%s" does not exist', $path));
@@ -37,7 +39,7 @@ final class ConfigFactory
         };
     }
 
-    private function getFromPHP(string $path): Config
+    private function getFromPHP(string $path): GeneralConfigInterface
     {
         return require $path;
     }

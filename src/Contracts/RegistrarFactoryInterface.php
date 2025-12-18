@@ -11,11 +11,12 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Aeliot\TodoRegistrar;
+namespace Aeliot\TodoRegistrar\Contracts;
 
-/**
- * @template-extends \ArrayAccess<string,mixed>
- */
-interface InlineConfigInterface extends \ArrayAccess
+interface RegistrarFactoryInterface
 {
+    /**
+     * @param array<string,mixed> $config
+     */
+    public function create(array $config): RegistrarInterface;
 }

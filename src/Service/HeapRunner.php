@@ -14,13 +14,13 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Service;
 
 use Aeliot\TodoRegistrar\Console\OutputAdapter;
+use Aeliot\TodoRegistrar\Contracts\FinderInterface;
 use Aeliot\TodoRegistrar\Exception\CommentRegistrationException;
-use Aeliot\TodoRegistrar\Service\File\Finder;
 
 class HeapRunner
 {
     public function __construct(
-        private Finder $finder,
+        private FinderInterface $finder,
         private FileProcessor $fileProcessor,
         private OutputAdapter $output,
     ) {

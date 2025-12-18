@@ -13,11 +13,14 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar;
 
+use Aeliot\TodoRegistrar\Contracts\GeneralConfigInterface;
+use Aeliot\TodoRegistrar\Contracts\InlineConfigFactoryInterface;
+use Aeliot\TodoRegistrar\Contracts\InlineConfigReaderInterface;
+use Aeliot\TodoRegistrar\Contracts\RegistrarFactoryInterface;
 use Aeliot\TodoRegistrar\Enum\RegistrarType;
 use Aeliot\TodoRegistrar\Service\File\Finder;
-use Aeliot\TodoRegistrar\Service\Registrar\RegistrarFactoryInterface;
 
-class Config
+class Config implements GeneralConfigInterface
 {
     private Finder $finder;
     private ?InlineConfigFactoryInterface $InlineConfigFactory = null;
@@ -64,9 +67,6 @@ class Config
         $this->inlineConfigReader = $inlineConfigReader;
     }
 
-    /**
-     * @return array<string,mixed>
-     */
     public function getRegistrarConfig(): array
     {
         return $this->registrarConfig;
@@ -88,9 +88,6 @@ class Config
         return $this;
     }
 
-    /**
-     * @return string[]
-     */
     public function getTags(): array
     {
         return $this->tags;
