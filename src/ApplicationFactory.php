@@ -13,11 +13,9 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar;
 
-use Aeliot\TodoRegistrar\Console\OptionsReader;
-use Aeliot\TodoRegistrar\Console\Output;
+use Aeliot\TodoRegistrar\Console\OutputAdapter;
 use Aeliot\TodoRegistrar\Enum\RegistrarType;
 use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
-use Aeliot\TodoRegistrar\Exception\InvalidOptionException;
 use Aeliot\TodoRegistrar\Service\Comment\Detector;
 use Aeliot\TodoRegistrar\Service\Comment\Extractor;
 use Aeliot\TodoRegistrar\Service\CommentRegistrar;
@@ -32,23 +30,22 @@ use Aeliot\TodoRegistrar\Service\Registrar\RegistrarFactoryRegistry;
 use Aeliot\TodoRegistrar\Service\Registrar\RegistrarInterface;
 use Aeliot\TodoRegistrar\Service\Tag\Detector as TagDetector;
 use Aeliot\TodoRegistrar\Service\TodoFactory;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * @internal
  */
 class ApplicationFactory
 {
-    public function create(): Application
+    public function create(?string $configPath, OutputInterface $output): Application
     {
-        $options = (new OptionsReader())->getOptions();
-        $config = $this->getConfig($options);
-        $output = $this->getOutput($options);
+        $config = $this->getConfig($configPath);
         $fileProcessor = $this->getProcessor($config);
 
         return new Application(
             $config->getFinder(),
             $fileProcessor,
-            $output,
+            new OutputAdapter($output),
         );
     }
 
@@ -99,17 +96,10 @@ class ApplicationFactory
         return $registrarFactory->create($config->getRegistrarConfig());
     }
 
-    /**
-     * @param array{
-     *      config: string|null,
-     *      quiet: bool|null,
-     *      verbose: int|string|null
-     *  } $options
-     */
-    private function getConfig(array $options): Config
+    private function getConfig(?string $configPath): Config
     {
         $absolutePathMaker = new AbsolutePathMaker();
-        $path = $options['config'] ?? null;
+        $path = $configPath;
         if ($path) {
             $path = $absolutePathMaker->prepare($path);
         }
@@ -124,22 +114,5 @@ class ApplicationFactory
         $commentRegistrar = $this->createCommentRegistrar($registrar, $config);
 
         return $this->createFileProcessor($commentRegistrar);
-    }
-
-    /**
-     * @param array<string,mixed> $options
-     */
-    private function getOutput(array $options): Output
-    {
-        $verbosity = (string) ($options['verbose'] ?? (int) getenv('SHELL_VERBOSITY'));
-
-        return new Output(match ($verbosity) {
-            '3', 'vv', 'debug' => Output::VERBOSITY_DEBUG,
-            '2', 'v', 'very', 'very verbose', 'very_verbose', 'very-verbose' => Output::VERBOSITY_VERY_VERBOSE,
-            '1', '', 'verbose' => Output::VERBOSITY_VERBOSE,
-            '0', 'normal', => Output::VERBOSITY_NORMAL,
-            '-1', => Output::VERBOSITY_QUIET,
-            default => throw new InvalidOptionException(\sprintf('Unexpected value "%s" for verbosity', $verbosity))
-        });
     }
 }

@@ -1,0 +1,17 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+
+  Aeliot\TodoRegistrar\:
+    resource: '../src/*'
+    exclude:
+      - '../src/Dto'
+      - '../src/Enum'
+      - '../src/Exception'
+      - '../src/Console/OutputAdapter.php'
+
+  # Commands
+  Aeliot\TodoRegistrar\Console\Command\RegisterCommand:
+    public: true
+    tags: [ 'console.command' ]

@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar;
 
-use Aeliot\TodoRegistrar\Console\Output;
+use Aeliot\TodoRegistrar\Console\OutputAdapter;
 use Aeliot\TodoRegistrar\Exception\CommentRegistrationException;
 use Aeliot\TodoRegistrar\Service\File\Finder;
 use Aeliot\TodoRegistrar\Service\FileProcessor;
@@ -23,7 +23,7 @@ class Application
     public function __construct(
         private Finder $finder,
         private FileProcessor $fileProcessor,
-        private Output $output,
+        private OutputAdapter $output,
     ) {
     }
 

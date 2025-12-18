@@ -13,11 +13,11 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service;
 
-use Aeliot\TodoRegistrar\Console\Output;
 use Aeliot\TodoRegistrar\Exception\CommentRegistrationException;
 use Aeliot\TodoRegistrar\Service\Comment\Detector as CommentDetector;
 use Aeliot\TodoRegistrar\Service\Comment\Extractor as CommentExtractor;
 use Aeliot\TodoRegistrar\Service\Registrar\RegistrarInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class CommentRegistrar
 {
@@ -32,7 +32,7 @@ class CommentRegistrar
     /**
      * @param \PhpToken[] $tokens
      */
-    public function register(array $tokens, Output $output): int
+    public function register(array $tokens, OutputInterface $output): int
     {
         $commentTokens = $this->commentDetector->filter($tokens);
         if (!$commentTokens) {
@@ -45,7 +45,7 @@ class CommentRegistrar
     /**
      * @param \PhpToken[] $tokens
      */
-    private function registerTodos(array $tokens, Output $output): int
+    private function registerTodos(array $tokens, OutputInterface $output): int
     {
         $countNewTodo = 0;
         foreach ($tokens as $token) {

@@ -13,13 +13,13 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Test\Unit\Service;
 
-use Aeliot\TodoRegistrar\Console\Output;
 use Aeliot\TodoRegistrar\Service\CommentRegistrar;
 use Aeliot\TodoRegistrar\Service\File\Saver;
 use Aeliot\TodoRegistrar\Service\File\Tokenizer;
 use Aeliot\TodoRegistrar\Service\FileProcessor;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Console\Output\OutputInterface;
 
 #[CoversClass(FileProcessor::class)]
 final class FileProcessorTest extends TestCase
@@ -33,7 +33,7 @@ final class FileProcessorTest extends TestCase
         $tokenizer = $this->createMock(Tokenizer::class);
         $tokenizer->method('tokenize')->willReturn([]);
 
-        $output = $this->createMock(Output::class);
+        $output = $this->createMock(OutputInterface::class);
 
         $processor = new FileProcessor($commentRegistrar, $saver, $tokenizer);
         $processor->process($this->createMock(\SplFileInfo::class), $output);
@@ -48,7 +48,7 @@ final class FileProcessorTest extends TestCase
         $tokenizer = $this->createMock(Tokenizer::class);
         $tokenizer->method('tokenize')->willReturn([]);
 
-        $output = $this->createMock(Output::class);
+        $output = $this->createMock(OutputInterface::class);
 
         $processor = new FileProcessor($commentRegistrar, $saver, $tokenizer);
         $processor->process($this->createMock(\SplFileInfo::class), $output);

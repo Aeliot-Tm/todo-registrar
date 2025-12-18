@@ -12,7 +12,8 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-use Aeliot\TodoRegistrar\ApplicationFactory;
+use Aeliot\TodoRegistrar\Console\Application;
+use Aeliot\TodoRegistrar\Console\ContainerBuilder;
 
 $autoloaderPath = (static function (): string {
     if (Phar::running()) {
@@ -41,4 +42,8 @@ $autoloaderPath = (static function (): string {
 
 require_once $autoloaderPath;
 
-exit((new ApplicationFactory())->create()->run());
+$container = ContainerBuilder::build();
+$application = new Application($container);
+$application->setDefaultCommand('register', true);
+
+exit($application->run());

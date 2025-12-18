@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Test\Unit\Service;
 
-use Aeliot\TodoRegistrar\Console\Output;
 use Aeliot\TodoRegistrar\Dto\Comment\CommentPart;
 use Aeliot\TodoRegistrar\Dto\Comment\CommentParts;
 use Aeliot\TodoRegistrar\Dto\InlineConfig\IndexedCollection;
@@ -34,6 +33,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Console\Output\OutputInterface;
 
 #[CoversClass(CommentRegistrar::class)]
 #[UsesClass(ArrayFromJsonLikeLexerBuilder::class)]
@@ -65,7 +65,7 @@ final class CommentRegistrarTest extends TestCase
             ->method('register')
             ->with($todo);
 
-        $output = $this->createMock(Output::class);
+        $output = $this->createMock(OutputInterface::class);
 
         $commentRegistrar = new CommentRegistrar($commentDetector, $commentExtractor, $registrar, $todoFactory);
         $commentRegistrar->register($tokens, $output);
@@ -92,7 +92,7 @@ final class CommentRegistrarTest extends TestCase
             ->expects($this->never())
             ->method('register');
 
-        $output = $this->createMock(Output::class);
+        $output = $this->createMock(OutputInterface::class);
 
         $commentRegistrar = new CommentRegistrar($commentDetector, $commentExtractor, $registrar, $todoFactory);
         $commentRegistrar->register($tokens, $output);
@@ -116,7 +116,7 @@ final class CommentRegistrarTest extends TestCase
             ->with($todo)
             ->willReturn('X-001');
 
-        $output = $this->createMock(Output::class);
+        $output = $this->createMock(OutputInterface::class);
 
         $commentRegistrar = new CommentRegistrar($commentDetector, $commentExtractor, $registrar, $todoFactory);
         $commentRegistrar->register($tokens, $output);

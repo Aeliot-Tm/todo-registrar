@@ -13,9 +13,9 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service;
 
-use Aeliot\TodoRegistrar\Console\Output;
 use Aeliot\TodoRegistrar\Service\File\Saver;
 use Aeliot\TodoRegistrar\Service\File\Tokenizer;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class FileProcessor
 {
@@ -26,7 +26,7 @@ class FileProcessor
     ) {
     }
 
-    public function process(\SplFileInfo $file, Output $output): int
+    public function process(\SplFileInfo $file, OutputInterface $output): int
     {
         $tokens = $this->tokenizer->tokenize($file);
         $countNewTodos = $this->commentRegistrar->register($tokens, $output);
