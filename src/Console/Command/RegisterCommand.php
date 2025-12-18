@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Console\Command;
 
-use Aeliot\TodoRegistrar\ApplicationFactory;
+use Aeliot\TodoRegistrar\Service\HeapRunnerFactory;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -26,7 +26,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 #[AsCommand(name: 'register', description: 'Register TODOs from source code in issue tracker')]
 final class RegisterCommand extends Command
 {
-    public function __construct(private readonly ApplicationFactory $applicationFactory)
+    public function __construct(private readonly HeapRunnerFactory $heapRunnerFactory)
     {
         parent::__construct();
     }
@@ -40,6 +40,6 @@ final class RegisterCommand extends Command
     {
         $configPath = $input->getOption('config');
 
-        return $this->applicationFactory->create($configPath, $output)->run();
+        return $this->heapRunnerFactory->create($configPath, $output)->run();
     }
 }

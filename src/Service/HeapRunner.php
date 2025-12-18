@@ -11,14 +11,13 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Aeliot\TodoRegistrar;
+namespace Aeliot\TodoRegistrar\Service;
 
 use Aeliot\TodoRegistrar\Console\OutputAdapter;
 use Aeliot\TodoRegistrar\Exception\CommentRegistrationException;
 use Aeliot\TodoRegistrar\Service\File\Finder;
-use Aeliot\TodoRegistrar\Service\FileProcessor;
 
-class Application
+class HeapRunner
 {
     public function __construct(
         private Finder $finder,
