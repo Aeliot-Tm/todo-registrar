@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service;
 
+use Aeliot\TodoRegistrar\Console\OutputAdapter;
 use Aeliot\TodoRegistrar\Contracts\GeneralConfigInterface;
 use Aeliot\TodoRegistrar\Service\InlineConfig\ExtrasReader;
 use Aeliot\TodoRegistrar\Service\InlineConfig\InlineConfigFactory;
@@ -15,11 +16,11 @@ final readonly class TodoBuilderFactory
     ) {
     }
 
-    public function create(GeneralConfigInterface $config): TodoBuilder
+    public function create(GeneralConfigInterface $config, OutputAdapter $output): TodoBuilder
     {
         $inlineConfigReader = $config->getInlineConfigReader() ?? $this->extrasReader;
         $inlineConfigFactory = $config->getInlineConfigFactory() ?? $this->inlineConfigFactory;
 
-        return new TodoBuilder($inlineConfigFactory, $inlineConfigReader);
+        return new TodoBuilder($inlineConfigFactory, $inlineConfigReader, $output);
     }
 }

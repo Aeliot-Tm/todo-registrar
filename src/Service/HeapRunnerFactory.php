@@ -31,7 +31,7 @@ final readonly class HeapRunnerFactory
         private ConfigProvider $configProvider,
         private RegistrarProvider $registrarProvider,
         private Saver $saver,
-        private TodoBuilder $todoBuilder,
+        private TodoBuilderFactory $todoBuilderFactory,
         private Tokenizer $tokenizer,
     ) {
     }
@@ -40,6 +40,7 @@ final readonly class HeapRunnerFactory
     {
         $config = $this->configProvider->getConfig($configPath);
         $registrar = $this->registrarProvider->getRegistrar($config);
+        $todoBuilder = $this->todoBuilderFactory->create($config);
 
         return new HeapRunner(
             $this->commentDetector,
@@ -48,7 +49,7 @@ final readonly class HeapRunnerFactory
             $output,
             $registrar,
             $this->saver,
-            $this->todoBuilder,
+            $todoBuilder,
             $this->tokenizer,
         );
     }
