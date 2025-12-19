@@ -13,13 +13,13 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Exception;
 
-use Aeliot\TodoRegistrar\Contracts\TodoInterface;
 use Aeliot\TodoRegistrar\Dto\Comment\CommentPart;
+use Aeliot\TodoRegistrar\Dto\Registrar\Todo;
 
 final class CommentRegistrationException extends \RuntimeException
 {
     public function __construct(
-        private TodoInterface $todo,
+        private Todo $todo,
         \Throwable $previous,
     ) {
         parent::__construct(\sprintf('Cannot register %s-comment', $todo->getCommentPart()->getTag()), 0, $previous);

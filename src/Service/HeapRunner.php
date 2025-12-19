@@ -52,7 +52,7 @@ final readonly class HeapRunner
     }
 
     /**
-     * @return \Generator<array{0: CommentPart, 2: callable}>
+     * @return \Generator<array{0: CommentPart, 1: callable}>
      */
     private function getCommentParts(ProcessStatistic $statistic): \Generator
     {
@@ -125,7 +125,7 @@ final readonly class HeapRunner
     }
 
     /**
-     * @return \Generator<array{0: Todo, 2: callable}>
+     * @return \Generator<array{0: Todo, 1: callable}>
      */
     private function getTodos(ProcessStatistic $statistic): \Generator
     {
