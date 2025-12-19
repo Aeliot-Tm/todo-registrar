@@ -113,8 +113,9 @@ First of all, pay attention to **available options:**
 | Long Form | Short From | Description |
 |---|---|---|
 | `--config=/path/to/config` | `-c /path/to/config` | Path to configuration file when it is not in default place |
-| `--verbose={verbosity_level}` | `-v{verbosity_level}` | Enable very verbose or debug output |
-| `--quiet` | `-q` | Suppress all output except errors |
+
+**Verbosity levels:** The command uses Symfony Console verbosity levels.
+See [Symfony Console Verbosity documentation](https://symfony.com/doc/7.4/console/verbosity.html) for details about `-q`, `-v`, `-vv`, `-vvv` options.
 
 #### Using with Docker
 
@@ -141,14 +142,14 @@ c. With verbose output to see processing details
      -v $(pwd):/code \
      ghcr.io/aeliot-tm/todo-registrar:latest \
      --config=/code/.todo-registrar.yaml \
-     --verbose=very_verbose
+     -vv
    ```
 
 **Important notes:**
 - Mount your project directory to `/code` (this is the working directory inside the container)
 - The config file can be inside your project directory (will be found automatically) or mounted separately
 - Use `-it` flags for interactive mode if you need to see real-time output
-- The container uses unbuffered output, so verbose messages will appear in real-time
+- The container uses unbuffered output, so messages will appear in real-time
 
 #### Using of PHAR file
 
