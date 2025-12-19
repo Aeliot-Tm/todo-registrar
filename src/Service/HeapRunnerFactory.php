@@ -15,7 +15,6 @@ namespace Aeliot\TodoRegistrar\Service;
 
 use Aeliot\TodoRegistrar\Console\OutputAdapter;
 use Aeliot\TodoRegistrar\Service\Comment\Detector as CommentDetector;
-use Aeliot\TodoRegistrar\Service\Comment\Extractor as CommentExtractor;
 use Aeliot\TodoRegistrar\Service\Config\ConfigProvider;
 use Aeliot\TodoRegistrar\Service\File\Saver;
 use Aeliot\TodoRegistrar\Service\File\Tokenizer;
@@ -27,7 +26,7 @@ final readonly class HeapRunnerFactory
 {
     public function __construct(
         private CommentDetector $commentDetector,
-        private CommentExtractor $commentExtractor,
+        private CommentExtractorFactory $commentExtractorFactory,
         private ConfigProvider $configProvider,
         private RegistrarProvider $registrarProvider,
         private Saver $saver,
@@ -39,12 +38,13 @@ final readonly class HeapRunnerFactory
     public function create(?string $configPath, OutputAdapter $output): HeapRunner
     {
         $config = $this->configProvider->getConfig($configPath);
+        $commentExtractor = $this->commentExtractorFactory->create($config);
         $registrar = $this->registrarProvider->getRegistrar($config);
         $todoBuilder = $this->todoBuilderFactory->create($config, $output);
 
         return new HeapRunner(
             $this->commentDetector,
-            $this->commentExtractor,
+            $commentExtractor,
             $config->getFinder(),
             $output,
             $registrar,
