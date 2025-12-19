@@ -10,7 +10,7 @@ Description of keys of general config:
 $githubConfig = [
     'issue' => [
         'addTagToLabels' => true,                   // add detected tag into list of issue labels or not
-        'assignees' => ['an.assignee_1']            // identifiers of Github-users, which will be assigned to ticket
+        'assignees' => ['an.assignee_1']            // identifiers of GitHub users, which will be assigned to ticket
                                                     // when "assignee-suffix" was not used with tag.
         'labels' => ['a-label'],                    // list of labels which will be set to issue
         'tagPrefix' => 'tag-',                      // prefix which will be added to tag when "addTagToLabels=true"
@@ -29,5 +29,5 @@ Supported keys of inline config:
 
 | Key       | Description                                                               |
 |-----------|---------------------------------------------------------------------------|
-| assignees | List of identifiers of Github-users, which will be assigned to the issue. |
+| assignees | List of identifiers of GitHub users, which will be assigned to the issue. |
 | labels    | List of labels which will be assigned to the issue.                       |

@@ -16,7 +16,7 @@ paths:                            # Optional. Defines paths which will be walked
     - var
 
 registrar:                        # Required. Configuration of Registrar
-  type: github                    # Required. Type of supported issue tracker or fully qualified class of custom factory
+  type: GitHub                    # Required. Type of supported issue tracker or fully qualified class of custom factory
                                   #           of Registrar.
   options:                        # Required. Options necessary for exact Registrar.
     issue:

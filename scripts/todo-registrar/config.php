@@ -24,7 +24,7 @@ $finder = (new Finder())
 
 return (new Config())
     ->setFinder($finder)
-    ->setRegistrar(RegistrarType::Github, [
+    ->setRegistrar(RegistrarType::GitHub, [
         'issue' => [
             'addTagToLabels' => true,
             'labels' => ['tech-debt'],

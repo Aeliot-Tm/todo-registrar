@@ -11,12 +11,12 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Aeliot\TodoRegistrar\Service\Registrar\Github;
+namespace Aeliot\TodoRegistrar\Service\Registrar\GitHub;
 
 use Aeliot\TodoRegistrar\Contracts\RegistrarInterface;
 use Aeliot\TodoRegistrar\Contracts\TodoInterface;
 
-final class GithubRegistrar implements RegistrarInterface
+final class GitHubRegistrar implements RegistrarInterface
 {
     public function __construct(
         private IssueFactory $issueFactory,

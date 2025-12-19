@@ -16,10 +16,10 @@ parameters:
 			message: '#^Call to an undefined method Github\\Api\\AbstractApi\:\:labels\(\)\.$#'
 			identifier: method.notFound
 			count: 1
-			path: ../../src/Service/Registrar/Github/ApiClientFactory.php
+			path: ../../src/Service/Registrar/GitHub/ApiClientFactory.php
 
 		-
-			message: '#^Parameter \#1 \$issueAPI of class Aeliot\\TodoRegistrar\\Service\\Registrar\\Github\\IssueApiClient constructor expects Github\\Api\\Issue, Github\\Api\\AbstractApi given\.$#'
+			message: '#^Parameter \#1 \$issueAPI of class Aeliot\\TodoRegistrar\\Service\\Registrar\\GitHub\\IssueApiClient constructor expects Github\\Api\\Issue, Github\\Api\\AbstractApi given\.$#'
 			identifier: argument.type
 			count: 1
-			path: ../../src/Service/Registrar/Github/ApiClientFactory.php
+			path: ../../src/Service/Registrar/GitHub/ApiClientFactory.php

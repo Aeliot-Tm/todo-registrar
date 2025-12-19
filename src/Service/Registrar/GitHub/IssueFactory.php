@@ -11,7 +11,7 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Aeliot\TodoRegistrar\Service\Registrar\Github;
+namespace Aeliot\TodoRegistrar\Service\Registrar\GitHub;
 
 use Aeliot\TodoRegistrar\Contracts\TodoInterface;
 
