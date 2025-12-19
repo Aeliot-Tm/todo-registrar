@@ -38,6 +38,10 @@ final readonly class RegistrarProvider
             if (class_exists($registrarType) && is_a($registrarType, RegistrarFactoryInterface::class, true)) {
                 $registrarType = new $registrarType();
             } else {
+                // add some backward compatibility
+                if ('github' === strtolower($registrarType)) {
+                    $registrarType = RegistrarType::GitHub->value;
+                }
                 $newType = RegistrarType::tryFrom($registrarType);
                 if (!$newType) {
                     throw new InvalidConfigException(\sprintf('Invalid type of registrar: %s', $registrarType));

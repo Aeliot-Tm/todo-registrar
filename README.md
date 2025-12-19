@@ -176,7 +176,7 @@ near development as close as possible for earlier catching of tech-debt. Soon of
 So, you have to configure you integration depending on used git-server:
 
 1. [GitLab pipelines](docs/gitlab/gitlab.md)
-2. [GitHub Actions](docs/github/workflow.md)
+2. [GitHub Actions](docs/GitHub/workflow.md)
 
 ## Configuration file
 
@@ -231,7 +231,7 @@ Currently, todo-registrar supports the following issue trackers:
 | Issue Tracker                                   | Description                                                                                   |
 |-------------------------------------------------|-----------------------------------------------------------------------------------------------|
 | [Jira](https://www.atlassian.com/software/jira) | Supported via API tokens. See [description of configuration](docs/registrar/jira/config.md)   |
-| Github issues                                   | Supported via API tokens. See [description of configuration](docs/registrar/github/config.md) |
+| GitHub issues                                   | Supported via API tokens. See [description of configuration](docs/registrar/GitHub/config.md) |
 | [GitLab](https://about.gitlab.com/)             | Supported via API tokens (HTTP Token or OAuth). See [description of configuration](docs/registrar/gitlab/config.md) |
 
 ## Articles

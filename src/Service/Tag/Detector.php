@@ -60,11 +60,11 @@ REGEXP;
         return [
             // date consisting of YYYY-MM-DD format
             '(?:\d{4}-\d\d?-\d\d?)',
-            // Github issue URL
+            // GitHub issue URL
             '(?:https://github\.com/\S{2,}/\S+/issues/\d++)',
-            // Github pull request number of exact repo
+            // GitHub pull request number of exact repo
             '(?:\S{2,}/\S+\#\d++)',
-            // Github issue number
+            // GitHub issue number
             '(?:\#\d++)',
             // JIRA & YouTack issue
             '(?:[A-Z0-9]++-\d++)',

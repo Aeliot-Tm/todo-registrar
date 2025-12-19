@@ -17,7 +17,7 @@ use Aeliot\TodoRegistrar\Service\File\Finder;
 
 return (new Config())
     ->setFinder((new Finder())->in(__DIR__))
-    ->setRegistrar(RegistrarType::Github, [
+    ->setRegistrar(RegistrarType::GitHub, [
         'issue' => [
             'addTagToLabels' => true,
             'labels' => ['Label-1', 'Label-2'],

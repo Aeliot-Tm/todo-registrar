@@ -125,28 +125,28 @@
         "src\/Service\/Registrar\/AbstractIssueConfig.php": {
             "hash": 1528753214
         },
-        "src\/Service\/Registrar\/Github\/ApiClientFactory.php": {
+        "src\/Service\/Registrar\/GitHub\/ApiClientFactory.php": {
             "hash": 3174191168
         },
-        "src\/Service\/Registrar\/Github\/GithubRegistrar.php": {
+        "src\/Service\/Registrar\/GitHub\/GitHubRegistrar.php": {
             "hash": 2851033346
         },
-        "src\/Service\/Registrar\/Github\/GithubRegistrarFactory.php": {
+        "src\/Service\/Registrar\/GitHub\/GitHubRegistrarFactory.php": {
             "hash": 224695018
         },
-        "src\/Service\/Registrar\/Github\/Issue.php": {
+        "src\/Service\/Registrar\/GitHub\/Issue.php": {
             "hash": 3945416898
         },
-        "src\/Service\/Registrar\/Github\/IssueApiClient.php": {
+        "src\/Service\/Registrar\/GitHub\/IssueApiClient.php": {
             "hash": 453333599
         },
-        "src\/Service\/Registrar\/Github\/IssueConfig.php": {
+        "src\/Service\/Registrar\/GitHub\/IssueConfig.php": {
             "hash": 3420049987
         },
-        "src\/Service\/Registrar\/Github\/IssueFactory.php": {
+        "src\/Service\/Registrar\/GitHub\/IssueFactory.php": {
             "hash": 3814030650
         },
-        "src\/Service\/Registrar\/Github\/LabelApiClient.php": {
+        "src\/Service\/Registrar\/GitHub\/LabelApiClient.php": {
             "hash": 2666335577
         },
         "src\/Service\/Registrar\/JIRA\/IssueConfig.php": {

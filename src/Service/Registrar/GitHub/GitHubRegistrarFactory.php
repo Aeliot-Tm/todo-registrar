@@ -11,7 +11,7 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Aeliot\TodoRegistrar\Service\Registrar\Github;
+namespace Aeliot\TodoRegistrar\Service\Registrar\GitHub;
 
 use Aeliot\TodoRegistrar\Contracts\RegistrarFactoryInterface;
 use Aeliot\TodoRegistrar\Contracts\RegistrarInterface;
@@ -19,16 +19,16 @@ use Aeliot\TodoRegistrar\Enum\RegistrarType;
 use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
 
 /**
- * TODO: #146 make assertion of Github config with symfony/validator component.
+ * TODO: #146 make assertion of GitHub config with symfony/validator component.
  */
-#[AsTaggedItem(index: RegistrarType::Github->value)]
-final class GithubRegistrarFactory implements RegistrarFactoryInterface
+#[AsTaggedItem(index: RegistrarType::GitHub->value)]
+final class GitHubRegistrarFactory implements RegistrarFactoryInterface
 {
     public function create(array $config): RegistrarInterface
     {
         $issueConfig = $config['issue'] ?? [];
 
-        return new GithubRegistrar(
+        return new GitHubRegistrar(
             new IssueFactory(new IssueConfig($issueConfig)),
             new ApiClientFactory($config['service'])
         );
