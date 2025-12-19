@@ -15,43 +15,128 @@ namespace Aeliot\TodoRegistrar\Service;
 
 use Aeliot\TodoRegistrar\Console\OutputAdapter;
 use Aeliot\TodoRegistrar\Contracts\FinderInterface;
+use Aeliot\TodoRegistrar\Contracts\RegistrarInterface;
+use Aeliot\TodoRegistrar\Dto\Comment\CommentPart;
+use Aeliot\TodoRegistrar\Dto\FileHeap;
+use Aeliot\TodoRegistrar\Dto\ProcessStatistic;
+use Aeliot\TodoRegistrar\Dto\Registrar\Todo;
 use Aeliot\TodoRegistrar\Exception\CommentRegistrationException;
+use Aeliot\TodoRegistrar\Service\Comment\Detector as CommentDetector;
+use Aeliot\TodoRegistrar\Service\Comment\Extractor as CommentExtractor;
+use Aeliot\TodoRegistrar\Service\File\Saver;
+use Aeliot\TodoRegistrar\Service\File\Tokenizer;
 
-class HeapRunner
+final readonly class HeapRunner
 {
     public function __construct(
+        private CommentDetector $commentDetector,
+        private CommentExtractor $commentExtractor,
         private FinderInterface $finder,
-        private FileProcessor $fileProcessor,
         private OutputAdapter $output,
+        private RegistrarInterface $registrar,
+        private Saver $saver,
+        private TodoBuilder $todoBuilder,
+        private Tokenizer $tokenizer,
     ) {
     }
 
-    public function run(): int
+    public function run(): ProcessStatistic
     {
-        $result = 0;
-        $totalFiles = 0;
-        $totalNewTodos = 0;
-        foreach ($this->finder as $file) {
-            if ($this->output->isDebug()) {
-                $this->output->writeln("Begin process file: {$file->getPathname()}");
+        $statistic = new ProcessStatistic();
+        foreach ($this->getTodos($statistic) as [$todo, $fileUpdateCallback]) {
+            $this->register($todo);
+            $fileUpdateCallback();
+        }
+
+        return $statistic;
+    }
+
+    /**
+     * @return \Generator<array{0: CommentPart, 2: callable}>
+     */
+    private function getCommentParts(ProcessStatistic $statistic): \Generator
+    {
+        foreach ($this->getFileHeaps($statistic) as $fileHeap) {
+            foreach ($fileHeap->getCommentTokens() as $token) {
+                // TODO: #13 implement gluing of simple comments
+                $commentParts = $this->commentExtractor->extract($token->text, $token);
+                foreach ($commentParts->getTodos() as $commentPart) {
+                    $ticketKey = $commentPart->getTagMetadata()?->getTicketKey();
+                    if ($ticketKey) {
+                        $this->output->writeln("Skip TODO with Key: {$ticketKey}", OutputAdapter::VERBOSITY_DEBUG);
+                        continue;
+                    }
+
+                    yield [$commentPart, $fileHeap->getFileUpdateCallback()];
+                }
             }
+        }
+    }
+
+    /**
+     * @return \Generator<FileHeap>
+     */
+    private function getFileHeaps(ProcessStatistic $statistic): \Generator
+    {
+        foreach ($this->finder as $file) {
+            $this->output->writeln("Begin process file: {$file->getPathname()}", OutputAdapter::VERBOSITY_DEBUG);
             try {
-                $totalNewTodos += $countNewTodos = $this->fileProcessor->process($file, $this->output);
-                if ($countNewTodos && $this->output->isVerbose()) {
-                    $this->output->writeln("Registered $countNewTodos for file: {$file->getPathname()}");
+                $tokens = $this->tokenizer->tokenize($file);
+                $commentTokens = $this->commentDetector->filter($tokens);
+                $countCommentTokens = \count($commentTokens);
+
+                if ($this->output->isDebug()) {
+                    $this->output->writeln("Detected comment tokens: {$countCommentTokens}");
+                }
+
+                $fileHeap = new FileHeap(
+                    $commentTokens,
+                    $tokens,
+                    $file,
+                    $statistic,
+                    $this->saver,
+                );
+                yield $fileHeap;
+
+                if (
+                    $this->output->isDebug()
+                    || ($this->output->isVeryVerbose() && $countCommentTokens)
+                    || ($this->output->isVerbose() && $fileHeap->getRegistrationCounter())
+                ) {
+                    $this->output->writeln(
+                        "Registered {$fileHeap->getRegistrationCounter()} for file: {$file->getPathname()}"
+                    );
                 }
             } catch (\Throwable $exception) {
+                /*
+                 * TODO: refactor handling of exceptions
+                 *       Consider points when continuing is possible and when is not
+                 */
                 $this->writeError($exception, $file);
-                $result = 1;
+                throw $exception;
             }
-            ++$totalFiles;
         }
+    }
 
-        if (!$this->output->isQuiet()) {
-            $this->output->writeln("Registered $totalNewTodos for $totalFiles files");
+    /**
+     * @return \Generator<array{0: Todo, 2: callable}>
+     */
+    private function getTodos(ProcessStatistic $statistic): \Generator
+    {
+        foreach ($this->getCommentParts($statistic) as [$commentPart, $fileUpdateCallback]) {
+            yield [$this->todoBuilder->create($commentPart), $fileUpdateCallback];
         }
+    }
 
-        return $result;
+    private function register(Todo $todo): void
+    {
+        try {
+            $key = $this->registrar->register($todo);
+            $todo->injectKey($key);
+            $this->output->writeln("Registered new key: $key", OutputAdapter::VERBOSITY_VERBOSE);
+        } catch (\Throwable $exception) {
+            throw new CommentRegistrationException($todo, $exception);
+        }
     }
 
     private function writeError(\Throwable $exception, ?\SplFileInfo $file = null): void

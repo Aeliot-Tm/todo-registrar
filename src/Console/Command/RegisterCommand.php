@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Console\Command;
 
+use Aeliot\TodoRegistrar\Console\OutputAdapter;
 use Aeliot\TodoRegistrar\Service\HeapRunnerFactory;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -40,6 +41,14 @@ final class RegisterCommand extends Command
     {
         $configPath = $input->getOption('config');
 
-        return $this->heapRunnerFactory->create($configPath, $output)->run();
+        $outputAdapter = new OutputAdapter($output);
+        $statistic = $this->heapRunnerFactory->create($configPath, $outputAdapter)->run();
+
+        $outputAdapter->writeln(
+            "Registered {$statistic->getCountRegisteredTODOs()} for {$statistic->getCountUpdatedFiles()} files",
+            OutputAdapter::VERBOSITY_NORMAL
+        );
+
+        return self::SUCCESS;
     }
 }

@@ -23,7 +23,7 @@ class Extractor
     {
     }
 
-    public function extract(string $comment): CommentParts
+    public function extract(string $comment, \PhpToken $token): CommentParts
     {
         $part = null;
         $parts = new CommentParts();
@@ -32,7 +32,11 @@ class Extractor
                 $part = null;
             }
 
-            $part ??= $this->registerPart($line, $parts);
+            if (null === $part) {
+                $part = new CommentPart($token, $this->tagDetector->getTagMetadata($line));
+                $parts->addPart($part);
+            }
+
             $part->addLine($line);
 
             if (null === $part->getTag()) {
@@ -52,14 +56,6 @@ class Extractor
         $prefix = substr($line, 0, $part->getPrefixLength());
 
         return \in_array(trim($prefix), ['*', '//', '#'], true);
-    }
-
-    private function registerPart(string $line, CommentParts $parts): CommentPart
-    {
-        $part = new CommentPart($this->tagDetector->getTagMetadata($line));
-        $parts->addPart($part);
-
-        return $part;
     }
 
     /**

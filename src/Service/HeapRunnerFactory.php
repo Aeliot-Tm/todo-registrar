@@ -14,8 +14,11 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Service;
 
 use Aeliot\TodoRegistrar\Console\OutputAdapter;
+use Aeliot\TodoRegistrar\Service\Comment\Detector as CommentDetector;
+use Aeliot\TodoRegistrar\Service\Comment\Extractor as CommentExtractor;
 use Aeliot\TodoRegistrar\Service\Config\ConfigProvider;
-use Symfony\Component\Console\Output\OutputInterface;
+use Aeliot\TodoRegistrar\Service\File\Saver;
+use Aeliot\TodoRegistrar\Service\File\Tokenizer;
 
 /**
  * @internal
@@ -23,20 +26,30 @@ use Symfony\Component\Console\Output\OutputInterface;
 final readonly class HeapRunnerFactory
 {
     public function __construct(
+        private CommentDetector $commentDetector,
+        private CommentExtractor $commentExtractor,
         private ConfigProvider $configProvider,
-        private FileProcessorFactory $fileProcessorFactory,
+        private RegistrarProvider $registrarProvider,
+        private Saver $saver,
+        private TodoBuilder $todoBuilder,
+        private Tokenizer $tokenizer,
     ) {
     }
 
-    public function create(?string $configPath, OutputInterface $output): HeapRunner
+    public function create(?string $configPath, OutputAdapter $output): HeapRunner
     {
         $config = $this->configProvider->getConfig($configPath);
-        $fileProcessor = $this->fileProcessorFactory->create($config);
+        $registrar = $this->registrarProvider->getRegistrar($config);
 
         return new HeapRunner(
+            $this->commentDetector,
+            $this->commentExtractor,
             $config->getFinder(),
-            $fileProcessor,
-            new OutputAdapter($output),
+            $output,
+            $registrar,
+            $this->saver,
+            $this->todoBuilder,
+            $this->tokenizer,
         );
     }
 }

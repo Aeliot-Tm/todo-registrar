@@ -24,11 +24,6 @@ final class GithubRegistrar implements RegistrarInterface
     ) {
     }
 
-    public function isRegistered(TodoInterface $todo): bool
-    {
-        return (bool) preg_match('/^\\s*\\b#\\d+\\b/i', $todo->getSummary());
-    }
-
     public function register(TodoInterface $todo): string
     {
         $issue = $this->issueFactory->create($todo);
@@ -49,6 +44,6 @@ final class GithubRegistrar implements RegistrarInterface
     {
         $labelsService = $this->serviceFactory->createLabelService();
         $labels = array_diff($labels, $labelsService->getAll());
-        array_walk($labels, fn (string $label) => $labelsService->create($label));
+        array_walk($labels, static fn (string $label) => $labelsService->create($label));
     }
 }

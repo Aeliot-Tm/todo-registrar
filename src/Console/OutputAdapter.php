@@ -22,6 +22,13 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 final class OutputAdapter implements OutputInterface
 {
+    public const VERBOSITY_SILENT = OutputInterface::VERBOSITY_SILENT;
+    public const VERBOSITY_QUIET = OutputInterface::VERBOSITY_QUIET;
+    public const VERBOSITY_NORMAL = OutputInterface::VERBOSITY_NORMAL;
+    public const VERBOSITY_VERBOSE = OutputInterface::VERBOSITY_VERBOSE;
+    public const VERBOSITY_VERY_VERBOSE = OutputInterface::VERBOSITY_VERY_VERBOSE;
+    public const VERBOSITY_DEBUG = OutputInterface::VERBOSITY_DEBUG;
+
     public function __construct(
         private OutputInterface $output,
     ) {

@@ -16,11 +16,6 @@ namespace Aeliot\TodoRegistrar\Contracts;
 interface RegistrarInterface
 {
     /**
-     * @deprecated skip registered by metadata {@see \Aeliot\TodoRegistrar\Dto\Tag\TagMetadata::getTicketKey() }
-     */
-    public function isRegistered(TodoInterface $todo): bool;
-
-    /**
      * @return string Key of registered ticket
      */
     public function register(TodoInterface $todo): string;

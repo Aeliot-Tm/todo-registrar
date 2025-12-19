@@ -36,6 +36,7 @@ class TodoBuilder
             $commentPart->getSummary(),
             $description,
             $commentPart->getTagMetadata()?->getAssignee(),
+            $commentPart,
             $this->getInlineConfig($description),
         );
     }
@@ -45,6 +46,7 @@ class TodoBuilder
         try {
             $config = $this->inlineConfigReader->getInlineConfig($description);
         } catch (\Throwable $exception) {
+            // TODO: wright by OutputAdapter
             fwrite(\STDERR, "[ERROR] {$exception->getMessage()}. Cannot parse inline config for: $description \n");
             $config = [];
         }
