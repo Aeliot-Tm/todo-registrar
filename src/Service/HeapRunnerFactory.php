@@ -40,7 +40,7 @@ final readonly class HeapRunnerFactory
     {
         $config = $this->configProvider->getConfig($configPath);
         $registrar = $this->registrarProvider->getRegistrar($config);
-        $todoBuilder = $this->todoBuilderFactory->create($config);
+        $todoBuilder = $this->todoBuilderFactory->create($config, $output);
 
         return new HeapRunner(
             $this->commentDetector,

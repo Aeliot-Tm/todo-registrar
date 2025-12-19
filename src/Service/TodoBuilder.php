@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service;
 
+use Aeliot\TodoRegistrar\Console\OutputAdapter;
 use Aeliot\TodoRegistrar\Contracts\InlineConfigFactoryInterface;
 use Aeliot\TodoRegistrar\Contracts\InlineConfigInterface;
 use Aeliot\TodoRegistrar\Contracts\InlineConfigReaderInterface;
@@ -24,6 +25,7 @@ class TodoBuilder
     public function __construct(
         private InlineConfigFactoryInterface $inlineConfigFactory,
         private InlineConfigReaderInterface $inlineConfigReader,
+        private OutputAdapter $output,
     ) {
     }
 
@@ -46,8 +48,7 @@ class TodoBuilder
         try {
             $config = $this->inlineConfigReader->getInlineConfig($description);
         } catch (\Throwable $exception) {
-            // TODO: wright by OutputAdapter
-            fwrite(\STDERR, "[ERROR] {$exception->getMessage()}. Cannot parse inline config for: $description \n");
+            $this->output->writeErr("[ERROR] {$exception->getMessage()}. Cannot parse inline config for: $description \n");
             $config = [];
         }
 
