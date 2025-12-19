@@ -16,7 +16,7 @@ namespace Aeliot\TodoRegistrar\Service\Config;
 /**
  * @internal
  */
-final class ConfigFileGuesser
+final readonly class ConfigFileGuesser
 {
     public function __construct(private AbsolutePathMaker $absolutePathMaker)
     {

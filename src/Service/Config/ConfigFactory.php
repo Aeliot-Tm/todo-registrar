@@ -20,7 +20,7 @@ use Symfony\Component\Yaml\Yaml;
 /**
  * @internal
  */
-final class ConfigFactory
+final readonly class ConfigFactory
 {
     public function __construct(private ArrayConfigFactory $arrayConfigFactory)
     {
@@ -28,27 +28,17 @@ final class ConfigFactory
 
     public function create(string $path): GeneralConfigInterface
     {
-        if (!file_exists($path)) {
-            throw new \RuntimeException(\sprintf('Config file "%s" does not exist', $path));
-        }
-
         return match (strtolower(pathinfo($path, \PATHINFO_EXTENSION))) {
-            'php' => $this->getFromPHP($path),
             'yaml', 'yml' => $this->getFromYAML($path),
             default => throw new \DomainException('Unsupported type of config')
         };
-    }
-
-    private function getFromPHP(string $path): GeneralConfigInterface
-    {
-        return require $path;
     }
 
     private function getFromYAML(string $path): Config
     {
         $contents = file_get_contents($path);
         if (false === $contents) {
-            throw new \RuntimeException(\sprintf('Config file "%s" does not exist', $path));
+            throw new \RuntimeException(\sprintf('Config file "%s" is not readable', $path));
         }
 
         return $this->arrayConfigFactory->create(Yaml::parse(

@@ -16,7 +16,7 @@ namespace Aeliot\TodoRegistrar\Service\Config;
 /**
  * @internal
  */
-final class AbsolutePathMaker
+final readonly class AbsolutePathMaker
 {
     public function prepare(string $path): string
     {

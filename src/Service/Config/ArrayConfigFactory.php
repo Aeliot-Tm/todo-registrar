@@ -22,7 +22,7 @@ use Aeliot\TodoRegistrar\Service\File\Finder;
  *
  * @internal
  */
-final class ArrayConfigFactory
+final readonly class ArrayConfigFactory
 {
     /**
      * @param array<string,mixed> $options
