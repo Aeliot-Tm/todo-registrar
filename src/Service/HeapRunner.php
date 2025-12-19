@@ -115,7 +115,7 @@ final readonly class HeapRunner
                 }
             } catch (\Throwable $exception) {
                 /*
-                 * TODO: refactor handling of exceptions
+                 * TODO: #196 refactor handling of exceptions
                  *       Consider points when continuing is possible and when is not
                  */
                 $this->writeError($exception, $file);
