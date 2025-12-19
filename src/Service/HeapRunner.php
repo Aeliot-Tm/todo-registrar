@@ -67,7 +67,13 @@ final readonly class HeapRunner
                         continue;
                     }
 
-                    yield [$commentPart, $fileHeap->getFileUpdateCallback()];
+                    yield [
+                        $commentPart,
+                        static function () use ($commentParts, $token, $fileHeap) {
+                            $token->text = $commentParts->getContent();
+                            $fileHeap->getFileUpdateCallback()();
+                        },
+                    ];
                 }
             }
         }
