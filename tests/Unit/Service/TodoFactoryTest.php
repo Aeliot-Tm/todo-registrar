@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Test\Unit\Service;
 
+use Aeliot\TodoRegistrar\Console\OutputAdapter;
 use Aeliot\TodoRegistrar\Dto\Comment\CommentPart;
 use Aeliot\TodoRegistrar\Dto\InlineConfig\IndexedCollection;
 use Aeliot\TodoRegistrar\Dto\InlineConfig\NamedCollection;
@@ -26,6 +27,7 @@ use Aeliot\TodoRegistrar\Service\TodoBuilder;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Console\Output\NullOutput;
 
 #[CoversClass(TodoBuilder::class)]
 #[UsesClass(ArrayFromJsonLikeLexerBuilder::class)]
@@ -72,6 +74,10 @@ final class TodoFactoryTest extends TestCase
 
     private function createTodoFactory(): TodoBuilder
     {
-        return new TodoBuilder(new InlineConfigFactory(), new ExtrasReader(new ArrayFromJsonLikeLexerBuilder()));
+        return new TodoBuilder(
+            new InlineConfigFactory(),
+            new ExtrasReader(new ArrayFromJsonLikeLexerBuilder()),
+            new OutputAdapter(new NullOutput())
+        );
     }
 }

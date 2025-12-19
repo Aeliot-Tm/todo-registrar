@@ -90,15 +90,23 @@ CONT,
     #[DataProvider('getDataForTestCatchLineSeparator')]
     public function testCatchLineSeparator(string $comment): void
     {
-        $parts = (new Extractor(new TagDetector()))->extract($comment);
+        $token = $this->createPhpToken($comment);
+        $parts = (new Extractor(new TagDetector()))->extract($comment, $token);
         self::assertSame($comment, $parts->getContent());
     }
 
     #[DataProvider('getDataForTestCountOfParts')]
     public function testCountOfParts(int $expectedTotalCount, int $expectedTodoCount, string $comment): void
     {
-        $parts = (new Extractor(new TagDetector()))->extract($comment);
+        $token = $this->createPhpToken($comment);
+        $parts = (new Extractor(new TagDetector()))->extract($comment, $token);
         self::assertCount($expectedTotalCount, $parts->getParts());
         self::assertCount($expectedTodoCount, $parts->getTodos());
+    }
+
+    private function createPhpToken(string $comment): \PhpToken
+    {
+        // Fallback: create a token manually if no comment found
+        return new \PhpToken(\T_COMMENT, $comment, 0, 0);
     }
 }
