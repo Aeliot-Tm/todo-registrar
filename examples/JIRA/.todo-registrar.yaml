@@ -1,0 +1,35 @@
+# This file is part of the TODO Registrar project.
+#
+# (c) Anatoliy Melnikov <5785276@gmail.com>
+#
+# This source file is subject to the MIT license that is bundled
+# with this source code in the file LICENSE.
+
+paths:
+  in: .
+
+registrar:
+  type: JIRA
+  options:
+    issue:
+      addTagToLabels: true
+      components:
+        - Component-1
+        - Component-2
+      labels:
+        - Label-1
+        - Label-2
+      tagPrefix: tag-
+      type: Bug
+    projectKey: Todo
+    service:
+      host: localhost  # (or set JIRA_HOST environment variable, default: localhost)
+      # Replace with your actual token (or set JIRA_PERSONAL_ACCESS_TOKEN environment variable)
+      personalAccessToken: null
+      tokenBasedAuth: true
+
+tags:
+  - todo
+  - fixme
+  - a_custom_tag
+

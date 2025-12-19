@@ -1,5 +1,11 @@
 # Configuration YAML file
 
+> **Important:** YAML configuration files do not support automatic environment variable substitution.
+> Unlike PHP configuration files (where you can use `$_ENV['VAR'] ?? null`), you must manually replace
+> values in YAML files or use external tools/scripts to substitute environment variables before parsing.
+> If you need dynamic configuration with environment variables, consider using PHP configuration format instead.
+> See issue [#203](https://github.com/Aeliot-Tm/todo-registrar/issues/203).
+
 It may have such structure:
 ```yaml
 paths:                            # Optional. Defines paths which will be walked to find supported files
