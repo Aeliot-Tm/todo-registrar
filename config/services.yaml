@@ -15,6 +15,7 @@ services:
       - '../src/Service/HeapRunner.php'
       - '../src/Service/InlineConfig/JsonLikeLexer.php'
       - '../src/Service/Registrar/Github/'
+      - '../src/Service/Registrar/GitLab/'
       - '../src/Service/Registrar/JIRA/'
       - '../src/Service/TodoBuilder.php'
 
@@ -24,4 +25,5 @@ services:
     tags: [ 'console.command' ]
 
   Aeliot\TodoRegistrar\Service\Registrar\Github\GithubRegistrarFactory: ~
+  Aeliot\TodoRegistrar\Service\Registrar\GitLab\GitlabRegistrarFactory: ~
   Aeliot\TodoRegistrar\Service\Registrar\JIRA\JiraRegistrarFactory: ~
