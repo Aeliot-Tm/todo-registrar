@@ -19,7 +19,7 @@ use Aeliot\TodoRegistrar\Enum\RegistrarType;
 use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
 
 /**
- * TODO: make assertion of GitLab config with symfony/validator component.
+ * TODO: #199 make assertion of GitLab config with symfony/validator component.
  */
 #[AsTaggedItem(index: RegistrarType::GitLab->value)]
 final class GitlabRegistrarFactory implements RegistrarFactoryInterface
