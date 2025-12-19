@@ -41,6 +41,7 @@
     },
     "require": {
         "php": "^8.2",
+        "ext-ctype": "*",
         "ext-mbstring": "*",
         "ext-tokenizer": "*",
         "guzzlehttp/guzzle": "^7.9",
