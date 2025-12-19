@@ -13,12 +13,15 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\JIRA;
 
-use Aeliot\TodoRegistrar\Service\Registrar\RegistrarFactoryInterface;
-use Aeliot\TodoRegistrar\Service\Registrar\RegistrarInterface;
+use Aeliot\TodoRegistrar\Contracts\RegistrarFactoryInterface;
+use Aeliot\TodoRegistrar\Contracts\RegistrarInterface;
+use Aeliot\TodoRegistrar\Enum\RegistrarType;
+use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
 
 /**
  * TODO: #145 make assertion of JIRA config with symfony/validator component.
  */
+#[AsTaggedItem(index: RegistrarType::JIRA->value)]
 class JiraRegistrarFactory implements RegistrarFactoryInterface
 {
     public function create(array $config): RegistrarInterface

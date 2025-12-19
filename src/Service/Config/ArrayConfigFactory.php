@@ -11,8 +11,9 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Aeliot\TodoRegistrar;
+namespace Aeliot\TodoRegistrar\Service\Config;
 
+use Aeliot\TodoRegistrar\Config;
 use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
 use Aeliot\TodoRegistrar\Service\File\Finder;
 
@@ -21,7 +22,7 @@ use Aeliot\TodoRegistrar\Service\File\Finder;
  *
  * @internal
  */
-final class ArrayConfigFactory
+final readonly class ArrayConfigFactory
 {
     /**
      * @param array<string,mixed> $options

@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\Github;
 
-use Aeliot\TodoRegistrar\Dto\Registrar\Todo;
+use Aeliot\TodoRegistrar\Contracts\TodoInterface;
 
 final class IssueFactory
 {
@@ -21,7 +21,7 @@ final class IssueFactory
     {
     }
 
-    public function create(Todo $todo): Issue
+    public function create(TodoInterface $todo): Issue
     {
         $issue = new Issue();
         $issue->setTitle($todo->getSummary());
@@ -33,7 +33,7 @@ final class IssueFactory
         return $issue;
     }
 
-    private function setAssignees(Issue $issue, Todo $todo): void
+    private function setAssignees(Issue $issue, TodoInterface $todo): void
     {
         $assignees = array_filter([
             $todo->getAssignee(),
@@ -46,7 +46,7 @@ final class IssueFactory
         }
     }
 
-    private function setLabels(Issue $issue, Todo $todo): void
+    private function setLabels(Issue $issue, TodoInterface $todo): void
     {
         $labels = [
             ...(array) ($todo->getInlineConfig()['labels'] ?? []),

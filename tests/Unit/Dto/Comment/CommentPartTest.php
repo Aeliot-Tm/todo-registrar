@@ -130,14 +130,16 @@ final class CommentPartTest extends TestCase
     public function testGetContentThrowsExceptionWithoutLines(): void
     {
         $this->expectException(NoLineException::class);
-        $commentPart = new CommentPart(null);
+        $token = $this->createPhpToken();
+        $commentPart = new CommentPart($token, null);
         $commentPart->getContent();
     }
 
     public function testGetFirstLineThrowsExceptionWithoutLines(): void
     {
         $this->expectException(NoLineException::class);
-        $commentPart = new CommentPart(null);
+        $token = $this->createPhpToken();
+        $commentPart = new CommentPart($token, null);
         $commentPart->getFirstLine();
     }
 
@@ -147,9 +149,10 @@ final class CommentPartTest extends TestCase
     #[DataProvider('getDataForTestGetDescription')]
     public function testGetDescription(string $expected, array $lines, int $prefixLength): void
     {
+        $token = $this->createPhpToken();
         $metadata = $this->createMock(TagMetadata::class);
         $metadata->method('getPrefixLength')->willReturn($prefixLength);
-        $commentPart = new CommentPart($metadata);
+        $commentPart = new CommentPart($token, $metadata);
         array_walk($lines, static fn (string $line) => $commentPart->addLine($line));
 
         self::assertEquals($expected, $commentPart->getDescription());
@@ -161,9 +164,10 @@ final class CommentPartTest extends TestCase
     #[DataProvider('getDataForTestGetSummary')]
     public function testGetSummary(string $expected, array $lines, int $prefixLength): void
     {
+        $token = $this->createPhpToken();
         $metadata = $this->createMock(TagMetadata::class);
         $metadata->method('getPrefixLength')->willReturn($prefixLength);
-        $commentPart = new CommentPart($metadata);
+        $commentPart = new CommentPart($token, $metadata);
         array_walk($lines, static fn (string $line) => $commentPart->addLine($line));
 
         self::assertEquals($expected, $commentPart->getSummary());
@@ -184,7 +188,8 @@ final class CommentPartTest extends TestCase
     public function testInjectKeyThrowsExceptionWithoutLines(): void
     {
         $this->expectException(NoLineException::class);
-        $commentPart = new CommentPart(null);
+        $token = $this->createPhpToken();
+        $commentPart = new CommentPart($token, null);
         $commentPart->injectKey('any key');
     }
 
@@ -193,7 +198,8 @@ final class CommentPartTest extends TestCase
     {
         $this->expectException(NoPrefixException::class);
 
-        $commentPart = new CommentPart(new TagMetadata(null, $prefixLength));
+        $token = $this->createPhpToken();
+        $commentPart = new CommentPart($token, new TagMetadata(null, $prefixLength));
         $commentPart->addLine('any text of line');
         $commentPart->injectKey('any key');
     }
@@ -203,11 +209,17 @@ final class CommentPartTest extends TestCase
      */
     private function createCommentPartWithLines(array $lines, ?TagMetadata $tagMetadata = null): CommentPart
     {
-        $commentPart = new CommentPart($tagMetadata);
+        $token = $this->createPhpToken();
+        $commentPart = new CommentPart($token, $tagMetadata);
         foreach ($lines as $line) {
             $commentPart->addLine($line);
         }
 
         return $commentPart;
+    }
+
+    private function createPhpToken(): \PhpToken
+    {
+        return new \PhpToken(\T_COMMENT, '// comment', 0, 0);
     }
 }

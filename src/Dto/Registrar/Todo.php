@@ -13,15 +13,18 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Dto\Registrar;
 
-use Aeliot\TodoRegistrar\InlineConfigInterface;
+use Aeliot\TodoRegistrar\Contracts\InlineConfigInterface;
+use Aeliot\TodoRegistrar\Contracts\TodoInterface;
+use Aeliot\TodoRegistrar\Dto\Comment\CommentPart;
 
-class Todo
+class Todo implements TodoInterface
 {
     public function __construct(
         private string $tag,
         private string $summary,
         private string $description,
         private ?string $assignee,
+        private CommentPart $commentPart,
         private InlineConfigInterface $inlineConfig,
     ) {
     }
@@ -34,6 +37,11 @@ class Todo
     public function getDescription(): string
     {
         return $this->description;
+    }
+
+    public function getCommentPart(): CommentPart
+    {
+        return $this->commentPart;
     }
 
     public function getInlineConfig(): InlineConfigInterface
@@ -49,5 +57,10 @@ class Todo
     public function getTag(): string
     {
         return $this->tag;
+    }
+
+    public function injectKey(string $key): void
+    {
+        $this->commentPart->injectKey($key);
     }
 }

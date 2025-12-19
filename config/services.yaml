@@ -1,0 +1,27 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+
+  Aeliot\TodoRegistrar\:
+    resource: '../src/*'
+    exclude:
+      - '../src/Dto'
+      - '../src/Enum'
+      - '../src/Exception'
+      - '../src/Console/OutputAdapter.php'
+      - '../src/Service/Comment/Extractor.php'
+      - '../src/Service/File/Finder.php'
+      - '../src/Service/HeapRunner.php'
+      - '../src/Service/InlineConfig/JsonLikeLexer.php'
+      - '../src/Service/Registrar/Github/'
+      - '../src/Service/Registrar/JIRA/'
+      - '../src/Service/TodoBuilder.php'
+
+  # Commands
+  Aeliot\TodoRegistrar\Console\Command\RegisterCommand:
+    public: true
+    tags: [ 'console.command' ]
+
+  Aeliot\TodoRegistrar\Service\Registrar\Github\GithubRegistrarFactory: ~
+  Aeliot\TodoRegistrar\Service\Registrar\JIRA\JiraRegistrarFactory: ~

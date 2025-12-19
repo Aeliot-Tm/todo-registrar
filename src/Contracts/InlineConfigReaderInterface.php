@@ -11,11 +11,12 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Aeliot\TodoRegistrar;
+namespace Aeliot\TodoRegistrar\Contracts;
 
-/**
- * @template-extends \ArrayAccess<string,mixed>
- */
-interface InlineConfigInterface extends \ArrayAccess
+interface InlineConfigReaderInterface
 {
+    /**
+     * @return array<array-key,mixed>
+     */
+    public function getInlineConfig(string $input): array;
 }

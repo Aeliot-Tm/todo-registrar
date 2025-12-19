@@ -11,12 +11,12 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Aeliot\TodoRegistrar;
+namespace Aeliot\TodoRegistrar\Service\Config;
 
 /**
  * @internal
  */
-final class ConfigFileGuesser
+final readonly class ConfigFileGuesser
 {
     public function __construct(private AbsolutePathMaker $absolutePathMaker)
     {

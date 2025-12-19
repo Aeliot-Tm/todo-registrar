@@ -25,6 +25,7 @@ class CommentPart
     private array $lines = [];
 
     public function __construct(
+        private \PhpToken $token,
         private ?TagMetadata $tagMetadata,
     ) {
     }
@@ -84,6 +85,11 @@ class CommentPart
     public function getTagMetadata(): ?TagMetadata
     {
         return $this->tagMetadata;
+    }
+
+    public function getToken(): \PhpToken
+    {
+        return $this->token;
     }
 
     public function getContent(): string

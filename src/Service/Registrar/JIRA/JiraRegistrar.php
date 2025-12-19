@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\JIRA;
 
-use Aeliot\TodoRegistrar\Dto\Registrar\Todo;
-use Aeliot\TodoRegistrar\Service\Registrar\RegistrarInterface;
+use Aeliot\TodoRegistrar\Contracts\RegistrarInterface;
+use Aeliot\TodoRegistrar\Contracts\TodoInterface;
 
 class JiraRegistrar implements RegistrarInterface
 {
@@ -25,12 +25,7 @@ class JiraRegistrar implements RegistrarInterface
     ) {
     }
 
-    public function isRegistered(Todo $todo): bool
-    {
-        return (bool) preg_match('/^\\s*\\b[A-Z]+-\\d+\\b/i', $todo->getSummary());
-    }
-
-    public function register(Todo $todo): string
+    public function register(TodoInterface $todo): string
     {
         $issueField = $this->issueFieldFactory->create($todo);
 

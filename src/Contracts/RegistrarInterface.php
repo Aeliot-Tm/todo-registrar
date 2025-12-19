@@ -11,12 +11,12 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Aeliot\TodoRegistrar\Service\Registrar;
+namespace Aeliot\TodoRegistrar\Contracts;
 
-interface RegistrarFactoryInterface
+interface RegistrarInterface
 {
     /**
-     * @param array<string,mixed> $config
+     * @return string Key of registered ticket
      */
-    public function create(array $config): RegistrarInterface;
+    public function register(TodoInterface $todo): string;
 }

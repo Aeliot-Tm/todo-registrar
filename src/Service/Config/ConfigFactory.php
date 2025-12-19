@@ -11,42 +11,34 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Aeliot\TodoRegistrar;
+namespace Aeliot\TodoRegistrar\Service\Config;
 
+use Aeliot\TodoRegistrar\Config;
+use Aeliot\TodoRegistrar\Contracts\GeneralConfigInterface;
 use Symfony\Component\Yaml\Yaml;
 
 /**
  * @internal
  */
-final class ConfigFactory
+final readonly class ConfigFactory
 {
     public function __construct(private ArrayConfigFactory $arrayConfigFactory)
     {
     }
 
-    public function create(string $path): Config
+    public function create(string $path): GeneralConfigInterface
     {
-        if (!file_exists($path)) {
-            throw new \RuntimeException(\sprintf('Config file "%s" does not exist', $path));
-        }
-
         return match (strtolower(pathinfo($path, \PATHINFO_EXTENSION))) {
-            'php' => $this->getFromPHP($path),
             'yaml', 'yml' => $this->getFromYAML($path),
             default => throw new \DomainException('Unsupported type of config')
         };
-    }
-
-    private function getFromPHP(string $path): Config
-    {
-        return require $path;
     }
 
     private function getFromYAML(string $path): Config
     {
         $contents = file_get_contents($path);
         if (false === $contents) {
-            throw new \RuntimeException(\sprintf('Config file "%s" does not exist', $path));
+            throw new \RuntimeException(\sprintf('Config file "%s" is not readable', $path));
         }
 
         return $this->arrayConfigFactory->create(Yaml::parse(
