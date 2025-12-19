@@ -15,10 +15,13 @@ namespace Aeliot\TodoRegistrar\Service\Registrar\Github;
 
 use Aeliot\TodoRegistrar\Contracts\RegistrarFactoryInterface;
 use Aeliot\TodoRegistrar\Contracts\RegistrarInterface;
+use Aeliot\TodoRegistrar\Enum\RegistrarType;
+use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
 
 /**
  * TODO: #146 make assertion of Github config with symfony/validator component.
  */
+#[AsTaggedItem(index: RegistrarType::Github->value)]
 final class GithubRegistrarFactory implements RegistrarFactoryInterface
 {
     public function create(array $config): RegistrarInterface

@@ -15,18 +15,29 @@ namespace Aeliot\TodoRegistrar\Service\Registrar;
 
 use Aeliot\TodoRegistrar\Contracts\RegistrarFactoryInterface;
 use Aeliot\TodoRegistrar\Enum\RegistrarType;
-use Aeliot\TodoRegistrar\Service\Registrar\Github\GithubRegistrarFactory;
-use Aeliot\TodoRegistrar\Service\Registrar\JIRA\JiraRegistrarFactory;
+use Symfony\Component\DependencyInjection\Attribute\AutowireLocator;
+use Symfony\Component\DependencyInjection\ServiceLocator;
 
-class RegistrarFactoryRegistry
+/**
+ * @internal
+ */
+final readonly class RegistrarFactoryRegistry
 {
+    /**
+     * @param ServiceLocator<RegistrarFactoryInterface> $registrarFactoryLocator
+     */
+    public function __construct(
+        #[AutowireLocator('aeliot.todo_registrar.registrar_factory')]
+        private ServiceLocator $registrarFactoryLocator,
+    ) {
+    }
+
     public function getFactory(RegistrarType $type): RegistrarFactoryInterface
     {
-        return match ($type) {
-            RegistrarType::Github => new GithubRegistrarFactory(),
-            RegistrarType::JIRA => new JiraRegistrarFactory(),
-            // TODO #129 add factory of different registrars
-            default => throw new \DomainException(\sprintf('Not supported registrar type "%s"', $type->value)),
-        };
+        if (!$this->registrarFactoryLocator->has($type->value)) {
+            throw new \DomainException(\sprintf('Not supported registrar type "%s"', $type->value));
+        }
+
+        return $this->registrarFactoryLocator->get($type->value);
     }
 }

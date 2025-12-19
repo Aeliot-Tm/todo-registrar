@@ -13,6 +13,10 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Contracts;
 
+use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
+
+// TODO #129 add factory of different registrars
+#[AutoconfigureTag('aeliot.todo_registrar.registrar_factory')]
 interface RegistrarFactoryInterface
 {
     /**
