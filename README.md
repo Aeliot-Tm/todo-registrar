@@ -175,7 +175,7 @@ near development as close as possible for earlier catching of tech-debt. Soon of
 
 So, you have to configure you integration depending on used git-server:
 
-1. [GitLab pipelines](docs/gitlab/gitlab.md)
+1. [GitLab CI](docs/GitlLab/integration_on_ci.md)
 2. [GitHub Actions](docs/GitHub/workflow.md)
 
 ## Configuration file
