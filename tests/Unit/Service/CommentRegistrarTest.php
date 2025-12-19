@@ -28,7 +28,7 @@ use Aeliot\TodoRegistrar\Service\InlineConfig\ArrayFromJsonLikeLexerBuilder;
 use Aeliot\TodoRegistrar\Service\InlineConfig\ExtrasReader;
 use Aeliot\TodoRegistrar\Service\InlineConfig\InlineConfigFactory;
 use Aeliot\TodoRegistrar\Service\InlineConfig\JsonLikeLexer;
-use Aeliot\TodoRegistrar\Service\TodoFactory;
+use Aeliot\TodoRegistrar\Service\TodoBuilder;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -45,7 +45,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 #[UsesClass(NamedCollection::class)]
 #[UsesClass(TagMetadata::class)]
 #[UsesClass(Todo::class)]
-#[UsesClass(TodoFactory::class)]
+#[UsesClass(TodoBuilder::class)]
 #[UsesClass(Token::class)]
 final class CommentRegistrarTest extends TestCase
 {
@@ -189,8 +189,8 @@ final class CommentRegistrarTest extends TestCase
         return $registrar;
     }
 
-    private function createTodoFactory(): TodoFactory
+    private function createTodoFactory(): TodoBuilder
     {
-        return new TodoFactory(new InlineConfigFactory(), new ExtrasReader(new ArrayFromJsonLikeLexerBuilder()));
+        return new TodoBuilder(new InlineConfigFactory(), new ExtrasReader(new ArrayFromJsonLikeLexerBuilder()));
     }
 }

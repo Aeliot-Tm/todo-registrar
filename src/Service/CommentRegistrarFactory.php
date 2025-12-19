@@ -15,7 +15,7 @@ final readonly class CommentRegistrarFactory
     public function __construct(
         private Detector $detector,
         private ExtractorFactory $extractorFactory,
-        private TodoFactoryFactory $todoFactoryFactory,
+        private TodoBuilderFactory $todoFactoryFactory,
     ) {
     }
 

@@ -7,7 +7,7 @@ use Aeliot\TodoRegistrar\Contracts\GeneralConfigInterface;
 use Aeliot\TodoRegistrar\Service\InlineConfig\ExtrasReader;
 use Aeliot\TodoRegistrar\Service\InlineConfig\InlineConfigFactory;
 
-final readonly class TodoFactoryFactory
+final readonly class TodoBuilderFactory
 {
     public function __construct(
         private ExtrasReader $extrasReader,
@@ -15,11 +15,11 @@ final readonly class TodoFactoryFactory
     ) {
     }
 
-    public function create(GeneralConfigInterface $config): TodoFactory
+    public function create(GeneralConfigInterface $config): TodoBuilder
     {
         $inlineConfigReader = $config->getInlineConfigReader() ?? $this->extrasReader;
         $inlineConfigFactory = $config->getInlineConfigFactory() ?? $this->inlineConfigFactory;
 
-        return new TodoFactory($inlineConfigFactory, $inlineConfigReader);
+        return new TodoBuilder($inlineConfigFactory, $inlineConfigReader);
     }
 }

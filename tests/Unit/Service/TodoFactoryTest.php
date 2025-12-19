@@ -22,12 +22,12 @@ use Aeliot\TodoRegistrar\Service\InlineConfig\ArrayFromJsonLikeLexerBuilder;
 use Aeliot\TodoRegistrar\Service\InlineConfig\ExtrasReader;
 use Aeliot\TodoRegistrar\Service\InlineConfig\InlineConfigFactory;
 use Aeliot\TodoRegistrar\Service\InlineConfig\JsonLikeLexer;
-use Aeliot\TodoRegistrar\Service\TodoFactory;
+use Aeliot\TodoRegistrar\Service\TodoBuilder;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(TodoFactory::class)]
+#[CoversClass(TodoBuilder::class)]
 #[UsesClass(ArrayFromJsonLikeLexerBuilder::class)]
 #[UsesClass(ExtrasReader::class)]
 #[UsesClass(IndexedCollection::class)]
@@ -70,8 +70,8 @@ final class TodoFactoryTest extends TestCase
         self::assertNull($todo->getAssignee());
     }
 
-    private function createTodoFactory(): TodoFactory
+    private function createTodoFactory(): TodoBuilder
     {
-        return new TodoFactory(new InlineConfigFactory(), new ExtrasReader(new ArrayFromJsonLikeLexerBuilder()));
+        return new TodoBuilder(new InlineConfigFactory(), new ExtrasReader(new ArrayFromJsonLikeLexerBuilder()));
     }
 }

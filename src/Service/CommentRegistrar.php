@@ -25,7 +25,7 @@ class CommentRegistrar
         private CommentDetector $commentDetector,
         private CommentExtractor $commentExtractor,
         private RegistrarInterface $registrar,
-        private TodoFactory $todoFactory,
+        private TodoBuilder $todoFactory,
     ) {
     }
 
