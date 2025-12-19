@@ -17,7 +17,7 @@ enum RegistrarType: string
 {
     case AzureBoards = 'AzureBoards';
     case Github = 'Github';
-    case Gitlab = 'Gitlab';
+    case GitLab = 'GitLab';
     case JIRA = 'JIRA';
     case PivotalTracker = 'PivotalTracker';
     case Redmine = 'Redmine';
