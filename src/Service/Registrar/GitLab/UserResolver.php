@@ -72,11 +72,10 @@ final class UserResolver
 
     /**
      * @param array<string,mixed> $user
-     * @param string $identifier
      */
     private function cacheUser(array $user, string $identifier): int
     {
-        $userId = (int)$user['id'];
+        $userId = (int) $user['id'];
         // Cache the result
         $this->cache[$identifier] = $userId;
         // Also cache by username and email if available
@@ -136,8 +135,6 @@ final class UserResolver
 
     /**
      * @param array<string,mixed> $user
-     * @param string $identifier
-     * @return bool
      */
     public function isSameUser(array $user, string $identifier): bool
     {
