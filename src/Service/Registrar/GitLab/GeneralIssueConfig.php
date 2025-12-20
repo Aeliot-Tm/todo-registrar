@@ -14,15 +14,41 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Service\Registrar\GitLab;
 
 use Aeliot\TodoRegistrar\Service\Registrar\AbstractGeneralIssueConfig;
+use Symfony\Component\Validator\Constraints as Assert;
 
 final class GeneralIssueConfig extends AbstractGeneralIssueConfig
 {
     /**
-     * @var string[]
+     * @var string[]|null
      */
-    protected array $assignee;
-    protected int|string|null $milestone;
-    protected ?string $due_date;
+    #[Assert\Sequentially([
+        new Assert\NotNull(message: 'Option "assignee" is required'),
+        new Assert\Type(type: 'array', message: 'Option "assignee" must be an array'),
+        new Assert\All([new Assert\Type(type: 'string', message: 'Each assignee must be a string (username or email)')]),
+    ])]
+    protected mixed $assignee = null;
+
+    #[Assert\AtLeastOneOf(
+        constraints: [
+            new Assert\IsNull(),
+            new Assert\Type(type: 'int', message: 'Milestone must be an integer ID'),
+            new Assert\Type(type: 'string', message: 'Milestone must be a string title'),
+        ],
+        message: 'Option "milestone" must be an integer ID, IID, or string title'
+    )]
+    protected mixed $milestone = null;
+
+    #[Assert\AtLeastOneOf(
+        constraints: [
+            new Assert\IsNull(),
+            new Assert\Regex(
+                pattern: '/^\d{4}-\d{2}-\d{2}$/',
+                message: 'Due date must be in format YYYY-MM-DD'
+            ),
+        ],
+        message: 'Option "due_date" must be a date string in format YYYY-MM-DD or null'
+    )]
+    protected mixed $due_date = null;
 
     /**
      * @return string[]

@@ -13,32 +13,52 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\JIRA;
 
-use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
 use Aeliot\TodoRegistrar\Service\Registrar\AbstractGeneralIssueConfig;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class GeneralIssueConfig extends AbstractGeneralIssueConfig
 {
     /**
-     * @var string[]
+     * @var string[]|null
      */
-    protected array $components;
-    protected ?string $assignee;
-    protected string $issueType;
-    protected ?string $priority;
-    protected string $projectKey;
+    #[Assert\Sequentially([
+        new Assert\NotNull(message: 'Option "components" is required'),
+        new Assert\Type(type: 'array', message: 'Option "components" must be an array'),
+        new Assert\All([new Assert\Type(type: 'string', message: 'Each component must be a string JIRA component name')]),
+    ])]
+    protected mixed $components = null;
 
-    /**
-     * @param array<string,mixed> $config
-     */
-    public function __construct(array $config)
-    {
-        if (\array_key_exists('issueType', $config) && \array_key_exists('type', $config)) {
-            $exceptionMessage = 'Conflicting config. Both properties "issueType" and "type" added to config of issue';
-            throw new InvalidConfigException($exceptionMessage);
-        }
+    #[Assert\AtLeastOneOf(
+        constraints: [
+            new Assert\IsNull(),
+            new Assert\Type(type: 'string', message: 'Assignee must be a string JIRA username'),
+        ],
+        message: 'Option "assignee" must be a string JIRA username or null'
+    )]
+    protected mixed $assignee = null;
 
-        parent::__construct($config);
-    }
+    #[Assert\NotBlank(message: 'Option "issueType" is required for JIRA registrar')]
+    #[Assert\Type(type: 'string', message: 'Option "issueType" must be a string (e.g., "Task", "Bug", "Story")')]
+    protected mixed $issueType = null;
+
+    #[Assert\AtLeastOneOf(
+        constraints: [
+            new Assert\IsNull(),
+            new Assert\Type(type: 'string', message: 'Priority must be a string'),
+        ],
+        message: 'Option "priority" must be a string JIRA priority name (e.g., "High", "Medium", "Low") or null'
+    )]
+    protected mixed $priority = null;
+
+    #[Assert\NotBlank(message: 'Option "projectKey" is required for JIRA registrar')]
+    #[Assert\Type(type: 'string', message: 'Option "projectKey" must be a string (e.g., "PROJ")')]
+    protected mixed $projectKey = null;
+
+    #[Assert\IsNull(message: 'Used outdated property "type", but "issueType" must be used')]
+    protected mixed $type = null;
+
+    #[Assert\IsNull(message: 'Conflicting config: both "issueType" and "type" are specified. Use only one of them')]
+    protected mixed $conflictingTypeKeys = null;
 
     public function getAssignee(): ?string
     {
@@ -84,10 +104,12 @@ class GeneralIssueConfig extends AbstractGeneralIssueConfig
 
         $config['components'] = (array) $config['components'];
 
-        if (\array_key_exists('type', $config)) {
-            // TODO: #127 throw exception when exists key "issueType"
+        if (\array_key_exists('issueType', $config) && \array_key_exists('type', $config)) {
+            $config['conflictingTypeKeys'] = '"issueType" and "type"';
+        }
+
+        if (\array_key_exists('type', $config) && !\array_key_exists('issueType', $config)) {
             $config['issueType'] = $config['type'];
-            unset($config['type']);
         }
 
         return $config;
