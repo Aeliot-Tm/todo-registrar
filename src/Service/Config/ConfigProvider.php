@@ -26,12 +26,17 @@ final readonly class ConfigProvider
     public function __construct(
         private ConfigFileDetector $configFileDetector,
         private ConfigFactory $configFactory,
+        private StdinConfigFactory $stdinConfigFactory,
         private ValidatorInterface $validator,
     ) {
     }
 
     public function getConfig(?string $path): GeneralConfigInterface
     {
+        if ('STDIN' === $path) {
+            return $this->stdinConfigFactory->create();
+        }
+
         $path = $this->configFileDetector->getPath($path);
         if ('php' === strtolower(pathinfo($path, \PATHINFO_EXTENSION))) {
             return $this->loadPhpConfig($path);

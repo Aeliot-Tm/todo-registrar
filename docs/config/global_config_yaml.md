@@ -6,6 +6,8 @@
 > If you need dynamic configuration with environment variables, consider using PHP configuration format instead.
 > See issue [#203](https://github.com/Aeliot-Tm/todo-registrar/issues/203).
 
+## Loading from file
+
 It may have such structure:
 ```yaml
 paths:                            # Optional. Defines paths which will be walked to find supported files
@@ -35,3 +37,58 @@ registrar:                        # Required. Configuration of Registrar
 tags:           # Optional. Accepts string (tag) or array of strings (tags) which should be processed by the script.
   - my_tag
 ```
+
+## Loading from STDIN
+
+You can pass YAML configuration via STDIN using `--config=STDIN` option:
+
+```bash
+# Pipe from file
+cat .todo-registrar.yaml | ./bin/todo-registrar register --config=STDIN
+
+# Stdin redirection
+./bin/todo-registrar register --config=STDIN < .todo-registrar.yaml
+
+# Heredoc
+./bin/todo-registrar register --config=STDIN << 'EOF'
+paths:
+  in: /app/src
+registrar:
+  type: GitHub
+  options:
+    service:
+      personalAccessToken: your-token
+      owner: your-org
+      repository: your-repo
+EOF
+```
+
+### Docker usage
+
+When running in Docker, use the `-T` flag with `docker compose exec` to disable TTY allocation,
+which is required for STDIN to work properly:
+
+```bash
+# Pipe configuration file
+cat .todo-registrar.yaml | docker compose exec -T php-cli ./bin/todo-registrar register --config=STDIN
+
+# Stdin redirection
+docker compose exec -T php-cli ./bin/todo-registrar register --config=STDIN < .todo-registrar.yaml
+
+# Heredoc with environment variable substitution by shell
+docker compose exec -T php-cli ./bin/todo-registrar register --config=STDIN << EOF
+paths:
+  in: /app/src
+registrar:
+  type: GitHub
+  options:
+    service:
+      personalAccessToken: ${GITHUB_TOKEN}
+      owner: ${GITHUB_OWNER}
+      repository: ${GITHUB_REPO}
+EOF
+```
+
+> **Note:** In the heredoc example above, environment variables like `${GITHUB_TOKEN}` are substituted
+> by the shell **before** the YAML is passed to the application. Use unquoted `EOF` to enable variable
+> substitution, or `'EOF'` (quoted) to pass the literal `${VAR}` strings without substitution.
