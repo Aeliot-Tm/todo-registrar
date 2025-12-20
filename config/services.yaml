@@ -18,6 +18,7 @@ services:
       - '../src/Service/Registrar/GitLab/'
       - '../src/Service/Registrar/JIRA/'
       - '../src/Service/TodoBuilder.php'
+      - '../src/Config.php'
 
   # Commands
   Aeliot\TodoRegistrar\Console\Command\RegisterCommand:
