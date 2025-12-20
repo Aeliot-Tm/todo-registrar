@@ -4,6 +4,7 @@ alwaysApply: true
 Download descriptions from files IF you need to understand the work:
 1. Architecture (Technical solutions):
    - [Overview]: .cursor/docs/API/Architecture/Overview.md
+   - [Processing Flow]: .cursor/docs/API/Architecture/ProcessingFlow.md
 
 2. Features:
    - [GitHub Registrar]: .cursor/docs/API/Feature/GitHubRegistrar.md
