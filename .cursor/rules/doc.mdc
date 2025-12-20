@@ -6,7 +6,9 @@ Download descriptions from files IF you need to understand the work:
    - [Overview]: .cursor/docs/API/Architecture/Overview.md
 
 2. Features:
-   (not exists yet)
+   - [GitHub Registrar]: .cursor/docs/API/Feature/GitHubRegistrar.md
+   - [GitLab Registrar]: .cursor/docs/API/Feature/GitLabRegistrar.md
+   - [JIRA Registrar]: .cursor/docs/API/Feature/JIRARegistrar.md
 
 When updating functionality or when explicitly requested, update the corresponding documentation files.
    - First, business logic/steps with minimal technical details, then additional logic with minimal technical details,
