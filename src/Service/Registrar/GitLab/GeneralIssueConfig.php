@@ -13,9 +13,9 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\GitLab;
 
-use Aeliot\TodoRegistrar\Service\Registrar\AbstractIssueConfig;
+use Aeliot\TodoRegistrar\Service\Registrar\AbstractGeneralIssueConfig;
 
-final class IssueConfig extends AbstractIssueConfig
+final class GeneralIssueConfig extends AbstractGeneralIssueConfig
 {
     /**
      * @var string[]

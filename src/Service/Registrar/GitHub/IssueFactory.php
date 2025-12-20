@@ -17,7 +17,7 @@ use Aeliot\TodoRegistrar\Contracts\TodoInterface;
 
 final class IssueFactory
 {
-    public function __construct(private IssueConfig $issueConfig)
+    public function __construct(private GeneralIssueConfig $generalIssueConfig)
     {
     }
 
@@ -38,7 +38,7 @@ final class IssueFactory
         $assignees = array_filter([
             $todo->getAssignee(),
             ...$todo->getInlineConfig()['assignees'] ?? [],
-            ...$this->issueConfig->getAssignees(),
+            ...$this->generalIssueConfig->getAssignees(),
         ]);
 
         foreach ($assignees as $assignee) {
@@ -50,11 +50,11 @@ final class IssueFactory
     {
         $labels = [
             ...(array) ($todo->getInlineConfig()['labels'] ?? []),
-            ...$this->issueConfig->getLabels(),
+            ...$this->generalIssueConfig->getLabels(),
         ];
 
-        if ($this->issueConfig->isAddTagToLabels()) {
-            $labels[] = strtolower(\sprintf('%s%s', $this->issueConfig->getTagPrefix(), $todo->getTag()));
+        if ($this->generalIssueConfig->isAddTagToLabels()) {
+            $labels[] = strtolower(\sprintf('%s%s', $this->generalIssueConfig->getTagPrefix(), $todo->getTag()));
         }
 
         foreach (array_unique($labels) as $label) {

@@ -29,7 +29,7 @@ final class GitHubRegistrarFactory implements RegistrarFactoryInterface
         $issueConfig = $config['issue'] ?? [];
 
         return new GitHubRegistrar(
-            new IssueFactory(new IssueConfig($issueConfig)),
+            new IssueFactory(new GeneralIssueConfig($issueConfig)),
             new ApiClientFactory($config['service'])
         );
     }

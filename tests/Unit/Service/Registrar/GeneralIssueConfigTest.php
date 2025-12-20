@@ -14,13 +14,13 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Test\Unit\Service\Registrar;
 
 use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
-use Aeliot\TodoRegistrar\Service\Registrar\JIRA\IssueConfig;
+use Aeliot\TodoRegistrar\Service\Registrar\JIRA\GeneralIssueConfig;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(IssueConfig::class)]
-final class IssueConfigTest extends TestCase
+#[CoversClass(GeneralIssueConfig::class)]
+final class GeneralIssueConfigTest extends TestCase
 {
     public static function getDataForTestIssueTypeAlias(): iterable
     {
@@ -56,7 +56,7 @@ final class IssueConfigTest extends TestCase
     #[DataProvider('getDataForTestIssueTypeAlias')]
     public function testIssueTypeAlias(array $values): void
     {
-        $config = new IssueConfig($values);
+        $config = new GeneralIssueConfig($values);
         self::assertSame('Bug', $config->getIssueType());
     }
 
@@ -68,7 +68,7 @@ final class IssueConfigTest extends TestCase
             'type' => 'any string',
             'issueType' => 'any string',
         ];
-        new IssueConfig($values);
+        new GeneralIssueConfig($values);
     }
 
     public function testThrowExceptionWithNotSupportedSymbols(): void
@@ -80,14 +80,14 @@ final class IssueConfigTest extends TestCase
             'type' => 'any string',
             'not_supported_key' => 'any string',
         ];
-        new IssueConfig($values);
+        new GeneralIssueConfig($values);
     }
 
     #[DataProvider('getDataForTestThrowExceptionWhenMissedRequiredProperty')]
     public function testThrowExceptionWhenMissedRequiredProperty(array $values): void
     {
         $this->expectException(InvalidConfigException::class);
-        new IssueConfig($values);
+        new GeneralIssueConfig($values);
     }
 
     public function testValueAssigning(): void
@@ -103,7 +103,7 @@ final class IssueConfigTest extends TestCase
             // extra key added in factory
             'projectKey' => 'Todo',
         ];
-        $config = new IssueConfig($values);
+        $config = new GeneralIssueConfig($values);
 
         self::assertTrue($config->isAddTagToLabels());
         self::assertSame('Bug', $config->getIssueType());

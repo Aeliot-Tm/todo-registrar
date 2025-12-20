@@ -31,7 +31,7 @@ final class GitlabRegistrarFactory implements RegistrarFactoryInterface
 
         return new GitlabRegistrar(
             new IssueFactory(
-                new IssueConfig($issueConfig),
+                new GeneralIssueConfig($issueConfig),
                 $apiClientProvider->getUserResolver(),
                 $apiClientProvider->getMilestoneService(),
             ),

@@ -32,7 +32,7 @@ class JiraRegistrarFactory implements RegistrarFactoryInterface
         $serviceFactory = new ServiceFactory($config['service']);
 
         return new JiraRegistrar(
-            new IssueFieldFactory(new IssueConfig($issueConfig)),
+            new IssueFieldFactory(new GeneralIssueConfig($issueConfig)),
             $serviceFactory,
             new IssueLinkRegistrar(
                 new LinkedIssueNormalizer(

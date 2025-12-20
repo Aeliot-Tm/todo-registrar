@@ -14,9 +14,9 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Service\Registrar\JIRA;
 
 use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
-use Aeliot\TodoRegistrar\Service\Registrar\AbstractIssueConfig;
+use Aeliot\TodoRegistrar\Service\Registrar\AbstractGeneralIssueConfig;
 
-class IssueConfig extends AbstractIssueConfig
+class GeneralIssueConfig extends AbstractGeneralIssueConfig
 {
     /**
      * @var string[]

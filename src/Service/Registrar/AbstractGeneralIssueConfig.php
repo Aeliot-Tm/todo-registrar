@@ -15,7 +15,7 @@ namespace Aeliot\TodoRegistrar\Service\Registrar;
 
 use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
 
-abstract class AbstractIssueConfig
+abstract class AbstractGeneralIssueConfig
 {
     protected bool $addTagToLabels;
     /**

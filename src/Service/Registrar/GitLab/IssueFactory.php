@@ -18,7 +18,7 @@ use Aeliot\TodoRegistrar\Contracts\TodoInterface;
 final class IssueFactory
 {
     public function __construct(
-        private IssueConfig $issueConfig,
+        private GeneralIssueConfig $generalIssueConfig,
         private UserResolver $userResolver,
         private MilestoneApiClient $milestoneApiClient,
     ) {
@@ -27,7 +27,7 @@ final class IssueFactory
     public function create(TodoInterface $todo): Issue
     {
         $issue = new Issue();
-        $issue->setTitle($this->issueConfig->getSummaryPrefix() . $todo->getSummary());
+        $issue->setTitle($this->generalIssueConfig->getSummaryPrefix() . $todo->getSummary());
         $issue->setDescription($todo->getDescription());
 
         $this->setAssignees($issue, $todo);
@@ -44,7 +44,7 @@ final class IssueFactory
         $assignees = array_filter([
             $todo->getAssignee(),
             ...((array) ($todo->getInlineConfig()['assignee'] ?? [])),
-            ...$this->issueConfig->getAssignee(),
+            ...$this->generalIssueConfig->getAssignee(),
         ], static fn ($value): bool => '' !== (string) $value);
 
         if (!$assignees) {
@@ -61,11 +61,11 @@ final class IssueFactory
     {
         $labels = [
             ...(array) ($todo->getInlineConfig()['labels'] ?? []),
-            ...$this->issueConfig->getLabels(),
+            ...$this->generalIssueConfig->getLabels(),
         ];
 
-        if ($this->issueConfig->isAddTagToLabels()) {
-            $labels[] = strtolower(\sprintf('%s%s', $this->issueConfig->getTagPrefix(), $todo->getTag()));
+        if ($this->generalIssueConfig->isAddTagToLabels()) {
+            $labels[] = strtolower(\sprintf('%s%s', $this->generalIssueConfig->getTagPrefix(), $todo->getTag()));
         }
 
         $issue->setLabels(array_unique($labels));
@@ -75,7 +75,7 @@ final class IssueFactory
     {
         $milestone = array_values(array_filter([
             $todo->getInlineConfig()['milestone'] ?? null,
-            $this->issueConfig->getMilestone(),
+            $this->generalIssueConfig->getMilestone(),
         ]))[0] ?? null;
 
         if (null === $milestone) {
@@ -105,7 +105,7 @@ final class IssueFactory
     private function setDueDate(Issue $issue, TodoInterface $todo): void
     {
         $dueDate = $todo->getInlineConfig()['due_date']
-            ?? $this->issueConfig->getDueDate();
+            ?? $this->generalIssueConfig->getDueDate();
 
         if (null !== $dueDate) {
             $issue->setDueDate((string) $dueDate);
