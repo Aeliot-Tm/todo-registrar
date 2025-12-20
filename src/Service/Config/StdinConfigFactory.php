@@ -15,7 +15,6 @@ namespace Aeliot\TodoRegistrar\Service\Config;
 
 use Aeliot\TodoRegistrar\Config;
 use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
-use Symfony\Component\Yaml\Yaml;
 
 /**
  * @internal
@@ -24,6 +23,7 @@ final readonly class StdinConfigFactory
 {
     public function __construct(
         private ArrayConfigFactory $arrayConfigFactory,
+        private YamlParser $yamlParser,
     ) {
     }
 
@@ -34,8 +34,6 @@ final readonly class StdinConfigFactory
             throw new InvalidConfigException('No configuration provided via STDIN');
         }
 
-        return $this->arrayConfigFactory->create(
-            Yaml::parse($contents, Yaml::PARSE_CONSTANT | Yaml::PARSE_EXCEPTION_ON_INVALID_TYPE | Yaml::PARSE_OBJECT),
-        );
+        return $this->arrayConfigFactory->create($this->yamlParser->parse($contents));
     }
 }
