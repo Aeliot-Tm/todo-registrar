@@ -24,6 +24,7 @@ final class FinderTest extends TestCase
     {
         $finder = (new Finder())
             ->in(__DIR__ . '/../../../fixtures')
+            ->exclude('config')
             ->sortByName(true);
 
         self::assertCount(3, $finder);

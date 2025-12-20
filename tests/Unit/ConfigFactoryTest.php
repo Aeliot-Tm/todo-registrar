@@ -27,7 +27,7 @@ final class ConfigFactoryTest extends TestCase
     public function testYamlConfig(): void
     {
         $validator = ValidatorFactory::create();
-        $config = (new ConfigFactory(new ArrayConfigFactory($validator)))->create(__DIR__ . '/../fixtures/simple_config.yaml');
+        $config = (new ConfigFactory(new ArrayConfigFactory($validator)))->create(__DIR__ . '/../fixtures/config/simple_config.yaml');
 
         self::assertSame('App\RegistrarFactory', $config->getRegistrarType());
         self::assertSame([
