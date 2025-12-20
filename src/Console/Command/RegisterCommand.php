@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Console\Command;
 
 use Aeliot\TodoRegistrar\Console\OutputAdapter;
+use Aeliot\TodoRegistrar\Exception\ConfigValidationException;
 use Aeliot\TodoRegistrar\Service\HeapRunnerFactory;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -40,9 +41,20 @@ final class RegisterCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $configPath = $input->getOption('config');
-
         $outputAdapter = new OutputAdapter($output);
-        $statistic = $this->heapRunnerFactory->create($configPath, $outputAdapter)->run();
+
+        try {
+            $statistic = $this->heapRunnerFactory->create($configPath, $outputAdapter)->run();
+        } catch (ConfigValidationException $exception) {
+            $outputAdapter->writeErr("[ERROR] {$exception->getMessage()}\n");
+            $outputAdapter->writeErr("Validation errors:\n");
+
+            foreach ($exception->getErrorMessages() as $errorMessage) {
+                $outputAdapter->writeErr("  - {$errorMessage}\n");
+            }
+
+            return self::FAILURE;
+        }
 
         $outputAdapter->writeln(
             "Registered {$statistic->getCountRegisteredTODOs()} for {$statistic->getCountUpdatedFiles()} files",

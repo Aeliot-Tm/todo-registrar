@@ -27,3 +27,6 @@ services:
   Aeliot\TodoRegistrar\Service\Registrar\GitHub\GitHubRegistrarFactory: ~
   Aeliot\TodoRegistrar\Service\Registrar\GitLab\GitlabRegistrarFactory: ~
   Aeliot\TodoRegistrar\Service\Registrar\JIRA\JiraRegistrarFactory: ~
+
+  Symfony\Component\Validator\Validator\ValidatorInterface:
+    factory: ['Aeliot\TodoRegistrar\Service\ValidatorFactory', 'create']

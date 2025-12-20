@@ -13,14 +13,20 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\GitHub;
 
-use Aeliot\TodoRegistrar\Service\Registrar\AbstractIssueConfig;
+use Aeliot\TodoRegistrar\Service\Registrar\AbstractGeneralIssueConfig;
+use Symfony\Component\Validator\Constraints as Assert;
 
-final class IssueConfig extends AbstractIssueConfig
+final class GeneralIssueConfig extends AbstractGeneralIssueConfig
 {
     /**
-     * @var string[]
+     * @var string[]|null
      */
-    protected array $assignees;
+    #[Assert\Sequentially([
+        new Assert\NotNull(message: 'Option "assignees" is required'),
+        new Assert\Type(type: 'array', message: 'Option "assignees" must be an array'),
+        new Assert\All([new Assert\Type(type: 'string', message: 'Each assignee must be a string GitHub username')]),
+    ])]
+    protected mixed $assignees = null;
 
     /**
      * @return string[]

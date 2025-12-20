@@ -19,6 +19,7 @@ use Aeliot\TodoRegistrar\Contracts\RegistrarInterface;
 use Aeliot\TodoRegistrar\Enum\RegistrarType;
 use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
 use Aeliot\TodoRegistrar\Service\Registrar\RegistrarFactoryRegistry;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * @internal
@@ -27,6 +28,7 @@ final readonly class RegistrarProvider
 {
     public function __construct(
         private RegistrarFactoryRegistry $registrarFactoryRegistry,
+        private ValidatorInterface $validator,
     ) {
     }
 
@@ -56,6 +58,6 @@ final readonly class RegistrarProvider
             $registrarFactory = $this->registrarFactoryRegistry->getFactory($registrarType);
         }
 
-        return $registrarFactory->create($config->getRegistrarConfig());
+        return $registrarFactory->create($config->getRegistrarConfig(), $this->validator);
     }
 }

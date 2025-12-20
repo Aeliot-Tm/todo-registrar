@@ -16,23 +16,25 @@ namespace Aeliot\TodoRegistrar\Service\Registrar\JIRA;
 use Aeliot\TodoRegistrar\Contracts\RegistrarFactoryInterface;
 use Aeliot\TodoRegistrar\Contracts\RegistrarInterface;
 use Aeliot\TodoRegistrar\Enum\RegistrarType;
+use Aeliot\TodoRegistrar\Exception\ConfigValidationException;
+use Aeliot\TodoRegistrar\Service\ValidatorFactory;
 use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-/**
- * TODO: #145 make assertion of JIRA config with symfony/validator component.
- */
 #[AsTaggedItem(index: RegistrarType::JIRA->value)]
-class JiraRegistrarFactory implements RegistrarFactoryInterface
+final class JiraRegistrarFactory implements RegistrarFactoryInterface
 {
-    public function create(array $config): RegistrarInterface
+    public function create(array $config, ?ValidatorInterface $validator = null): RegistrarInterface
     {
+        $validator ??= ValidatorFactory::create();
         $issueConfig = ($config['issue'] ?? []) + ['projectKey' => $config['projectKey']];
-        $defaultIssueLinkType = $config['issueLinkType'] ?? 'Relates';
+        $generalIssueConfig = $this->createGeneralIssueConfig($issueConfig, $validator);
 
+        $defaultIssueLinkType = $config['issueLinkType'] ?? 'Relates';
         $serviceFactory = new ServiceFactory($config['service']);
 
         return new JiraRegistrar(
-            new IssueFieldFactory(new IssueConfig($issueConfig)),
+            new IssueFieldFactory($generalIssueConfig),
             $serviceFactory,
             new IssueLinkRegistrar(
                 new LinkedIssueNormalizer(
@@ -42,5 +44,19 @@ class JiraRegistrarFactory implements RegistrarFactoryInterface
                 $serviceFactory,
             ),
         );
+    }
+
+    /**
+     * @param array<string,mixed> $issueConfig
+     */
+    public function createGeneralIssueConfig(array $issueConfig, ValidatorInterface $validator): GeneralIssueConfig
+    {
+        $generalIssueConfig = new GeneralIssueConfig($issueConfig);
+        $violations = $validator->validate($generalIssueConfig);
+        if (\count($violations) > 0) {
+            throw new ConfigValidationException($violations, '[JIRA] Invalid general issue config');
+        }
+
+        return $generalIssueConfig;
     }
 }

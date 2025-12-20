@@ -19,7 +19,7 @@ use JiraRestApi\Issue\IssueField;
 final class IssueFieldFactory
 {
     public function __construct(
-        private IssueConfig $issueConfig,
+        private GeneralIssueConfig $generalIssueConfig,
     ) {
     }
 
@@ -27,8 +27,8 @@ final class IssueFieldFactory
     {
         $issueField = new IssueField();
         $issueField
-            ->setProjectKey($this->issueConfig->getProjectKey())
-            ->setSummary($this->issueConfig->getSummaryPrefix() . $todo->getSummary())
+            ->setProjectKey($this->generalIssueConfig->getProjectKey())
+            ->setSummary($this->generalIssueConfig->getSummaryPrefix() . $todo->getSummary())
             ->setDescription($todo->getDescription());
 
         $this->setIssueType($issueField, $todo);
@@ -44,7 +44,7 @@ final class IssueFieldFactory
     {
         $assignee = $todo->getInlineConfig()['assignee']
             ?? $todo->getAssignee()
-            ?? $this->issueConfig->getAssignee();
+            ?? $this->generalIssueConfig->getAssignee();
 
         if ($assignee) {
             $issueField->setAssigneeNameAsString($assignee);
@@ -55,7 +55,7 @@ final class IssueFieldFactory
     {
         $component = [
             ...($todo->getInlineConfig()['components'] ?? []),
-            ...$this->issueConfig->getComponents(),
+            ...$this->generalIssueConfig->getComponents(),
         ];
         $issueField->addComponentsAsArray(array_unique($component));
     }
@@ -64,7 +64,7 @@ final class IssueFieldFactory
     {
         $inlineConfig = $todo->getInlineConfig();
         $issueType = $inlineConfig['issue_type']
-            ?? $this->issueConfig->getIssueType();
+            ?? $this->generalIssueConfig->getIssueType();
 
         $issueField->setIssueTypeAsString($issueType);
     }
@@ -73,11 +73,11 @@ final class IssueFieldFactory
     {
         $labels = [
             ...(array) ($todo->getInlineConfig()['labels'] ?? []),
-            ...$this->issueConfig->getLabels(),
+            ...$this->generalIssueConfig->getLabels(),
         ];
 
-        if ($this->issueConfig->isAddTagToLabels()) {
-            $labels[] = strtolower(\sprintf('%s%s', $this->issueConfig->getTagPrefix(), $todo->getTag()));
+        if ($this->generalIssueConfig->isAddTagToLabels()) {
+            $labels[] = strtolower(\sprintf('%s%s', $this->generalIssueConfig->getTagPrefix(), $todo->getTag()));
         }
 
         foreach (array_unique($labels) as $label) {
@@ -88,7 +88,7 @@ final class IssueFieldFactory
     private function setPriority(IssueField $issueField, TodoInterface $todo): void
     {
         $priority = $todo->getInlineConfig()['priority']
-            ?? $this->issueConfig->getPriority();
+            ?? $this->generalIssueConfig->getPriority();
 
         if ($priority) {
             $issueField->setPriorityNameAsString($priority);
