@@ -23,6 +23,7 @@ use Aeliot\TodoRegistrar\Service\Config\ConfigFactory;
 use Aeliot\TodoRegistrar\Service\Config\ConfigFileDetector;
 use Aeliot\TodoRegistrar\Service\Config\ConfigFileGuesser;
 use Aeliot\TodoRegistrar\Service\Config\ConfigProvider;
+use Aeliot\TodoRegistrar\Service\Config\StdinConfigFactory;
 use Aeliot\TodoRegistrar\Service\ValidatorFactory;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -47,11 +48,16 @@ final class ConfigProviderTest extends TestCase
             $absolutePathMaker,
             new ConfigFileGuesser($absolutePathMaker),
         );
-        $configFactory = new ConfigFactory(
-            new ArrayConfigFactory(self::$validator),
-        );
+        $arrayConfigFactory = new ArrayConfigFactory(self::$validator);
+        $configFactory = new ConfigFactory($arrayConfigFactory);
+        $stdinConfigFactory = new StdinConfigFactory($arrayConfigFactory);
 
-        $this->configProvider = new ConfigProvider($configFileDetector, $configFactory, self::$validator);
+        $this->configProvider = new ConfigProvider(
+            $configFileDetector,
+            $configFactory,
+            $stdinConfigFactory,
+            self::$validator,
+        );
     }
 
     public function testLoadValidPhpConfig(): void
