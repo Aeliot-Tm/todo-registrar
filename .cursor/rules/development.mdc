@@ -1,0 +1,39 @@
+---
+alwaysApply: true
+---
+Follow these rules when developing:
+
+1. Stack:
+   - PHP 8.2+
+   - Symfony Console 7.4 (CLI application)
+   - Symfony Dependency Injection 7.4 (DI container, services configuration)
+   - Symfony Config 7.4 (configuration loading)
+   - Symfony Finder (file search)
+   - Symfony YAML (YAML config parsing)
+   - Guzzle HTTP 7.9 (HTTP client)
+   - knplabs/github-api 3.14 (GitHub Issues API)
+   - m4tthumphrey/php-gitlab-api 11.14 (GitLab Issues API)
+   - lesstif/php-jira-rest-client 5.8 (JIRA API)
+   - PHPStan 2.0 (static analysis)
+   - PHP CS Fixer (code formatting)
+   - Box (PHAR building)
+
+2. When changing existing classes, try to use file renaming (`git mv`)
+   instead of creating new ones and deleting old ones where possible.
+
+3. Write all comments in code and everything that is output to logs or console in English.
+
+4. Nether use comments like `@phpstan-ignore-next-line` which suppress issues detected by PHPStan.
+
+5. Do not add more than ONE blank line in a row in any files (.php, .yaml and so on).
+   Maximum 1 blank line to separate logical blocks.
+
+6. Do not create new documentation files without an explicit request.
+
+7. Project runs in Docker containers configured in `compose.yaml`.
+   To execute shell scripts, add prefix `docker compose exec php-cli ` to them.
+
+8. After creating or updating *.php files, at the end of the work run these shell scripts:
+   1. PHP CS Fixer: `composer cs-fix`
+   2. PHPStan: `composer phpstan`
+
