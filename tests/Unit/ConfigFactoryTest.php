@@ -15,6 +15,7 @@ namespace Aeliot\TodoRegistrar\Test\Unit;
 
 use Aeliot\TodoRegistrar\Service\Config\ArrayConfigFactory;
 use Aeliot\TodoRegistrar\Service\Config\ConfigFactory;
+use Aeliot\TodoRegistrar\Service\ValidatorFactory;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Finder\Finder as SymfonyFinder;
@@ -25,7 +26,8 @@ final class ConfigFactoryTest extends TestCase
 {
     public function testYamlConfig(): void
     {
-        $config = (new ConfigFactory(new ArrayConfigFactory()))->create(__DIR__ . '/../fixtures/simple_config.yaml');
+        $validator = ValidatorFactory::create();
+        $config = (new ConfigFactory(new ArrayConfigFactory($validator)))->create(__DIR__ . '/../fixtures/simple_config.yaml');
 
         self::assertSame('App\RegistrarFactory', $config->getRegistrarType());
         self::assertSame([

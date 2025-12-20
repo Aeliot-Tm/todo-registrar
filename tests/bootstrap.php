@@ -13,4 +13,6 @@ use DG\BypassFinals;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+define('AELIOT_TODO_REGISTRAR_ROOT', dirname(__DIR__));
+
 BypassFinals::enable();
