@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Test\Unit\Service\Registrar\JIRA;
 
 use Aeliot\TodoRegistrar\Exception\ConfigValidationException;
-use Aeliot\TodoRegistrar\Service\Registrar\JIRA\GeneralIssueConfig;
 use Aeliot\TodoRegistrar\Service\Registrar\JIRA\JiraRegistrarFactory;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
@@ -48,7 +47,6 @@ final class JiraRegistrarFactoryTest extends TestCase
 
         $config = $factory->createGeneralIssueConfig($issueConfig, self::$validator);
 
-        self::assertInstanceOf(GeneralIssueConfig::class, $config);
         self::assertSame('PROJ', $config->getProjectKey());
         self::assertSame('Task', $config->getIssueType());
         self::assertTrue($config->isAddTagToLabels());

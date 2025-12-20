@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Test\Unit\Service\Registrar\GitHub;
 
 use Aeliot\TodoRegistrar\Exception\ConfigValidationException;
-use Aeliot\TodoRegistrar\Service\Registrar\GitHub\GeneralIssueConfig;
 use Aeliot\TodoRegistrar\Service\Registrar\GitHub\GitHubRegistrarFactory;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
@@ -44,7 +43,6 @@ final class GitHubRegistrarFactoryTest extends TestCase
 
         $config = $factory->createGeneralConfig($issueConfig, self::$validator);
 
-        self::assertInstanceOf(GeneralIssueConfig::class, $config);
         self::assertTrue($config->isAddTagToLabels());
         self::assertSame(['bug'], $config->getLabels());
         self::assertSame(['user1'], $config->getAssignees());

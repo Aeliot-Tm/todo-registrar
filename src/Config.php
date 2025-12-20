@@ -19,7 +19,10 @@ use Aeliot\TodoRegistrar\Contracts\InlineConfigReaderInterface;
 use Aeliot\TodoRegistrar\Contracts\RegistrarFactoryInterface;
 use Aeliot\TodoRegistrar\Enum\RegistrarType;
 use Aeliot\TodoRegistrar\Service\File\Finder;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
+#[Assert\Callback('validate')]
 class Config implements GeneralConfigInterface
 {
     private Finder $finder;
@@ -101,5 +104,22 @@ class Config implements GeneralConfigInterface
         $this->tags = $tags;
 
         return $this;
+    }
+
+    public function validate(ExecutionContextInterface $context): void
+    {
+        $reflection = new \ReflectionClass($this);
+
+        if (!$reflection->getProperty('finder')->isInitialized($this)) {
+            $context->buildViolation('Option "finder" is required. Call setFinder() method.')
+                ->atPath('finder')
+                ->addViolation();
+        }
+
+        if (!$reflection->getProperty('registrarType')->isInitialized($this)) {
+            $context->buildViolation('Option "registrar" is required. Call setRegistrar() method.')
+                ->atPath('registrar')
+                ->addViolation();
+        }
     }
 }

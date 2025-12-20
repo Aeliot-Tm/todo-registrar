@@ -14,6 +14,9 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Service\Config;
 
 use Aeliot\TodoRegistrar\Contracts\GeneralConfigInterface;
+use Aeliot\TodoRegistrar\Exception\ConfigValidationException;
+use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * @internal
@@ -23,6 +26,7 @@ final readonly class ConfigProvider
     public function __construct(
         private ConfigFileDetector $configFileDetector,
         private ConfigFactory $configFactory,
+        private ValidatorInterface $validator,
     ) {
     }
 
@@ -30,9 +34,24 @@ final readonly class ConfigProvider
     {
         $path = $this->configFileDetector->getPath($path);
         if ('php' === strtolower(pathinfo($path, \PATHINFO_EXTENSION))) {
-            return require $path;
+            return $this->loadPhpConfig($path);
         }
 
         return $this->configFactory->create($path);
+    }
+
+    private function loadPhpConfig(string $path): GeneralConfigInterface
+    {
+        $config = require $path;
+        if (!$config instanceof GeneralConfigInterface) {
+            throw new InvalidConfigException(\sprintf('PHP config file "%s" must return an instance of %s, got %s', $path, GeneralConfigInterface::class, get_debug_type($config)));
+        }
+
+        $violations = $this->validator->validate($config);
+        if (\count($violations) > 0) {
+            throw new ConfigValidationException($violations, 'Invalid PHP config');
+        }
+
+        return $config;
     }
 }

@@ -14,29 +14,37 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Service\Config;
 
 use Aeliot\TodoRegistrar\Config;
-use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
+use Aeliot\TodoRegistrar\Exception\ConfigValidationException;
 use Aeliot\TodoRegistrar\Service\File\Finder;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
- * TODO: #144 use component symfony/validator to show all violations of array config.
- *
  * @internal
  */
 final readonly class ArrayConfigFactory
 {
+    public function __construct(
+        private ValidatorInterface $validator,
+    ) {
+    }
+
     /**
      * @param array<string,mixed> $options
      */
     public function create(array $options): Config
     {
-        $this->validate($options);
-        $config = (new Config())
-            ->setFinder($this->createFinder($options))
-            ->setRegistrar($options['registrar']['type'], $options['registrar']['options'] ?? []);
+        $arrayConfig = $this->createArrayConfig($options);
 
-        $tags = $options['tags'] ?? null;
+        $pathsConfig = $arrayConfig->getPaths();
+        $registrarConfig = $arrayConfig->getRegistrar();
+
+        $config = (new Config())
+            ->setFinder($this->createFinder($pathsConfig))
+            ->setRegistrar($registrarConfig->getType(), $registrarConfig->getOptions() ?? []);
+
+        $tags = $arrayConfig->getTags();
         if ($tags) {
-            $config->setTags((array) $tags);
+            $config->setTags($tags);
         }
 
         return $config;
@@ -45,37 +53,35 @@ final readonly class ArrayConfigFactory
     /**
      * @param array<string,mixed> $options
      */
-    private function createFinder(array $options): Finder
+    private function createArrayConfig(array $options): ArrayConfig
+    {
+        $arrayConfig = new ArrayConfig($options);
+        $violations = $this->validator->validate($arrayConfig);
+
+        if (\count($violations) > 0) {
+            throw new ConfigValidationException($violations, 'Invalid general configuration');
+        }
+
+        return $arrayConfig;
+    }
+
+    private function createFinder(?PathsConfig $pathsConfig): Finder
     {
         $finder = (new Finder())
             ->files()
             ->ignoreVCS(true)
-            ->in($options['paths']['in'] ?? getcwd());
+            ->in($pathsConfig?->getIn() ?? (getcwd() ?: '.'));
 
-        $append = $options['paths']['append'] ?? null;
+        $append = $pathsConfig?->getAppend();
         if ($append) {
             $finder->append((array) $append);
         }
 
-        $exclude = $options['paths']['exclude'] ?? null;
+        $exclude = $pathsConfig?->getExclude();
         if ($exclude) {
             $finder->exclude((array) $exclude);
         }
 
         return $finder;
-    }
-
-    /**
-     * @param array<string,mixed> $options
-     */
-    private function validate(array $options): void
-    {
-        if (!isset($options['registrar']['type'])) {
-            throw new InvalidConfigException('Missed type of registrar');
-        }
-
-        if (!\is_string($options['registrar']['type'])) {
-            throw new InvalidConfigException('Type of registrar must be the string');
-        }
     }
 }
