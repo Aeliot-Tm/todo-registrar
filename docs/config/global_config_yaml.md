@@ -1,10 +1,32 @@
 # Configuration YAML file
 
-> **Important:** YAML configuration files do not support automatic environment variable substitution.
-> Unlike PHP configuration files (where you can use `$_ENV['VAR'] ?? null`), you must manually replace
-> values in YAML files or use external tools/scripts to substitute environment variables before parsing.
-> If you need dynamic configuration with environment variables, consider using PHP configuration format instead.
-> See issue [#203](https://github.com/Aeliot-Tm/todo-registrar/issues/203).
+## Environment Variables
+
+YAML configuration files support environment variable substitution using the Symfony-style syntax:
+
+```yaml
+registrar:
+  type: GitHub
+  options:
+    service:
+      personalAccessToken: '%env(GITHUB_TOKEN)%'
+      owner: '%env(GITHUB_OWNER)%'
+      repository: '%env(GITHUB_REPO)%'
+```
+
+### Syntax
+
+Use `%env(VARIABLE_NAME)%` to reference environment variables. The value must be the **entire string** — 
+partial substitution like `prefix_%env(VAR)%_suffix` is not supported.
+
+### Resolution Order
+
+1. `$_ENV['VARIABLE_NAME']` — checked first
+2. `getenv('VARIABLE_NAME')` — used as fallback
+
+### Missing Variables
+
+If an environment variable is not defined, the placeholder `%env(VARIABLE_NAME)%` remains unchanged in the configuration. This allows you to detect configuration errors early.
 
 ## Loading from file
 
@@ -92,3 +114,91 @@ EOF
 > **Note:** In the heredoc example above, environment variables like `${GITHUB_TOKEN}` are substituted
 > by the shell **before** the YAML is passed to the application. Use unquoted `EOF` to enable variable
 > substitution, or `'EOF'` (quoted) to pass the literal `${VAR}` strings without substitution.
+
+## Docker and Environment Variables
+
+When using `%env(VAR)%` syntax in YAML configuration with Docker, you need to ensure that environment 
+variables are available inside the container.
+
+### Passing Variables Securely
+
+#### Method 1: Using `-e` flag (for single runs)
+
+```bash
+# With docker compose exec
+docker compose exec -e GITHUB_TOKEN="$GITHUB_TOKEN" php-cli ./bin/todo-registrar register
+
+# With docker run
+docker run --rm -e GITHUB_TOKEN="$GITHUB_TOKEN" -v "$(pwd):/app" todo-registrar ./bin/todo-registrar register
+```
+
+> **Security note:** Avoid passing the token value directly in the command (e.g., `-e GITHUB_TOKEN=ghp_xxx`).
+> Always use shell variable expansion (`"$GITHUB_TOKEN"`) to prevent the secret from appearing in shell history.
+
+#### Method 2: Using `environment` in compose.yaml (recommended for development)
+
+```yaml
+services:
+  php-cli:
+    environment:
+      - GITHUB_TOKEN=${GITHUB_TOKEN}
+      - GITHUB_OWNER=${GITHUB_OWNER}
+      - GITHUB_REPO=${GITHUB_REPO}
+```
+
+Then in `.todo-registrar.yaml`:
+
+```yaml
+registrar:
+  type: GitHub
+  options:
+    service:
+      personalAccessToken: '%env(GITHUB_TOKEN)%'
+      owner: '%env(GITHUB_OWNER)%'
+      repository: '%env(GITHUB_REPO)%'
+```
+
+#### Method 3: Using env_file (recommended for CI/CD)
+
+Create a `.env` file (never commit to VCS):
+
+```bash
+GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxx
+GITHUB_OWNER=your-org
+GITHUB_REPO=your-repo
+```
+
+Reference it in `compose.yaml`:
+
+```yaml
+services:
+  php-cli:
+    env_file:
+      - .env
+```
+
+Or use directly with `docker run`:
+
+```bash
+docker run --rm --env-file .env -v "$(pwd):/app" todo-registrar ./bin/todo-registrar register
+```
+
+> **Tip:** This is the most secure method for `docker run` as secrets never appear in command arguments.
+
+### Security Best Practices
+
+1. **Never commit secrets to VCS** — add `.env` and files with tokens to `.gitignore`
+
+2. **Use CI/CD secrets** — in GitHub Actions, GitLab CI, or other CI systems, use their built-in secret management:
+
+   ```yaml
+   # GitHub Actions example
+   - name: Register TODOs
+     env:
+       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+     run: docker compose exec -T php-cli ./bin/todo-registrar register
+   ```
+
+3. **Prefer env_file over command-line** — passing secrets via `-e` flag may expose them in process listings
+
+4. **Use read-only tokens** — create tokens with minimal required permissions (e.g., `repo` scope for GitHub)

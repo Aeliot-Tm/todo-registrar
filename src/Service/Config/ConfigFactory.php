@@ -15,15 +15,16 @@ namespace Aeliot\TodoRegistrar\Service\Config;
 
 use Aeliot\TodoRegistrar\Config;
 use Aeliot\TodoRegistrar\Contracts\GeneralConfigInterface;
-use Symfony\Component\Yaml\Yaml;
 
 /**
  * @internal
  */
 final readonly class ConfigFactory
 {
-    public function __construct(private ArrayConfigFactory $arrayConfigFactory)
-    {
+    public function __construct(
+        private ArrayConfigFactory $arrayConfigFactory,
+        private YamlParser $yamlParser,
+    ) {
     }
 
     public function create(string $path): GeneralConfigInterface
@@ -41,9 +42,6 @@ final readonly class ConfigFactory
             throw new \RuntimeException(\sprintf('Config file "%s" is not readable', $path));
         }
 
-        return $this->arrayConfigFactory->create(Yaml::parse(
-            $contents,
-            Yaml::PARSE_CONSTANT | Yaml::PARSE_EXCEPTION_ON_INVALID_TYPE | Yaml::PARSE_OBJECT,
-        ));
+        return $this->arrayConfigFactory->create($this->yamlParser->parse($contents));
     }
 }

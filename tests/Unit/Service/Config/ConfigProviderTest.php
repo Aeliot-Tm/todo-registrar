@@ -24,6 +24,7 @@ use Aeliot\TodoRegistrar\Service\Config\ConfigFileDetector;
 use Aeliot\TodoRegistrar\Service\Config\ConfigFileGuesser;
 use Aeliot\TodoRegistrar\Service\Config\ConfigProvider;
 use Aeliot\TodoRegistrar\Service\Config\StdinConfigFactory;
+use Aeliot\TodoRegistrar\Service\Config\YamlParser;
 use Aeliot\TodoRegistrar\Service\ValidatorFactory;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -49,8 +50,9 @@ final class ConfigProviderTest extends TestCase
             new ConfigFileGuesser($absolutePathMaker),
         );
         $arrayConfigFactory = new ArrayConfigFactory(self::$validator);
-        $configFactory = new ConfigFactory($arrayConfigFactory);
-        $stdinConfigFactory = new StdinConfigFactory($arrayConfigFactory);
+        $yamlParser = new YamlParser();
+        $configFactory = new ConfigFactory($arrayConfigFactory, $yamlParser);
+        $stdinConfigFactory = new StdinConfigFactory($arrayConfigFactory, $yamlParser);
 
         $this->configProvider = new ConfigProvider(
             $configFileDetector,
