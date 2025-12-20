@@ -7,7 +7,7 @@ TODO Registrar is a CLI application that scans PHP source code for TODO/FIXME co
 ## High-Level Flow
 
 1. **Entry Point** → `bin/todo-registrar` initializes the Symfony Console application
-2. **Configuration Loading** → Reads `.todo-registrar.yaml` or `.todo-registrar.php` config file
+2. **Configuration Loading** → Reads `.todo-registrar.yaml`, `.todo-registrar.php` config file, or YAML from STDIN
 3. **File Discovery** → Uses Symfony Finder to locate PHP files
 4. **Tokenization** → PHP Tokenizer extracts comment tokens from source files
 5. **Comment Extraction** → Parses comments to find TODO/FIXME tags
@@ -31,9 +31,10 @@ bin/todo-registrar
 ### Service Layer
 
 #### Configuration Services (`Service/Config/`)
-- `ConfigProvider` — Provides configuration from file path
-- `ConfigFactory` — Creates Config object from YAML/PHP files
+- `ConfigProvider` — Provides configuration from file path or STDIN
+- `ConfigFactory` — Creates Config object from YAML files
 - `ArrayConfigFactory` — Converts array config to Config object
+- `StdinConfigFactory` — Creates Config object from YAML passed via STDIN
 - `ConfigFileGuesser` — Auto-detects config file location
 
 #### File Processing Services (`Service/File/`)
@@ -126,12 +127,24 @@ Located in `Dto/`:
 ### Config File Formats
 - YAML: `.todo-registrar.yaml` (preferred)
 - PHP: `.todo-registrar.php` (for programmatic config)
+- STDIN: Pass YAML via `--config=STDIN` option
 
 ### Key Configuration Options
 - `finder` — Symfony Finder configuration (paths, patterns)
 - `registrar` — Issue tracker type and credentials
 - `tags` — TODO tags to detect (default: `['todo', 'fixme']`)
 - `inline_config` — Inline configuration options
+
+### STDIN Configuration
+
+When `--config=STDIN` is passed, the application reads YAML configuration from STDIN.
+This is useful for Docker environments or CI/CD pipelines where configuration can be piped:
+
+```bash
+cat config.yaml | docker compose exec -T php-cli ./bin/todo-registrar register --config=STDIN
+```
+
+The `-T` flag is required with `docker compose exec` to disable TTY allocation for STDIN to work.
 
 ## Directory Structure
 
