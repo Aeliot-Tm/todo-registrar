@@ -59,7 +59,7 @@ final readonly class ArrayConfigFactory
         $violations = $this->validator->validate($arrayConfig);
 
         if (\count($violations) > 0) {
-            throw new ConfigValidationException($violations, 'general');
+            throw new ConfigValidationException($violations, 'Invalid general configuration');
         }
 
         return $arrayConfig;
