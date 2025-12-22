@@ -31,6 +31,16 @@ abstract class AbstractGeneralIssueConfig
     ])]
     protected mixed $labels = null;
 
+    /**
+     * @var string[]|null
+     */
+    #[Assert\Sequentially([
+        new Assert\NotNull(message: 'Option "labels" is required'),
+        new Assert\Type(type: 'array', message: 'Option "labels" must be an array'),
+        new Assert\All([new Assert\Type(type: 'string', message: 'Each label must be a string')]),
+    ])]
+    protected mixed $allowedLabels = null;
+
     #[Assert\NotNull(message: 'Option "tagPrefix" is required')]
     #[Assert\Type(type: 'string', message: 'Option "tagPrefix" must be a string')]
     protected mixed $tagPrefix = null;
@@ -48,6 +58,14 @@ abstract class AbstractGeneralIssueConfig
     public function __construct(array $config)
     {
         $this->setProperties($this->normalizeConfig($config));
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getAllowedLabels(): array
+    {
+        return $this->allowedLabels;
     }
 
     public function isAddTagToLabels(): bool
@@ -83,12 +101,14 @@ abstract class AbstractGeneralIssueConfig
         $config += [
             'addTagToLabels' => false,
             'labels' => [],
+            'allowedLabels' => [],
             'summaryPrefix' => '',
             'tagPrefix' => '',
         ];
 
         $config['addTagToLabels'] = (bool) $config['addTagToLabels'];
         $config['labels'] = (array) $config['labels'];
+        $config['allowedLabels'] = (array) $config['allowedLabels'];
 
         return $config;
     }

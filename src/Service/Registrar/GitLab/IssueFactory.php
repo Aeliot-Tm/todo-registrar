@@ -68,7 +68,12 @@ final readonly class IssueFactory
             $labels[] = strtolower(\sprintf('%s%s', $this->generalIssueConfig->getTagPrefix(), $todo->getTag()));
         }
 
-        $issue->setLabels(array_unique($labels));
+        $labels = array_unique($labels);
+        if ($allowedLabels = $this->generalIssueConfig->getAllowedLabels()) {
+            $labels = array_intersect($labels, $allowedLabels);
+        }
+
+        $issue->setLabels($labels);
     }
 
     private function setMilestone(Issue $issue, TodoInterface $todo): void
