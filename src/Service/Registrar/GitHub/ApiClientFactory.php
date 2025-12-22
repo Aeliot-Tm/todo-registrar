@@ -18,7 +18,7 @@ use Github\Client as GithubClient;
 use Github\HttpClient\Builder;
 use Github\HttpClient\Plugin\Authentication;
 
-final class ApiClientFactory
+final readonly class ApiClientFactory
 {
     /**
      * @param array<string,mixed> $config
@@ -27,7 +27,7 @@ final class ApiClientFactory
     {
     }
 
-    public function createIssueService(): IssueApiClient
+    public function createIssueApiClient(): IssueApiClient
     {
         return new IssueApiClient(
             $this->createGithubClient()->api('issue'),
@@ -36,7 +36,7 @@ final class ApiClientFactory
         );
     }
 
-    public function createLabelService(): LabelApiClient
+    public function createLabelApiClient(): LabelApiClient
     {
         return new LabelApiClient(
             $this->createGithubClient()->api('issue')->labels(),
