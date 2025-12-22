@@ -4,8 +4,64 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b6ce3f0c903566a40817231695683742",
+    "content-hash": "3c6d71e41293c88079fe07ee0c2bc6e2",
     "packages": [
+        {
+            "name": "bugrov/yandex-tracker",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/intensa/yandex-tracker.git",
+                "reference": "0886d2e50352b1aa4ce17999261ffce6d0e87ffa"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/intensa/yandex-tracker/zipball/0886d2e50352b1aa4ce17999261ffce6d0e87ffa",
+                "reference": "0886d2e50352b1aa4ce17999261ffce6d0e87ffa",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^7.0.1",
+                "php": ">=7.4"
+            },
+            "require-dev": {
+                "symfony/var-dumper": "^5.4"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "BugrovWeb\\YandexTracker\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "bugrov",
+                    "email": "a.bugrov@intensa.ru"
+                }
+            ],
+            "description": "PHP SDK для работы с Яндекс.Трекером",
+            "keywords": [
+                "api",
+                "client",
+                "php",
+                "sdk",
+                "tracker",
+                "yandex",
+                "yandex tracker",
+                "трекер",
+                "яндекс",
+                "яндекс трекер"
+            ],
+            "support": {
+                "source": "https://github.com/intensa/yandex-tracker/tree/master",
+                "issues": "https://github.com/intensa/yandex-tracker/issues"
+            },
+            "time": "2023-02-17T08:22:36+00:00"
+        },
         {
             "name": "clue/stream-filter",
             "version": "v1.7.0",

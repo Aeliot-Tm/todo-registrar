@@ -11,6 +11,12 @@
     ],
     "minimum-stability": "dev",
     "prefer-stable": true,
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/intensa/yandex-tracker"
+        }
+    ],
     "keywords": [
         "static analysis",
         "TODO registrar",
@@ -44,6 +50,7 @@
         "ext-ctype": "*",
         "ext-mbstring": "*",
         "ext-tokenizer": "*",
+        "bugrov/yandex-tracker": "dev-master",
         "guzzlehttp/guzzle": "^7.9",
         "http-interop/http-factory-guzzle": "^1.2",
         "knplabs/github-api": "^3.14",
