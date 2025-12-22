@@ -22,16 +22,18 @@ use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[AsTaggedItem(index: RegistrarType::GitHub->value)]
-final class GitHubRegistrarFactory implements RegistrarFactoryInterface
+final readonly class GitHubRegistrarFactory implements RegistrarFactoryInterface
 {
     public function create(array $config, ?ValidatorInterface $validator = null): RegistrarInterface
     {
         $validator ??= ValidatorFactory::create();
         $generalIssueConfig = $this->createGeneralConfig($config['issue'] ?? [], $validator);
+        $apiClientFactory = new ApiClientFactory($config['service']);
 
         return new GitHubRegistrar(
+            $apiClientFactory->createIssueApiClient(),
             new IssueFactory($generalIssueConfig),
-            new ApiClientFactory($config['service'])
+            $apiClientFactory->createLabelApiClient(),
         );
     }
 

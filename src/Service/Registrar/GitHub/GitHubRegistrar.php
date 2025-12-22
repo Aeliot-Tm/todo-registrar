@@ -19,8 +19,9 @@ use Aeliot\TodoRegistrar\Contracts\TodoInterface;
 final class GitHubRegistrar implements RegistrarInterface
 {
     public function __construct(
+        private IssueApiClient $issueApiClient,
         private IssueFactory $issueFactory,
-        private ApiClientFactory $serviceFactory,
+        private LabelApiClient $labelApiClient,
     ) {
     }
 
@@ -32,7 +33,7 @@ final class GitHubRegistrar implements RegistrarInterface
             $this->registerLabels($issue->getLabels());
         }
 
-        $response = $this->serviceFactory->createIssueService()->create($issue);
+        $response = $this->issueApiClient->create($issue);
 
         return '#' . $response['number'];
     }
@@ -42,8 +43,7 @@ final class GitHubRegistrar implements RegistrarInterface
      */
     private function registerLabels(array $labels): void
     {
-        $labelsService = $this->serviceFactory->createLabelService();
-        $labels = array_diff($labels, $labelsService->getAll());
-        array_walk($labels, static fn (string $label) => $labelsService->create($label));
+        $labels = array_diff($labels, $this->labelApiClient->getAll());
+        array_walk($labels, fn (string $label) => $this->labelApiClient->create($label));
     }
 }
