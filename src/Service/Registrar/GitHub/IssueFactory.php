@@ -57,7 +57,12 @@ final class IssueFactory
             $labels[] = strtolower(\sprintf('%s%s', $this->generalIssueConfig->getTagPrefix(), $todo->getTag()));
         }
 
-        foreach (array_unique($labels) as $label) {
+        $labels = array_unique($labels);
+        if ($allowedLabels = $this->generalIssueConfig->getAllowedLabels()) {
+            $labels = array_intersect($labels, $allowedLabels);
+        }
+
+        foreach ($labels as $label) {
             $issue->addLabel($label);
         }
     }
