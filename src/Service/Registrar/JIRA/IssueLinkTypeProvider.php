@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Service\Registrar\JIRA;
 
 use Aeliot\TodoRegistrar\Service\InlineConfig\JIRANotSupportedLinkTypeException;
+use JiraRestApi\IssueLink\IssueLinkService;
 use JiraRestApi\IssueLink\IssueLinkType;
 
 final class IssueLinkTypeProvider
@@ -23,7 +24,7 @@ final class IssueLinkTypeProvider
      */
     private ?array $supportedLinkTypes = null;
 
-    public function __construct(private readonly ServiceFactory $serviceFactory)
+    public function __construct(private readonly IssueLinkService $issueLinkService)
     {
     }
 
@@ -45,7 +46,7 @@ final class IssueLinkTypeProvider
     {
         if (null === $this->supportedLinkTypes) {
             /** @var \ArrayObject<int,IssueLinkType>|iterable<IssueLinkType>|IssueLinkType[] $issueLinkTypes */
-            $issueLinkTypes = $this->serviceFactory->createIssueLinkService()->getIssueLinkTypes();
+            $issueLinkTypes = $this->issueLinkService->getIssueLinkTypes();
             if ($issueLinkTypes instanceof \ArrayObject) {
                 $issueLinkTypes = $issueLinkTypes->getArrayCopy();
             }

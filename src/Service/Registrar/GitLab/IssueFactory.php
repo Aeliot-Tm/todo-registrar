@@ -15,7 +15,7 @@ namespace Aeliot\TodoRegistrar\Service\Registrar\GitLab;
 
 use Aeliot\TodoRegistrar\Contracts\TodoInterface;
 
-final class IssueFactory
+final readonly class IssueFactory
 {
     public function __construct(
         private GeneralIssueConfig $generalIssueConfig,

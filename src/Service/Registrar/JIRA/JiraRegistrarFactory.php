@@ -32,17 +32,18 @@ final class JiraRegistrarFactory implements RegistrarFactoryInterface
 
         $defaultIssueLinkType = $config['issueLinkType'] ?? 'Relates';
         $serviceFactory = new ServiceFactory($config['service']);
+        $issueLinkService = $serviceFactory->createIssueLinkService();
 
         return new JiraRegistrar(
             new IssueFieldFactory($generalIssueConfig),
-            $serviceFactory,
             new IssueLinkRegistrar(
                 new LinkedIssueNormalizer(
                     $defaultIssueLinkType,
-                    new IssueLinkTypeProvider($serviceFactory)
+                    new IssueLinkTypeProvider($issueLinkService)
                 ),
-                $serviceFactory,
+                $issueLinkService,
             ),
+            $serviceFactory->createIssueService(),
         );
     }
 
