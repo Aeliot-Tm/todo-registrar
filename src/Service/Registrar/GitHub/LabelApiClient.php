@@ -17,6 +17,9 @@ use Github\Api\Issue\Labels as LabelsApi;
 
 final class LabelApiClient
 {
+    /**
+     * @var string[]|null
+     */
     private ?array $labels = null;
 
     public function __construct(
