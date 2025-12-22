@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Test\Unit\Service\Registrar\JIRA;
 
 use Aeliot\TodoRegistrar\Service\Registrar\JIRA\IssueLinkTypeProvider;
-use Aeliot\TodoRegistrar\Service\Registrar\JIRA\ServiceFactory;
 use JiraRestApi\IssueLink\IssueLinkService;
 use JiraRestApi\IssueLink\IssueLinkType;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -120,10 +119,8 @@ final class IssueLinkTypeProviderTest extends TestCase
     {
         $service = $this->createMock(IssueLinkService::class);
         $service->method('getIssueLinkTypes')->willReturn($this->createIssueLinkTypes());
-        $serviceFactory = $this->createMock(ServiceFactory::class);
-        $serviceFactory->method('createIssueLinkService')->willReturn($service);
 
-        return new IssueLinkTypeProvider($serviceFactory);
+        return new IssueLinkTypeProvider($service);
     }
 
     /**
