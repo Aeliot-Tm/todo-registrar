@@ -15,12 +15,13 @@ namespace Aeliot\TodoRegistrar\Service\Registrar\JIRA;
 
 use Aeliot\TodoRegistrar\Contracts\TodoInterface;
 use JiraRestApi\IssueLink\IssueLink;
+use JiraRestApi\IssueLink\IssueLinkService;
 
-final class IssueLinkRegistrar
+final readonly class IssueLinkRegistrar
 {
     public function __construct(
         private LinkedIssueNormalizer $linkedIssueNormalizer,
-        private ServiceFactory $serviceFactory,
+        private IssueLinkService $issueLinkService,
     ) {
     }
 
@@ -32,12 +33,11 @@ final class IssueLinkRegistrar
         }
 
         $linkedIssues = $this->linkedIssueNormalizer->normalizeLinkedIssues($linkedIssues);
-        $service = $this->serviceFactory->createIssueLinkService();
 
         foreach ($linkedIssues as $issueLinkType => $iterateLinkedIssuesGroup) {
             foreach ($iterateLinkedIssuesGroup as $linkedIssue) {
                 $issueLink = $this->createIssueLink($inwardIssueKey, $linkedIssue, $issueLinkType);
-                $service->addIssueLink($issueLink);
+                $this->issueLinkService->addIssueLink($issueLink);
             }
         }
     }
