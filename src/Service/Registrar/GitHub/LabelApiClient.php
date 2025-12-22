@@ -21,10 +21,12 @@ use Github\Api\Issue\Labels as LabelsApi;
  */
 final class LabelApiClient
 {
+    private ?array $labels = null;
+
     public function __construct(
-        private LabelsApi $labelsApi,
-        private string $owner,
-        private string $repository,
+        private readonly LabelsApi $labelsApi,
+        private readonly string $owner,
+        private readonly string $repository,
     ) {
     }
 
@@ -33,14 +35,24 @@ final class LabelApiClient
      */
     public function getAll(): array
     {
-        $response = $this->labelsApi->all($this->owner, $this->repository);
+        if (null === $this->labels) {
+            $response = $this->labelsApi->all($this->owner, $this->repository);
+            $this->labels = array_map(static fn (array $x): string => $x['name'], $response);
+            sort($this->labels);
+        }
 
-        return array_map(static fn (array $x): string => $x['name'], $response);
+        return $this->labels;
     }
 
     public function create(string $label): void
     {
+        if (null === $this->labels) {
+            $this->getAll();
+        }
+
         $params = ['name' => $label];
         $this->labelsApi->create($this->owner, $this->repository, $params);
+        $this->labels[] = $label;
+        sort($this->labels);
     }
 }
