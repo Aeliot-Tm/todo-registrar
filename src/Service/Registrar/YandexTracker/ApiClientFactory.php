@@ -30,6 +30,6 @@ final readonly class ApiClientFactory
 
     public function createTracker(): Tracker
     {
-        return new Tracker($this->config['token'], $this->config['orgId']);
+        return new Tracker($this->config['token'], $this->config['orgId'] ?? null, $this->config['cloudOrgId'] ?? null);
     }
 }

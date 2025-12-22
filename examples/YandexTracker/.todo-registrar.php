@@ -23,8 +23,9 @@ return (new Config())
             'type' => 'task',
         ],
         'service' => [
-            'token' => $_ENV['YANDEX_TRACKER_TOKEN'] ?? null,
+            'cloudOrgId' => $_ENV['YANDEX_TRACKER_CLOUD_ORG_ID'] ?? null,
             'orgId' => $_ENV['YANDEX_TRACKER_ORG_ID'] ?? null,
+            'token' => $_ENV['YANDEX_TRACKER_TOKEN'] ?? null,
         ],
     ])
     ->setTags(['todo', 'fixme']);

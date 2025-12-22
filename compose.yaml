@@ -5,7 +5,7 @@ services:
       dockerfile: .docker/php/Dockerfile
     environment:
       GITHUB_PERSONAL_ACCESS_TOKEN: ${GITHUB_PERSONAL_ACCESS_TOKEN:-}
-      GITLAB_HOST: ${GITLAB_HOST:https://gitlab.com}
+      GITLAB_HOST: ${GITLAB_HOST:-https://gitlab.com}
       GITLAB_PERSONAL_ACCESS_TOKEN: ${GITLAB_PERSONAL_ACCESS_TOKEN:-}
       GITLAB_PROJECT_IDENTIFIER: ${GITLAB_PROJECT_IDENTIFIER:-}
       JIRA_HOST: ${JIRA_HOST:-}
@@ -13,6 +13,7 @@ services:
       PHP_IDE_CONFIG: serverName=todo-registrar.local
       XDEBUG_CONFIG: "client_host=host.docker.internal"
       XDEBUG_ENABLE: 1
+      YANDEX_TRACKER_CLOUD_ORG_ID: ${YANDEX_TRACKER_CLOUD_ORG_ID:-}
       YANDEX_TRACKER_ORG_ID: ${YANDEX_TRACKER_ORG_ID:-}
       YANDEX_TRACKER_TOKEN: ${YANDEX_TRACKER_TOKEN:-}
     expose:

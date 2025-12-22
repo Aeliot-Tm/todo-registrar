@@ -18,8 +18,9 @@ registrar:
     tagPrefix: ''
     type: task
   service:
+    cloudOrgId: '%env(YANDEX_TRACKER_CLOUD_ORG_ID)%',
+    # orgId: '%env(YANDEX_TRACKER_ORG_ID)%'
     token: '%env(YANDEX_TRACKER_TOKEN)%'
-    orgId: '%env(YANDEX_TRACKER_ORG_ID)%'
 
 tags:
   - todo

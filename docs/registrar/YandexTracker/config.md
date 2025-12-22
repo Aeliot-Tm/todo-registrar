@@ -20,8 +20,9 @@ $yandexTrackerConfig = [
         'type' => 'task',                           // type of issue (task, bug, story, epic, etc.)
     ],
     'service' => [
+        'cloudOrgId' => 'string'                    // Cloud Organization ID (X-Cloud-Org-ID header)
+        // 'orgId' => 'string',                     // Organization ID (X-Org-ID header)
         'token' => 'string',                        // OAuth token for Yandex Tracker API
-        'orgId' => 'string',                        // Organization ID (X-Org-ID header)
     ]
 ];
 ```
@@ -44,8 +45,9 @@ registrar:
     tagPrefix: ''
     type: task
   service:
+    cloudOrgId: '%env(YANDEX_TRACKER_CLOUD_ORG_ID)%'
+    # orgId: '%env(YANDEX_TRACKER_ORG_ID)%'
     token: '%env(YANDEX_TRACKER_TOKEN)%'
-    orgId: '%env(YANDEX_TRACKER_ORG_ID)%'
 ```
 
 ## Inline config
@@ -72,15 +74,21 @@ Supported keys of inline config:
 
 1. Go to [Yandex OAuth](https://oauth.yandex.com/) and register your application
 2. Request token with `tracker:write` scope
-3. Use the received token in configuration
+3. Follow link: `https://oauth.yandex.com/authorize?response_type=token&client_id=<client_id>`
+4. Authorize the application
+5. Use the received token in configuration
 
-For more details, see [Yandex Tracker API Access](https://yandex.ru/support/tracker/concepts/access.html).
+For more details, see [Yandex Tracker API Access](https://yandex.com/support/tracker/concepts/access.html).
 
 ### Getting Organization ID
 
 The organization ID can be found in:
-- Yandex Tracker settings page
+- Yandex Tracker settings page: https://tracker.yandex.com/admin/orgs
 - Or via API call: `GET https://api.tracker.yandex.net/v2/myself`
+
+Pay attention if it 'Cloud' organization then you have to provide `orgCloudId` in configuration instead of `orgId`
+
+![img.png](img.png)
 
 ## Environment Variables
 
@@ -104,4 +112,3 @@ Or use `.env` file with Docker:
 YANDEX_TRACKER_TOKEN=y0_AgAAAABXXXXXXXXXXXXXXXXXXXXXXXXX
 YANDEX_TRACKER_ORG_ID=123456
 ```
-

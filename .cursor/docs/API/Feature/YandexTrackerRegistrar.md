@@ -34,10 +34,11 @@ Yandex Tracker Registrar creates issues in Yandex Tracker from TODO/FIXME commen
 ```yaml
 registrar:
   type: YandexTracker
-  queue: 'QUEUE'                        # Yandex Tracker queue key (required)
+  queue: 'QUEUE'                            # Yandex Tracker queue key (required)
   service:
-    token: 'OAuth-token'                # OAuth token for API access
-    orgId: 'organization-id'            # Organization ID (X-Org-ID header)
+    cloudOrgId: 'cloud-organization-id'     # Cloud Organization ID (X-Cloud-Org-ID header)
+    # orgId: 'organization-id'              # Organization ID (X-Org-ID header)
+    token: 'OAuth-token'                    # OAuth token for API access
 ```
 
 ### Issue Configuration
@@ -127,13 +128,17 @@ To get an OAuth token for Yandex Tracker API:
 2. Authorize the application
 3. Copy the token
 
-For more details, see [Yandex Tracker API Access](https://yandex.ru/support/tracker/concepts/access.html).
+For more details, see [Yandex Tracker API Access](https://yandex.com/support/tracker/concepts/access.html).
 
 ### Organization ID
 
 The organization ID (`orgId`) can be found in:
-- Yandex Tracker settings
-- Or obtained via API call to get current user info
+- Yandex Tracker settings page: https://tracker.yandex.com/admin/orgs
+- Or via API call: `GET https://api.tracker.yandex.net/v2/myself`
+
+Pay attention if it 'Cloud' organization then you have to provide `orgCloudId` in configuration instead of `orgId`
+
+![img.png](../../../../docs/registrar/YandexTracker/img.png)
 
 ## Technical Details
 
@@ -173,7 +178,7 @@ $issueKey = $response->getField('key'); // e.g., "QUEUE-123"
 
 ## Limitations
 
-- The SDK `bugrov/yandex-tracker` is not published on Packagist and is loaded from GitHub via VCS repository
+- The SDK `bugrov/yandex-tracker` is published on Packagist but have only `master` branch.
+  So, require version `dev-master` explicitly.
 - Issue linking is not yet implemented (can be added in future versions)
 - Components and sprints are not yet supported
-
