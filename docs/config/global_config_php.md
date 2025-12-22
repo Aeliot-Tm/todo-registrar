@@ -42,7 +42,7 @@ Responsible for configuration of registrar factory.
 It accepts two arguments:
 1. First one is registrar type (`\Aeliot\TodoRegistrar\Enum\RegistrarType`)
    or instance of registrar factory (`\Aeliot\TodoRegistrar\Service\Registrar\RegistrarFactoryInterface`).
-2. Second one is array of config for registrar. See [example for JIRA](../registrar/jira/config.md).
+2. Second one is array of config for registrar. See [example for JIRA](../registrar/JIRA/config.md).
 
 So, you can use build-in registrar or pass your own.
 

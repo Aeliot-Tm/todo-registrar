@@ -58,44 +58,27 @@ docker pull ghcr.io/aeliot-tm/todo-registrar:v1.8.0
 
 ### Installation with PHIVE
 
-You can install this package with [PHIVE](https://phar.io/). It permits you to install package by one console command
-without extending dependencies in your composer-files.
+Basically, it's enough to call command (with installed `phive`):
 ```shell
 phive install todo-registrar
 ```
-
-Sometimes you may need to update database of package-aliases of PHIVE. See [issue #3](https://github.com/Aeliot-Tm/php-cs-fixer-baseline/issues/3)
-So, just call console command for it:
-```shell
-phive update-repository-list
-```
-
-To upgrade this package use the following command:
-```shell
-phive update todo-registrar
-```
+Additional instructions read [here](docs/installation/phive.md).
 
 ### Downloading of PHAR directly
 
-Download PHAR directly to root directory of the project or in another place as you wish.
+Download PHAR directly to root directory:
 ```shell
 # Do adjust the URL if you need a release other than the latest
 wget -O todo-registrar.phar "https://github.com/Aeliot-Tm/todo-registrar/releases/latest/download/todo-registrar.phar"
-wget -O todo-registrar.phar.asc "https://github.com/Aeliot-Tm/todo-registrar/releases/latest/download/todo-registrar.phar.asc"
 
-# Check that the signature matches
-gpg --verify todo-registrar.phar.asc todo-registrar.phar
-
-# Check the issuer (the ID can also be found from the previous command)
-gpg --keyserver hkps://keys.openpgp.org --recv-keys 9D0DD6FCB92C84688B777DF59204DEE8CAE9C22C
-
-rm todo-registrar.phar.asc
 chmod +x todo-registrar.phar
 ```
 
+Additional instructions read [here](docs/installation/phar_directly.md)
+
 ### Installation with Composer
 
-You can install this package with [Composer](https://getcomposer.org/doc/03-cli.md#install-i):
+Require the package as development dependency with [Composer](https://getcomposer.org/doc/03-cli.md#install-i):
 ```shell
 composer require --dev aeliot/todo-registrar
 ```
@@ -193,6 +176,8 @@ The orders of files which are looked for:
 5. `.todo-registrar.yml`
 6. `.todo-registrar.dist.yml`
 
+Otherwise, you may pass a special value`--config=STDIN` and [it will be obtained from STDIN](docs/config/global_config_yaml.md#loading-from-stdin).
+
 ## Inline Configuration
 
 Script supports inline configuration of each TODO-comment. It helps flexibly configure different aspects of created issues.
@@ -231,8 +216,8 @@ Currently, todo-registrar supports the following issue trackers:
 | Issue Tracker                                   | Description                                                                                   |
 |-------------------------------------------------|-----------------------------------------------------------------------------------------------|
 | GitHub issues                                   | Supported via API tokens. See [description of configuration](docs/registrar/GitHub/config.md) |
-| [GitLab](https://about.gitlab.com/)             | Supported via API tokens (HTTP Token or OAuth). See [description of configuration](docs/registrar/gitlab/config.md) |
-| [JIRA](https://www.atlassian.com/software/jira) | Supported via API tokens. See [description of configuration](docs/registrar/jira/config.md)   |
+| [GitLab](https://about.gitlab.com/)             | Supported via API tokens (HTTP Token or OAuth). See [description of configuration](docs/registrar/GitLab/config.md) |
+| [JIRA](https://www.atlassian.com/software/jira) | Supported via API tokens. See [description of configuration](docs/registrar/JIRA/config.md)   |
 
 ## Articles
 

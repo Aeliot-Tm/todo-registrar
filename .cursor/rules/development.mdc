@@ -30,6 +30,7 @@ Follow these rules when developing:
 
 6. Do not add more than ONE blank line in a row in any files (.php, .yaml and so on).
    Maximum 1 blank line to separate logical blocks.
+   Maximum 1 blank line at the end of the file.
 
 7. Do not create new documentation files without an explicit request.
 

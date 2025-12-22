@@ -51,8 +51,8 @@ Below are examples of settings supported by the implemented JIRA-registrar.
 ### Inline configs specific for issue trackers
 
 1. [GitHub](registrar/GitHub/config.md#inline-config)
-2. [GitLab](registrar/gitlab/config.md#inline-config)
-3. [JIRA](registrar/jira/config.md#inline-config)
+2. [GitLab](registrar/GitLab/config.md#inline-config)
+3. [JIRA](registrar/JIRA/config.md#inline-config)
 
 
 ## The order of applying of configs
