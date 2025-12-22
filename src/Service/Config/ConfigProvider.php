@@ -33,7 +33,7 @@ final readonly class ConfigProvider
 
     public function getConfig(?string $path): GeneralConfigInterface
     {
-        if ('STDIN' === $path) {
+        if ('STDIN' === strtoupper((string) $path)) {
             return $this->stdinConfigFactory->create();
         }
 
