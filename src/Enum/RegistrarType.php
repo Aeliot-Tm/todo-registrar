@@ -19,7 +19,6 @@ enum RegistrarType: string
     case GitHub = 'GitHub';
     case GitLab = 'GitLab';
     case JIRA = 'JIRA';
-    case PivotalTracker = 'PivotalTracker';
     case Redmine = 'Redmine';
     case YouTrack = 'YouTrack';
 }
