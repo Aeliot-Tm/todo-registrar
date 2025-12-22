@@ -15,10 +15,6 @@ namespace Aeliot\TodoRegistrar\Service\Registrar\GitHub;
 
 use Github\Api\Issue\Labels as LabelsApi;
 
-/**
- * TODO: #128 cache list of labels
- *       It reduce API-calls and speed up processing of issues with labels.
- */
 final class LabelApiClient
 {
     private ?array $labels = null;
