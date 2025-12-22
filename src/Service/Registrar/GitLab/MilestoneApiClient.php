@@ -13,16 +13,17 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\GitLab;
 
+use Gitlab\Api\Milestones;
 use Gitlab\Client;
 
 /**
  * Client for working with GitLab project milestones.
  * Used to validate milestone existence before creating issues.
  */
-final class MilestoneApiClient
+final readonly class MilestoneApiClient
 {
     public function __construct(
-        private Client $client,
+        private Milestones $milestones,
         private int|string $projectIdentifier,
     ) {
     }
@@ -34,7 +35,7 @@ final class MilestoneApiClient
      */
     public function getAll(): array
     {
-        $milestones = $this->client->milestones()->all($this->projectIdentifier);
+        $milestones = $this->milestones->all($this->projectIdentifier);
         $result = [];
         foreach ($milestones as $milestone) {
             if (isset($milestone['id'])) {
@@ -52,7 +53,7 @@ final class MilestoneApiClient
      */
     private function getAllByIid(): array
     {
-        $milestones = $this->client->milestones()->all($this->projectIdentifier);
+        $milestones = $this->milestones->all($this->projectIdentifier);
         $result = [];
         foreach ($milestones as $milestone) {
             if (isset($milestone['iid'])) {

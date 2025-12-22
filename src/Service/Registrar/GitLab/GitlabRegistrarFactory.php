@@ -28,15 +28,22 @@ final class GitlabRegistrarFactory implements RegistrarFactoryInterface
     {
         $validator ??= ValidatorFactory::create();
         $generalIssueConfig = $this->createGeneralIssueConfig($config['issue'] ?? [], $validator);
-        $apiClientProvider = new ApiClientProvider($config['service']);
+        $apiClientProvider = new ApiClientFactory($config['service']);
+        $apiSectionClientFactory = new ApiSectionClientFactory(
+            $apiClientProvider->createClient(),
+            $this->getProjectIdentifier($config['service']),
+        );
+        $milestoneApiClient = $apiSectionClientFactory->createMilestoneService();
 
         return new GitlabRegistrar(
+            $apiSectionClientFactory->createIssueService(),
             new IssueFactory(
                 $generalIssueConfig,
-                $apiClientProvider->getUserResolver(),
-                $apiClientProvider->getMilestoneService(),
+                $apiSectionClientFactory->createUserResolver(),
+                $milestoneApiClient,
             ),
-            $apiClientProvider,
+            $apiSectionClientFactory->createLabelService(),
+            $milestoneApiClient,
         );
     }
 
@@ -52,5 +59,25 @@ final class GitlabRegistrarFactory implements RegistrarFactoryInterface
         }
 
         return $generalIssueConfig;
+    }
+
+    /**
+     * @param array<string,mixed> $config
+     */
+    private function getProjectIdentifier(array $config): int|string
+    {
+        // Either path or ID
+        $projectIdentifier = $config['project'] ?? null;
+        if ('' === (string) $projectIdentifier) {
+            throw new \InvalidArgumentException('Project identifier must be specified in service config');
+        }
+
+        // If already an integer, return as is
+        if (\is_int($projectIdentifier) || ctype_digit((string) $projectIdentifier)) {
+            return (int) $projectIdentifier;
+        }
+
+        // Otherwise, it's a project path (return as string, API will URL-encode it)
+        return $projectIdentifier;
     }
 }

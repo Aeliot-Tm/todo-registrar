@@ -13,16 +13,16 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\GitLab;
 
-use Gitlab\Client;
+use Gitlab\Api\Projects;
 
 /**
  * Client for working with GitLab project labels.
  * Labels are created at project level, not at issue level.
  */
-final class LabelApiClient
+final readonly class LabelApiClient
 {
     public function __construct(
-        private Client $client,
+        private Projects $projects,
         private int|string $projectIdentifier,
     ) {
     }
@@ -34,7 +34,7 @@ final class LabelApiClient
      */
     public function getAll(): array
     {
-        $labels = $this->client->projects()->labels($this->projectIdentifier);
+        $labels = $this->projects->labels($this->projectIdentifier);
 
         return array_map(static fn (array $label): string => $label['name'], $labels);
     }
@@ -58,6 +58,6 @@ final class LabelApiClient
             $params['description'] = $description;
         }
 
-        $this->client->projects()->addLabel($this->projectIdentifier, $params);
+        $this->projects->addLabel($this->projectIdentifier, $params);
     }
 }

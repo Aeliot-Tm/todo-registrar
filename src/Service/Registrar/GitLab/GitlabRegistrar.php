@@ -19,8 +19,10 @@ use Aeliot\TodoRegistrar\Contracts\TodoInterface;
 final readonly class GitlabRegistrar implements RegistrarInterface
 {
     public function __construct(
+        private IssueApiClient $issueApiClient,
         private IssueFactory $issueFactory,
-        private ApiClientProvider $apiClientProvider,
+        private LabelApiClient $labelApiClient,
+        private MilestoneApiClient $milestoneApiClient,
     ) {
     }
 
@@ -41,7 +43,7 @@ final readonly class GitlabRegistrar implements RegistrarInterface
         }
 
         // Create issue
-        $response = $this->apiClientProvider->getIssueService()->create($issue);
+        $response = $this->issueApiClient->create($issue);
 
         // Return IID in format "#123"
         return '#' . $response['iid'];
@@ -64,12 +66,11 @@ final readonly class GitlabRegistrar implements RegistrarInterface
      */
     private function registerLabels(array $labels): void
     {
-        $labelService = $this->apiClientProvider->getLabelService();
-        $existingLabels = $labelService->getAll();
+        $existingLabels = $this->labelApiClient->getAll();
         $missingLabels = array_diff($labels, $existingLabels);
 
         foreach ($missingLabels as $label) {
-            $labelService->create($label);
+            $this->labelApiClient->create($label);
         }
     }
 
@@ -78,8 +79,7 @@ final readonly class GitlabRegistrar implements RegistrarInterface
      */
     private function validateMilestone(int $milestoneId): void
     {
-        $milestoneService = $this->apiClientProvider->getMilestoneService();
-        if (!$milestoneService->findById($milestoneId)) {
+        if (!$this->milestoneApiClient->findById($milestoneId)) {
             throw new \RuntimeException(\sprintf('Milestone with ID %d does not exist', $milestoneId));
         }
     }
