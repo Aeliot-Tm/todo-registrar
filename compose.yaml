@@ -13,6 +13,8 @@ services:
       PHP_IDE_CONFIG: serverName=todo-registrar.local
       XDEBUG_CONFIG: "client_host=host.docker.internal"
       XDEBUG_ENABLE: 1
+      YANDEX_TRACKER_ORG_ID: ${YANDEX_TRACKER_ORG_ID:-}
+      YANDEX_TRACKER_TOKEN: ${YANDEX_TRACKER_TOKEN:-}
     expose:
       - '9003'
     extra_hosts:
