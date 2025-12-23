@@ -62,7 +62,7 @@ jobs:
           echo "branch_name=$TR_NEW_BRANCH" >>  "$GITHUB_OUTPUT"
 
       - name: Register TODOs
-        uses: Aeliot-Tm/todo-registrar-action@1.0.0
+        uses: Aeliot-Tm/todo-registrar-action@1.1.0
         env:
           GH_PERSONAL_ACCESS_TOKEN: ${{ secrets.GH_TODO_REGISTRAR_ACCESS_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
@@ -73,34 +73,5 @@ jobs:
             GH_PERSONAL_ACCESS_TOKEN
             GITHUB_REPOSITORY
             GITHUB_REPOSITORY_OWNER
-
-      - name: Checkout new branch
-        run: git checkout -b ${{ steps.branch_name.outputs.branch_name }} 1> /dev/null
-
-      - name: Add changes to Git tracking
-        run: git add -A .
-
-      - name: Commit changes
-        id: commit
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          export TR_NOTHING_TO_COMMIT=$(git commit -m "TODO-REGISTRAR: automated registering of new TODOs" | grep "nothing to commit")
-          echo "result=$TR_NOTHING_TO_COMMIT" >> "$GITHUB_OUTPUT"
-          echo "Result of commiting: $TR_NOTHING_TO_COMMIT" >> $GITHUB_STEP_SUMMARY
-
-      - name: Push changes
-        if: ${{ ! steps.commit.outputs.result }}
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ steps.branch_name.outputs.branch_name }}
-
-      - name: Create pull request
-        if: ${{ ! steps.commit.outputs.result }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TODO_REGISTRAR_ACCESS_TOKEN }}
-        run: |
-          gh pr create -B main -H ${{ steps.branch_name.outputs.branch_name }} \
-          --title '[TODO Registrar] automated registering of new TODOs' \
-          --body 'Created by Github action'
+          new_branch_name: ${{ steps.branch_name.outputs.branch_name }}
+          target_branch_name: main
