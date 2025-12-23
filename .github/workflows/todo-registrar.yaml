@@ -42,11 +42,6 @@ jobs:
     if: 0 == needs.preflight.outputs.count
     runs-on: ubuntu-latest
 
-    env:
-      GH_PERSONAL_ACCESS_TOKEN: ${{ secrets.GH_TODO_REGISTRAR_ACCESS_TOKEN }}
-      GH_REPOSITORY: ${{ vars.GITHUB_REPOSITORY }}
-      GH_REPOSITORY_OWNER: ${{ vars.GITHUB_REPOSITORY_OWNER }}
-
     # Define the permissions for the action
     permissions:
       contents: write
@@ -60,27 +55,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: 8.2
-          ini-values: phar.readonly=0
-          tools: composer
-          coverage: none
-
-      - name: Cache Composer packages
-        id: composer-cache
-        uses: actions/cache@v4
-        with:
-          path: vendor
-          key: "os-${{ runner.os }}-php-${{ runner.php-version }}-composer-${{ hashFiles('**/composer.lock') }}"
-          restore-keys: "os-${{ runner.os }}-php-${{ runner.php-version }}-composer-"
-
-      - name: Install Composer dependencies
-        uses: ramsey/composer-install@v3
-        with:
-          composer-options: '--no-dev'
-
       - name: Generate new branch name
         id: branch_name
         run: |
@@ -88,8 +62,17 @@ jobs:
           echo "branch_name=$TR_NEW_BRANCH" >>  "$GITHUB_OUTPUT"
 
       - name: Register TODOs
-        run: |
-          php bin/todo-registrar -c scripts/todo-registrar/config.php
+        uses: Aeliot-Tm/todo-registrar-action@1.0.0
+        env:
+          GH_PERSONAL_ACCESS_TOKEN: ${{ secrets.GH_TODO_REGISTRAR_ACCESS_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}
+        with:
+          config_path: scripts/todo-registrar/config.php
+          env_vars: |
+            GH_PERSONAL_ACCESS_TOKEN
+            GITHUB_REPOSITORY
+            GITHUB_REPOSITORY_OWNER
 
       - name: Checkout new branch
         run: git checkout -b ${{ steps.branch_name.outputs.branch_name }} 1> /dev/null
