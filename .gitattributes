@@ -1,6 +1,7 @@
 * text eol=lf
 *.neon linguist-language=YAML
 
+/.cursor        export-ignore
 /.docker        export-ignore
 /.github        export-ignore
 /.phive         export-ignore
