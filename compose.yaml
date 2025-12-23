@@ -21,3 +21,18 @@ services:
     tty: true
     volumes:
       - .:/app
+
+  mcp_serena:
+    # documentation: https://github.com/oraios/serena/blob/main/DOCKER.md
+    image: ghcr.io/oraios/serena:latest
+    # Add the context for the IDE assistant option:
+    command:
+      - "uv run --directory . serena-mcp-server --transport sse --port 9121 --host 0.0.0.0 --context claude-code"
+    ports:
+      - "${SERENA_PORT:-9121}:9121"
+      # dashboard: http://localhost:24282/dashboard
+      - "${SERENA_DASHBOARD_PORT:-24282}:24282"
+    # To work with projects, you must mount them as volumes:
+    volumes:
+      - ./.mcp/serena/config:/workspaces/serena/config
+      - ./:/workspace/projects/todo-registrar
