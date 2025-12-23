@@ -14,5 +14,5 @@
 /.gitattributes     export-ignore
 /.gitignore                 export-ignore
 /composer.lock              export-ignore
-/docker-compose.yml         export-ignore
+/compose.yaml               export-ignore
 /docker-entrypoint.sh       export-ignore
