@@ -33,6 +33,7 @@ There are several ways of installation:
 2. [PHIVE](#installation-with-phive)
 3. [Downloading of PHAR directly](#downloading-of-phar-directly)
 4. [Composer](#installation-with-composer)
+5. [GitHub Action](https://github.com/marketplace/actions/todo-registrar)
 
 First of all, I recommend Docker container case it provides fully isolated solution.
 It is no matter which version of PHP installed in yous system and which components required by Composer (no dependency hell).
