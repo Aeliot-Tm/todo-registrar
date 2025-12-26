@@ -29,11 +29,11 @@ into comment in code. This prevents creating of issues twice and injected marks 
 ## Installation
 
 There are several ways of installation:
-1. [Docker](#installation-with-docker)
-2. [PHIVE](#installation-with-phive)
-3. [Downloading of PHAR directly](#downloading-of-phar-directly)
-4. [Composer](#installation-with-composer)
-5. [GitHub Action](https://github.com/marketplace/actions/todo-registrar)
+1. [GitHub Action](https://github.com/marketplace/actions/todo-registrar)
+2. [Docker](#installation-with-docker)
+3. [PHIVE](#installation-with-phive)
+4. [Downloading of PHAR directly](#downloading-of-phar-directly)
+5. [Composer](#installation-with-composer)
 
 First of all, I recommend Docker container case it provides fully isolated solution.
 It is no matter which version of PHP installed in yous system and which components required by Composer (no dependency hell).
