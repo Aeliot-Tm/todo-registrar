@@ -31,8 +31,8 @@ into comment in code. This prevents creating of issues twice and injected marks 
 There are several ways of installation:
 1. [GitHub Action](https://github.com/marketplace/actions/todo-registrar)
 2. [Docker](#installation-with-docker)
-3. [PHIVE](#installation-with-phive)
-4. [Downloading of PHAR directly](#downloading-of-phar-directly)
+3. [Downloading of PHAR directly](#downloading-of-phar-directly)
+4. [PHIVE](#installation-with-phive)
 5. [Composer](#installation-with-composer)
 
 First of all, I recommend Docker container case it provides fully isolated solution.
@@ -57,14 +57,6 @@ docker pull ghcr.io/aeliot-tm/todo-registrar:latest
 docker pull ghcr.io/aeliot-tm/todo-registrar:v1.8.0
 ```
 
-### Installation with PHIVE
-
-Basically, it's enough to call command (with installed `phive`):
-```shell
-phive install todo-registrar
-```
-Additional instructions read [here](docs/installation/phive.md).
-
 ### Downloading of PHAR directly
 
 Download PHAR directly to root directory:
@@ -76,6 +68,14 @@ chmod +x todo-registrar.phar
 ```
 
 Additional instructions read [here](docs/installation/phar_directly.md)
+
+### Installation with PHIVE
+
+Basically, it's enough to call command (with installed `phive`):
+```shell
+phive install todo-registrar
+```
+Additional instructions read [here](docs/installation/phive.md).
 
 ### Installation with Composer
 
