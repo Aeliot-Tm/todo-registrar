@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ccada962a6a0d349c4ff5d7852450c31",
+    "content-hash": "df7ebcb1d466c096c2b6262f3365e9e6",
     "packages": [
         {
             "name": "bugrov/yandex-tracker",
@@ -4244,6 +4244,7 @@
         "php": "^8.2",
         "ext-ctype": "*",
         "ext-mbstring": "*",
+        "ext-simplexml": "*",
         "ext-tokenizer": "*"
     },
     "platform-dev": [],
