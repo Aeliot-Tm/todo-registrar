@@ -23,7 +23,7 @@ return (new Config())
             'type' => 'task',
         ],
         'service' => [
-            'cloudOrgId' => $_ENV['YANDEX_TRACKER_CLOUD_ORG_ID'] ?? null,
+            'isCloud' => $_ENV['YANDEX_TRACKER_IS_CLOUD'] ?? null,
             'orgId' => $_ENV['YANDEX_TRACKER_ORG_ID'] ?? null,
             'token' => $_ENV['YANDEX_TRACKER_TOKEN'] ?? null,
         ],

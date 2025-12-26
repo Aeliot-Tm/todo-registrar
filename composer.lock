@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "dfb3ba73038e2dc23e26522375614016",
+    "content-hash": "891e37ca74331ee3f3c0373e8d1cbf26",
     "packages": [
         {
             "name": "bugrov/yandex-tracker",
-            "version": "dev-master",
+            "version": "0.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Aeliot-Tm/yandex-tracker.git",
-                "reference": "41a061ecffdab694e9ac0bd73108ab190b4cf219"
+                "reference": "e27cba9fb9734b10ecc182531753d7c1c6e5a5b8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Aeliot-Tm/yandex-tracker/zipball/41a061ecffdab694e9ac0bd73108ab190b4cf219",
-                "reference": "41a061ecffdab694e9ac0bd73108ab190b4cf219",
+                "url": "https://api.github.com/repos/Aeliot-Tm/yandex-tracker/zipball/e27cba9fb9734b10ecc182531753d7c1c6e5a5b8",
+                "reference": "e27cba9fb9734b10ecc182531753d7c1c6e5a5b8",
                 "shasum": ""
             },
             "require": {
@@ -27,7 +27,6 @@
             "require-dev": {
                 "symfony/var-dumper": "^5.4"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -57,9 +56,9 @@
                 "яндекс трекер"
             ],
             "support": {
-                "source": "https://github.com/Aeliot-Tm/yandex-tracker/tree/master"
+                "source": "https://github.com/Aeliot-Tm/yandex-tracker/tree/0.1.0"
             },
-            "time": "2025-12-22T19:40:09+00:00"
+            "time": "2025-12-26T16:25:42+00:00"
         },
         {
             "name": "clue/stream-filter",
@@ -4173,7 +4172,6 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "bugrov/yandex-tracker": 20,
         "roave/security-advisories": 20
     },
     "prefer-stable": true,

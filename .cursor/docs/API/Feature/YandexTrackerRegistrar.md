@@ -36,9 +36,10 @@ registrar:
   type: YandexTracker
   queue: 'QUEUE'                            # Yandex Tracker queue key (required)
   service:
-    cloudOrgId: 'cloud-organization-id'     # Cloud Organization ID (X-Cloud-Org-ID header)
-    # orgId: 'organization-id'              # Organization ID (X-Org-ID header)
-    token: 'OAuth-token'                    # OAuth token for API access
+    isCloud: true                           # Is Cloud Organization (default: true)
+                                            # If true, X-Cloud-Org-ID header is used instead of X-Org-ID
+    orgId: 'organization-id'                # Organization ID (required)
+    token: 'OAuth-token'                    # OAuth token for API access (required)
 ```
 
 ### Issue Configuration
@@ -136,7 +137,13 @@ The organization ID (`orgId`) can be found in:
 - Yandex Tracker settings page: https://tracker.yandex.com/admin/orgs
 - Or via API call: `GET https://api.tracker.yandex.net/v2/myself`
 
-Pay attention if it 'Cloud' organization then you have to provide `orgCloudId` in configuration instead of `orgId`
+### Cloud Organization
+
+If you are using Yandex Tracker Cloud organization, set `isCloud: true` in the service configuration.
+When `isCloud` is `true`, the `X-Cloud-Org-ID` header is used instead of `X-Org-ID`.
+By default, `isCloud` is `true`.
+
+For on-premise installations, set `isCloud: false`.
 
 ![img.png](../../../../docs/registrar/YandexTracker/img.png)
 

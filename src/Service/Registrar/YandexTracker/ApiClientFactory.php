@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\YandexTracker;
 
+use __ComposerUnused__\JsonSchema\Exception\InvalidConfigException;
 use BugrovWeb\YandexTracker\Api\Tracker;
 
 /**
@@ -21,7 +22,7 @@ use BugrovWeb\YandexTracker\Api\Tracker;
 final readonly class ApiClientFactory
 {
     /**
-     * @param array{token: string, orgId: string} $config
+     * @param array{token: string, orgId: string, isCloud?: bool} $config
      */
     public function __construct(
         private array $config,
@@ -30,6 +31,19 @@ final readonly class ApiClientFactory
 
     public function createTracker(): Tracker
     {
-        return new Tracker($this->config['token'], $this->config['orgId'] ?? null, $this->config['cloudOrgId'] ?? null);
+        return new Tracker(
+            $this->config['token'],
+            $this->config['orgId'],
+            $this->isCloud(),
+        );
+    }
+
+    private function isCloud(): bool
+    {
+        return match ($this->config['isCloud'] ?? true) {
+            false, 'false', 0, '0', 'n', 'no' => false,
+            true, 'true', 1, '1', 'y', 'yes' => true,
+            default => throw new InvalidConfigException('Unexpected value of option "isCloud"'),
+        };
     }
 }

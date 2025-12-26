@@ -20,9 +20,10 @@ $yandexTrackerConfig = [
         'type' => 'task',                           // type of issue (task, bug, story, epic, etc.)
     ],
     'service' => [
-        'cloudOrgId' => 'string'                    // Cloud Organization ID (X-Cloud-Org-ID header)
-        // 'orgId' => 'string',                     // Organization ID (X-Org-ID header)
-        'token' => 'string',                        // OAuth token for Yandex Tracker API
+        'isCloud' => true,                          // Is Cloud Organization (default: true)
+                                                    // If true, X-Cloud-Org-ID header is passed instead of X-Org-ID
+        'orgId' => 'string',                        // Organization ID (required)
+        'token' => 'string',                        // OAuth token for Yandex Tracker API (required)
     ]
 ];
 ```
@@ -45,8 +46,8 @@ registrar:
     tagPrefix: ''
     type: task
   service:
-    cloudOrgId: '%env(YANDEX_TRACKER_CLOUD_ORG_ID)%'
-    # orgId: '%env(YANDEX_TRACKER_ORG_ID)%'
+    isCloud: '%env(YANDEX_TRACKER_IS_CLOUD)%'
+    orgId: '%env(YANDEX_TRACKER_ORG_ID)%'
     token: '%env(YANDEX_TRACKER_TOKEN)%'
 ```
 
@@ -86,7 +87,13 @@ The organization ID can be found in:
 - Yandex Tracker settings page: https://tracker.yandex.com/admin/orgs
 - Or via API call: `GET https://api.tracker.yandex.net/v2/myself`
 
-Pay attention if it 'Cloud' organization then you have to provide `orgCloudId` in configuration instead of `orgId`
+### Cloud Organization
+
+If you are using Yandex Tracker Cloud organization, set `isCloud: true` in the service configuration.
+When `isCloud` is `true`, the `X-Cloud-Org-ID` header is used instead of `X-Org-ID`.
+By default, `isCloud` is `true`.
+
+For on-premise installations, set `isCloud: false`.
 
 ![img.png](img.png)
 
@@ -96,12 +103,14 @@ For security, use environment variables for sensitive data:
 
 ```yaml
 service:
+  isCloud: '%env(YANDEX_TRACKER_IS_CLOUD)%'
   token: '%env(YANDEX_TRACKER_TOKEN)%'
   orgId: '%env(YANDEX_TRACKER_ORG_ID)%'
 ```
 
 Set environment variables before running:
 ```bash
+export YANDEX_TRACKER_IS_CLOUD="true"
 export YANDEX_TRACKER_TOKEN="y0_AgAAAABXXXXXXXXXXXXXXXXXXXXXXXXX"
 export YANDEX_TRACKER_ORG_ID="123456"
 ```
@@ -109,6 +118,7 @@ export YANDEX_TRACKER_ORG_ID="123456"
 Or use `.env` file with Docker:
 ```bash
 # .env
+YANDEX_TRACKER_IS_CLOUD=true
 YANDEX_TRACKER_TOKEN=y0_AgAAAABXXXXXXXXXXXXXXXXXXXXXXXXX
 YANDEX_TRACKER_ORG_ID=123456
 ```
