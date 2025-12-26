@@ -1,6 +1,18 @@
 parameters:
 	ignoreErrors:
 		-
+			message: '#^Call to an undefined method Github\\Api\\AbstractApi\:\:labels\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: ../../src/Service/Registrar/GitHub/ApiClientFactory.php
+
+		-
+			message: '#^Parameter \#1 \$issueAPI of class Aeliot\\TodoRegistrar\\Service\\Registrar\\GitHub\\IssueApiClient constructor expects Github\\Api\\Issue, Github\\Api\\AbstractApi given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../../src/Service/Registrar/GitHub/ApiClientFactory.php
+
+		-
 			message: '#^Call to an undefined method Gitlab\\Api\\Users\:\:search\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -13,13 +25,79 @@ parameters:
 			path: ../../src/Service/Registrar/GitLab/UserResolver.php
 
 		-
-			message: '#^Call to an undefined method Github\\Api\\AbstractApi\:\:labels\(\)\.$#'
-			identifier: method.notFound
+			message: '#^Instantiated class __ComposerUnused__\\JsonSchema\\Exception\\InvalidConfigException not found\.$#'
+			identifier: class.notFound
 			count: 1
-			path: ../../src/Service/Registrar/GitHub/ApiClientFactory.php
+			path: ../../src/Service/Registrar/YandexTracker/ApiClientFactory.php
 
 		-
-			message: '#^Parameter \#1 \$issueAPI of class Aeliot\\TodoRegistrar\\Service\\Registrar\\GitHub\\IssueApiClient constructor expects Github\\Api\\Issue, Github\\Api\\AbstractApi given\.$#'
-			identifier: argument.type
+			message: '#^Match arm comparison between \*NEVER\* and ''1'' is always false\.$#'
+			identifier: match.alwaysFalse
 			count: 1
-			path: ../../src/Service/Registrar/GitHub/ApiClientFactory.php
+			path: ../../src/Service/Registrar/YandexTracker/ApiClientFactory.php
+
+		-
+			message: '#^Match arm comparison between \*NEVER\* and ''true'' is always false\.$#'
+			identifier: match.alwaysFalse
+			count: 1
+			path: ../../src/Service/Registrar/YandexTracker/ApiClientFactory.php
+
+		-
+			message: '#^Match arm comparison between \*NEVER\* and ''y'' is always false\.$#'
+			identifier: match.alwaysFalse
+			count: 1
+			path: ../../src/Service/Registrar/YandexTracker/ApiClientFactory.php
+
+		-
+			message: '#^Match arm comparison between \*NEVER\* and ''yes'' is always false\.$#'
+			identifier: match.alwaysFalse
+			count: 1
+			path: ../../src/Service/Registrar/YandexTracker/ApiClientFactory.php
+
+		-
+			message: '#^Match arm comparison between \*NEVER\* and 1 is always false\.$#'
+			identifier: match.alwaysFalse
+			count: 1
+			path: ../../src/Service/Registrar/YandexTracker/ApiClientFactory.php
+
+		-
+			message: '#^Match arm comparison between true and ''0'' is always false\.$#'
+			identifier: match.alwaysFalse
+			count: 1
+			path: ../../src/Service/Registrar/YandexTracker/ApiClientFactory.php
+
+		-
+			message: '#^Match arm comparison between true and ''false'' is always false\.$#'
+			identifier: match.alwaysFalse
+			count: 1
+			path: ../../src/Service/Registrar/YandexTracker/ApiClientFactory.php
+
+		-
+			message: '#^Match arm comparison between true and ''n'' is always false\.$#'
+			identifier: match.alwaysFalse
+			count: 1
+			path: ../../src/Service/Registrar/YandexTracker/ApiClientFactory.php
+
+		-
+			message: '#^Match arm comparison between true and ''no'' is always false\.$#'
+			identifier: match.alwaysFalse
+			count: 1
+			path: ../../src/Service/Registrar/YandexTracker/ApiClientFactory.php
+
+		-
+			message: '#^Match arm comparison between true and 0 is always false\.$#'
+			identifier: match.alwaysFalse
+			count: 1
+			path: ../../src/Service/Registrar/YandexTracker/ApiClientFactory.php
+
+		-
+			message: '#^Match arm comparison between true and true is always true\.$#'
+			identifier: match.alwaysTrue
+			count: 1
+			path: ../../src/Service/Registrar/YandexTracker/ApiClientFactory.php
+
+		-
+			message: '#^Throwing object of an unknown class __ComposerUnused__\\JsonSchema\\Exception\\InvalidConfigException\.$#'
+			identifier: class.notFound
+			count: 1
+			path: ../../src/Service/Registrar/YandexTracker/ApiClientFactory.php
