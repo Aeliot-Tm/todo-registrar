@@ -11,6 +11,10 @@ $yandexTrackerConfig = [
     'queue' => 'MYQUEUE',                           // key of Yandex Tracker queue (required)
     'issue' => [
         'addTagToLabels' => true,                   // add detected tag into list of issue tags or not
+        'allowedLabels' => ['tag-1', 'tag-2'],     // optional: list of allowed tags. If set, only tags from this
+                                                    //           list will be applied to issues. Tags from inline
+                                                    //           config, general config, and tag-based tags (if
+                                                    //           addTagToLabels=true) will be filtered to match this list.
         'assignee' => 'string',                     // login of Yandex Tracker user, which will be assigned to issue
                                                     // when "assignee-suffix" was not used with tag.
         'labels' => ['a-label'],                    // list of tags which will be set to issue
@@ -50,6 +54,40 @@ registrar:
     orgId: '%env(YANDEX_TRACKER_ORG_ID)%'
     token: '%env(YANDEX_TRACKER_TOKEN)%'
 ```
+
+## Allowed Labels
+
+The `allowedLabels` option allows you to restrict which tags can be applied to issues. This is useful when you want to ensure only predefined tags from your Yandex Tracker queue are used.
+
+### How it works
+
+When `allowedLabels` is set (non-empty array), the registrar filters all collected tags to keep only those that are present in the `allowedLabels` list. The collected tags come from:
+
+1. Tags specified in inline config (via `{EXTRAS: {labels: [...]}}`)
+2. Tags from general config (`labels` option)
+3. Tag-based tag (if `addTagToLabels` is `true`, format: `{tagPrefix}{tag}`)
+
+### Example
+
+```php
+'issue' => [
+    'addTagToLabels' => true,
+    'allowedLabels' => ['bug', 'feature', 'tech-debt'],
+    'labels' => ['tech-debt'],
+    'tagPrefix' => 'todo-',
+]
+```
+
+With this configuration:
+- If a TODO comment has `{EXTRAS: {labels: [bug, urgent]}}`, only `bug` will be applied (because `urgent` is not in `allowedLabels`)
+- The general config tag `tech-debt` will be applied
+- If the tag is `TODO`, the tag-based tag `todo-todo` will be filtered out (not in `allowedLabels`)
+
+### When to use
+
+- **Queue policy enforcement**: Ensure only approved tags are used
+- **Prevent typos**: Avoid creating issues with misspelled tags
+- **Tag management**: Control which tags can be created automatically
 
 ## Inline config
 

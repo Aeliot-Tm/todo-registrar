@@ -10,6 +10,10 @@ Description of keys of general config:
 $gitlabConfig = [
     'issue' => [
         'addTagToLabels' => true,                   // add detected tag into list of issue labels or not
+        'allowedLabels' => ['label-1', 'label-2'], // optional: list of allowed labels. If set, only labels from this
+                                                    //           list will be applied to issues. Labels from inline
+                                                    //           config, general config, and tag-based labels (if
+                                                    //           addTagToLabels=true) will be filtered to match this list.
         'assignee' => ['username1', 'username2'],   // String or array of strings. Identifiers of GitLab users (username or email),
                                                     // which will be assigned to issue when "assignee-suffix"
                                                     // was not used with tag.
@@ -87,6 +91,40 @@ For self-hosted GitLab instances, specify the host URL:
     // ...
 ]
 ```
+
+## Allowed Labels
+
+The `allowedLabels` option allows you to restrict which labels can be applied to issues. This is useful when you want to ensure only predefined labels from your project are used.
+
+### How it works
+
+When `allowedLabels` is set (non-empty array), the registrar filters all collected labels to keep only those that are present in the `allowedLabels` list. The collected labels come from:
+
+1. Labels specified in inline config (via `{EXTRAS: {labels: [...]}}`)
+2. Labels from general config (`labels` option)
+3. Tag-based label (if `addTagToLabels` is `true`, format: `{tagPrefix}{tag}`)
+
+### Example
+
+```php
+'issue' => [
+    'addTagToLabels' => true,
+    'allowedLabels' => ['bug', 'feature', 'tech-debt'],
+    'labels' => ['tech-debt'],
+    'tagPrefix' => 'todo-',
+]
+```
+
+With this configuration:
+- If a TODO comment has `{EXTRAS: {labels: [bug, urgent]}}`, only `bug` will be applied (because `urgent` is not in `allowedLabels`)
+- The general config label `tech-debt` will be applied
+- If the tag is `TODO`, the tag-based label `todo-todo` will be filtered out (not in `allowedLabels`)
+
+### When to use
+
+- **Project policy enforcement**: Ensure only approved labels are used
+- **Prevent typos**: Avoid creating issues with misspelled labels
+- **Label management**: Control which labels can be created automatically
 
 ## Inline config
 
