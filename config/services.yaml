@@ -17,6 +17,7 @@ services:
       - '../src/Service/Registrar/GitHub/'
       - '../src/Service/Registrar/GitLab/'
       - '../src/Service/Registrar/JIRA/'
+      - '../src/Service/Registrar/YandexTracker/'
       - '../src/Service/TodoBuilder.php'
       - '../src/Config.php'
 
@@ -28,6 +29,7 @@ services:
   Aeliot\TodoRegistrar\Service\Registrar\GitHub\GitHubRegistrarFactory: ~
   Aeliot\TodoRegistrar\Service\Registrar\GitLab\GitlabRegistrarFactory: ~
   Aeliot\TodoRegistrar\Service\Registrar\JIRA\JiraRegistrarFactory: ~
+  Aeliot\TodoRegistrar\Service\Registrar\YandexTracker\YandexTrackerRegistrarFactory: ~
 
   Symfony\Component\Validator\Validator\ValidatorInterface:
     factory: ['Aeliot\TodoRegistrar\Service\ValidatorFactory', 'create']

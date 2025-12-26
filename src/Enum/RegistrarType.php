@@ -20,5 +20,6 @@ enum RegistrarType: string
     case GitLab = 'GitLab';
     case JIRA = 'JIRA';
     case Redmine = 'Redmine';
+    case YandexTracker = 'YandexTracker';
     case YouTrack = 'YouTrack';
 }

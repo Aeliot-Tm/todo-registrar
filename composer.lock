@@ -4,8 +4,62 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b6ce3f0c903566a40817231695683742",
+    "content-hash": "891e37ca74331ee3f3c0373e8d1cbf26",
     "packages": [
+        {
+            "name": "bugrov/yandex-tracker",
+            "version": "0.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Aeliot-Tm/yandex-tracker.git",
+                "reference": "e27cba9fb9734b10ecc182531753d7c1c6e5a5b8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Aeliot-Tm/yandex-tracker/zipball/e27cba9fb9734b10ecc182531753d7c1c6e5a5b8",
+                "reference": "e27cba9fb9734b10ecc182531753d7c1c6e5a5b8",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^7.0.1",
+                "php": ">=7.4"
+            },
+            "require-dev": {
+                "symfony/var-dumper": "^5.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "BugrovWeb\\YandexTracker\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "bugrov",
+                    "email": "a.bugrov@intensa.ru"
+                }
+            ],
+            "description": "PHP SDK для работы с Яндекс.Трекером",
+            "keywords": [
+                "api",
+                "client",
+                "php",
+                "sdk",
+                "tracker",
+                "yandex",
+                "yandex tracker",
+                "трекер",
+                "яндекс",
+                "яндекс трекер"
+            ],
+            "support": {
+                "source": "https://github.com/Aeliot-Tm/yandex-tracker/tree/0.1.0"
+            },
+            "time": "2025-12-26T16:25:42+00:00"
+        },
         {
             "name": "clue/stream-filter",
             "version": "v1.7.0",

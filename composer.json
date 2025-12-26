@@ -39,11 +39,18 @@
         },
         "sort-packages": true
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/Aeliot-Tm/yandex-tracker"
+        }
+    ],
     "require": {
         "php": "^8.2",
         "ext-ctype": "*",
         "ext-mbstring": "*",
         "ext-tokenizer": "*",
+        "bugrov/yandex-tracker": "0.1.0",
         "guzzlehttp/guzzle": "^7.9",
         "http-interop/http-factory-guzzle": "^1.2",
         "knplabs/github-api": "^3.14",

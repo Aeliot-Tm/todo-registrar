@@ -1,0 +1,28 @@
+paths:
+  in: /app/src
+  exclude:
+    - vendor
+    - var
+    - tests
+
+registrar:
+  type: YandexTracker
+  queue: MYQUEUE
+  issue:
+    addTagToLabels: true
+    assignee: developer.login
+    labels:
+      - tech-debt
+      - from-code
+    priority: normal
+    tagPrefix: ''
+    type: task
+  service:
+    isCloud: '%env(YANDEX_TRACKER_IS_CLOUD)%'
+    orgId: '%env(YANDEX_TRACKER_ORG_ID)%'
+    token: '%env(YANDEX_TRACKER_TOKEN)%'
+
+tags:
+  - todo
+  - fixme
+
