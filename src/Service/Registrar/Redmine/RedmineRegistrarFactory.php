@@ -1,0 +1,57 @@
+<?php
+
+declare(strict_types=1);
+
+/*
+ * This file is part of the TODO Registrar project.
+ *
+ * (c) Anatoliy Melnikov <5785276@gmail.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+namespace Aeliot\TodoRegistrar\Service\Registrar\Redmine;
+
+use Aeliot\TodoRegistrar\Contracts\RegistrarFactoryInterface;
+use Aeliot\TodoRegistrar\Contracts\RegistrarInterface;
+use Aeliot\TodoRegistrar\Enum\RegistrarType;
+use Aeliot\TodoRegistrar\Exception\ConfigValidationException;
+use Aeliot\TodoRegistrar\Service\ValidatorFactory;
+use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
+
+#[AsTaggedItem(index: RegistrarType::Redmine->value)]
+final class RedmineRegistrarFactory implements RegistrarFactoryInterface
+{
+    public function create(array $config, ?ValidatorInterface $validator = null): RegistrarInterface
+    {
+        $validator ??= ValidatorFactory::create();
+        $issueConfig = ($config['issue'] ?? []) + ['project' => $config['project'] ?? null];
+        $generalIssueConfig = $this->createGeneralIssueConfig($issueConfig, $validator);
+        $client = (new ServiceFactory($config['service']))->createClient();
+
+        return new RedmineRegistrar(
+            new IssueFactory(
+                $generalIssueConfig,
+                new UserResolver($client),
+                new EntityResolver($client, $generalIssueConfig->getProjectIdentifier()),
+            ),
+            new IssueApiClient($client),
+        );
+    }
+
+    /**
+     * @param array<string,mixed> $issueConfig
+     */
+    public function createGeneralIssueConfig(array $issueConfig, ValidatorInterface $validator): GeneralIssueConfig
+    {
+        $generalIssueConfig = new GeneralIssueConfig($issueConfig);
+        $violations = $validator->validate($generalIssueConfig);
+        if (\count($violations) > 0) {
+            throw new ConfigValidationException($violations, '[Redmine] Invalid general issue config');
+        }
+
+        return $generalIssueConfig;
+    }
+}

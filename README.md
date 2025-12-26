@@ -219,6 +219,7 @@ Currently, todo-registrar supports the following issue trackers:
 | GitHub issues                                   | Supported via API tokens. See [description of configuration](docs/registrar/GitHub/config.md) |
 | [GitLab](https://about.gitlab.com/)             | Supported via API tokens (HTTP Token or OAuth). See [description of configuration](docs/registrar/GitLab/config.md) |
 | [JIRA](https://www.atlassian.com/software/jira) | Supported via API tokens. See [description of configuration](docs/registrar/JIRA/config.md)   |
+| [Redmine](https://www.redmine.org/)            | Supported via API keys or Basic Auth. See [description of configuration](docs/registrar/Redmine/config.md) |
 | [Yandex Tracker](https://tracker.yandex.com/)   | Supported via OAuth tokens. See [description of configuration](docs/registrar/YandexTracker/config.md) |
 
 ## Articles

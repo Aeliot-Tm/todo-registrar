@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "891e37ca74331ee3f3c0373e8d1cbf26",
+    "content-hash": "ccada962a6a0d349c4ff5d7852450c31",
     "packages": [
         {
             "name": "bugrov/yandex-tracker",
@@ -508,6 +508,70 @@
                 "source": "https://github.com/http-interop/http-factory-guzzle/tree/1.2.0"
             },
             "time": "2021-07-21T13:50:14+00:00"
+        },
+        {
+            "name": "kbsali/redmine-api",
+            "version": "v2.8.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kbsali/php-redmine-api.git",
+                "reference": "da184ccc68f067e1ebac884a4f009c6c8f6244d0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/kbsali/php-redmine-api/zipball/da184ccc68f067e1ebac884a4f009c6c8f6244d0",
+                "reference": "da184ccc68f067e1ebac884a4f009c6c8f6244d0",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-json": "*",
+                "ext-simplexml": "*",
+                "php": "^7.4 || ^8.0",
+                "psr/http-client": "^1.0",
+                "psr/http-factory": "^1.0"
+            },
+            "require-dev": {
+                "behat/behat": "^3.14",
+                "friendsofphp/php-cs-fixer": "^3.68",
+                "guzzlehttp/psr7": "^2",
+                "php-mock/php-mock-phpunit": "^2.13",
+                "phpstan/phpstan": "^2.1",
+                "phpunit/phpunit": "^9.5 || ^10.5 || ^11.2 || ^12.0.9"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Redmine\\": "src/Redmine/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Kevin Saliou",
+                    "email": "kevin@saliou.name",
+                    "homepage": "http://kevin.saliou.name"
+                },
+                {
+                    "name": "Artur Weigandt",
+                    "email": "artur@wlabs.de",
+                    "homepage": "https://wlabs.de"
+                }
+            ],
+            "description": "Redmine API client",
+            "homepage": "https://github.com/kbsali/php-redmine-api",
+            "keywords": [
+                "api",
+                "redmine"
+            ],
+            "support": {
+                "issues": "https://github.com/kbsali/php-redmine-api/issues",
+                "source": "https://github.com/kbsali/php-redmine-api/tree/v2.8.0"
+            },
+            "time": "2025-06-02T19:08:36+00:00"
         },
         {
             "name": "knplabs/github-api",

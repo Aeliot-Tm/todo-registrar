@@ -1,0 +1,50 @@
+# This file is part of the TODO Registrar project.
+#
+# (c) Anatoliy Melnikov <5785276@gmail.com>
+#
+# This source file is subject to the MIT license that is bundled
+# with this source code in the file LICENSE.
+
+paths:
+  in: .
+
+registrar:
+  type: Redmine
+  options:
+    issue:
+      addTagToLabels: false
+      labels: []
+      tagPrefix: tag-
+      summaryPrefix: '[TODO] '
+      # Assignee can be specified by username, login, email, or user ID (optional)
+      assignee: null  # or username: 'john', or user ID: 123
+      # Tracker can be specified by name or ID
+      tracker: Bugs  # or tracker ID: 1
+      # Priority can be specified by name or ID
+      priority: Low  # or priority ID: 3
+      # Category can be specified by name or ID (optional)
+      category: null  # or category name: 'Categ B'
+      # Fixed version can be specified by name or ID (optional)
+      fixed_version: null  # or version name: 'v0.0.2'
+      # Optional date fields (format: YYYY-MM-DD)
+      start_date: null
+      due_date: null
+      # Optional estimated hours
+      estimated_hours: null
+    # Project can be specified by identifier or ID
+    project: testing-project  # or project ID: 1
+    service:
+      # Redmine URL (or set REDMINE_URL environment variable)
+      # For local Redmine in Docker: use 'http://host.docker.internal:3000' instead of 'http://localhost:3000'
+      url: null  # or 'https://redmine.example.com'
+      # API key (recommended) or username (or set REDMINE_API_KEY or REDMINE_USERNAME environment variable)
+      apikeyOrUsername: null
+      # Password for Basic Auth (optional, or set REDMINE_PASSWORD environment variable)
+      # If password is provided, Basic Auth will be used (username:password)
+      # Otherwise, apikeyOrUsername will be treated as API key
+      password: null
+
+tags:
+  - todo
+  - fixme
+  - a_custom_tag

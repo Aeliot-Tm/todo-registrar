@@ -1,4 +1,5 @@
 .idea
+.mcp/serena/config/logs/
 .phpunit
 /tools
 /var
