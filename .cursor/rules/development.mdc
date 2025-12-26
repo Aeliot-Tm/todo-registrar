@@ -38,6 +38,5 @@ Follow these rules when developing:
    To execute shell scripts, add prefix `docker compose exec php-cli ` to them.
 
 9. After creating or updating *.php files, at the end of the work run these shell scripts:
-   1. PHP CS Fixer: `composer cs-fix`
+   1. PHP CS Fixer: `composer cs-fix -- --show-progress=none`
    2. PHPStan: `composer phpstan`
-

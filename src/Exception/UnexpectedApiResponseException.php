@@ -11,8 +11,8 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-use ComposerUnused\ComposerUnused\Configuration\Configuration;
+namespace Aeliot\TodoRegistrar\Exception;
 
-return static function (Configuration $config): Configuration {
-    return $config;
-};
+final class UnexpectedApiResponseException extends \RuntimeException
+{
+}
