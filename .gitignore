@@ -1,10 +1,8 @@
 .idea
 .mcp/serena/config/logs/
-.phpunit
 /tools
 /var
 /vendor
 /.env
-/.php-cs-fixer.cache
 /todo-registrar.phar
 /todo-registrar.phar.asc
