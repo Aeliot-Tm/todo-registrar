@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\YandexTracker;
 
-use __ComposerUnused__\JsonSchema\Exception\InvalidConfigException;
+use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
 use BugrovWeb\YandexTracker\Api\Tracker;
 
 /**
