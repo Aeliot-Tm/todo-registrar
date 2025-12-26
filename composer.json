@@ -93,9 +93,6 @@
         "require-check": "tools/composer-require-checker.phar check --config-file=scripts/composer-require-checker/config.json composer.json --output=text",
         "unused": "XDEBUG_MODE=off tools/composer-unused.phar unused -c ./scripts/composer-unused/config.php"
     },
-    "suggest": {
-        "staabm/phpstan-todo-by": "For the monitoring of outdated comments when ticket closed and TODO-comment should be removed"
-    },
     "support": {
         "issues": "https://github.com/Aeliot-Tm/todo-registrar/issues"
     }
