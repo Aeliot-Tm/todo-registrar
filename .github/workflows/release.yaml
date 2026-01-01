@@ -4,7 +4,6 @@ on:
   release:
     types:
       - created
-      - prereleased
 
 # See https://stackoverflow.com/a/72408109
 concurrency:
@@ -99,3 +98,11 @@ jobs:
         with:
           subject-name: ${{ env.TODO_REGISTRAR_PHAR }}
           subject-digest: sha256:${{ steps.upload_phar.outputs.artifact-digest }}
+
+      - name: Upload PHAR to the release
+        uses: softprops/action-gh-release@v2
+        with:
+          token: ${{ secrets.GH_RELEASE_TOKEN }}
+          files: |
+            ${{ env.TODO_REGISTRAR_PHAR }}
+            ${{ env.TODO_REGISTRAR_SIGN }}
