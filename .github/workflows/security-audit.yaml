@@ -1,7 +1,17 @@
 name: Security Audit
 
 on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - reopened
+      - review_requested
   push:
+    branches:
+      - main
+      - 'rc*'
   schedule:
     - cron: '45 12 * * *'
 
