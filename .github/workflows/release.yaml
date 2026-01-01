@@ -18,6 +18,12 @@ jobs:
       TODO_REGISTRAR_PHAR: todo-registrar.phar
       TODO_REGISTRAR_SIGN: todo-registrar.phar.asc
 
+    permissions:
+      artifact-metadata: write
+      attestations: write
+      contents: read
+      id-token: write
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -76,9 +82,18 @@ jobs:
         run: gpg --verify ${{ env.TODO_REGISTRAR_SIGN }} ${{ env.TODO_REGISTRAR_PHAR }}
 
       - name: Upload PHAR to the release
-        uses: softprops/action-gh-release@v2
+        uses: actions/upload-artifact@v4
+        id: upload_phar
         with:
-          token: ${{ secrets.GH_RELEASE_TOKEN }}
-          files: |
-            ${{ env.TODO_REGISTRAR_PHAR }}
-            ${{ env.TODO_REGISTRAR_SIGN }}
+          path: ${{ env.TODO_REGISTRAR_PHAR }}
+
+      - name: Upload PHAR SIGN to the release
+        uses: actions/upload-artifact@v4
+        id: upload_sign
+        with:
+          path: ${{ env.TODO_REGISTRAR_SIGN }}
+
+      - uses: actions/attest-build-provenance@v3
+        with:
+          subject-name: ${{ env.TODO_REGISTRAR_PHAR }}
+          subject-digest: sha256:${{ steps.upload_phar.outputs.artifact-digest }}
