@@ -85,12 +85,14 @@ jobs:
         uses: actions/upload-artifact@v4
         id: upload_phar
         with:
+          name: ${{ env.TODO_REGISTRAR_PHAR }}
           path: ${{ env.TODO_REGISTRAR_PHAR }}
 
       - name: Upload PHAR SIGN to the release
         uses: actions/upload-artifact@v4
         id: upload_sign
         with:
+          name: ${{ env.TODO_REGISTRAR_SIGN }}
           path: ${{ env.TODO_REGISTRAR_SIGN }}
 
       - uses: actions/attest-build-provenance@v3
