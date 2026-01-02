@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Exception;
 
-final class InvalidConfigException extends \InvalidArgumentException
+use Aeliot\TodoRegistrarContracts\Exception\InvalidConfigException as InvalidConfigExceptionInterface;
+
+final class InvalidConfigException extends \InvalidArgumentException implements InvalidConfigExceptionInterface
 {
 }

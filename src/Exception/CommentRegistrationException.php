@@ -15,8 +15,9 @@ namespace Aeliot\TodoRegistrar\Exception;
 
 use Aeliot\TodoRegistrar\Dto\Comment\CommentPart;
 use Aeliot\TodoRegistrar\Dto\Registrar\Todo;
+use Aeliot\TodoRegistrarContracts\Exception\RegistrarException;
 
-final class CommentRegistrationException extends \RuntimeException
+final class CommentRegistrationException extends \RuntimeException implements RegistrarException
 {
     public function __construct(
         private Todo $todo,

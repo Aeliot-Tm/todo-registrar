@@ -13,9 +13,20 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Contracts;
 
+use Aeliot\TodoRegistrarContracts\FinderInterface as FinderContractInterface;
+
 /**
+ * @deprecated use {@see FinderContractInterface }
+ *
  * @template-extends \IteratorAggregate<non-empty-string, \SplFileInfo>
  */
-interface FinderInterface extends \IteratorAggregate, \Countable
+interface FinderInterface extends \Countable, \IteratorAggregate, FinderContractInterface
 {
 }
+
+trigger_deprecation(
+    'aeliot/todo-registrar',
+    '2.3.0',
+    'Use interfaces from "aeliot/todo-registrar-contracts". Interface %s will be removed in version 3.0.0.',
+    FinderInterface::class,
+);

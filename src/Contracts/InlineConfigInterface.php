@@ -13,9 +13,18 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Contracts;
 
+use Aeliot\TodoRegistrarContracts\InlineConfigInterface as InlineConfigContractInterface;
+
 /**
- * @template-extends \ArrayAccess<string,mixed>
+ * @deprecated use {@see InlineConfigContractInterface }
  */
-interface InlineConfigInterface extends \ArrayAccess
+interface InlineConfigInterface extends InlineConfigContractInterface
 {
 }
+
+trigger_deprecation(
+    'aeliot/todo-registrar',
+    '2.3.0',
+    'Use interfaces from "aeliot/todo-registrar-contracts". Interface %s will be removed in version 3.0.0.',
+    InlineConfigInterface::class,
+);

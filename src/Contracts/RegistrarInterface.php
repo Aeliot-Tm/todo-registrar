@@ -13,6 +13,11 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Contracts;
 
+use Aeliot\TodoRegistrarContracts\RegistrarInterface as RegistrarContractInterface;
+
+/**
+ * @deprecated use {@see RegistrarContractInterface }
+ */
 interface RegistrarInterface
 {
     /**
@@ -20,3 +25,10 @@ interface RegistrarInterface
      */
     public function register(TodoInterface $todo): string;
 }
+
+trigger_deprecation(
+    'aeliot/todo-registrar',
+    '2.3.0',
+    'Use interfaces from "aeliot/todo-registrar-contracts". Interface %s will be removed in version 3.0.0.',
+    RegistrarInterface::class,
+);

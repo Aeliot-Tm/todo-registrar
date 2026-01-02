@@ -13,9 +13,10 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Exception;
 
+use Aeliot\TodoRegistrarContracts\Exception\InvalidConfigException as InvalidConfigExceptionInterface;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
-final class ConfigValidationException extends \RuntimeException
+final class ConfigValidationException extends \RuntimeException implements InvalidConfigExceptionInterface
 {
     public function __construct(
         private readonly ConstraintViolationListInterface $violations,
