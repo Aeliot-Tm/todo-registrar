@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Exception;
 
-class NoLineException extends \DomainException
+use Aeliot\TodoRegistrarContracts\Exception\RegistrarException;
+
+class NoLineException extends \DomainException implements RegistrarException
 {
 }

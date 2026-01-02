@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Exception;
 
-final class UnexpectedApiResponseException extends \RuntimeException
+use Aeliot\TodoRegistrarContracts\Exception\RegistrarException;
+
+final class UnexpectedApiResponseException extends \RuntimeException implements RegistrarException
 {
 }

@@ -13,7 +13,9 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Exception;
 
-final class CollectionDuplicatedKeyException extends \DomainException
+use Aeliot\TodoRegistrarContracts\Exception\RegistrarException;
+
+final class CollectionDuplicatedKeyException extends \DomainException implements RegistrarException
 {
     public function __construct(string $key)
     {
