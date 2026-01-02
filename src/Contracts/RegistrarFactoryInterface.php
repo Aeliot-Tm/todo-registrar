@@ -14,9 +14,15 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Contracts;
 
 use Aeliot\TodoRegistrar\Exception\ConfigValidationException;
+use Aeliot\TodoRegistrarContracts\RegistrarFactoryInterface as RegistrarFactoryContractInterface;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
+/**
+ * @deprecated use {@see RegistrarFactoryContractInterface }. Note the second parameter `$validator` is removed
+ *             in new interface but will be passed implicitly. Main purpose is to not enforce using of it
+ *             and to reduce dependencies.
+ */
 #[AutoconfigureTag('aeliot.todo_registrar.registrar_factory')]
 interface RegistrarFactoryInterface
 {
@@ -28,3 +34,10 @@ interface RegistrarFactoryInterface
      */
     public function create(array $config, ?ValidatorInterface $validator = null): RegistrarInterface;
 }
+
+trigger_deprecation(
+    'aeliot/todo-registrar',
+    '2.3.0',
+    'Use interfaces from "aeliot/todo-registrar-contracts". Interface %s will be removed in version 3.0.0.',
+    RegistrarFactoryInterface::class,
+);

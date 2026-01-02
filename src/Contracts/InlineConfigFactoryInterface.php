@@ -13,10 +13,22 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Contracts;
 
-interface InlineConfigFactoryInterface
+use Aeliot\TodoRegistrarContracts\InlineConfigFactoryInterface as InlineConfigFactoryContractInterface;
+
+/**
+ * @deprecated use {@see InlineConfigFactoryContractInterface }
+ */
+interface InlineConfigFactoryInterface extends InlineConfigFactoryContractInterface
 {
     /**
      * @param array<array-key,mixed> $input
      */
     public function getInlineConfig(array $input): InlineConfigInterface;
 }
+
+trigger_deprecation(
+    'aeliot/todo-registrar',
+    '2.3.0',
+    'Use interfaces from "aeliot/todo-registrar-contracts". Interface %s will be removed in version 3.0.0.',
+    InlineConfigFactoryInterface::class,
+);

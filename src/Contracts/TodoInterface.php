@@ -13,7 +13,12 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Contracts;
 
-interface TodoInterface
+use Aeliot\TodoRegistrarContracts\TodoInterface as TodoContractInterface;
+
+/**
+ * @deprecated use {@see TodoContractInterface }
+ */
+interface TodoInterface extends TodoContractInterface
 {
     public function getAssignee(): ?string;
 
@@ -25,3 +30,10 @@ interface TodoInterface
 
     public function getTag(): string;
 }
+
+trigger_deprecation(
+    'aeliot/todo-registrar',
+    '2.3.0',
+    'Use interfaces from "aeliot/todo-registrar-contracts". Interface %s will be removed in version 3.0.0.',
+    TodoContractInterface::class,
+);

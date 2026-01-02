@@ -13,10 +13,22 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Contracts;
 
-interface InlineConfigReaderInterface
+use Aeliot\TodoRegistrarContracts\InlineConfigReaderInterface as InlineConfigReaderContractInterface;
+
+/**
+ * @deprecated use {@see InlineConfigReaderContractInterface }
+ */
+interface InlineConfigReaderInterface extends InlineConfigReaderContractInterface
 {
     /**
      * @return array<array-key,mixed>
      */
     public function getInlineConfig(string $input): array;
 }
+
+trigger_deprecation(
+    'aeliot/todo-registrar',
+    '2.3.0',
+    'Use interfaces from "aeliot/todo-registrar-contracts". Interface %s will be removed in version 3.0.0.',
+    InlineConfigReaderInterface::class,
+);
