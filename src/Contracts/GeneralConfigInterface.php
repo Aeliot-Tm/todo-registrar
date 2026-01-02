@@ -46,7 +46,7 @@ trigger_deprecation(
     'aeliot/todo-registrar',
     '2.3.0',
     'Use interfaces from "aeliot/todo-registrar-contracts". '
-    .'Interface %s will be removed in version 3.0.0 and method "getRegistrarType" will not support %s.',
+    . 'Interface %s will be removed in version 3.0.0 and method "getRegistrarType" will not support %s.',
     GeneralConfigInterface::class,
     RegistrarType::class,
 );
