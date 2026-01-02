@@ -17,8 +17,6 @@ use Aeliot\TodoRegistrarContracts\InlineConfigInterface as InlineConfigContractI
 
 /**
  * @deprecated use {@see InlineConfigContractInterface }
- *
- * @template-extends \ArrayAccess<string,mixed>
  */
 interface InlineConfigInterface extends InlineConfigContractInterface
 {
