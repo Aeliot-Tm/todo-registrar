@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c044c1bd70a763dd349e4866321d3e41",
+    "content-hash": "f4f357b8e936e961503dc67fdb5e3097",
     "packages": [
         {
             "name": "aeliot/todo-registrar-contracts",
-            "version": "1.0.1",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Aeliot-Tm/todo-registrar-contracts.git",
-                "reference": "0cee5454bb4ddee15030620bdb7573ab568aac73"
+                "reference": "15ea6f86457be4776f2719d502c4b6d8a9fd7f6a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Aeliot-Tm/todo-registrar-contracts/zipball/0cee5454bb4ddee15030620bdb7573ab568aac73",
-                "reference": "0cee5454bb4ddee15030620bdb7573ab568aac73",
+                "url": "https://api.github.com/repos/Aeliot-Tm/todo-registrar-contracts/zipball/15ea6f86457be4776f2719d502c4b6d8a9fd7f6a",
+                "reference": "15ea6f86457be4776f2719d502c4b6d8a9fd7f6a",
                 "shasum": ""
             },
             "require": {
@@ -54,9 +54,9 @@
             ],
             "support": {
                 "issues": "https://github.com/Aeliot-Tm/todo-registrar-contracts/issues",
-                "source": "https://github.com/Aeliot-Tm/todo-registrar-contracts/tree/1.0.1"
+                "source": "https://github.com/Aeliot-Tm/todo-registrar-contracts/tree/1.0.2"
             },
-            "time": "2026-01-02T17:40:06+00:00"
+            "time": "2026-01-02T18:45:52+00:00"
         },
         {
             "name": "bugrov/yandex-tracker",
