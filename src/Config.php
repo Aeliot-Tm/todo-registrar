@@ -13,19 +13,19 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar;
 
+use Aeliot\TodoRegistrar\Contracts\FinderInterface;
 use Aeliot\TodoRegistrar\Contracts\GeneralConfigInterface;
 use Aeliot\TodoRegistrar\Contracts\InlineConfigFactoryInterface;
 use Aeliot\TodoRegistrar\Contracts\InlineConfigReaderInterface;
 use Aeliot\TodoRegistrar\Contracts\RegistrarFactoryInterface;
 use Aeliot\TodoRegistrar\Enum\RegistrarType;
-use Aeliot\TodoRegistrar\Service\File\Finder;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 #[Assert\Callback('validate')]
 class Config implements GeneralConfigInterface
 {
-    private Finder $finder;
+    private FinderInterface $finder;
     private ?InlineConfigFactoryInterface $InlineConfigFactory = null;
     private ?InlineConfigReaderInterface $inlineConfigReader = null;
     /**
@@ -38,12 +38,12 @@ class Config implements GeneralConfigInterface
      */
     private array $tags = ['todo', 'fixme'];
 
-    public function getFinder(): Finder
+    public function getFinder(): FinderInterface
     {
         return $this->finder;
     }
 
-    public function setFinder(Finder $finder): self
+    public function setFinder(FinderInterface $finder): self
     {
         $this->finder = $finder;
 
