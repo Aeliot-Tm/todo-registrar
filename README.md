@@ -1,9 +1,9 @@
 ![logo](docs/logo.svg)
 
 [![GitHub Release](https://img.shields.io/github/v/release/Aeliot-Tm/todo-registrar?label=Release&labelColor=black)](https://packagist.org/packages/aeliot/todo-registrar)
-[![WFS](https://github.com/Aeliot-Tm/todo-registrar/actions/workflows/automated_testing.yml/badge.svg?branch=main)](https://github.com/Aeliot-Tm/todo-registrar/actions)
+[![WFS](https://github.com/Aeliot-Tm/todo-registrar/actions/workflows/automated_testing.yml/badge.svg?branch=main)](https://github.com/Aeliot-Tm/todo-registrar/actions/workflows/automated_testing.yml?query=branch%3Amain)
 [![Security Audit](https://github.com/Aeliot-Tm/todo-registrar/actions/workflows/security-audit.yaml/badge.svg?branch=main)](https://github.com/Aeliot-Tm/todo-registrar/actions/workflows/security-audit.yaml?query=branch%3Amain)
-[![GitHub License](https://img.shields.io/github/license/Aeliot-Tm/todo-registrar?label=License&labelColor=black)](LICENSE)
+[![GitHub License](https://img.shields.io/github/license/Aeliot-Tm/todo-registrar?label=License&labelColor=black)](https://github.com/Aeliot-Tm/todo-registrar?tab=MIT-1-ov-file)
 
 It takes TODO/FIXME and other comments from your php-code and register them as issues in Issue Trackers like
 JIRA. With all necessary labels, linked issues and so on.
