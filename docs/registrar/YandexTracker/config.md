@@ -40,7 +40,7 @@ You may pass different comfortable literals to it
 | true | true (bool or string), 1 (int or string), y (string), yes (string) |
 | false | false (bool or string), 0 (int or string), n (string), no (string), not (string) |
 
-## General config
+## PHP configuration
 
 Put config php-file `.todo-registrar.php` in the root directory.
 See [example](../../../examples/YandexTracker/.todo-registrar.php).
