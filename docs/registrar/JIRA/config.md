@@ -1,4 +1,4 @@
-# Configuration of JIRA-registrar
+# Configuration of JIRA Registrar
 
 ## General config
 

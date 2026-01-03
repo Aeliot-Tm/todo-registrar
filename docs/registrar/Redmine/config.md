@@ -1,4 +1,4 @@
-# Configuration of Redmine-registrar
+# Configuration of Redmine Registrar
 
 ## General config
 

@@ -1,4 +1,4 @@
-# Configuration of GitLab-registrar
+# Configuration of GitLab Registrar
 
 ## General config
 

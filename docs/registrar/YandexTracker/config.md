@@ -1,4 +1,4 @@
-# Configuration of YandexTracker-registrar
+# Configuration of Yandex Tracker Registrar
 
 ## General config
 

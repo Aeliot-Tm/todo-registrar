@@ -1,4 +1,4 @@
-# Configuration of GitHub-registrar
+# Configuration of GitHub Registrar
 
 ## General config
 
