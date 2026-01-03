@@ -15,6 +15,9 @@ namespace Aeliot\TodoRegistrar\Service\Registrar\GitHub;
 
 use Aeliot\TodoRegistrarContracts\TodoInterface;
 
+/**
+ * @internal
+ */
 final class IssueFactory
 {
     public function __construct(private GeneralIssueConfig $generalIssueConfig)

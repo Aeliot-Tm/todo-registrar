@@ -18,6 +18,9 @@ use Aeliot\TodoRegistrar\Service\InlineConfig\ExtrasReader;
 use Aeliot\TodoRegistrar\Service\InlineConfig\InlineConfigFactory;
 use Aeliot\TodoRegistrarContracts\GeneralConfigInterface;
 
+/**
+ * @internal
+ */
 final readonly class TodoBuilderFactory
 {
     public function __construct(

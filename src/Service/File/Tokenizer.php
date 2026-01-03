@@ -13,6 +13,9 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\File;
 
+/**
+ * @internal
+ */
 class Tokenizer
 {
     /**

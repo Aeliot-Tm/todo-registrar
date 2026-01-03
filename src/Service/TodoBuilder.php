@@ -20,6 +20,9 @@ use Aeliot\TodoRegistrarContracts\InlineConfigFactoryInterface;
 use Aeliot\TodoRegistrarContracts\InlineConfigInterface;
 use Aeliot\TodoRegistrarContracts\InlineConfigReaderInterface;
 
+/**
+ * @internal
+ */
 class TodoBuilder
 {
     public function __construct(

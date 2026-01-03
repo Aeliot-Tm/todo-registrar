@@ -15,6 +15,9 @@ namespace Aeliot\TodoRegistrar\Service\Registrar\Redmine;
 
 use Aeliot\TodoRegistrarContracts\TodoInterface;
 
+/**
+ * @internal
+ */
 final readonly class IssueFactory
 {
     public function __construct(

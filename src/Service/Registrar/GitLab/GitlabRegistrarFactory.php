@@ -20,6 +20,9 @@ use Aeliot\TodoRegistrarContracts\RegistrarInterface;
 use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
+/**
+ * @internal
+ */
 #[AsTaggedItem(index: RegistrarType::GitLab->value)]
 final class GitlabRegistrarFactory implements RegistrarFactoryInterface
 {
