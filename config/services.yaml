@@ -41,5 +41,7 @@ services:
   Aeliot\TodoRegistrar\Service\Registrar\Redmine\RedmineRegistrarFactory: ~
   Aeliot\TodoRegistrar\Service\Registrar\YandexTracker\YandexTrackerRegistrarFactory: ~
 
+  Aeliot\EnvResolver\Service\StringProcessor: ~
+
   Symfony\Component\Validator\Validator\ValidatorInterface:
     factory: ['Aeliot\TodoRegistrar\Service\ValidatorFactory', 'create']

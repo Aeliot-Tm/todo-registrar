@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Test\Unit;
 
+use Aeliot\EnvResolver\Service\StringProcessor;
 use Aeliot\TodoRegistrar\Service\Config\ArrayConfigFactory;
 use Aeliot\TodoRegistrar\Service\Config\ConfigFactory;
 use Aeliot\TodoRegistrar\Service\Config\YamlParser;
@@ -29,7 +30,10 @@ final class ConfigFactoryTest extends TestCase
     public function testYamlConfig(): void
     {
         $validator = ValidatorFactory::create();
-        $config = (new ConfigFactory(new ArrayConfigFactory($validator), new YamlParser()))->create(__DIR__ . '/../fixtures/config/simple_config.yaml');
+        $config = (new ConfigFactory(
+            new ArrayConfigFactory($validator),
+            new YamlParser(new StringProcessor()))
+        )->create(__DIR__ . '/../fixtures/config/simple_config.yaml');
 
         self::assertSame('App\RegistrarFactory', $config->getRegistrarType());
         self::assertSame([

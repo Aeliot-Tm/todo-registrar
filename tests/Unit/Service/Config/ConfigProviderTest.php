@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Test\Unit\Service\Config;
 
+use Aeliot\EnvResolver\Service\StringProcessor;
 use Aeliot\TodoRegistrar\Enum\RegistrarType;
 use Aeliot\TodoRegistrar\Exception\ConfigValidationException;
 use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
@@ -50,7 +51,7 @@ final class ConfigProviderTest extends TestCase
             new ConfigFileGuesser($absolutePathMaker),
         );
         $arrayConfigFactory = new ArrayConfigFactory(self::$validator);
-        $yamlParser = new YamlParser();
+        $yamlParser = new YamlParser(new StringProcessor());
         $configFactory = new ConfigFactory($arrayConfigFactory, $yamlParser);
         $stdinConfigFactory = new StdinConfigFactory($arrayConfigFactory, $yamlParser);
 
