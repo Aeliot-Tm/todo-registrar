@@ -13,11 +13,11 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Test\Unit\Service\Registrar\Redmine;
 
-use Aeliot\TodoRegistrar\Contracts\TodoInterface;
 use Aeliot\TodoRegistrar\Service\Registrar\Redmine\Issue;
 use Aeliot\TodoRegistrar\Service\Registrar\Redmine\IssueApiClient;
 use Aeliot\TodoRegistrar\Service\Registrar\Redmine\IssueFactory;
 use Aeliot\TodoRegistrar\Service\Registrar\Redmine\RedmineRegistrar;
+use Aeliot\TodoRegistrarContracts\TodoInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 

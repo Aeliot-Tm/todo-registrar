@@ -13,9 +13,9 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\InlineConfig;
 
-use Aeliot\TodoRegistrar\Contracts\InlineConfigFactoryInterface;
-use Aeliot\TodoRegistrar\Contracts\InlineConfigInterface;
 use Aeliot\TodoRegistrar\Dto\InlineConfig\InlineConfig;
+use Aeliot\TodoRegistrarContracts\InlineConfigFactoryInterface;
+use Aeliot\TodoRegistrarContracts\InlineConfigInterface;
 
 final class InlineConfigFactory implements InlineConfigFactoryInterface
 {

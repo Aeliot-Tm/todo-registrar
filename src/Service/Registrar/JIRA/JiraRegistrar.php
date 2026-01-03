@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\JIRA;
 
-use Aeliot\TodoRegistrar\Contracts\RegistrarInterface;
-use Aeliot\TodoRegistrar\Contracts\TodoInterface;
+use Aeliot\TodoRegistrarContracts\RegistrarInterface;
+use Aeliot\TodoRegistrarContracts\TodoInterface;
 use JiraRestApi\Issue\IssueService;
 
 final readonly class JiraRegistrar implements RegistrarInterface

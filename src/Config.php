@@ -13,12 +13,12 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar;
 
-use Aeliot\TodoRegistrar\Contracts\FinderInterface;
-use Aeliot\TodoRegistrar\Contracts\GeneralConfigInterface;
-use Aeliot\TodoRegistrar\Contracts\InlineConfigFactoryInterface;
-use Aeliot\TodoRegistrar\Contracts\InlineConfigReaderInterface;
-use Aeliot\TodoRegistrar\Contracts\RegistrarFactoryInterface;
 use Aeliot\TodoRegistrar\Enum\RegistrarType;
+use Aeliot\TodoRegistrarContracts\FinderInterface;
+use Aeliot\TodoRegistrarContracts\GeneralConfigInterface;
+use Aeliot\TodoRegistrarContracts\InlineConfigFactoryInterface;
+use Aeliot\TodoRegistrarContracts\InlineConfigReaderInterface;
+use Aeliot\TodoRegistrarContracts\RegistrarFactoryInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
@@ -32,7 +32,7 @@ class Config implements GeneralConfigInterface
      * @var array<string,mixed>
      */
     private array $registrarConfig;
-    private RegistrarType|RegistrarFactoryInterface|string $registrarType;
+    private RegistrarFactoryInterface|string $registrarType;
     /**
      * @var string[]
      */
@@ -75,7 +75,7 @@ class Config implements GeneralConfigInterface
         return $this->registrarConfig;
     }
 
-    public function getRegistrarType(): RegistrarType|RegistrarFactoryInterface|string
+    public function getRegistrarType(): RegistrarFactoryInterface|string
     {
         return $this->registrarType;
     }
@@ -85,6 +85,10 @@ class Config implements GeneralConfigInterface
      */
     public function setRegistrar(RegistrarType|RegistrarFactoryInterface|string $type, array $config): self
     {
+        if ($type instanceof RegistrarType) {
+            $type = $type->value;
+        }
+
         $this->registrarType = $type;
         $this->registrarConfig = $config;
 

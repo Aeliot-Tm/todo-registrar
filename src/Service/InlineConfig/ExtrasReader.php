@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\InlineConfig;
 
-use Aeliot\TodoRegistrar\Contracts\InlineConfigReaderInterface;
 use Aeliot\TodoRegistrar\Exception\InvalidInlineConfigFormatException;
+use Aeliot\TodoRegistrarContracts\InlineConfigReaderInterface;
 
 final class ExtrasReader implements InlineConfigReaderInterface
 {

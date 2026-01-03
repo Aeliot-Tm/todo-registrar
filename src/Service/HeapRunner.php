@@ -14,8 +14,6 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Service;
 
 use Aeliot\TodoRegistrar\Console\OutputAdapter;
-use Aeliot\TodoRegistrar\Contracts\FinderInterface;
-use Aeliot\TodoRegistrar\Contracts\RegistrarInterface;
 use Aeliot\TodoRegistrar\Dto\Comment\CommentPart;
 use Aeliot\TodoRegistrar\Dto\FileHeap;
 use Aeliot\TodoRegistrar\Dto\ProcessStatistic;
@@ -25,6 +23,8 @@ use Aeliot\TodoRegistrar\Service\Comment\Detector as CommentDetector;
 use Aeliot\TodoRegistrar\Service\Comment\Extractor as CommentExtractor;
 use Aeliot\TodoRegistrar\Service\File\Saver;
 use Aeliot\TodoRegistrar\Service\File\Tokenizer;
+use Aeliot\TodoRegistrarContracts\FinderInterface;
+use Aeliot\TodoRegistrarContracts\RegistrarInterface;
 
 final readonly class HeapRunner
 {
