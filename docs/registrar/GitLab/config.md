@@ -2,35 +2,37 @@
 
 ## General config
 
-Put config php-file `.todo-registrar.php` in the root directory.
-See [example](../../../examples/GitLab/.todo-registrar.php).
+Put either yaml-config-file `.todo-registrar.yaml` ([example](../../../examples/GitLab/.todo-registrar.yaml))
+or php-config-file `.todo-registrar.php` ([example](../../../examples/GitLab/.todo-registrar.php)) in the root directory.
 
 Description of keys of general config:
 ```php
-$gitlabConfig = [
+$config->setRegistrar('GitLab', [
     'issue' => [
-        'addTagToLabels' => true,                   // add detected tag into list of issue labels or not
-        'allowedLabels' => ['label-1', 'label-2'], // optional: list of allowed labels. If set, only labels from this
+        'assignee' => ['username1', 'username2'],   // optional: String or array of strings. Identifiers of GitLab users (username or email),
+                                                    //           which will be assigned to issue when "assignee-suffix"
+                                                    //           was not used with tag.
+        'labels' => ['label-1', 'label-2'],         // optional: list of labels which will be set to issue
+        'addTagToLabels' => true,                   // optional: add detected tag into list of issue labels or not
+        'tagPrefix' => 'tag-',                      // optional: prefix which will be added to tag when "addTagToLabels=true"
+        'allowedLabels' => ['label-1', 'label-2'],  // optional: list of allowed labels. If set, only labels from this
                                                     //           list will be applied to issues. Labels from inline
                                                     //           config, general config, and tag-based labels (if
                                                     //           addTagToLabels=true) will be filtered to match this list.
-        'assignee' => ['username1', 'username2'],   // String or array of strings. Identifiers of GitLab users (username or email),
-                                                    // which will be assigned to issue when "assignee-suffix"
-                                                    // was not used with tag.
-        'labels' => ['label-1', 'label-2'],         // list of labels which will be set to issue
-        'tagPrefix' => 'tag-',                      // prefix which will be added to tag when "addTagToLabels=true"
-        'milestone' => 123,                         // either ID (integer: 123) or title (string) of milestone (optional)
-        'due_date' => '2025-12-31',                 // due date in format YYYY-MM-DD (optional)
+        'due_date' => '2025-12-31',                 // optional: due date in format YYYY-MM-DD (optional)
+        'milestone' => 123,                         // optional: either ID (integer: 123) or title (string) of milestone (optional)
     ],
     'service' => [
-        'personalAccessToken' => 'string',          // personal access token (for http_token auth method)
-        'oauthToken' => 'string',                   // OAuth token (for oauth_token auth method)
-        'host' => 'https://gitlab.com',             // GitLab host URL (optional, defaults to https://gitlab.com)
-        'project' => 123,                           // either project ID (integer: 123) or project path (string: owner/repo)
-                                                    // (projectPath takes priority if both are specified)
+        'project' => 123,                           // required: either project ID (integer: 123) or project path (string: owner/repo)
+                                                    //           (projectPath takes priority if both are specified)
+        'host' => 'https://gitlab.com',             // optional: GitLab host URL (optional, defaults to https://gitlab.com)
+        'personalAccessToken' => 'string',          // optional: personal access token (for http_token auth method)
+        'oauthToken' => 'string',                   // optional: OAuth token (for oauth_token auth method)
     ]
-];
+]);
 ```
+
+**Note:** either `personalAccessToken` or `oauthToken` is required.
 
 ## Authentication methods
 
@@ -140,4 +142,3 @@ Supported keys of inline config:
 - **Milestones**: Milestone IDs are validated before creating the issue. If a milestone doesn't exist, an error will be thrown.
 - **Assignees**: Usernames and emails are automatically resolved to user IDs via GitLab Users API. Results are cached to optimize performance.
 - **Project Path vs ID**: Using <project path> is more readable but may require an additional API call. Using <project id> is more efficient.
-
