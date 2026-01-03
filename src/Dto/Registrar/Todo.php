@@ -39,6 +39,9 @@ class Todo implements TodoInterface
         return $this->description;
     }
 
+    /**
+     * @internal
+     */
     public function getCommentPart(): CommentPart
     {
         return $this->commentPart;
@@ -59,6 +62,9 @@ class Todo implements TodoInterface
         return $this->tag;
     }
 
+    /**
+     * @internal
+     */
     public function injectKey(string $key): void
     {
         $this->commentPart->injectKey($key);
