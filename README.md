@@ -86,7 +86,7 @@ composer require --dev aeliot/todo-registrar
 
 ## Using
 
-1. Create [configuration file](#configuration-file)
+1. Create [configuration file](docs/config/global_config.md)
 2. Call shell script [in command line](#command-line).
 3. Commit updated files. You may config your pipeline/job on CI which commits updates.
 
@@ -96,10 +96,10 @@ First of all, pay attention to **available options:**
 
 | Long Form | Short From | Description |
 |---|---|---|
-| `--config=/path/to/config` | `-c /path/to/config` | Path to configuration file when it is not in default place |
+| `--config=/path/to/config` | `-c /path/to/config` | Path to [configuration file](docs/config/global_config.md) when it is not in default place |
+| | `-q`, `-v`, `-vv`, `-vvv` | Verbosity levels. The command uses [Symfony Console verbosity levels](https://symfony.com/doc/7.4/console/verbosity.html) |
 
-**Verbosity levels:** The command uses Symfony Console verbosity levels.
-See [Symfony Console Verbosity documentation](https://symfony.com/doc/7.4/console/verbosity.html) for details about `-q`, `-v`, `-vv`, `-vvv` options.
+**NOTE:** You may pass a special value`--config=STDIN` then [script obtains YAML from STDIN](docs/config/global_config_yaml.md#loading-from-stdin).
 
 #### Using with Docker
 
@@ -161,23 +161,6 @@ So, you have to configure you integration depending on used git-server:
 
 1. [GitLab CI](docs/GitlLab/integration_on_ci.md)
 2. [GitHub Actions](docs/GitHub/workflow.md)
-
-## Configuration file
-
-Configuration file can either in YAML format ([see documentation about config YAML-file](docs/config/global_config_yaml.md))
-or PHP format ([see documentation about config PHP-file](docs/config/global_config_php.md)). You may define custom path
-to config with option `--config=/custom/path/to/cofig`. When option `--config` is omitted then script tries to find
-default config file in the root directory of project (exactly in directory from which the script was called).
-
-The orders of files which are looked for:
-1. `.todo-registrar.yaml`
-2. `.todo-registrar.dist.yaml`
-3. `.todo-registrar.php`
-4. `.todo-registrar.dist.php`
-5. `.todo-registrar.yml`
-6. `.todo-registrar.dist.yml`
-
-Otherwise, you may pass a special value`--config=STDIN` and [it will be obtained from STDIN](docs/config/global_config_yaml.md#loading-from-stdin).
 
 ## Inline Configuration
 
