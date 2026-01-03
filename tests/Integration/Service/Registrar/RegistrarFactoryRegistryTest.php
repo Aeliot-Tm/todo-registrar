@@ -15,6 +15,7 @@ namespace Aeliot\TodoRegistrar\Test\Integration\Service\Registrar;
 
 use Aeliot\TodoRegistrar\Console\ContainerBuilder;
 use Aeliot\TodoRegistrar\Enum\RegistrarType;
+use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
 use Aeliot\TodoRegistrar\Service\Registrar\GitHub\GitHubRegistrarFactory;
 use Aeliot\TodoRegistrar\Service\Registrar\GitLab\GitlabRegistrarFactory;
 use Aeliot\TodoRegistrar\Service\Registrar\JIRA\JiraRegistrarFactory;
@@ -65,7 +66,7 @@ final class RegistrarFactoryRegistryTest extends TestCase
     #[DataProvider('getNotImplementedRegistrarTypes')]
     public function testNotImplementedRegistrarTypes(RegistrarType $type): void
     {
-        $this->expectException(\DomainException::class);
+        $this->expectException(InvalidConfigException::class);
         $this->expectExceptionMessage(\sprintf('Not supported registrar type "%s"', $type->value));
 
         $this->registry->getFactory($type);
