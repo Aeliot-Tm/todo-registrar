@@ -13,7 +13,10 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\JIRA;
 
-final class NotSupportedLinkTypeException extends \DomainException
+/**
+ * @internal
+ */
+class NotSupportedLinkTypeException extends \DomainException
 {
     public function __construct(string $alias)
     {
