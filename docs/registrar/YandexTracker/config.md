@@ -1,9 +1,11 @@
 # Configuration of Yandex Tracker Registrar
 
-## YAML configuration
+## General config
 
-Put config file `.todo-registrar.yaml` in the root directory.
-See [example](../../../examples/YandexTracker/.todo-registrar.yaml).
+Put either yaml-config-file `.todo-registrar.yaml` ([example](../../../examples/YandexTracker/.todo-registrar.yaml))
+or php-config-file `.todo-registrar.php` ([example](../../../examples/YandexTracker/.todo-registrar.php)) in the root directory.
+
+### YAML configuration
 
 ```yaml
 registrar:
@@ -31,19 +33,7 @@ registrar:
                                                     #           If true, X-Cloud-Org-ID header is passed instead of X-Org-ID
 ```
 
-### Option 'isCloud'
-
-You may pass different comfortable literals to it
-
-| Resolved value | Literals |
-|---|---|
-| true | true (bool or string), 1 (int or string), y (string), yes (string) |
-| false | false (bool or string), 0 (int or string), n (string), no (string), not (string) |
-
-## PHP configuration
-
-Put config php-file `.todo-registrar.php` in the root directory.
-See [example](../../../examples/YandexTracker/.todo-registrar.php).
+### PHP configuration
 
 Description of keys of general config:
 ```php
@@ -72,7 +62,18 @@ $config->setRegistrar('YandexTracker', [
 ]);
 ```
 
-## Allowed Labels
+### Option 'isCloud'
+
+If true, X-Cloud-Org-ID header is passed instead of X-Org-ID.
+
+You may pass different comfortable literals to it.
+
+| Resolved value | Literals |
+|---|---|
+| true | true (bool or string), 1 (int or string), y (string), yes (string) |
+| false | false (bool or string), 0 (int or string), n (string), no (string), not (string) |
+
+### Option Allowed Labels
 
 See [allowed labels documentation](../../allowed_labels.md)
 
@@ -124,7 +125,11 @@ For on-premise installations, set `isCloud: false`.
 
 ## Environment Variables
 
-For security, use environment variables for sensitive data:
+For security, use environment variables for sensitive data.
+
+First of all define in the config which environment variables have to be used.
+Expressions `%env(...)%` will be detected in YAML file and replaced by values of related environment variables.
+See documentation of used package [aeliot/env-resolver](https://github.com/Aeliot-Tm/env-resolver) for more details.
 
 ```yaml
 service:
