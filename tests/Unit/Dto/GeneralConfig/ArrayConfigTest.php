@@ -11,11 +11,11 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Aeliot\TodoRegistrar\Test\Unit\Service\Config;
+namespace Aeliot\TodoRegistrar\Test\Unit\Dto\GeneralConfig;
 
-use Aeliot\TodoRegistrar\Service\Config\ArrayConfig;
-use Aeliot\TodoRegistrar\Service\Config\PathsConfig;
-use Aeliot\TodoRegistrar\Service\Config\RegistrarConfig;
+use Aeliot\TodoRegistrar\Dto\GeneralConfig\ArrayConfig;
+use Aeliot\TodoRegistrar\Dto\GeneralConfig\PathsConfig;
+use Aeliot\TodoRegistrar\Dto\GeneralConfig\RegistrarConfig;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
