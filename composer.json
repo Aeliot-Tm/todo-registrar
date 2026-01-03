@@ -17,7 +17,12 @@
         "TODO comment",
         "create issue",
         "issue tracking",
-        "JIRA API"
+        "todo tracking",
+        "GitHub Issue",
+        "GitLab Issue",
+        "JIRA API",
+        "Readmine Issue",
+        "Yandex Tracker"
     ],
     "autoload": {
         "psr-4": {
