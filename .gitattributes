@@ -1,3 +1,4 @@
+*.png binary
 * text eol=lf
 *.neon linguist-language=YAML
 
