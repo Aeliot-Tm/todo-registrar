@@ -13,20 +13,20 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\GitHub;
 
-use Aeliot\TodoRegistrar\Contracts\RegistrarFactoryInterface;
-use Aeliot\TodoRegistrar\Contracts\RegistrarInterface;
 use Aeliot\TodoRegistrar\Enum\RegistrarType;
 use Aeliot\TodoRegistrar\Exception\ConfigValidationException;
-use Aeliot\TodoRegistrar\Service\ValidatorFactory;
+use Aeliot\TodoRegistrarContracts\RegistrarFactoryInterface;
+use Aeliot\TodoRegistrarContracts\RegistrarInterface;
 use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[AsTaggedItem(index: RegistrarType::GitHub->value)]
 final readonly class GitHubRegistrarFactory implements RegistrarFactoryInterface
 {
-    public function create(array $config, ?ValidatorInterface $validator = null): RegistrarInterface
+    public function create(array $config): RegistrarInterface
     {
-        $validator ??= ValidatorFactory::create();
+        /** @var ValidatorInterface $validator */
+        $validator = func_get_arg(1);
         $generalIssueConfig = $this->createGeneralConfig($config['issue'] ?? [], $validator);
         $apiClientFactory = new ApiClientFactory($config['service']);
 

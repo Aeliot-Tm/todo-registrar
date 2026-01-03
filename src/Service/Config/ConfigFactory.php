@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Service\Config;
 
 use Aeliot\TodoRegistrar\Config;
-use Aeliot\TodoRegistrar\Contracts\GeneralConfigInterface;
+use Aeliot\TodoRegistrarContracts\GeneralConfigInterface;
 
 /**
  * @internal

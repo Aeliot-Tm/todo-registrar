@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Dto\InlineConfig;
 
-use Aeliot\TodoRegistrar\Contracts\InlineConfigInterface;
+use Aeliot\TodoRegistrarContracts\InlineConfigInterface;
 
 class InlineConfig implements InlineConfigInterface
 {

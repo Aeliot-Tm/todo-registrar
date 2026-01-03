@@ -13,9 +13,9 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service;
 
-use Aeliot\TodoRegistrar\Contracts\GeneralConfigInterface;
 use Aeliot\TodoRegistrar\Service\Comment\Extractor;
 use Aeliot\TodoRegistrar\Service\Tag\Detector as TagDetector;
+use Aeliot\TodoRegistrarContracts\GeneralConfigInterface;
 
 /**
  * @internal

@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\Redmine;
 
-use Aeliot\TodoRegistrar\Contracts\RegistrarInterface;
-use Aeliot\TodoRegistrar\Contracts\TodoInterface;
+use Aeliot\TodoRegistrarContracts\RegistrarInterface;
+use Aeliot\TodoRegistrarContracts\TodoInterface;
 
 final readonly class RedmineRegistrar implements RegistrarInterface
 {

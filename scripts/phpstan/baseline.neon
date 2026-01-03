@@ -125,3 +125,9 @@ parameters:
 			identifier: match.alwaysTrue
 			count: 1
 			path: ../../src/Service/Registrar/YandexTracker/ApiClientFactory.php
+
+		-
+			message: '#^Method Aeliot\\TodoRegistrarContracts\\RegistrarFactoryInterface\:\:create\(\) invoked with 2 parameters, 1 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: ../../src/Service/RegistrarProvider.php

@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\File;
 
-use Aeliot\TodoRegistrar\Contracts\FinderInterface;
+use Aeliot\TodoRegistrarContracts\FinderInterface;
 use Symfony\Component\Finder\Finder as SymfonyFinder;
 
 class Finder extends SymfonyFinder implements FinderInterface

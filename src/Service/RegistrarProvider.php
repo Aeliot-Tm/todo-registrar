@@ -13,12 +13,12 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service;
 
-use Aeliot\TodoRegistrar\Contracts\GeneralConfigInterface;
-use Aeliot\TodoRegistrar\Contracts\RegistrarFactoryInterface;
-use Aeliot\TodoRegistrar\Contracts\RegistrarInterface;
 use Aeliot\TodoRegistrar\Enum\RegistrarType;
 use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
 use Aeliot\TodoRegistrar\Service\Registrar\RegistrarFactoryRegistry;
+use Aeliot\TodoRegistrarContracts\GeneralConfigInterface;
+use Aeliot\TodoRegistrarContracts\RegistrarFactoryInterface;
+use Aeliot\TodoRegistrarContracts\RegistrarInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
