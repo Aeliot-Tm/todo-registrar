@@ -20,6 +20,9 @@ use Aeliot\TodoRegistrar\Contracts\InlineConfigReaderInterface;
 use Aeliot\TodoRegistrar\Dto\Comment\CommentPart;
 use Aeliot\TodoRegistrar\Dto\Registrar\Todo;
 
+/**
+ * @internal
+ */
 class TodoBuilder
 {
     public function __construct(

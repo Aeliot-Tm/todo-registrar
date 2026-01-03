@@ -18,6 +18,8 @@ use Gitlab\Client;
 /**
  * Resolves GitLab user identifiers (username/email) to user IDs.
  * Caches results in memory to avoid repeated API calls.
+ *
+ * @internal
  */
 final class UserResolver
 {

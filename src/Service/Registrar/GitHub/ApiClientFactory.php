@@ -18,6 +18,9 @@ use Github\Client as GithubClient;
 use Github\HttpClient\Builder;
 use Github\HttpClient\Plugin\Authentication;
 
+/**
+ * @internal
+ */
 final readonly class ApiClientFactory
 {
     /**

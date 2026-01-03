@@ -16,6 +16,9 @@ namespace Aeliot\TodoRegistrar\Service\Registrar\YandexTracker;
 use Aeliot\TodoRegistrar\Service\Registrar\AbstractGeneralIssueConfig;
 use Symfony\Component\Validator\Constraints as Assert;
 
+/**
+ * @internal
+ */
 final class GeneralIssueConfig extends AbstractGeneralIssueConfig
 {
     #[Assert\NotNull(message: 'Option "queue" is required')]

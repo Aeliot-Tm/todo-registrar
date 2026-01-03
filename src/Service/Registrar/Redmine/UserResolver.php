@@ -18,6 +18,8 @@ use Redmine\Client\Client;
 /**
  * Resolves Redmine user identifiers (login/email) to user IDs.
  * Caches results in memory to avoid repeated API calls.
+ *
+ * @internal
  */
 final class UserResolver
 {

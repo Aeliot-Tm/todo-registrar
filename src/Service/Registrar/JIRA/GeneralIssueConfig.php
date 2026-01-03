@@ -16,6 +16,9 @@ namespace Aeliot\TodoRegistrar\Service\Registrar\JIRA;
 use Aeliot\TodoRegistrar\Service\Registrar\AbstractGeneralIssueConfig;
 use Symfony\Component\Validator\Constraints as Assert;
 
+/**
+ * @internal
+ */
 class GeneralIssueConfig extends AbstractGeneralIssueConfig
 {
     /**

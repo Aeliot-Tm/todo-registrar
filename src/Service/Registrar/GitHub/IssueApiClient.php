@@ -15,6 +15,9 @@ namespace Aeliot\TodoRegistrar\Service\Registrar\GitHub;
 
 use Github\Api\Issue as IssueApi;
 
+/**
+ * @internal
+ */
 final class IssueApiClient
 {
     public function __construct(

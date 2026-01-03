@@ -17,6 +17,9 @@ use Aeliot\TodoRegistrar\Contracts\InlineConfigFactoryInterface;
 use Aeliot\TodoRegistrar\Contracts\InlineConfigInterface;
 use Aeliot\TodoRegistrar\Dto\InlineConfig\InlineConfig;
 
+/**
+ * @internal
+ */
 final class InlineConfigFactory implements InlineConfigFactoryInterface
 {
     /**

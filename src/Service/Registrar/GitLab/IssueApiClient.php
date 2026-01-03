@@ -15,6 +15,9 @@ namespace Aeliot\TodoRegistrar\Service\Registrar\GitLab;
 
 use Gitlab\Api\Issues;
 
+/**
+ * @internal
+ */
 final readonly class IssueApiClient
 {
     public function __construct(
