@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\YandexTracker;
 
+use Aeliot\TodoRegistrar\Service\Registrar\IssueSupporter;
 use Aeliot\TodoRegistrarContracts\TodoInterface;
 
 /**
@@ -20,8 +21,10 @@ use Aeliot\TodoRegistrarContracts\TodoInterface;
  */
 final readonly class IssueFactory
 {
-    public function __construct(private GeneralIssueConfig $generalIssueConfig)
-    {
+    public function __construct(
+        private GeneralIssueConfig $generalIssueConfig,
+        private IssueSupporter $issueSupporter,
+    ) {
     }
 
     public function create(TodoInterface $todo): ExtendedIssueCreateRequest
@@ -69,31 +72,9 @@ final readonly class IssueFactory
 
     private function setTags(ExtendedIssueCreateRequest $request, TodoInterface $todo): void
     {
-        $tags = $this->getTags($todo);
+        $tags = $this->issueSupporter->getLabels($todo, $this->generalIssueConfig);
         if ($tags) {
             $request->tags($tags);
         }
-    }
-
-    /**
-     * @return string[]
-     */
-    private function getTags(TodoInterface $todo): array
-    {
-        $tags = [
-            ...(array) ($todo->getInlineConfig()['labels'] ?? []),
-            ...$this->generalIssueConfig->getLabels(),
-        ];
-
-        if ($this->generalIssueConfig->isAddTagToLabels()) {
-            $tags[] = strtolower(\sprintf('%s%s', $this->generalIssueConfig->getTagPrefix(), $todo->getTag()));
-        }
-
-        $tags = array_unique($tags);
-        if ($allowedLabels = $this->generalIssueConfig->getAllowedLabels()) {
-            $tags = array_intersect($tags, $allowedLabels);
-        }
-
-        return array_values($tags);
     }
 }

@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\JIRA;
 
+use Aeliot\TodoRegistrar\Service\Registrar\IssueSupporter;
 use Aeliot\TodoRegistrarContracts\TodoInterface;
 use JiraRestApi\Issue\IssueField;
 
@@ -23,6 +24,7 @@ final class IssueFieldFactory
 {
     public function __construct(
         private GeneralIssueConfig $generalIssueConfig,
+        private IssueSupporter $issueSupporter,
     ) {
     }
 
@@ -74,20 +76,7 @@ final class IssueFieldFactory
 
     private function setLabels(IssueField $issueField, TodoInterface $todo): void
     {
-        $labels = [
-            ...(array) ($todo->getInlineConfig()['labels'] ?? []),
-            ...$this->generalIssueConfig->getLabels(),
-        ];
-
-        if ($this->generalIssueConfig->isAddTagToLabels()) {
-            $labels[] = strtolower(\sprintf('%s%s', $this->generalIssueConfig->getTagPrefix(), $todo->getTag()));
-        }
-
-        $labels = array_unique($labels);
-        if ($allowedLabels = $this->generalIssueConfig->getAllowedLabels()) {
-            $labels = array_intersect($labels, $allowedLabels);
-        }
-
+        $labels = $this->issueSupporter->getLabels($todo, $this->generalIssueConfig);
         foreach ($labels as $label) {
             $issueField->addLabelAsString($label);
         }

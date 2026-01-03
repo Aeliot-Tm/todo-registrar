@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\GitHub;
 
+use Aeliot\TodoRegistrar\Service\Registrar\IssueSupporter;
 use Aeliot\TodoRegistrarContracts\TodoInterface;
 
 /**
@@ -20,14 +21,16 @@ use Aeliot\TodoRegistrarContracts\TodoInterface;
  */
 final class IssueFactory
 {
-    public function __construct(private GeneralIssueConfig $generalIssueConfig)
-    {
+    public function __construct(
+        private GeneralIssueConfig $generalIssueConfig,
+        private IssueSupporter $issueSupporter,
+    ) {
     }
 
     public function create(TodoInterface $todo): Issue
     {
         $issue = new Issue();
-        $issue->setTitle($todo->getSummary());
+        $issue->setTitle($this->generalIssueConfig->getSummaryPrefix() . $todo->getSummary());
         $issue->setBody($todo->getDescription());
 
         $this->setAssignees($issue, $todo);
@@ -51,20 +54,7 @@ final class IssueFactory
 
     private function setLabels(Issue $issue, TodoInterface $todo): void
     {
-        $labels = [
-            ...(array) ($todo->getInlineConfig()['labels'] ?? []),
-            ...$this->generalIssueConfig->getLabels(),
-        ];
-
-        if ($this->generalIssueConfig->isAddTagToLabels()) {
-            $labels[] = strtolower(\sprintf('%s%s', $this->generalIssueConfig->getTagPrefix(), $todo->getTag()));
-        }
-
-        $labels = array_unique($labels);
-        if ($allowedLabels = $this->generalIssueConfig->getAllowedLabels()) {
-            $labels = array_intersect($labels, $allowedLabels);
-        }
-
+        $labels = $this->issueSupporter->getLabels($todo, $this->generalIssueConfig);
         foreach ($labels as $label) {
             $issue->addLabel($label);
         }

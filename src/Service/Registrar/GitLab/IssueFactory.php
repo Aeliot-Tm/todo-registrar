@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\GitLab;
 
+use Aeliot\TodoRegistrar\Service\Registrar\IssueSupporter;
 use Aeliot\TodoRegistrarContracts\TodoInterface;
 
 /**
@@ -22,6 +23,7 @@ final readonly class IssueFactory
 {
     public function __construct(
         private GeneralIssueConfig $generalIssueConfig,
+        private IssueSupporter $issueSupporter,
         private UserResolver $userResolver,
         private MilestoneApiClient $milestoneApiClient,
     ) {
@@ -62,21 +64,7 @@ final readonly class IssueFactory
 
     private function setLabels(Issue $issue, TodoInterface $todo): void
     {
-        $labels = [
-            ...(array) ($todo->getInlineConfig()['labels'] ?? []),
-            ...$this->generalIssueConfig->getLabels(),
-        ];
-
-        if ($this->generalIssueConfig->isAddTagToLabels()) {
-            $labels[] = strtolower(\sprintf('%s%s', $this->generalIssueConfig->getTagPrefix(), $todo->getTag()));
-        }
-
-        $labels = array_unique($labels);
-        if ($allowedLabels = $this->generalIssueConfig->getAllowedLabels()) {
-            $labels = array_intersect($labels, $allowedLabels);
-        }
-
-        $issue->setLabels($labels);
+        $issue->setLabels($this->issueSupporter->getLabels($todo, $this->generalIssueConfig));
     }
 
     private function setMilestone(Issue $issue, TodoInterface $todo): void
