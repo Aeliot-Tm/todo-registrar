@@ -26,6 +26,9 @@ use Aeliot\TodoRegistrar\Service\File\Tokenizer;
 use Aeliot\TodoRegistrarContracts\FinderInterface;
 use Aeliot\TodoRegistrarContracts\RegistrarInterface;
 
+/**
+ * @internal
+ */
 final readonly class HeapRunner
 {
     public function __construct(
