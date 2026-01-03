@@ -18,6 +18,8 @@ use Redmine\Client\Client;
 /**
  * Resolves Redmine entity identifiers (ID or name) to entity IDs.
  * Caches results in memory to avoid repeated API calls.
+ *
+ * @internal
  */
 final class EntityResolver
 {

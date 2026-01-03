@@ -15,6 +15,9 @@ namespace Aeliot\TodoRegistrar\Service\Registrar\GitHub;
 
 use Github\Api\Issue\Labels as LabelsApi;
 
+/**
+ * @internal
+ */
 final class LabelApiClient
 {
     /**

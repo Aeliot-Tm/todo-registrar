@@ -18,6 +18,8 @@ use Gitlab\Api\Projects;
 /**
  * Client for working with GitLab project labels.
  * Labels are created at project level, not at issue level.
+ *
+ * @internal
  */
 final readonly class LabelApiClient
 {

@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Service\Config;
 
 use Aeliot\TodoRegistrar\Config;
+use Aeliot\TodoRegistrar\Dto\GeneralConfig\PathsConfig as PathsConfigDto;
 use Aeliot\TodoRegistrar\Exception\ConfigValidationException;
 use Aeliot\TodoRegistrar\Service\File\Finder;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -65,7 +66,7 @@ final readonly class ArrayConfigFactory
         return $arrayConfig;
     }
 
-    private function createFinder(?PathsConfig $pathsConfig): Finder
+    private function createFinder(PathsConfig|PathsConfigDto|null $pathsConfig): Finder
     {
         $finder = (new Finder())
             ->files()

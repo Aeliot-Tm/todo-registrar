@@ -17,6 +17,9 @@ use Aeliot\TodoRegistrar\Exception\UnexpectedApiResponseException;
 use Psr\Http\Client\ClientExceptionInterface;
 use Redmine\Client\Client;
 
+/**
+ * @internal
+ */
 final readonly class IssueApiClient
 {
     public function __construct(

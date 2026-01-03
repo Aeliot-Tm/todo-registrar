@@ -16,6 +16,9 @@ namespace Aeliot\TodoRegistrar\Service;
 use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
+/**
+ * @internal
+ */
 final class ValidatorFactory
 {
     public static function create(): ValidatorInterface

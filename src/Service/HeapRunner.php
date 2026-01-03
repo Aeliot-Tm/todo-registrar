@@ -26,6 +26,9 @@ use Aeliot\TodoRegistrar\Service\Comment\Extractor as CommentExtractor;
 use Aeliot\TodoRegistrar\Service\File\Saver;
 use Aeliot\TodoRegistrar\Service\File\Tokenizer;
 
+/**
+ * @internal
+ */
 final readonly class HeapRunner
 {
     public function __construct(

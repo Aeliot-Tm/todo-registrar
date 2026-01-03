@@ -21,6 +21,9 @@ use Aeliot\TodoRegistrar\Service\ValidatorFactory;
 use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
+/**
+ * @internal
+ */
 #[AsTaggedItem(index: RegistrarType::YandexTracker->value)]
 final class YandexTrackerRegistrarFactory implements RegistrarFactoryInterface
 {

@@ -15,6 +15,9 @@ namespace Aeliot\TodoRegistrar\Dto;
 
 use Aeliot\TodoRegistrar\Service\File\Saver;
 
+/**
+ * @internal
+ */
 final class FileHeap
 {
     private \Closure $fileUpdateCallback;

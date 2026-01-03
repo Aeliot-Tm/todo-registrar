@@ -17,6 +17,9 @@ use Aeliot\TodoRegistrar\Service\InlineConfig\JIRANotSupportedLinkTypeException;
 use JiraRestApi\IssueLink\IssueLinkService;
 use JiraRestApi\IssueLink\IssueLinkType;
 
+/**
+ * @internal
+ */
 final class IssueLinkTypeProvider
 {
     /**
