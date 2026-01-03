@@ -11,7 +11,7 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Aeliot\TodoRegistrar\Service\Config;
+namespace Aeliot\TodoRegistrar\Dto\GeneralConfig;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
