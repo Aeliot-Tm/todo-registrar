@@ -20,7 +20,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @internal
  */
-final class RegistrarConfig
+class RegistrarConfig
 {
     #[Assert\NotBlank(message: 'Option "registrar.type" is required')]
     #[Assert\Type(type: 'string', message: 'Option "registrar.type" must be a string')]
