@@ -3,7 +3,7 @@
 #### Did you find a bug?
 
 * **Do not open up a GitHub issue if the bug is a security vulnerability in TODO Registrar**,
-  and instead to send email to 5785276@gmail.com.
+  and instead send email to 5785276@gmail.com.
 
 * **Ensure the bug was not already reported** by searching on GitHub under [Issues](https://github.com/Aeliot-Tm/todo-registrar/issues).
 
@@ -25,10 +25,6 @@ or testability of TODO Registrar will generally not be accepted.
 #### Do you intend to add a new feature or change an existing one?
 
 * Suggest your change as a [feature request](https://github.com/Aeliot-Tm/todo-registrar/issues/new?assignees=&labels=enhancement&projects=&template=3_FEATURE_REQUEST.md),
-  read about [local development](../docs/local_development.md) and start writing code.
-
-#### Do you have questions about the source code?
-
-* Ask any question about how to use TODO Registrar in the [Discussions](https://github.com/Aeliot-Tm/todo-registrar/discussions).
+  read about [local development](docs/local_development.md) and start writing code.
 
 Thanks! :heart: :heart: :heart:

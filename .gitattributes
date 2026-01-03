@@ -17,3 +17,4 @@
 /.gitignore                 export-ignore
 /compose.yaml               export-ignore
 /composer.lock              export-ignore
+/CONTRIBUTING.md            export-ignore
