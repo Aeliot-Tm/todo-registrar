@@ -48,8 +48,8 @@ final class GitlabRegistrarFactory implements RegistrarFactoryInterface
             new IssueFactory(
                 $generalIssueConfig,
                 $this->issueSupporter,
-                $apiSectionClientFactory->createUserResolver(),
                 $milestoneApiClient,
+                $apiSectionClientFactory->createUserResolver(),
             ),
             $apiSectionClientFactory->createLabelService(),
             $milestoneApiClient,

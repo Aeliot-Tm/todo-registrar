@@ -24,8 +24,8 @@ final readonly class IssueFactory
     public function __construct(
         private GeneralIssueConfig $generalIssueConfig,
         private IssueSupporter $issueSupporter,
-        private UserResolver $userResolver,
         private MilestoneApiClient $milestoneApiClient,
+        private UserResolver $userResolver,
     ) {
     }
 
