@@ -16,6 +16,9 @@ namespace Aeliot\TodoRegistrar\Service\Registrar\GitLab;
 use Aeliot\TodoRegistrarContracts\RegistrarInterface;
 use Aeliot\TodoRegistrarContracts\TodoInterface;
 
+/**
+ * @internal
+ */
 final readonly class GitlabRegistrar implements RegistrarInterface
 {
     public function __construct(

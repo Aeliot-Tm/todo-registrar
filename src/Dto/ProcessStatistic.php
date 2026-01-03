@@ -13,6 +13,9 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Dto;
 
+/**
+ * @internal
+ */
 final class ProcessStatistic
 {
     /**

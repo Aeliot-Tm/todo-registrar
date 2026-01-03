@@ -16,6 +16,9 @@ namespace Aeliot\TodoRegistrar\Service\Registrar\JIRA;
 use Aeliot\TodoRegistrarContracts\TodoInterface;
 use JiraRestApi\Issue\IssueField;
 
+/**
+ * @internal
+ */
 final class IssueFieldFactory
 {
     public function __construct(

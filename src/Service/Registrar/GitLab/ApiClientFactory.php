@@ -15,6 +15,9 @@ namespace Aeliot\TodoRegistrar\Service\Registrar\GitLab;
 
 use Gitlab\Client;
 
+/**
+ * @internal
+ */
 final readonly class ApiClientFactory
 {
     /**

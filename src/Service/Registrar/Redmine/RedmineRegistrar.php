@@ -16,6 +16,9 @@ namespace Aeliot\TodoRegistrar\Service\Registrar\Redmine;
 use Aeliot\TodoRegistrarContracts\RegistrarInterface;
 use Aeliot\TodoRegistrarContracts\TodoInterface;
 
+/**
+ * @internal
+ */
 final readonly class RedmineRegistrar implements RegistrarInterface
 {
     public function __construct(

@@ -19,6 +19,8 @@ use Gitlab\Client;
 /**
  * Client for working with GitLab project milestones.
  * Used to validate milestone existence before creating issues.
+ *
+ * @internal
  */
 final readonly class MilestoneApiClient
 {

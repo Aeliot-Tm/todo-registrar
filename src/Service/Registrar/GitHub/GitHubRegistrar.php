@@ -16,6 +16,9 @@ namespace Aeliot\TodoRegistrar\Service\Registrar\GitHub;
 use Aeliot\TodoRegistrarContracts\RegistrarInterface;
 use Aeliot\TodoRegistrarContracts\TodoInterface;
 
+/**
+ * @internal
+ */
 final class GitHubRegistrar implements RegistrarInterface
 {
     public function __construct(

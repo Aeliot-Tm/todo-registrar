@@ -17,6 +17,9 @@ use Aeliot\TodoRegistrar\Dto\Tag\TagMetadata;
 use Aeliot\TodoRegistrar\Exception\NoLineException;
 use Aeliot\TodoRegistrar\Exception\NoPrefixException;
 
+/**
+ * @internal
+ */
 class CommentPart
 {
     /**

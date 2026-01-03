@@ -17,6 +17,9 @@ use JiraRestApi\Configuration\ArrayConfiguration;
 use JiraRestApi\Issue\IssueService;
 use JiraRestApi\IssueLink\IssueLinkService;
 
+/**
+ * @internal
+ */
 class ServiceFactory
 {
     /**

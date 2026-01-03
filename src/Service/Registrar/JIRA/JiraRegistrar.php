@@ -17,6 +17,9 @@ use Aeliot\TodoRegistrarContracts\RegistrarInterface;
 use Aeliot\TodoRegistrarContracts\TodoInterface;
 use JiraRestApi\Issue\IssueService;
 
+/**
+ * @internal
+ */
 final readonly class JiraRegistrar implements RegistrarInterface
 {
     public function __construct(

@@ -17,6 +17,9 @@ use Aeliot\TodoRegistrarContracts\TodoInterface;
 use JiraRestApi\IssueLink\IssueLink;
 use JiraRestApi\IssueLink\IssueLinkService;
 
+/**
+ * @internal
+ */
 final readonly class IssueLinkRegistrar
 {
     public function __construct(

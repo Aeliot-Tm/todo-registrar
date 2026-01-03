@@ -17,6 +17,9 @@ use Aeliot\TodoRegistrar\Exception\InvalidInlineConfigFormatException;
 use Aeliot\TodoRegistrar\Service\InlineConfig\JIRANotSupportedLinkTypeException;
 use JiraRestApi\IssueLink\IssueLinkType;
 
+/**
+ * @internal
+ */
 final class LinkedIssueNormalizer
 {
     public function __construct(

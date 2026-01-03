@@ -16,6 +16,9 @@ namespace Aeliot\TodoRegistrar\Service\Registrar\YandexTracker;
 use Aeliot\TodoRegistrarContracts\RegistrarInterface;
 use Aeliot\TodoRegistrarContracts\TodoInterface;
 
+/**
+ * @internal
+ */
 final readonly class YandexTrackerRegistrar implements RegistrarInterface
 {
     public function __construct(

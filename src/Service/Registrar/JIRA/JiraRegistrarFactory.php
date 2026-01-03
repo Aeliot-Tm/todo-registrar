@@ -20,6 +20,9 @@ use Aeliot\TodoRegistrarContracts\RegistrarInterface;
 use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
+/**
+ * @internal
+ */
 #[AsTaggedItem(index: RegistrarType::JIRA->value)]
 final class JiraRegistrarFactory implements RegistrarFactoryInterface
 {
