@@ -20,7 +20,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @internal
  */
-final class PathsConfig
+class PathsConfig
 {
     #[Assert\AtLeastOneOf(
         constraints: [
