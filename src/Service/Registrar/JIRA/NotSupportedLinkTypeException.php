@@ -11,9 +11,9 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Aeliot\TodoRegistrar\Service\InlineConfig;
+namespace Aeliot\TodoRegistrar\Service\Registrar\JIRA;
 
-final class JIRANotSupportedLinkTypeException extends \DomainException
+final class NotSupportedLinkTypeException extends \DomainException
 {
     public function __construct(string $alias)
     {
