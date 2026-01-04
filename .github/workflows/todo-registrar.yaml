@@ -68,7 +68,7 @@ jobs:
           GITHUB_REPOSITORY: ${{ github.repository }}
           GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}
         with:
-          config_path: scripts/todo-registrar/config.php
+          config_path: .scripts/todo-registrar/config.php
           env_vars: |
             GH_PERSONAL_ACCESS_TOKEN
             GITHUB_REPOSITORY
