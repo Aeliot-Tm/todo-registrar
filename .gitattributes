@@ -7,8 +7,8 @@
 /.github        export-ignore
 /.mcp           export-ignore
 /.phive         export-ignore
+/.scripts       export-ignore
 /examples       export-ignore
-/scripts        export-ignore
 /tools          export-ignore
 /tests          export-ignore
 /var            export-ignore
