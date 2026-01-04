@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Test\Unit\Service\Config;
 
-use Aeliot\EnvResolver\Exception\EnvFoundException;
+use Aeliot\EnvResolver\Exception\EnvNotFoundException;
 use Aeliot\EnvResolver\Service\StringProcessor;
 use Aeliot\TodoRegistrar\Service\Config\YamlParser;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -127,7 +127,7 @@ final class YamlParserTest extends TestCase
             token: '%env(NON_EXISTENT_VAR_12345)%'
             YAML;
 
-        $this->expectException(EnvFoundException::class);
+        $this->expectException(EnvNotFoundException::class);
         $this->expectExceptionMessage('Undefined environment variable "NON_EXISTENT_VAR_12345"');
 
         $this->yamlParser->parse($yaml);
