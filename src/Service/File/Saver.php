@@ -16,7 +16,7 @@ namespace Aeliot\TodoRegistrar\Service\File;
 /**
  * @internal
  */
-class Saver
+final readonly class Saver
 {
     /**
      * @param \PhpToken[] $tokens

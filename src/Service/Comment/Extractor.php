@@ -20,7 +20,7 @@ use Aeliot\TodoRegistrar\Service\Tag\Detector as TagDetector;
 /**
  * @internal
  */
-class Extractor
+final readonly class Extractor
 {
     public function __construct(private TagDetector $tagDetector)
     {

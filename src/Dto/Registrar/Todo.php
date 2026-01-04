@@ -34,17 +34,17 @@ class Todo implements TodoInterface
         return $this->assignee;
     }
 
-    public function getDescription(): string
-    {
-        return $this->description;
-    }
-
     /**
      * @internal
      */
     public function getCommentPart(): CommentPart
     {
         return $this->commentPart;
+    }
+
+    public function getDescription(): string
+    {
+        return $this->description;
     }
 
     public function getInlineConfig(): InlineConfigInterface

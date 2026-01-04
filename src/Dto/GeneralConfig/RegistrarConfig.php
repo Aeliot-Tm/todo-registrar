@@ -20,12 +20,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @internal
  */
-class RegistrarConfig
+final class RegistrarConfig
 {
-    #[Assert\NotBlank(message: 'Option "registrar.type" is required')]
-    #[Assert\Type(type: 'string', message: 'Option "registrar.type" must be a string')]
-    private mixed $type = null;
-
     #[Assert\AtLeastOneOf(
         constraints: [
             new Assert\IsNull(),
@@ -34,6 +30,10 @@ class RegistrarConfig
         message: 'Option "registrar.options" must be an array or null'
     )]
     private mixed $options = null;
+
+    #[Assert\NotBlank(message: 'Option "registrar.type" is required')]
+    #[Assert\Type(type: 'string', message: 'Option "registrar.type" must be a string')]
+    private mixed $type = null;
 
     #[Assert\IsNull(message: 'Unknown "registrar" options detected: {{ value }}')]
     private mixed $invalidKeys = null;

@@ -23,7 +23,7 @@ use Aeliot\TodoRegistrarContracts\InlineConfigReaderInterface;
 /**
  * @internal
  */
-class TodoBuilder
+final readonly class TodoBuilder
 {
     public function __construct(
         private InlineConfigFactoryInterface $inlineConfigFactory,

@@ -20,21 +20,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @internal
  */
-class PathsConfig
+final class PathsConfig
 {
-    #[Assert\AtLeastOneOf(
-        constraints: [
-            new Assert\IsNull(),
-            new Assert\Type(type: 'string', message: 'Option "paths.in" must be a string or array of strings'),
-            new Assert\Sequentially(constraints: [
-                new Assert\Type(type: 'array', message: 'Option "paths.in" must be a string or array of strings'),
-                new Assert\All(constraints: [new Assert\Type(type: 'string', message: 'Each path in "paths.in" must be a string')]),
-            ]),
-        ],
-        message: 'Option "paths.in" must be a string or array of strings'
-    )]
-    private mixed $in = null;
-
     #[Assert\AtLeastOneOf(
         constraints: [
             new Assert\IsNull(),
@@ -61,6 +48,19 @@ class PathsConfig
     )]
     private mixed $exclude = null;
 
+    #[Assert\AtLeastOneOf(
+        constraints: [
+            new Assert\IsNull(),
+            new Assert\Type(type: 'string', message: 'Option "paths.in" must be a string or array of strings'),
+            new Assert\Sequentially(constraints: [
+                new Assert\Type(type: 'array', message: 'Option "paths.in" must be a string or array of strings'),
+                new Assert\All(constraints: [new Assert\Type(type: 'string', message: 'Each path in "paths.in" must be a string')]),
+            ]),
+        ],
+        message: 'Option "paths.in" must be a string or array of strings'
+    )]
+    private mixed $in = null;
+
     #[Assert\IsNull(message: 'Unknown "paths" options detected: {{ value }}')]
     private mixed $invalidKeys = null;
 
@@ -83,17 +83,17 @@ class PathsConfig
     /**
      * @return string|string[]|null
      */
-    public function getIn(): string|array|null
+    public function getAppend(): string|array|null
     {
-        return $this->in;
+        return $this->append;
     }
 
     /**
      * @return string|string[]|null
      */
-    public function getAppend(): string|array|null
+    public function getIn(): string|array|null
     {
-        return $this->append;
+        return $this->in;
     }
 
     /**
