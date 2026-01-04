@@ -44,11 +44,12 @@ final readonly class IssueFactory
         return $request;
     }
 
-    private function getType(TodoInterface $todo): string
+    private function setAssignee(ExtendedIssueCreateRequest $request, TodoInterface $todo): void
     {
-        $inlineConfig = $todo->getInlineConfig();
-
-        return $inlineConfig['issue_type'] ?? $this->generalIssueConfig->getType();
+        $assignees = $this->issueSupporter->getAssignees($todo, $this->generalIssueConfig);
+        if ($assignees) {
+            $request->assignee(reset($assignees));
+        }
     }
 
     private function setPriority(ExtendedIssueCreateRequest $request, TodoInterface $todo): void
@@ -59,19 +60,18 @@ final readonly class IssueFactory
         }
     }
 
-    private function setAssignee(ExtendedIssueCreateRequest $request, TodoInterface $todo): void
-    {
-        $assignees = $this->issueSupporter->getAssignees($todo, $this->generalIssueConfig);
-        if ($assignees) {
-            $request->assignee(reset($assignees));
-        }
-    }
-
     private function setTags(ExtendedIssueCreateRequest $request, TodoInterface $todo): void
     {
         $tags = $this->issueSupporter->getLabels($todo, $this->generalIssueConfig);
         if ($tags) {
             $request->tags($tags);
         }
+    }
+
+    private function getType(TodoInterface $todo): string
+    {
+        $inlineConfig = $todo->getInlineConfig();
+
+        return $inlineConfig['issue_type'] ?? $this->generalIssueConfig->getType();
     }
 }
