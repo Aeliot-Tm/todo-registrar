@@ -40,20 +40,6 @@ final class IssueFactory
         return $issue;
     }
 
-    private function setOwnerAndRepository(Issue $issue, TodoInterface $todo): void
-    {
-        $inlineConfig = $todo->getInlineConfig();
-        $owner = $inlineConfig['owner'] ?? $this->generalIssueConfig->getOwner();
-        $repository = $inlineConfig['repository'] ?? $this->generalIssueConfig->getRepository();
-
-        if (str_contains($repository, '/')) {
-            [$owner, $repository] = explode('/', $repository, 2);
-        }
-
-        $issue->setOwner($owner);
-        $issue->setRepository($repository);
-    }
-
     private function setAssignees(Issue $issue, TodoInterface $todo): void
     {
         $assignees = $this->issueSupporter->getAssignees($todo, $this->generalIssueConfig);
@@ -68,5 +54,19 @@ final class IssueFactory
         foreach ($labels as $label) {
             $issue->addLabel($label);
         }
+    }
+
+    private function setOwnerAndRepository(Issue $issue, TodoInterface $todo): void
+    {
+        $inlineConfig = $todo->getInlineConfig();
+        $owner = $inlineConfig['owner'] ?? $this->generalIssueConfig->getOwner();
+        $repository = $inlineConfig['repository'] ?? $this->generalIssueConfig->getRepository();
+
+        if (str_contains($repository, '/')) {
+            [$owner, $repository] = explode('/', $repository, 2);
+        }
+
+        $issue->setOwner($owner);
+        $issue->setRepository($repository);
     }
 }

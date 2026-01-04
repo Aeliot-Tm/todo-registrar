@@ -29,6 +29,17 @@ final class LabelApiClient
         private readonly LabelsApi $labelsApi,
     ) {
     }
+    public function create(string $owner, string $repository, string $label): void
+    {
+        $cacheKey = $owner . '/' . $repository;
+        if (!isset($this->labelsCache[$cacheKey])) {
+            $this->getAll($owner, $repository);
+        }
+
+        $this->labelsApi->create($owner, $repository, ['name' => $label]);
+        $this->labelsCache[$cacheKey][] = $label;
+        sort($this->labelsCache[$cacheKey]);
+    }
 
     /**
      * @return string[]
@@ -45,17 +56,5 @@ final class LabelApiClient
         }
 
         return $this->labelsCache[$cacheKey];
-    }
-
-    public function create(string $owner, string $repository, string $label): void
-    {
-        $cacheKey = $owner . '/' . $repository;
-        if (!isset($this->labelsCache[$cacheKey])) {
-            $this->getAll($owner, $repository);
-        }
-
-        $this->labelsApi->create($owner, $repository, ['name' => $label]);
-        $this->labelsCache[$cacheKey][] = $label;
-        sort($this->labelsCache[$cacheKey]);
     }
 }
