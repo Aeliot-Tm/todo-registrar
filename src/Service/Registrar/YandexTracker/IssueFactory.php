@@ -32,7 +32,7 @@ final readonly class IssueFactory
         $request = new ExtendedIssueCreateRequest();
 
         $request
-            ->queue($inlineConfig['queue'] ?? null ?: $this->generalIssueConfig->getQueue())
+            ->queue($todo->getInlineConfig()['queue'] ?? $this->generalIssueConfig->getQueue())
             ->summary($this->issueSupporter->getSummary($todo, $this->generalIssueConfig))
             ->description($todo->getDescription())
             ->type($this->getType($todo));
