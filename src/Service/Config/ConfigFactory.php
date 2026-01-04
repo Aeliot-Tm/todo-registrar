@@ -13,7 +13,8 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Config;
 
-use Aeliot\TodoRegistrar\Config;
+use Aeliot\TodoRegistrar\Exception\NotSupportedConfigException;
+use Aeliot\TodoRegistrar\Exception\UnavailableConfigException;
 use Aeliot\TodoRegistrarContracts\GeneralConfigInterface;
 
 /**
@@ -31,15 +32,15 @@ final readonly class ConfigFactory
     {
         return match (strtolower(pathinfo($path, \PATHINFO_EXTENSION))) {
             'yaml', 'yml' => $this->getFromYAML($path),
-            default => throw new \DomainException('Unsupported type of config')
+            default => throw new NotSupportedConfigException('Unsupported type of config')
         };
     }
 
-    private function getFromYAML(string $path): Config
+    private function getFromYAML(string $path): GeneralConfigInterface
     {
         $contents = file_get_contents($path);
         if (false === $contents) {
-            throw new \RuntimeException(\sprintf('Config file "%s" is not readable', $path));
+            throw new UnavailableConfigException(\sprintf('Config file "%s" is not readable', $path));
         }
 
         return $this->arrayConfigFactory->create($this->yamlParser->parse($contents));

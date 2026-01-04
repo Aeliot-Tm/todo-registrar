@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Config;
 
+use Aeliot\TodoRegistrar\Exception\UnavailableConfigException;
+
 /**
  * @internal
  */
@@ -32,7 +34,7 @@ final readonly class ConfigFileDetector
         $path ??= $this->configFileGuesser->guess();
 
         if (!file_exists($path)) {
-            throw new \RuntimeException(\sprintf('Config file "%s" does not exist', $path));
+            throw new UnavailableConfigException(\sprintf('Config file "%s" does not exist', $path));
         }
 
         return $path;

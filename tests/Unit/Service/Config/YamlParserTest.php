@@ -15,6 +15,7 @@ namespace Aeliot\TodoRegistrar\Test\Unit\Service\Config;
 
 use Aeliot\EnvResolver\Exception\EnvNotFoundException;
 use Aeliot\EnvResolver\Service\StringProcessor;
+use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
 use Aeliot\TodoRegistrar\Service\Config\YamlParser;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -50,11 +51,12 @@ final class YamlParserTest extends TestCase
         ], $result);
     }
 
-    public function testParseEmptyYaml(): void
+    public function testParseEmptyYamlThrowsException(): void
     {
-        $result = $this->yamlParser->parse('');
+        $this->expectException(InvalidConfigException::class);
+        $this->expectExceptionMessage('Cannot parse YAML');
 
-        self::assertSame([], $result);
+        $this->yamlParser->parse('');
     }
 
     public function testResolveEnvVar(): void
