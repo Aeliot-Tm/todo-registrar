@@ -48,7 +48,7 @@ final readonly class GitHubRegistrarFactory implements RegistrarFactoryInterface
     /**
      * @param array<string,mixed> $config
      */
-    public function createGeneralConfig(array $config, ValidatorInterface $validator): GeneralIssueConfig
+    private function createGeneralConfig(array $config, ValidatorInterface $validator): GeneralIssueConfig
     {
         // Get owner and repository from issue config, fallback to service config
         $serviceConfig = $config['service'] ?? [];
