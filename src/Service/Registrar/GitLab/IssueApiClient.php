@@ -22,7 +22,6 @@ final readonly class IssueApiClient
 {
     public function __construct(
         private Issues $issuesApi,
-        private int|string $projectIdentifier,
     ) {
     }
 
@@ -31,6 +30,6 @@ final readonly class IssueApiClient
      */
     public function create(Issue $issue): array
     {
-        return $this->issuesApi->create($this->projectIdentifier, $issue->getData());
+        return $this->issuesApi->create($issue->getProject(), $issue->getData());
     }
 }

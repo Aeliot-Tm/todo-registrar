@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Test\Unit\Service\Registrar\Redmine;
 
 use Aeliot\TodoRegistrar\Exception\ConfigValidationException;
+use Aeliot\TodoRegistrar\Service\Registrar\IssueSupporter;
 use Aeliot\TodoRegistrar\Service\Registrar\Redmine\RedmineRegistrarFactory;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
@@ -34,7 +35,7 @@ final class RedmineRegistrarFactoryTest extends TestCase
 
     public function testCreateGeneralIssueConfigWithValidData(): void
     {
-        $factory = new RedmineRegistrarFactory();
+        $factory = new RedmineRegistrarFactory(new IssueSupporter());
         $issueConfig = [
             'project' => 1,
             'tracker' => 'Bug',
@@ -62,7 +63,7 @@ final class RedmineRegistrarFactoryTest extends TestCase
 
     public function testCreateGeneralIssueConfigThrowsOnMissingProject(): void
     {
-        $factory = new RedmineRegistrarFactory();
+        $factory = new RedmineRegistrarFactory(new IssueSupporter());
         $issueConfig = [
             'tracker' => 'Bug',
         ];
@@ -75,7 +76,7 @@ final class RedmineRegistrarFactoryTest extends TestCase
 
     public function testCreateGeneralIssueConfigThrowsOnMissingTracker(): void
     {
-        $factory = new RedmineRegistrarFactory();
+        $factory = new RedmineRegistrarFactory(new IssueSupporter());
         $issueConfig = [
             'project' => 1,
         ];
@@ -88,7 +89,7 @@ final class RedmineRegistrarFactoryTest extends TestCase
 
     public function testCreateGeneralIssueConfigThrowsOnInvalidDueDate(): void
     {
-        $factory = new RedmineRegistrarFactory();
+        $factory = new RedmineRegistrarFactory(new IssueSupporter());
         $issueConfig = [
             'project' => 1,
             'tracker' => 'Bug',
@@ -102,7 +103,7 @@ final class RedmineRegistrarFactoryTest extends TestCase
 
     public function testCreateGeneralIssueConfigThrowsOnInvalidStartDate(): void
     {
-        $factory = new RedmineRegistrarFactory();
+        $factory = new RedmineRegistrarFactory(new IssueSupporter());
         $issueConfig = [
             'project' => 1,
             'tracker' => 'Bug',
@@ -116,7 +117,7 @@ final class RedmineRegistrarFactoryTest extends TestCase
 
     public function testCreateGeneralIssueConfigWithValidEstimatedHours(): void
     {
-        $factory = new RedmineRegistrarFactory();
+        $factory = new RedmineRegistrarFactory(new IssueSupporter());
         $issueConfig = [
             'project' => 1,
             'tracker' => 'Bug',
@@ -130,7 +131,7 @@ final class RedmineRegistrarFactoryTest extends TestCase
 
     public function testCreateGeneralIssueConfigThrowsOnUnknownOptions(): void
     {
-        $factory = new RedmineRegistrarFactory();
+        $factory = new RedmineRegistrarFactory(new IssueSupporter());
         $issueConfig = [
             'project' => 1,
             'tracker' => 'Bug',

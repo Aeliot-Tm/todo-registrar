@@ -9,6 +9,7 @@ Description of keys of general config:
 ```php
 $config->setRegistrar('Redmine', [
     'issue' => [
+        'project' => 'testing-project',          // required: project identifier or ID
         'tracker' => 'Bugs',                     // required: tracker name or ID
         'priority' => 'Low',                     // optional: priority name or ID
         'assignee' => null,                      // optional: username, login, email, or user ID
@@ -19,7 +20,6 @@ $config->setRegistrar('Redmine', [
         'estimated_hours' => null,               // optional: estimated hours as float
         'summaryPrefix' => '[TODO] ',            // optional: prefix which will be added to issue subject
     ],
-    'project' => 'testing-project',              // required: project identifier or ID
     'service' => [
         'url' => 'https://redmine.example.com',  // required: Redmine URL
         'apikeyOrUsername' => 'string',          // required: API key (recommended) or username
@@ -29,6 +29,11 @@ $config->setRegistrar('Redmine', [
     ]
 ]);
 ```
+
+### Option 'project'
+
+It is expected that `project` is in `issue` array, but script tries to get it from root too.
+And it can be overridden by inline config.
 
 ## Labels
 

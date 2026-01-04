@@ -53,6 +53,16 @@ final class GeneralIssueConfig extends AbstractGeneralIssueConfig
     )]
     protected mixed $due_date = null;
 
+    #[Assert\NotBlank(message: 'Option "project" is required for GitLab registrar')]
+    #[Assert\AtLeastOneOf(
+        constraints: [
+            new Assert\Type(type: 'int', message: 'Option "project" must be an integer'),
+            new Assert\Type(type: 'string', message: 'Option "project" must be a string'),
+        ],
+        message: 'Option "project" must be an integer ID or string name'
+    )]
+    protected mixed $project = null;
+
     /**
      * @return string[]
      */
@@ -69,6 +79,11 @@ final class GeneralIssueConfig extends AbstractGeneralIssueConfig
     public function getDueDate(): ?string
     {
         return $this->due_date;
+    }
+
+    public function getProject(): int|string
+    {
+        return $this->project;
     }
 
     /**

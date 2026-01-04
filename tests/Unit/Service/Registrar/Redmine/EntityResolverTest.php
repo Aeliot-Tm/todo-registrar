@@ -30,7 +30,7 @@ final class EntityResolverTest extends TestCase
     {
         $client = $this->createMock(Client::class);
 
-        $resolver = new EntityResolver($client, 1);
+        $resolver = new EntityResolver($client);
 
         self::assertSame(1, $resolver->resolveProjectId(1));
     }
@@ -53,7 +53,7 @@ final class EntityResolverTest extends TestCase
         $client = $this->createMock(Client::class);
         $client->method('getApi')->with('project')->willReturn($projectApi);
 
-        $resolver = new EntityResolver($client, 1);
+        $resolver = new EntityResolver($client);
 
         self::assertSame(1, $resolver->resolveProjectId('My Project'));
     }
@@ -76,7 +76,7 @@ final class EntityResolverTest extends TestCase
         $client = $this->createMock(Client::class);
         $client->method('getApi')->with('project')->willReturn($projectApi);
 
-        $resolver = new EntityResolver($client, 1);
+        $resolver = new EntityResolver($client);
 
         self::assertSame(1, $resolver->resolveProjectId('my-project'));
     }
@@ -89,7 +89,7 @@ final class EntityResolverTest extends TestCase
         $client = $this->createMock(Client::class);
         $client->method('getApi')->with('project')->willReturn($projectApi);
 
-        $resolver = new EntityResolver($client, 1);
+        $resolver = new EntityResolver($client);
 
         self::assertNull($resolver->resolveProjectId('nonexistent'));
     }
@@ -112,7 +112,7 @@ final class EntityResolverTest extends TestCase
         $client = $this->createMock(Client::class);
         $client->method('getApi')->with('project')->willReturn($projectApi);
 
-        $resolver = new EntityResolver($client, 1);
+        $resolver = new EntityResolver($client);
 
         // First call should make API request
         self::assertSame(1, $resolver->resolveProjectId('My Project'));
@@ -125,7 +125,7 @@ final class EntityResolverTest extends TestCase
     {
         $client = $this->createMock(Client::class);
 
-        $resolver = new EntityResolver($client, 1);
+        $resolver = new EntityResolver($client);
 
         $trackers = [
             'trackers' => [
@@ -165,7 +165,7 @@ final class EntityResolverTest extends TestCase
         $client = $this->createMock(Client::class);
         $client->method('getApi')->with('tracker')->willReturn($trackerApi);
 
-        $resolver = new EntityResolver($client, 1);
+        $resolver = new EntityResolver($client);
 
         self::assertSame(2, $resolver->resolveTrackerId('Task'));
     }
@@ -187,7 +187,7 @@ final class EntityResolverTest extends TestCase
         $client = $this->createMock(Client::class);
         $client->method('getApi')->with('issue_priority')->willReturn($priorityApi);
 
-        $resolver = new EntityResolver($client, 1);
+        $resolver = new EntityResolver($client);
 
         self::assertSame(1, $resolver->resolvePriorityId(1));
     }
@@ -213,7 +213,7 @@ final class EntityResolverTest extends TestCase
         $client = $this->createMock(Client::class);
         $client->method('getApi')->with('issue_priority')->willReturn($priorityApi);
 
-        $resolver = new EntityResolver($client, 1);
+        $resolver = new EntityResolver($client);
 
         self::assertSame(2, $resolver->resolvePriorityId('High'));
     }
@@ -252,9 +252,9 @@ final class EntityResolverTest extends TestCase
                 };
             });
 
-        $resolver = new EntityResolver($client, 1);
+        $resolver = new EntityResolver($client);
 
-        self::assertSame(1, $resolver->resolveCategoryId(1));
+        self::assertSame(1, $resolver->resolveCategoryId(1, 1));
     }
 
     public function testResolveCategoryIdByName(): void
@@ -295,25 +295,9 @@ final class EntityResolverTest extends TestCase
                 };
             });
 
-        $resolver = new EntityResolver($client, 1);
+        $resolver = new EntityResolver($client);
 
-        self::assertSame(2, $resolver->resolveCategoryId('Frontend'));
-    }
-
-    public function testResolveCategoryIdThrowsExceptionWhenProjectNotFound(): void
-    {
-        $projectApi = $this->createMock(Project::class);
-        $projectApi->method('list')->willReturn(['projects' => []]);
-
-        $client = $this->createMock(Client::class);
-        $client->method('getApi')->with('project')->willReturn($projectApi);
-
-        $resolver = new EntityResolver($client, 'nonexistent');
-
-        $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('Project "nonexistent" not found');
-
-        $resolver->resolveCategoryId(1);
+        self::assertSame(2, $resolver->resolveCategoryId('Frontend', 1));
     }
 
     public function testResolveVersionIdWithInteger(): void
@@ -350,9 +334,9 @@ final class EntityResolverTest extends TestCase
                 };
             });
 
-        $resolver = new EntityResolver($client, 1);
+        $resolver = new EntityResolver($client);
 
-        self::assertSame(1, $resolver->resolveVersionId(1));
+        self::assertSame(1, $resolver->resolveVersionId(1, 1));
     }
 
     public function testResolveVersionIdByName(): void
@@ -393,25 +377,9 @@ final class EntityResolverTest extends TestCase
                 };
             });
 
-        $resolver = new EntityResolver($client, 1);
+        $resolver = new EntityResolver($client);
 
-        self::assertSame(2, $resolver->resolveVersionId('v2.0'));
-    }
-
-    public function testResolveVersionIdThrowsExceptionWhenProjectNotFound(): void
-    {
-        $projectApi = $this->createMock(Project::class);
-        $projectApi->method('list')->willReturn(['projects' => []]);
-
-        $client = $this->createMock(Client::class);
-        $client->method('getApi')->with('project')->willReturn($projectApi);
-
-        $resolver = new EntityResolver($client, 'nonexistent');
-
-        $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('Project "nonexistent" not found');
-
-        $resolver->resolveVersionId(1);
+        self::assertSame(2, $resolver->resolveVersionId('v2.0', 1));
     }
 
     public function testResolveCategoryIdHandlesApiException(): void
@@ -439,9 +407,9 @@ final class EntityResolverTest extends TestCase
                 };
             });
 
-        $resolver = new EntityResolver($client, 1);
+        $resolver = new EntityResolver($client);
 
-        self::assertNull($resolver->resolveCategoryId('Backend'));
+        self::assertNull($resolver->resolveCategoryId('Backend', 1));
     }
 
     public function testResolveVersionIdHandlesApiException(): void
@@ -469,9 +437,9 @@ final class EntityResolverTest extends TestCase
                 };
             });
 
-        $resolver = new EntityResolver($client, 1);
+        $resolver = new EntityResolver($client);
 
-        self::assertNull($resolver->resolveVersionId('v1.0'));
+        self::assertNull($resolver->resolveVersionId('v1.0', 1));
     }
 
     public function testResolveProjectIdPagination(): void
@@ -497,7 +465,7 @@ final class EntityResolverTest extends TestCase
         $client = $this->createMock(Client::class);
         $client->method('getApi')->with('project')->willReturn($projectApi);
 
-        $resolver = new EntityResolver($client, 1);
+        $resolver = new EntityResolver($client);
 
         self::assertSame(123, $resolver->resolveProjectId('Target Project'));
     }

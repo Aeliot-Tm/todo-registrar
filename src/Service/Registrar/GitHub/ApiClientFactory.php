@@ -34,8 +34,6 @@ final readonly class ApiClientFactory
     {
         return new IssueApiClient(
             $this->createGithubClient()->api('issue'),
-            $this->config['owner'],
-            $this->config['repository'],
         );
     }
 
@@ -43,8 +41,6 @@ final readonly class ApiClientFactory
     {
         return new LabelApiClient(
             $this->createGithubClient()->api('issue')->labels(),
-            $this->config['owner'],
-            $this->config['repository'],
         );
     }
 

@@ -26,7 +26,6 @@ final readonly class MilestoneApiClient
 {
     public function __construct(
         private Milestones $milestones,
-        private int|string $projectIdentifier,
     ) {
     }
 
@@ -35,9 +34,9 @@ final readonly class MilestoneApiClient
      *
      * @return array<int,array<string,mixed>> Array of milestones indexed by ID
      */
-    public function getAll(): array
+    public function getAll(int|string $project): array
     {
-        $milestones = $this->milestones->all($this->projectIdentifier);
+        $milestones = $this->milestones->all($project);
         $result = [];
         foreach ($milestones as $milestone) {
             if (isset($milestone['id'])) {
@@ -53,9 +52,9 @@ final readonly class MilestoneApiClient
      *
      * @return array<int,array<string,mixed>> Array of milestones indexed by IID
      */
-    private function getAllByIid(): array
+    private function getAllByIid(int|string $project): array
     {
-        $milestones = $this->milestones->all($this->projectIdentifier);
+        $milestones = $this->milestones->all($project);
         $result = [];
         foreach ($milestones as $milestone) {
             if (isset($milestone['iid'])) {
@@ -71,9 +70,9 @@ final readonly class MilestoneApiClient
      *
      * @return bool True if milestone exists
      */
-    public function findById(int $id): bool
+    public function findById(int|string $project, int $id): bool
     {
-        $milestones = $this->getAll();
+        $milestones = $this->getAll($project);
 
         return isset($milestones[$id]);
     }
@@ -83,9 +82,9 @@ final readonly class MilestoneApiClient
      *
      * @return int|null Milestone ID if found, null otherwise
      */
-    public function findByTitle(string $title): ?int
+    public function findByTitle(int|string $project, string $title): ?int
     {
-        $milestones = $this->getAll();
+        $milestones = $this->getAll($project);
         foreach ($milestones as $id => $milestone) {
             if (isset($milestone['title']) && $milestone['title'] === $title) {
                 return $id;
@@ -102,9 +101,9 @@ final readonly class MilestoneApiClient
      *
      * @return int|null Milestone ID if found, null otherwise
      */
-    public function findByIid(int $iid): ?int
+    public function findByIid(int|string $project, int $iid): ?int
     {
-        $milestonesByIid = $this->getAllByIid();
+        $milestonesByIid = $this->getAllByIid($project);
         if (isset($milestonesByIid[$iid]) && isset($milestonesByIid[$iid]['id'])) {
             return (int) $milestonesByIid[$iid]['id'];
         }

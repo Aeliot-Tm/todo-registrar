@@ -36,13 +36,13 @@ final readonly class GitlabRegistrar implements RegistrarInterface
         // Register missing labels before creating issue
         $labels = $issue->getLabels();
         if (!empty($labels)) {
-            $this->registerLabels($labels);
+            $this->registerLabels($issue->getProject(), $labels);
         }
 
         // Validate milestone if specified
         $milestoneId = $this->extractMilestoneId($issue);
         if (null !== $milestoneId) {
-            $this->validateMilestone($milestoneId);
+            $this->validateMilestone($issue->getProject(), $milestoneId);
         }
 
         // Create issue
@@ -67,22 +67,22 @@ final readonly class GitlabRegistrar implements RegistrarInterface
      *
      * @param string[] $labels
      */
-    private function registerLabels(array $labels): void
+    private function registerLabels(int|string $project, array $labels): void
     {
-        $existingLabels = $this->labelApiClient->getAll();
+        $existingLabels = $this->labelApiClient->getAll($project);
         $missingLabels = array_diff($labels, $existingLabels);
 
         foreach ($missingLabels as $label) {
-            $this->labelApiClient->create($label);
+            $this->labelApiClient->create($project, $label);
         }
     }
 
     /**
      * Validate that milestone exists.
      */
-    private function validateMilestone(int $milestoneId): void
+    private function validateMilestone(int|string $project, int $milestoneId): void
     {
-        if (!$this->milestoneApiClient->findById($milestoneId)) {
+        if (!$this->milestoneApiClient->findById($project, $milestoneId)) {
             throw new \RuntimeException(\sprintf('Milestone with ID %d does not exist', $milestoneId));
         }
     }

@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\JIRA;
 
-use Aeliot\TodoRegistrar\Service\InlineConfig\JIRANotSupportedLinkTypeException;
 use JiraRestApi\IssueLink\IssueLinkService;
 use JiraRestApi\IssueLink\IssueLinkType;
 
@@ -39,7 +38,7 @@ final class IssueLinkTypeProvider
             }
         }
 
-        throw new JIRANotSupportedLinkTypeException($alias);
+        throw new NotSupportedLinkTypeException($alias);
     }
 
     /**

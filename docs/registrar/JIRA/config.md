@@ -9,6 +9,7 @@ Description of keys of general config:
 ```php
 $config->setRegistrar('JIRA', [
     'issue' => [
+        'projectKey' => 'string',                   // required: key-name of project
         'type' => 'Bug',                            // required: type of issue
         'priority' => 'string',                     // required: priority of issue
         'assignee' => 'string'                      // optional: identifier of JIRA-user, which will be assigned to ticket
@@ -21,8 +22,8 @@ $config->setRegistrar('JIRA', [
                                                     //           config, general config, and tag-based labels (if
                                                     //           addTagToLabels=true) will be filtered to match this list.
         'components' => ['a-component'],            // optional: list of components which will be set to issue
+        'summaryPrefix' => '[TODO] ',               // optional: prefix which will be added to issue subject
     ],
-    'projectKey' => 'string',                       // required: key-name of project
     'service' => [
         'host' => 'string',                         // required: host of JIRA-server
         'tokenBasedAuth' => true,                   // optional: (default: false)
@@ -36,6 +37,11 @@ $config->setRegistrar('JIRA', [
     ]
 ]);
 ```
+
+### Option 'projectKey'
+
+It is expected that `projectKey` is in `issue` array, but script tries to get it from root too.
+And it can be overridden by inline config.
 
 ## Allowed Labels
 
@@ -52,3 +58,4 @@ Supported keys of inline config:
 | issue_type | Type of issue.                                                                                                         |
 | labels     | List of labels which will be assigned to the issue.                                                                    |
 | priority   | Priority of issue as string.                                                                                           |
+| projectKey | Allow override project key to create issue in another related project                                                  |

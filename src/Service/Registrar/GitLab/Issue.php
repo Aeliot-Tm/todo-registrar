@@ -23,6 +23,8 @@ final class Issue
      */
     private array $data = [];
 
+    private int|string $project;
+
     /**
      * @return array<string,mixed>
      */
@@ -89,5 +91,15 @@ final class Issue
 
         // Labels are stored as comma-separated string in GitLab
         return array_map('trim', explode(',', $this->data['labels']));
+    }
+
+    public function getProject(): int|string
+    {
+        return $this->project;
+    }
+
+    public function setProject(int|string $project): void
+    {
+        $this->project = $project;
     }
 }

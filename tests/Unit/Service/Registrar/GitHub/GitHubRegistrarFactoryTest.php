@@ -36,41 +36,61 @@ final class GitHubRegistrarFactoryTest extends TestCase
     public function testCreateGeneralConfigWithValidData(): void
     {
         $factory = new GitHubRegistrarFactory(new IssueSupporter());
-        $issueConfig = [
-            'addTagToLabels' => true,
-            'labels' => ['bug'],
-            'assignees' => ['user1'],
+        $config = [
+            'issue' => [
+                'addTagToLabels' => true,
+                'labels' => ['bug'],
+                'assignees' => ['user1'],
+            ],
+            'service' => [
+                'owner' => 'test-owner',
+                'repository' => 'test-repo',
+            ],
         ];
 
-        $config = $factory->createGeneralConfig($issueConfig, self::$validator);
+        $generalConfig = $factory->createGeneralConfig($config, self::$validator);
 
-        self::assertTrue($config->isAddTagToLabels());
-        self::assertSame(['bug'], $config->getLabels());
-        self::assertSame(['user1'], $config->getAssignees());
+        self::assertTrue($generalConfig->isAddTagToLabels());
+        self::assertSame(['bug'], $generalConfig->getLabels());
+        self::assertSame(['user1'], $generalConfig->getAssignees());
+        self::assertSame('test-owner', $generalConfig->getOwner());
+        self::assertSame('test-repo', $generalConfig->getRepository());
     }
 
     public function testCreateGeneralConfigThrowsOnInvalidData(): void
     {
         $factory = new GitHubRegistrarFactory(new IssueSupporter());
-        $issueConfig = [
-            'labels' => [123], // Invalid: must be strings
+        $config = [
+            'issue' => [
+                'labels' => [123], // Invalid: must be strings
+            ],
+            'service' => [
+                'owner' => 'test-owner',
+                'repository' => 'test-repo',
+            ],
         ];
 
         $this->expectException(ConfigValidationException::class);
         $this->expectExceptionMessage('[GitHub] Invalid general issue config');
 
-        $factory->createGeneralConfig($issueConfig, self::$validator);
+        $factory->createGeneralConfig($config, self::$validator);
     }
 
     public function testCreateGeneralConfigThrowsOnUnknownOptions(): void
     {
         $factory = new GitHubRegistrarFactory(new IssueSupporter());
-        $issueConfig = [
-            'unknown_option' => 'value',
+        $config = [
+            'issue' => [
+                'unknown_option' => 'value',
+            ],
+            'service' => [
+                'owner' => 'test-owner',
+                'repository' => 'test-repo',
+            ],
         ];
 
         $this->expectException(ConfigValidationException::class);
 
-        $factory->createGeneralConfig($issueConfig, self::$validator);
+        $factory->createGeneralConfig($config, self::$validator);
     }
 }

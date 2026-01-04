@@ -31,6 +31,22 @@ final class GeneralIssueConfig extends AbstractGeneralIssueConfig
     ])]
     protected mixed $assignees = null;
 
+    #[Assert\Sequentially([
+        new Assert\NotBlank(message: 'Option "owner" is required'),
+        new Assert\Type(type: 'string', message: 'Option "owner" must be a string'),
+    ])]
+    protected mixed $owner = null;
+
+    #[Assert\Sequentially([
+        new Assert\NotBlank(message: 'Option "repository" is required'),
+        new Assert\Type(type: 'string', message: 'Option "repository" must be a string'),
+        new Assert\Regex(
+            pattern: '~^[^/\\s]+$~',
+            message: 'Option "repository" cannot contain "/" and blank character'
+        ),
+    ])]
+    protected mixed $repository = null;
+
     /**
      * @return string[]
      */
@@ -39,6 +55,21 @@ final class GeneralIssueConfig extends AbstractGeneralIssueConfig
         return $this->assignees;
     }
 
+    public function getOwner(): string
+    {
+        return $this->owner;
+    }
+
+    public function getRepository(): string
+    {
+        return $this->repository;
+    }
+
+    /**
+     * @param array<string,mixed> $config
+     *
+     * @return array<string,mixed>
+     */
     protected function normalizeConfig(array $config): array
     {
         $config = parent::normalizeConfig($config);

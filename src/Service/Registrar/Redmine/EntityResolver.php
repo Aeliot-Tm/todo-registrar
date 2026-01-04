@@ -30,7 +30,6 @@ final class EntityResolver
 
     public function __construct(
         private Client $client,
-        private int|string $projectIdentifier,
     ) {
     }
 
@@ -89,18 +88,6 @@ final class EntityResolver
     }
 
     /**
-     * Get project ID from project identifier.
-     */
-    private function getProjectId(): ?int
-    {
-        if (\is_int($this->projectIdentifier)) {
-            return $this->projectIdentifier;
-        }
-
-        return $this->resolveProjectId($this->projectIdentifier);
-    }
-
-    /**
      * Resolve tracker identifier to tracker ID.
      *
      * @param int|string $identifier Tracker ID or name
@@ -153,13 +140,8 @@ final class EntityResolver
      *
      * @param int|string $identifier Category ID or name
      */
-    public function resolveCategoryId(int|string $identifier): ?int
+    public function resolveCategoryId(int|string $identifier, int $projectId): ?int
     {
-        $projectId = $this->getProjectId();
-        if (null === $projectId) {
-            throw new \RuntimeException(\sprintf('Project "%s" not found', $this->projectIdentifier));
-        }
-
         return $this->resolveEntityId('category', $identifier, function () use ($projectId): array {
             try {
                 $response = $this->client->getApi('issue_category')->listByProject($projectId);
@@ -187,13 +169,8 @@ final class EntityResolver
      *
      * @param int|string $identifier Version ID or name
      */
-    public function resolveVersionId(int|string $identifier): ?int
+    public function resolveVersionId(int|string $identifier, int $projectId): ?int
     {
-        $projectId = $this->getProjectId();
-        if (null === $projectId) {
-            throw new \RuntimeException(\sprintf('Project "%s" not found', $this->projectIdentifier));
-        }
-
         return $this->resolveEntityId('version', $identifier, function () use ($projectId): array {
             try {
                 $response = $this->client->getApi('version')->listByProject($projectId);

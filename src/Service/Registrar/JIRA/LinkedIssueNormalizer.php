@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Service\Registrar\JIRA;
 
 use Aeliot\TodoRegistrar\Exception\InvalidInlineConfigFormatException;
-use Aeliot\TodoRegistrar\Service\InlineConfig\JIRANotSupportedLinkTypeException;
 use JiraRestApi\IssueLink\IssueLinkType;
 
 /**
@@ -57,7 +56,7 @@ final class LinkedIssueNormalizer
     {
         try {
             $issueLinkType = $this->issueLinkTypeProvider->getLinkType($alias);
-        } catch (JIRANotSupportedLinkTypeException) {
+        } catch (NotSupportedLinkTypeException) {
             throw new InvalidInlineConfigFormatException(\sprintf('Not supported issue link type "%s"', $alias));
         }
 
