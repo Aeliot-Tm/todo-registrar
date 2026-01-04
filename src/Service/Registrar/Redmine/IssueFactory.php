@@ -22,10 +22,10 @@ use Aeliot\TodoRegistrarContracts\TodoInterface;
 final readonly class IssueFactory
 {
     public function __construct(
+        private EntityResolver $entityResolver,
         private GeneralIssueConfig $generalIssueConfig,
         private IssueSupporter $issueSupporter,
         private UserResolver $userResolver,
-        private EntityResolver $entityResolver,
     ) {
     }
 

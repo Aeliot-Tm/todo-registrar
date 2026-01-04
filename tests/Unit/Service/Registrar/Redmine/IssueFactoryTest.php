@@ -52,7 +52,7 @@ final class IssueFactoryTest extends TestCase
         $entityResolver->method('resolveProjectId')->with(1)->willReturn(1);
         $entityResolver->method('resolveTrackerId')->with(2)->willReturn(2);
 
-        $factory = new IssueFactory($generalConfig, new IssueSupporter(), $userResolver, $entityResolver);
+        $factory = new IssueFactory($entityResolver, $generalConfig, new IssueSupporter(), $userResolver);
         $issue = $factory->create($todo);
 
         $data = $issue->getData();
@@ -88,7 +88,7 @@ final class IssueFactoryTest extends TestCase
         $entityResolver->method('resolveProjectId')->with(1)->willReturn(1);
         $entityResolver->method('resolveTrackerId')->with(2)->willReturn(2);
 
-        $factory = new IssueFactory($generalConfig, new IssueSupporter(), $userResolver, $entityResolver);
+        $factory = new IssueFactory($entityResolver, $generalConfig, new IssueSupporter(), $userResolver);
         $issue = $factory->create($todo);
 
         $data = $issue->getData();
@@ -125,7 +125,7 @@ final class IssueFactoryTest extends TestCase
         $entityResolver->method('resolveCategoryId')->with('Backend')->willReturn(7);
         $entityResolver->method('resolveVersionId')->with('v1.0')->willReturn(10);
 
-        $factory = new IssueFactory($generalConfig, new IssueSupporter(), $userResolver, $entityResolver);
+        $factory = new IssueFactory($entityResolver, $generalConfig, new IssueSupporter(), $userResolver);
         $issue = $factory->create($todo);
 
         $data = $issue->getData();
@@ -174,7 +174,7 @@ final class IssueFactoryTest extends TestCase
         $entityResolver->method('resolveTrackerId')->with('Task')->willReturn(4);
         $entityResolver->method('resolvePriorityId')->with('Low')->willReturn(1);
 
-        $factory = new IssueFactory($generalConfig, new IssueSupporter(), $userResolver, $entityResolver);
+        $factory = new IssueFactory($entityResolver, $generalConfig, new IssueSupporter(), $userResolver);
         $issue = $factory->create($todo);
 
         $data = $issue->getData();
@@ -200,7 +200,7 @@ final class IssueFactoryTest extends TestCase
         $entityResolver = $this->createMock(EntityResolver::class);
         $entityResolver->method('resolveProjectId')->with(999)->willReturn(null);
 
-        $factory = new IssueFactory($generalConfig, new IssueSupporter(), $userResolver, $entityResolver);
+        $factory = new IssueFactory($entityResolver, $generalConfig, new IssueSupporter(), $userResolver);
 
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Project "999" not found');
@@ -226,7 +226,7 @@ final class IssueFactoryTest extends TestCase
         $entityResolver = $this->createMock(EntityResolver::class);
         $entityResolver->method('resolveProjectId')->with(1)->willReturn(1);
 
-        $factory = new IssueFactory($generalConfig, new IssueSupporter(), $userResolver, $entityResolver);
+        $factory = new IssueFactory($entityResolver, $generalConfig, new IssueSupporter(), $userResolver);
 
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Tracker must be specified in config or inline config');
@@ -253,7 +253,7 @@ final class IssueFactoryTest extends TestCase
         $entityResolver->method('resolveProjectId')->with(1)->willReturn(1);
         $entityResolver->method('resolveTrackerId')->with('NonExistent')->willReturn(null);
 
-        $factory = new IssueFactory($generalConfig, new IssueSupporter(), $userResolver, $entityResolver);
+        $factory = new IssueFactory($entityResolver, $generalConfig, new IssueSupporter(), $userResolver);
 
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Tracker "NonExistent" not found');
@@ -288,7 +288,7 @@ final class IssueFactoryTest extends TestCase
         $entityResolver->method('resolveProjectId')->with(1)->willReturn(1);
         $entityResolver->method('resolveTrackerId')->with(2)->willReturn(2);
 
-        $factory = new IssueFactory($generalConfig, new IssueSupporter(), $userResolver, $entityResolver);
+        $factory = new IssueFactory($entityResolver, $generalConfig, new IssueSupporter(), $userResolver);
         $issue = $factory->create($todo);
 
         $data = $issue->getData();
@@ -322,7 +322,7 @@ final class IssueFactoryTest extends TestCase
         $entityResolver->method('resolveProjectId')->with(1)->willReturn(1);
         $entityResolver->method('resolveTrackerId')->with(2)->willReturn(2);
 
-        $factory = new IssueFactory($generalConfig, new IssueSupporter(), $userResolver, $entityResolver);
+        $factory = new IssueFactory($entityResolver, $generalConfig, new IssueSupporter(), $userResolver);
         $issue = $factory->create($todo);
 
         $data = $issue->getData();
@@ -356,7 +356,7 @@ final class IssueFactoryTest extends TestCase
         $entityResolver->method('resolveTrackerId')->with(2)->willReturn(2);
         $entityResolver->method('resolvePriorityId')->with('NonexistentPriority')->willReturn(null);
 
-        $factory = new IssueFactory($generalConfig, new IssueSupporter(), $userResolver, $entityResolver);
+        $factory = new IssueFactory($entityResolver, $generalConfig, new IssueSupporter(), $userResolver);
         $issue = $factory->create($todo);
 
         $data = $issue->getData();
@@ -390,7 +390,7 @@ final class IssueFactoryTest extends TestCase
         $entityResolver->method('resolveTrackerId')->with(2)->willReturn(2);
         $entityResolver->method('resolveCategoryId')->with('NonexistentCategory')->willReturn(null);
 
-        $factory = new IssueFactory($generalConfig, new IssueSupporter(), $userResolver, $entityResolver);
+        $factory = new IssueFactory($entityResolver, $generalConfig, new IssueSupporter(), $userResolver);
         $issue = $factory->create($todo);
 
         $data = $issue->getData();
