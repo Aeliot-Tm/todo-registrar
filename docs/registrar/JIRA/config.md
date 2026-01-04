@@ -22,6 +22,7 @@ $config->setRegistrar('JIRA', [
                                                     //           config, general config, and tag-based labels (if
                                                     //           addTagToLabels=true) will be filtered to match this list.
         'components' => ['a-component'],            // optional: list of components which will be set to issue
+        'summaryPrefix' => '[TODO] ',               // optional: prefix which will be added to issue subject
     ],
     'service' => [
         'host' => 'string',                         // required: host of JIRA-server

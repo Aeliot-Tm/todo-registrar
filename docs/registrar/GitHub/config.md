@@ -18,6 +18,7 @@ $config->setRegistrar('GitHub', [
                                                     //           list will be applied to issues. Labels from inline
                                                     //           config, general config, and tag-based labels (if
                                                     //           addTagToLabels=true) will be filtered to match this list.
+        'summaryPrefix' => '[TODO] ',               // optional: prefix which will be added to issue subject
     ],
     'service' => [
         'personalAccessToken' => 'string',          // required: personal access-token
