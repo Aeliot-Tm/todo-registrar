@@ -1,37 +1,38 @@
-# Configuration of Redmine-registrar
+# Configuration of Redmine Registrar
 
 ## General config
 
-Put config php-file `.todo-registrar.php` or yaml-file `.todo-registrar.yaml` in the root directory.
-See [example](../../../examples/Redmine/.todo-registrar.php) or [example](../../../examples/Redmine/.todo-registrar.yaml).
+Put either yaml-config-file `.todo-registrar.yaml` ([example](../../../examples/Redmine/.todo-registrar.yaml))
+or php-config-file `.todo-registrar.php` ([example](../../../examples/Redmine/.todo-registrar.php)) in the root directory.
 
 Description of keys of general config:
 ```php
-$redmineConfig = [
+$config->setRegistrar('Redmine', [
     'issue' => [
-        'tracker' => 'Bugs',                     // tracker name or ID (required, can be overridden by inline issue)
-        'addTagToLabels' => false,               // Redmine doesn't support labels directly (optional)
-        'labels' => [],                          // not used for Redmine (optional)
-        'tagPrefix' => 'tag-',                   // prefix which will be added to tag when "addTagToLabels=true"
-        'summaryPrefix' => '[TODO] ',            // prefix which will be added to issue subject (optional)
-        'assignee' => null,                      // username, login, email, or user ID (optional)
-        'priority' => 'Low',                     // priority name or ID (optional)
-        'category' => null,                      // category name or ID (optional)
-        'fixed_version' => null,                 // version name or ID (optional)
-        'start_date' => null,                    // start date in format YYYY-MM-DD (optional)
-        'due_date' => null,                      // due date in format YYYY-MM-DD (optional)
-        'estimated_hours' => null,               // estimated hours as float (optional)
+        'tracker' => 'Bugs',                     // required: tracker name or ID
+        'priority' => 'Low',                     // optional: priority name or ID
+        'assignee' => null,                      // optional: username, login, email, or user ID
+        'category' => null,                      // optional: category name or ID
+        'fixed_version' => null,                 // optional: version name or ID
+        'start_date' => null,                    // optional: start date in format YYYY-MM-DD
+        'due_date' => null,                      // optional: due date in format YYYY-MM-DD
+        'estimated_hours' => null,               // optional: estimated hours as float
+        'summaryPrefix' => '[TODO] ',            // optional: prefix which will be added to issue subject
     ],
-    'project' => 'testing-project',              // project identifier or ID (required)
+    'project' => 'testing-project',              // required: project identifier or ID
     'service' => [
-        'url' => 'https://redmine.example.com',  // Redmine URL
-        'apikeyOrUsername' => 'string',          // API key (recommended) or username
-        'password' => null,                      // password for Basic Auth (optional)
-                                                 // If password is provided, Basic Auth will be used (username:password)
-                                                 // Otherwise, apikeyOrUsername will be treated as API key
+        'url' => 'https://redmine.example.com',  // required: Redmine URL
+        'apikeyOrUsername' => 'string',          // required: API key (recommended) or username
+        'password' => null,                      // optional: password for Basic Auth
+                                                 //           If password is provided, Basic Auth will be used (username:password)
+                                                 //           Otherwise, apikeyOrUsername will be treated as API key
     ]
-];
+]);
 ```
+
+## Labels
+
+Redmine doesn't support labels.
 
 ## Authentication methods
 

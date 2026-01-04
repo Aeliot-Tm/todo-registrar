@@ -53,6 +53,8 @@ Below are examples of settings supported by the implemented JIRA-registrar.
 1. [GitHub](registrar/GitHub/config.md#inline-config)
 2. [GitLab](registrar/GitLab/config.md#inline-config)
 3. [JIRA](registrar/JIRA/config.md#inline-config)
+4. [Readmine](registrar/Redmine/config.md#inline-config)
+5. [Yandex Tracker](registrar/Redmine/config.md#inline-config)
 
 
 ## The order of applying of configs

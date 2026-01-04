@@ -41,7 +41,7 @@ final readonly class ApiClientFactory
     private function isCloud(): bool
     {
         return match ($this->config['isCloud'] ?? true) {
-            false, 'false', 0, '0', 'n', 'no' => false,
+            false, 'false', 0, '0', 'n', 'no', 'not' => false,
             true, 'true', 1, '1', 'y', 'yes' => true,
             default => throw new InvalidConfigException('Unexpected value of option "isCloud"'),
         };

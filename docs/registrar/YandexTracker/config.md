@@ -1,97 +1,85 @@
-# Configuration of YandexTracker-registrar
+# Configuration of Yandex Tracker Registrar
 
 ## General config
 
-Put config php-file `.todo-registrar.php` in the root directory.
-See [example](../../../examples/YandexTracker/.todo-registrar.php).
+Put either yaml-config-file `.todo-registrar.yaml` ([example](../../../examples/YandexTracker/.todo-registrar.yaml))
+or php-config-file `.todo-registrar.php` ([example](../../../examples/YandexTracker/.todo-registrar.php)) in the root directory.
 
-Description of keys of general config:
-```php
-$yandexTrackerConfig = [
-    'queue' => 'MYQUEUE',                           // key of Yandex Tracker queue (required)
-    'issue' => [
-        'addTagToLabels' => true,                   // add detected tag into list of issue tags or not
-        'allowedLabels' => ['tag-1', 'tag-2'],     // optional: list of allowed tags. If set, only tags from this
-                                                    //           list will be applied to issues. Tags from inline
-                                                    //           config, general config, and tag-based tags (if
-                                                    //           addTagToLabels=true) will be filtered to match this list.
-        'assignee' => 'string',                     // login of Yandex Tracker user, which will be assigned to issue
-                                                    // when "assignee-suffix" was not used with tag.
-        'labels' => ['a-label'],                    // list of tags which will be set to issue
-        'priority' => 'normal',                     // priority of issue (blocker, critical, normal, minor, trivial)
-        'summaryPrefix' => '[TODO] ',               // prefix which will be added to issue summary
-        'tagPrefix' => 'tag-',                      // prefix which will be added to tag when "addTagToLabels=true"
-        'type' => 'task',                           // type of issue (task, bug, story, epic, etc.)
-    ],
-    'service' => [
-        'isCloud' => true,                          // Is Cloud Organization (default: true)
-                                                    // If true, X-Cloud-Org-ID header is passed instead of X-Org-ID
-        'orgId' => 'string',                        // Organization ID (required)
-        'token' => 'string',                        // OAuth token for Yandex Tracker API (required)
-    ]
-];
-```
-
-## YAML configuration
-
-See [example](../../../examples/YandexTracker/.todo-registrar.yaml).
+### YAML configuration
 
 ```yaml
 registrar:
   type: YandexTracker
-  queue: MYQUEUE
+  queue: MYQUEUE                                    # required: key of Yandex Tracker queue (required)
   issue:
-    addTagToLabels: true
-    assignee: developer.login
-    labels:
+    type: task                                      # required: type of issue (task, bug, story, epic, etc.)
+    priority: normal                                # priority of issue (blocker, critical, normal, minor, trivial)
+    assignee: developer.login                       # optional: login of Yandex Tracker user, which will be assigned to issue
+                                                    #           when "assignee-suffix" was not used with tag
+    labels:                                         # optional: list of tags which will be set to issue
       - tech-debt
       - from-code
-    priority: normal
-    tagPrefix: ''
-    type: task
+    addTagToLabels: true                            # optional: add detected tag into list of issue tags or not
+    tagPrefix: 'tag-'                               # optional: prefix which will be added to tag when "addTagToLabels=true"
+    allowedLabels: [tech-debt, another-label]       # optional: list of allowed tags. If set, only tags from this
+                                                    #           list will be applied to issues. Tags from inline
+                                                    #           config, general config, and tag-based tags (if
+                                                    #           addTagToLabels=true) will be filtered to match this list.
+    summaryPrefix: '[TODO] '                        # optional: prefix which will be added to issue summary
   service:
-    isCloud: '%env(YANDEX_TRACKER_IS_CLOUD)%'
-    orgId: '%env(YANDEX_TRACKER_ORG_ID)%'
-    token: '%env(YANDEX_TRACKER_TOKEN)%'
+    orgId: '%env(YANDEX_TRACKER_ORG_ID)%'           # required: Organization ID (required)
+    token: '%env(YANDEX_TRACKER_TOKEN)%'            # required: OAuth token for Yandex Tracker API (required)
+    isCloud: '%env(YANDEX_TRACKER_IS_CLOUD)%'       # optional: Is Cloud Organization (is not passes then default: true)
+                                                    #           If true, X-Cloud-Org-ID header is passed instead of X-Org-ID
 ```
 
-## Allowed Labels
+### PHP configuration
 
-The `allowedLabels` option allows you to restrict which tags can be applied to issues. This is useful when you want to ensure only predefined tags from your Yandex Tracker queue are used.
-
-### How it works
-
-When `allowedLabels` is set (non-empty array), the registrar filters all collected tags to keep only those that are present in the `allowedLabels` list. The collected tags come from:
-
-1. Tags specified in inline config (via `{EXTRAS: {labels: [...]}}`)
-2. Tags from general config (`labels` option)
-3. Tag-based tag (if `addTagToLabels` is `true`, format: `{tagPrefix}{tag}`)
-
-### Example
-
+Description of keys of general config:
 ```php
-'issue' => [
-    'addTagToLabels' => true,
-    'allowedLabels' => ['bug', 'feature', 'tech-debt'],
-    'labels' => ['tech-debt'],
-    'tagPrefix' => 'todo-',
-]
+$config->setRegistrar('YandexTracker', [
+    'queue' => 'MYQUEUE',                           // required: key of Yandex Tracker queue (required)
+    'issue' => [
+        'type' => 'task',                           // required: type of issue (task, bug, story, epic, etc.)
+        'priority' => 'normal',                     // required: priority of issue (blocker, critical, normal, minor, trivial)
+        'assignee' => 'string',                     // optional: login of Yandex Tracker user, which will be assigned to issue
+                                                    //           when "assignee-suffix" was not used with tag.
+        'labels' => ['a-label'],                    // optional: list of tags which will be set to issue
+        'addTagToLabels' => true,                   // optional: add detected tag into list of issue tags or not
+        'tagPrefix' => 'tag-',                      // optional: prefix which will be added to tag when "addTagToLabels=true"
+        'allowedLabels' => ['tag-1', 'tag-2'],      // optional: list of allowed tags. If set, only tags from this
+                                                    //           list will be applied to issues. Tags from inline
+                                                    //           config, general config, and tag-based tags (if
+                                                    //           addTagToLabels=true) will be filtered to match this list.
+        'summaryPrefix' => '[TODO] ',               // optional: prefix which will be added to issue summary
+    ],
+    'service' => [
+        'orgId' => 'string',                        // required: Organization ID (required)
+        'token' => 'string',                        // required: OAuth token for Yandex Tracker API (required)
+        'isCloud' => true,                          // optional: Is Cloud Organization (if not passed then default: true)
+                                                    //           If true, X-Cloud-Org-ID header is passed instead of X-Org-ID
+    ]
+]);
 ```
 
-With this configuration:
-- If a TODO comment has `{EXTRAS: {labels: [bug, urgent]}}`, only `bug` will be applied (because `urgent` is not in `allowedLabels`)
-- The general config tag `tech-debt` will be applied
-- If the tag is `TODO`, the tag-based tag `todo-todo` will be filtered out (not in `allowedLabels`)
+### Option 'isCloud'
 
-### When to use
+If true, X-Cloud-Org-ID header is passed instead of X-Org-ID.
 
-- **Queue policy enforcement**: Ensure only approved tags are used
-- **Prevent typos**: Avoid creating issues with misspelled tags
-- **Tag management**: Control which tags can be created automatically
+You may pass different comfortable literals to it.
+
+| Resolved value | Literals |
+|---|---|
+| true | true (bool or string), 1 (int or string), y (string), yes (string) |
+| false | false (bool or string), 0 (int or string), n (string), no (string), not (string) |
+
+### Option Allowed Labels
+
+See [allowed labels documentation](../../allowed_labels.md)
 
 ## Inline config
 
-Supported keys of inline config:
+Supported keys of [inline config](../../inline_config.md):
 
 | Key        | Description                                                                                                              |
 |------------|--------------------------------------------------------------------------------------------------------------------------|
@@ -133,11 +121,15 @@ By default, `isCloud` is `true`.
 
 For on-premise installations, set `isCloud: false`.
 
-![img.png](img.png)
+![UI for Organization ID](ui_org_id.png)
 
 ## Environment Variables
 
-For security, use environment variables for sensitive data:
+For security, use environment variables for sensitive data.
+
+First of all define in the config which environment variables have to be used.
+Expressions `%env(...)%` will be detected in YAML file and replaced by values of related environment variables.
+See documentation of used package [aeliot/env-resolver](https://github.com/Aeliot-Tm/env-resolver) for more details.
 
 ```yaml
 service:
