@@ -15,6 +15,7 @@ namespace Aeliot\TodoRegistrar\Test\Unit\Service\Registrar\GitLab;
 
 use Aeliot\TodoRegistrar\Exception\ConfigValidationException;
 use Aeliot\TodoRegistrar\Service\Registrar\GitLab\GitlabRegistrarFactory;
+use Aeliot\TodoRegistrar\Service\Registrar\IssueSupporter;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\Validation;
@@ -34,7 +35,7 @@ final class GitlabRegistrarFactoryTest extends TestCase
 
     public function testCreateGeneralIssueConfigWithValidData(): void
     {
-        $factory = new GitlabRegistrarFactory();
+        $factory = new GitlabRegistrarFactory(new IssueSupporter());
         $issueConfig = [
             'addTagToLabels' => true,
             'labels' => ['bug'],
@@ -54,7 +55,7 @@ final class GitlabRegistrarFactoryTest extends TestCase
 
     public function testCreateGeneralIssueConfigThrowsOnInvalidData(): void
     {
-        $factory = new GitlabRegistrarFactory();
+        $factory = new GitlabRegistrarFactory(new IssueSupporter());
         $issueConfig = [
             'labels' => [123], // Invalid: must be strings
         ];
@@ -67,7 +68,7 @@ final class GitlabRegistrarFactoryTest extends TestCase
 
     public function testCreateGeneralIssueConfigThrowsOnInvalidDueDate(): void
     {
-        $factory = new GitlabRegistrarFactory();
+        $factory = new GitlabRegistrarFactory(new IssueSupporter());
         $issueConfig = [
             'due_date' => 'invalid-date',
         ];
@@ -79,7 +80,7 @@ final class GitlabRegistrarFactoryTest extends TestCase
 
     public function testCreateGeneralIssueConfigThrowsOnUnknownOptions(): void
     {
-        $factory = new GitlabRegistrarFactory();
+        $factory = new GitlabRegistrarFactory(new IssueSupporter());
         $issueConfig = [
             'unknown_option' => 'value',
         ];

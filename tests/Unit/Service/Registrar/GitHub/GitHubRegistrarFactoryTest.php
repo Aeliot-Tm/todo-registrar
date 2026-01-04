@@ -15,6 +15,7 @@ namespace Aeliot\TodoRegistrar\Test\Unit\Service\Registrar\GitHub;
 
 use Aeliot\TodoRegistrar\Exception\ConfigValidationException;
 use Aeliot\TodoRegistrar\Service\Registrar\GitHub\GitHubRegistrarFactory;
+use Aeliot\TodoRegistrar\Service\Registrar\IssueSupporter;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\Validation;
@@ -34,7 +35,7 @@ final class GitHubRegistrarFactoryTest extends TestCase
 
     public function testCreateGeneralConfigWithValidData(): void
     {
-        $factory = new GitHubRegistrarFactory();
+        $factory = new GitHubRegistrarFactory(new IssueSupporter());
         $issueConfig = [
             'addTagToLabels' => true,
             'labels' => ['bug'],
@@ -50,7 +51,7 @@ final class GitHubRegistrarFactoryTest extends TestCase
 
     public function testCreateGeneralConfigThrowsOnInvalidData(): void
     {
-        $factory = new GitHubRegistrarFactory();
+        $factory = new GitHubRegistrarFactory(new IssueSupporter());
         $issueConfig = [
             'labels' => [123], // Invalid: must be strings
         ];
@@ -63,7 +64,7 @@ final class GitHubRegistrarFactoryTest extends TestCase
 
     public function testCreateGeneralConfigThrowsOnUnknownOptions(): void
     {
-        $factory = new GitHubRegistrarFactory();
+        $factory = new GitHubRegistrarFactory(new IssueSupporter());
         $issueConfig = [
             'unknown_option' => 'value',
         ];

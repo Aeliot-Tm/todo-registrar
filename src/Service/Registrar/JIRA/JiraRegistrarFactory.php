@@ -15,6 +15,7 @@ namespace Aeliot\TodoRegistrar\Service\Registrar\JIRA;
 
 use Aeliot\TodoRegistrar\Enum\RegistrarType;
 use Aeliot\TodoRegistrar\Exception\ConfigValidationException;
+use Aeliot\TodoRegistrar\Service\Registrar\IssueSupporter;
 use Aeliot\TodoRegistrarContracts\RegistrarFactoryInterface;
 use Aeliot\TodoRegistrarContracts\RegistrarInterface;
 use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
@@ -26,6 +27,10 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 #[AsTaggedItem(index: RegistrarType::JIRA->value)]
 final class JiraRegistrarFactory implements RegistrarFactoryInterface
 {
+    public function __construct(private IssueSupporter $issueSupporter)
+    {
+    }
+
     public function create(array $config): RegistrarInterface
     {
         /** @var ValidatorInterface $validator */
@@ -38,7 +43,7 @@ final class JiraRegistrarFactory implements RegistrarFactoryInterface
         $issueLinkService = $serviceFactory->createIssueLinkService();
 
         return new JiraRegistrar(
-            new IssueFieldFactory($generalIssueConfig),
+            new IssueFieldFactory($generalIssueConfig, $this->issueSupporter),
             new IssueLinkRegistrar(
                 new LinkedIssueNormalizer(
                     $defaultIssueLinkType,

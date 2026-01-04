@@ -15,6 +15,7 @@ namespace Aeliot\TodoRegistrar\Service\Registrar\GitLab;
 
 use Aeliot\TodoRegistrar\Enum\RegistrarType;
 use Aeliot\TodoRegistrar\Exception\ConfigValidationException;
+use Aeliot\TodoRegistrar\Service\Registrar\IssueSupporter;
 use Aeliot\TodoRegistrarContracts\RegistrarFactoryInterface;
 use Aeliot\TodoRegistrarContracts\RegistrarInterface;
 use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
@@ -26,6 +27,10 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 #[AsTaggedItem(index: RegistrarType::GitLab->value)]
 final class GitlabRegistrarFactory implements RegistrarFactoryInterface
 {
+    public function __construct(private IssueSupporter $issueSupporter)
+    {
+    }
+
     public function create(array $config): RegistrarInterface
     {
         /** @var ValidatorInterface $validator */
@@ -42,8 +47,9 @@ final class GitlabRegistrarFactory implements RegistrarFactoryInterface
             $apiSectionClientFactory->createIssueService(),
             new IssueFactory(
                 $generalIssueConfig,
-                $apiSectionClientFactory->createUserResolver(),
+                $this->issueSupporter,
                 $milestoneApiClient,
+                $apiSectionClientFactory->createUserResolver(),
             ),
             $apiSectionClientFactory->createLabelService(),
             $milestoneApiClient,
