@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Test\Unit\Service\Registrar\GitLab;
 
 use Aeliot\TodoRegistrar\Exception\ConfigValidationException;
+use Aeliot\TodoRegistrar\Service\ColorGenerator;
 use Aeliot\TodoRegistrar\Service\Registrar\GitLab\GitlabRegistrarFactory;
 use Aeliot\TodoRegistrar\Service\Registrar\IssueSupporter;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -35,7 +36,7 @@ final class GitlabRegistrarFactoryTest extends TestCase
 
     public function testCreateGeneralIssueConfigWithValidData(): void
     {
-        $factory = new GitlabRegistrarFactory(new IssueSupporter());
+        $factory = new GitlabRegistrarFactory(new ColorGenerator(), new IssueSupporter());
         $config = [
             'issue' => [
                 'project' => 123,
@@ -59,7 +60,7 @@ final class GitlabRegistrarFactoryTest extends TestCase
 
     public function testCreateGeneralIssueConfigThrowsOnInvalidData(): void
     {
-        $factory = new GitlabRegistrarFactory(new IssueSupporter());
+        $factory = new GitlabRegistrarFactory(new ColorGenerator(), new IssueSupporter());
         $config = [
             'issue' => [
                 'project' => 123,
@@ -75,7 +76,7 @@ final class GitlabRegistrarFactoryTest extends TestCase
 
     public function testCreateGeneralIssueConfigThrowsOnInvalidDueDate(): void
     {
-        $factory = new GitlabRegistrarFactory(new IssueSupporter());
+        $factory = new GitlabRegistrarFactory(new ColorGenerator(), new IssueSupporter());
         $config = [
             'issue' => [
                 'project' => 123,
@@ -90,7 +91,7 @@ final class GitlabRegistrarFactoryTest extends TestCase
 
     public function testCreateGeneralIssueConfigThrowsOnUnknownOptions(): void
     {
-        $factory = new GitlabRegistrarFactory(new IssueSupporter());
+        $factory = new GitlabRegistrarFactory(new ColorGenerator(), new IssueSupporter());
         $config = [
             'issue' => [
                 'project' => 123,
