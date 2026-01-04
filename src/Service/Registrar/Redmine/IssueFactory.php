@@ -35,10 +35,10 @@ final readonly class IssueFactory
         $issue->setSubject($this->issueSupporter->getSummary($todo, $this->generalIssueConfig));
         $issue->setDescription($todo->getDescription());
 
-        $projectIdentifier = $this->generalIssueConfig->getProjectIdentifier();
+        $projectIdentifier = $todo->getInlineConfig()['project'] ?? $this->generalIssueConfig->getProjectIdentifier();
         $projectId = $this->entityResolver->resolveProjectId($projectIdentifier);
         if (null === $projectId) {
-            throw new \RuntimeException(\sprintf('Project "%s" not found', $projectIdentifier));
+            throw new ProjectNotFoundException(\sprintf('Project "%s" not found', $projectIdentifier));
         }
         $issue->setProjectId($projectId);
 
@@ -108,7 +108,7 @@ final readonly class IssueFactory
             return;
         }
 
-        $categoryId = $this->entityResolver->resolveCategoryId($category);
+        $categoryId = $this->entityResolver->resolveCategoryId($category, $issue->getProjectId());
         if (null !== $categoryId) {
             $issue->setCategoryId($categoryId);
         }
@@ -123,7 +123,7 @@ final readonly class IssueFactory
             return;
         }
 
-        $versionId = $this->entityResolver->resolveVersionId($fixedVersion);
+        $versionId = $this->entityResolver->resolveVersionId($fixedVersion, $issue->getProjectId());
         if (null !== $versionId) {
             $issue->setFixedVersionId($versionId);
         }

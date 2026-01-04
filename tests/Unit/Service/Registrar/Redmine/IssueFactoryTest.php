@@ -122,8 +122,8 @@ final class IssueFactoryTest extends TestCase
         $entityResolver->method('resolveProjectId')->with(1)->willReturn(1);
         $entityResolver->method('resolveTrackerId')->with(2)->willReturn(2);
         $entityResolver->method('resolvePriorityId')->with('High')->willReturn(3);
-        $entityResolver->method('resolveCategoryId')->with('Backend')->willReturn(7);
-        $entityResolver->method('resolveVersionId')->with('v1.0')->willReturn(10);
+        $entityResolver->method('resolveCategoryId')->with('Backend', 1)->willReturn(7);
+        $entityResolver->method('resolveVersionId')->with('v1.0', 1)->willReturn(10);
 
         $factory = new IssueFactory($entityResolver, $generalConfig, new IssueSupporter(), $userResolver);
         $issue = $factory->create($todo);
@@ -388,7 +388,7 @@ final class IssueFactoryTest extends TestCase
         $entityResolver = $this->createMock(EntityResolver::class);
         $entityResolver->method('resolveProjectId')->with(1)->willReturn(1);
         $entityResolver->method('resolveTrackerId')->with(2)->willReturn(2);
-        $entityResolver->method('resolveCategoryId')->with('NonexistentCategory')->willReturn(null);
+        $entityResolver->method('resolveCategoryId')->with('NonexistentCategory', 1)->willReturn(null);
 
         $factory = new IssueFactory($entityResolver, $generalConfig, new IssueSupporter(), $userResolver);
         $issue = $factory->create($todo);

@@ -41,7 +41,7 @@ final class RedmineRegistrarFactory implements RegistrarFactoryInterface
 
         return new RedmineRegistrar(
             new IssueFactory(
-                new EntityResolver($client, $generalIssueConfig->getProjectIdentifier()),
+                new EntityResolver($client),
                 $generalIssueConfig,
                 $this->issueSupporter,
                 new UserResolver($client),
