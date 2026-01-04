@@ -56,9 +56,7 @@ final class IssueSupporter
             $labels = array_intersect($labels, $allowedLabels);
         }
 
-        sort($labels);
-
-        return $labels;
+        return array_values(array_map('trim', $labels));
     }
 
     public function getSummary(TodoInterface $todo, AbstractGeneralIssueConfig $generalIssueConfig): string
