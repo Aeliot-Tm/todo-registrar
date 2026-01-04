@@ -19,7 +19,7 @@ use Aeliot\TodoRegistrarContracts\TodoInterface;
 /**
  * @internal
  */
-final class IssueFactory
+final readonly class IssueFactory
 {
     public function __construct(
         private GeneralIssueConfig $generalIssueConfig,

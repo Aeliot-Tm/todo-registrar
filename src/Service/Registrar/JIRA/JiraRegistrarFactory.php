@@ -25,7 +25,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  * @internal
  */
 #[AsTaggedItem(index: RegistrarType::JIRA->value)]
-final class JiraRegistrarFactory implements RegistrarFactoryInterface
+final readonly class JiraRegistrarFactory implements RegistrarFactoryInterface
 {
     public function __construct(private IssueSupporter $issueSupporter)
     {

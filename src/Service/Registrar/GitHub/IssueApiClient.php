@@ -18,7 +18,7 @@ use Github\Api\Issue as IssueApi;
 /**
  * @internal
  */
-final class IssueApiClient
+final readonly class IssueApiClient
 {
     public function __construct(
         private IssueApi $issueAPI,

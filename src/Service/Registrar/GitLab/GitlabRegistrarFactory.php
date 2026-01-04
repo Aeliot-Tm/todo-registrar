@@ -25,7 +25,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  * @internal
  */
 #[AsTaggedItem(index: RegistrarType::GitLab->value)]
-final class GitlabRegistrarFactory implements RegistrarFactoryInterface
+final readonly class GitlabRegistrarFactory implements RegistrarFactoryInterface
 {
     public function __construct(private IssueSupporter $issueSupporter)
     {

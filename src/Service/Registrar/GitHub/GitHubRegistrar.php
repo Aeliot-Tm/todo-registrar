@@ -19,7 +19,7 @@ use Aeliot\TodoRegistrarContracts\TodoInterface;
 /**
  * @internal
  */
-final class GitHubRegistrar implements RegistrarInterface
+final readonly class GitHubRegistrar implements RegistrarInterface
 {
     public function __construct(
         private IssueApiClient $issueApiClient,

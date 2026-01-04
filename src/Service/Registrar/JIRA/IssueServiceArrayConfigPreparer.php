@@ -18,7 +18,7 @@ namespace Aeliot\TodoRegistrar\Service\Registrar\JIRA;
  *
  * @internal
  */
-class IssueServiceArrayConfigPreparer
+final readonly class IssueServiceArrayConfigPreparer
 {
     /**
      * @param array<string, mixed> $config

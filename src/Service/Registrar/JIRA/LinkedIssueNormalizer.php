@@ -19,7 +19,7 @@ use JiraRestApi\IssueLink\IssueLinkType;
 /**
  * @internal
  */
-final class LinkedIssueNormalizer
+final readonly class LinkedIssueNormalizer
 {
     public function __construct(
         private string $defaultIssueLinkType,

@@ -20,7 +20,7 @@ use JiraRestApi\Issue\IssueField;
 /**
  * @internal
  */
-final class IssueFieldFactory
+final readonly class IssueFieldFactory
 {
     public function __construct(
         private GeneralIssueConfig $generalIssueConfig,
