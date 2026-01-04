@@ -32,7 +32,7 @@ final readonly class IssueFactory
     public function create(TodoInterface $todo): Issue
     {
         $issue = new Issue();
-        $issue->setTitle($this->generalIssueConfig->getSummaryPrefix() . $todo->getSummary());
+        $issue->setTitle($this->issueSupporter->getSummary($todo, $this->generalIssueConfig));
         $issue->setDescription($todo->getDescription());
 
         $this->setAssignees($issue, $todo);
@@ -45,21 +45,12 @@ final readonly class IssueFactory
 
     private function setAssignees(Issue $issue, TodoInterface $todo): void
     {
-        // Collect assignees from all sources: inline config, tag assignee, global config
-        $assignees = array_filter([
-            $todo->getAssignee(),
-            ...((array) ($todo->getInlineConfig()['assignee'] ?? [])),
-            ...$this->generalIssueConfig->getAssignee(),
-        ], static fn ($value): bool => '' !== (string) $value);
-
+        $assignees = $this->issueSupporter->getAssignees($todo, $this->generalIssueConfig);
         if (!$assignees) {
             return;
         }
 
-        // Convert username/email to user IDs
-        $assigneeIds = $this->userResolver->resolveUserIds($assignees);
-
-        $issue->setAssigneeIds($assigneeIds);
+        $issue->setAssigneeIds($this->userResolver->resolveUserIds($assignees));
     }
 
     private function setLabels(Issue $issue, TodoInterface $todo): void

@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\Redmine;
 
+use Aeliot\TodoRegistrar\Service\Registrar\IssueSupporter;
 use Aeliot\TodoRegistrarContracts\TodoInterface;
 
 /**
@@ -22,6 +23,7 @@ final readonly class IssueFactory
 {
     public function __construct(
         private GeneralIssueConfig $generalIssueConfig,
+        private IssueSupporter $issueSupporter,
         private UserResolver $userResolver,
         private EntityResolver $entityResolver,
     ) {
@@ -30,7 +32,7 @@ final readonly class IssueFactory
     public function create(TodoInterface $todo): Issue
     {
         $issue = new Issue();
-        $issue->setSubject($this->generalIssueConfig->getSummaryPrefix() . $todo->getSummary());
+        $issue->setSubject($this->issueSupporter->getSummary($todo, $this->generalIssueConfig));
         $issue->setDescription($todo->getDescription());
 
         $projectIdentifier = $this->generalIssueConfig->getProjectIdentifier();
@@ -71,18 +73,12 @@ final readonly class IssueFactory
 
     private function setAssignee(Issue $issue, TodoInterface $todo): void
     {
-        // Collect assignee from all sources: inline config, tag assignee, global config
-        $assignee = $todo->getInlineConfig()['assignee']
-            ?? $todo->getAssignee()
-            ?? $this->generalIssueConfig->getAssignee();
-
-        if (null === $assignee || '' === (string) $assignee) {
+        $assignees = $this->issueSupporter->getAssignees($todo, $this->generalIssueConfig);
+        if (!$assignees) {
             return;
         }
 
-        // Convert username/login/ID to user ID
-        $assigneeId = $this->userResolver->resolveUserId($assignee);
-
+        $assigneeId = $this->userResolver->resolveUserId(reset($assignees));
         if (null !== $assigneeId) {
             $issue->setAssignedToId($assigneeId);
         }

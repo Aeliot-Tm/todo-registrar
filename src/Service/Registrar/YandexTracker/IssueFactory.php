@@ -33,7 +33,7 @@ final readonly class IssueFactory
 
         $request
             ->queue($this->generalIssueConfig->getQueue())
-            ->summary($this->generalIssueConfig->getSummaryPrefix() . $todo->getSummary())
+            ->summary($this->issueSupporter->getSummary($todo, $this->generalIssueConfig))
             ->description($todo->getDescription())
             ->type($this->getType($todo));
 
@@ -61,12 +61,9 @@ final readonly class IssueFactory
 
     private function setAssignee(ExtendedIssueCreateRequest $request, TodoInterface $todo): void
     {
-        $assignee = $todo->getAssignee()
-            ?? $todo->getInlineConfig()['assignee']
-            ?? $this->generalIssueConfig->getAssignee();
-
-        if (null !== $assignee) {
-            $request->assignee($assignee);
+        $assignees = $this->issueSupporter->getAssignees($todo, $this->generalIssueConfig);
+        if ($assignees) {
+            $request->assignee(reset($assignees));
         }
     }
 

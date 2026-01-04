@@ -30,7 +30,7 @@ final class IssueFactory
     public function create(TodoInterface $todo): Issue
     {
         $issue = new Issue();
-        $issue->setTitle($this->generalIssueConfig->getSummaryPrefix() . $todo->getSummary());
+        $issue->setTitle($this->issueSupporter->getSummary($todo, $this->generalIssueConfig));
         $issue->setBody($todo->getDescription());
 
         $this->setAssignees($issue, $todo);
@@ -41,12 +41,7 @@ final class IssueFactory
 
     private function setAssignees(Issue $issue, TodoInterface $todo): void
     {
-        $assignees = array_filter([
-            $todo->getAssignee(),
-            ...$todo->getInlineConfig()['assignees'] ?? [],
-            ...$this->generalIssueConfig->getAssignees(),
-        ]);
-
+        $assignees = $this->issueSupporter->getAssignees($todo, $this->generalIssueConfig);
         foreach ($assignees as $assignee) {
             $issue->addAssignee($assignee);
         }
