@@ -32,7 +32,7 @@ final class IssueFieldFactory
     {
         $issueField = new IssueField();
         $issueField
-            ->setProjectKey($this->generalIssueConfig->getProjectKey())
+            ->setProjectKey($todo->getInlineConfig()['projectKey'] ?? $this->generalIssueConfig->getProjectKey())
             ->setSummary($this->issueSupporter->getSummary($todo, $this->generalIssueConfig))
             ->setDescription($todo->getDescription());
 
