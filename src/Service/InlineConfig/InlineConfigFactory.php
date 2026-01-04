@@ -20,7 +20,7 @@ use Aeliot\TodoRegistrarContracts\InlineConfigInterface;
 /**
  * @internal
  */
-final class InlineConfigFactory implements InlineConfigFactoryInterface
+final readonly class InlineConfigFactory implements InlineConfigFactoryInterface
 {
     /**
      * TODO: #125 create config specific for configured registrar.

@@ -18,7 +18,7 @@ use Aeliot\TodoRegistrar\Dto\Tag\TagMetadata;
 /**
  * @internal
  */
-class Detector
+final readonly class Detector
 {
     private string $pattern;
 

@@ -22,7 +22,7 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
  * @internal
  */
 #[Assert\Callback('validateNestedConfigs')]
-class ArrayConfig
+final class ArrayConfig
 {
     #[Assert\AtLeastOneOf(
         constraints: [

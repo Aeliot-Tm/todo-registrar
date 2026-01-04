@@ -20,7 +20,7 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 /**
  * @internal
  */
-final class ContainerBuilder
+final readonly class ContainerBuilder
 {
     public static function build(): SymfonyContainerBuilder
     {

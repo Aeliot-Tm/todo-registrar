@@ -18,7 +18,7 @@ use Aeliot\TodoRegistrar\Dto\InlineConfig\NamedCollection;
 use Aeliot\TodoRegistrar\Dto\InlineConfig\Token;
 use Aeliot\TodoRegistrar\Exception\InvalidInlineConfigFormatException;
 
-final class ArrayFromJsonLikeLexerBuilder
+final readonly class ArrayFromJsonLikeLexerBuilder
 {
     /**
      * @return array<array-key,mixed>

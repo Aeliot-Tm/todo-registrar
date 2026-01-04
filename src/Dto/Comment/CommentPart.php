@@ -20,7 +20,7 @@ use Aeliot\TodoRegistrar\Exception\NoPrefixException;
 /**
  * @internal
  */
-class CommentPart
+final class CommentPart
 {
     /**
      * @var string[]

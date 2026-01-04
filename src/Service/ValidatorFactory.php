@@ -19,7 +19,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 /**
  * @internal
  */
-final class ValidatorFactory
+final readonly class ValidatorFactory
 {
     public static function create(): ValidatorInterface
     {

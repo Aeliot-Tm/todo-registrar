@@ -16,7 +16,7 @@ namespace Aeliot\TodoRegistrar\Dto\Comment;
 /**
  * @internal
  */
-class CommentParts
+final class CommentParts
 {
     /**
      * @var CommentPart[]
