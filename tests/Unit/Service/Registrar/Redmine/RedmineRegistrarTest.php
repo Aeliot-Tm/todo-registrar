@@ -37,7 +37,7 @@ final class RedmineRegistrarTest extends TestCase
         $issueApiClient = $this->createMock(IssueApiClient::class);
         $issueApiClient->method('create')->with($issue)->willReturn($response);
 
-        $registrar = new RedmineRegistrar($issueFactory, $issueApiClient);
+        $registrar = new RedmineRegistrar($issueApiClient, $issueFactory);
 
         $result = $registrar->register($todo);
 
@@ -60,7 +60,7 @@ final class RedmineRegistrarTest extends TestCase
         $issueApiClient = $this->createMock(IssueApiClient::class);
         $issueApiClient->method('create')->willReturn($response);
 
-        $registrar = new RedmineRegistrar($issueFactory, $issueApiClient);
+        $registrar = new RedmineRegistrar($issueApiClient, $issueFactory);
 
         $result = $registrar->register($todo);
 
@@ -80,7 +80,7 @@ final class RedmineRegistrarTest extends TestCase
         $issueApiClient = $this->createMock(IssueApiClient::class);
         $issueApiClient->method('create')->willReturn($response);
 
-        $registrar = new RedmineRegistrar($issueFactory, $issueApiClient);
+        $registrar = new RedmineRegistrar($issueApiClient, $issueFactory);
 
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Unable to extract issue ID from Redmine API response');

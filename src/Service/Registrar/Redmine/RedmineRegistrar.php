@@ -22,26 +22,20 @@ use Aeliot\TodoRegistrarContracts\TodoInterface;
 final readonly class RedmineRegistrar implements RegistrarInterface
 {
     public function __construct(
-        private IssueFactory $issueFactory,
         private IssueApiClient $issueApiClient,
+        private IssueFactory $issueFactory,
     ) {
     }
 
     public function register(TodoInterface $todo): string
     {
-        // Create issue
         $response = $this->issueApiClient->create($this->issueFactory->create($todo));
 
-        // Extract issue ID from SimpleXMLElement response
         $issueId = $this->extractIssueId($response);
 
-        // Return issue ID in format "#123"
         return '#' . $issueId;
     }
 
-    /**
-     * Extract issue ID from SimpleXMLElement response.
-     */
     private function extractIssueId(\SimpleXMLElement $response): int
     {
         // Response structure: <issue><id>123</id>...</issue>

@@ -25,7 +25,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  * @internal
  */
 #[AsTaggedItem(index: RegistrarType::Redmine->value)]
-final class RedmineRegistrarFactory implements RegistrarFactoryInterface
+final readonly class RedmineRegistrarFactory implements RegistrarFactoryInterface
 {
     public function __construct(private IssueSupporter $issueSupporter)
     {
@@ -40,13 +40,13 @@ final class RedmineRegistrarFactory implements RegistrarFactoryInterface
         $client = (new ServiceFactory($config['service']))->createClient();
 
         return new RedmineRegistrar(
+            new IssueApiClient($client),
             new IssueFactory(
                 new EntityResolver($client),
                 $generalIssueConfig,
                 $this->issueSupporter,
                 new UserResolver($client),
             ),
-            new IssueApiClient($client),
         );
     }
 
