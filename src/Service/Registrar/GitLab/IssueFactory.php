@@ -84,15 +84,15 @@ final readonly class IssueFactory
         if (\is_int($milestone) || ctype_digit((string) $milestone)) {
             $numericValue = (int) $milestone;
             // First try to find by ID
-            if ($this->milestoneApiClient->findById($issue->getProject(), $numericValue)) {
+            if ($this->milestoneApiClient->hasById($issue->getProject(), $numericValue)) {
                 $milestoneId = $numericValue;
             } else {
                 // If not found by ID, try to find by IID
-                $milestoneId = $this->milestoneApiClient->findByIid($issue->getProject(), $numericValue);
+                $milestoneId = $this->milestoneApiClient->findIdByIid($issue->getProject(), $numericValue);
             }
         } else {
             // If string, search by title
-            $milestoneId = $this->milestoneApiClient->findByTitle($issue->getProject(), (string) $milestone);
+            $milestoneId = $this->milestoneApiClient->findIdByTitle($issue->getProject(), (string) $milestone);
         }
 
         if (null !== $milestoneId) {

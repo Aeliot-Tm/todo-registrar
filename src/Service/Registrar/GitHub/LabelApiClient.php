@@ -29,6 +29,7 @@ final class LabelApiClient
         private readonly LabelsApi $labelsApi,
     ) {
     }
+
     public function create(string $owner, string $repository, string $label): void
     {
         $cacheKey = $owner . '/' . $repository;

@@ -82,7 +82,7 @@ final readonly class GitlabRegistrar implements RegistrarInterface
      */
     private function validateMilestone(int|string $project, int $milestoneId): void
     {
-        if (!$this->milestoneApiClient->findById($project, $milestoneId)) {
+        if (!$this->milestoneApiClient->hasById($project, $milestoneId)) {
             throw new \RuntimeException(\sprintf('Milestone with ID %d does not exist', $milestoneId));
         }
     }
