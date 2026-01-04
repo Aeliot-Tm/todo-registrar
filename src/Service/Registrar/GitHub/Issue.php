@@ -33,14 +33,15 @@ final class Issue
         return $this->data;
     }
 
+    public function addAssignee(string $assignee): void
+    {
+        $this->data['assignees'] ??= [];
+        $this->data['assignees'][] = $assignee;
+    }
+
     public function setBody(string $body): void
     {
         $this->data['body'] = $body;
-    }
-
-    public function setTitle(string $title): void
-    {
-        $this->data['title'] = $title;
     }
 
     /**
@@ -55,12 +56,6 @@ final class Issue
     {
         $this->data['labels'] ??= [];
         $this->data['labels'][] = $label;
-    }
-
-    public function addAssignee(string $assignee): void
-    {
-        $this->data['assignees'] ??= [];
-        $this->data['assignees'][] = $assignee;
     }
 
     public function getOwner(): string
@@ -81,5 +76,10 @@ final class Issue
     public function setRepository(string $repository): void
     {
         $this->repository = $repository;
+    }
+
+    public function setTitle(string $title): void
+    {
+        $this->data['title'] = $title;
     }
 }
