@@ -25,14 +25,6 @@ final class Issue
     private string $owner;
     private string $repository;
 
-    /**
-     * @return array<string,mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
-    }
-
     public function addAssignee(string $assignee): void
     {
         $this->data['assignees'] ??= [];
@@ -42,6 +34,14 @@ final class Issue
     public function setBody(string $body): void
     {
         $this->data['body'] = $body;
+    }
+
+    /**
+     * @return array<string,mixed>
+     */
+    public function getData(): array
+    {
+        return $this->data;
     }
 
     /**
