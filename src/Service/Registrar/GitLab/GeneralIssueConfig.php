@@ -34,16 +34,6 @@ final class GeneralIssueConfig extends AbstractGeneralIssueConfig
     #[Assert\AtLeastOneOf(
         constraints: [
             new Assert\IsNull(),
-            new Assert\Type(type: 'int', message: 'Milestone must be an integer ID'),
-            new Assert\Type(type: 'string', message: 'Milestone must be a string title'),
-        ],
-        message: 'Option "milestone" must be an integer ID, IID, or string title'
-    )]
-    protected mixed $milestone = null;
-
-    #[Assert\AtLeastOneOf(
-        constraints: [
-            new Assert\IsNull(),
             new Assert\Regex(
                 pattern: '/^\d{4}-\d{2}-\d{2}$/',
                 message: 'Due date must be in format YYYY-MM-DD'
@@ -52,6 +42,16 @@ final class GeneralIssueConfig extends AbstractGeneralIssueConfig
         message: 'Option "due_date" must be a date string in format YYYY-MM-DD or null'
     )]
     protected mixed $due_date = null;
+
+    #[Assert\AtLeastOneOf(
+        constraints: [
+            new Assert\IsNull(),
+            new Assert\Type(type: 'int', message: 'Milestone must be an integer ID'),
+            new Assert\Type(type: 'string', message: 'Milestone must be a string title'),
+        ],
+        message: 'Option "milestone" must be an integer ID, IID, or string title'
+    )]
+    protected mixed $milestone = null;
 
     #[Assert\NotBlank(message: 'Option "project" is required for GitLab registrar')]
     #[Assert\AtLeastOneOf(
@@ -71,14 +71,14 @@ final class GeneralIssueConfig extends AbstractGeneralIssueConfig
         return $this->assignee;
     }
 
-    public function getMilestone(): int|string|null
-    {
-        return $this->milestone;
-    }
-
     public function getDueDate(): ?string
     {
         return $this->due_date;
+    }
+
+    public function getMilestone(): int|string|null
+    {
+        return $this->milestone;
     }
 
     public function getProject(): int|string

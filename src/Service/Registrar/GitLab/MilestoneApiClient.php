@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Service\Registrar\GitLab;
 
 use Gitlab\Api\Milestones;
-use Gitlab\Client;
 
 /**
  * Client for working with GitLab project milestones.
@@ -29,52 +28,9 @@ final readonly class MilestoneApiClient
     ) {
     }
 
-    /**
-     * Get all milestones for the project.
-     *
-     * @return array<int,array<string,mixed>> Array of milestones indexed by ID
-     */
-    public function getAll(int|string $project): array
-    {
-        $milestones = $this->milestones->all($project);
-        $result = [];
-        foreach ($milestones as $milestone) {
-            if (isset($milestone['id'])) {
-                $result[(int) $milestone['id']] = $milestone;
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * Get all milestones indexed by IID.
-     *
-     * @return array<int,array<string,mixed>> Array of milestones indexed by IID
-     */
-    private function getAllByIid(int|string $project): array
-    {
-        $milestones = $this->milestones->all($project);
-        $result = [];
-        foreach ($milestones as $milestone) {
-            if (isset($milestone['iid'])) {
-                $result[(int) $milestone['iid']] = $milestone;
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * Find milestone by ID.
-     *
-     * @return bool True if milestone exists
-     */
     public function findById(int|string $project, int $id): bool
     {
-        $milestones = $this->getAll($project);
-
-        return isset($milestones[$id]);
+        return null !== $this->getIdByField($project, 'id', $id);
     }
 
     /**
@@ -84,14 +40,7 @@ final readonly class MilestoneApiClient
      */
     public function findByTitle(int|string $project, string $title): ?int
     {
-        $milestones = $this->getAll($project);
-        foreach ($milestones as $id => $milestone) {
-            if (isset($milestone['title']) && $milestone['title'] === $title) {
-                return $id;
-            }
-        }
-
-        return null;
+        return $this->getIdByField($project, 'title', $title);
     }
 
     /**
@@ -103,9 +52,16 @@ final readonly class MilestoneApiClient
      */
     public function findByIid(int|string $project, int $iid): ?int
     {
-        $milestonesByIid = $this->getAllByIid($project);
-        if (isset($milestonesByIid[$iid]) && isset($milestonesByIid[$iid]['id'])) {
-            return (int) $milestonesByIid[$iid]['id'];
+        return $this->getIdByField($project, 'iid', $iid);
+    }
+
+    private function getIdByField(int|string $project, string $field, int|string $value): ?int
+    {
+        $milestones = $this->milestones->all($project);
+        foreach ($milestones as $milestone) {
+            if (isset($milestone['id']) && ($milestone[$field] ?? null) === $value) {
+                return (int) $milestone['id'];
+            }
         }
 
         return null;

@@ -29,18 +29,6 @@ final readonly class LabelApiClient
     }
 
     /**
-     * Get all labels for the project.
-     *
-     * @return string[] Array of label names
-     */
-    public function getAll(int|string $project): array
-    {
-        $labels = $this->projects->labels($project);
-
-        return array_map(static fn (array $label): string => $label['name'], $labels);
-    }
-
-    /**
      * Create a new label in the project.
      *
      * @param string $name Label name
@@ -64,5 +52,17 @@ final readonly class LabelApiClient
         }
 
         $this->projects->addLabel($project, $params);
+    }
+
+    /**
+     * Get all labels for the project.
+     *
+     * @return string[] Array of label names
+     */
+    public function getAll(int|string $project): array
+    {
+        $labels = $this->projects->labels($project);
+
+        return array_map(static fn (array $label): string => $label['name'], $labels);
     }
 }
