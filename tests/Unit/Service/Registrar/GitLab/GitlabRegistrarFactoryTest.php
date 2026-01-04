@@ -37,6 +37,7 @@ final class GitlabRegistrarFactoryTest extends TestCase
     {
         $factory = new GitlabRegistrarFactory(new IssueSupporter());
         $issueConfig = [
+            'project' => 123,
             'addTagToLabels' => true,
             'labels' => ['bug'],
             'assignee' => ['user1'],
@@ -46,6 +47,7 @@ final class GitlabRegistrarFactoryTest extends TestCase
 
         $config = $factory->createGeneralIssueConfig($issueConfig, self::$validator);
 
+        self::assertSame(123, $config->getProject());
         self::assertTrue($config->isAddTagToLabels());
         self::assertSame(['bug'], $config->getLabels());
         self::assertSame(['user1'], $config->getAssignee());
@@ -57,6 +59,7 @@ final class GitlabRegistrarFactoryTest extends TestCase
     {
         $factory = new GitlabRegistrarFactory(new IssueSupporter());
         $issueConfig = [
+            'project' => 123,
             'labels' => [123], // Invalid: must be strings
         ];
 
@@ -70,6 +73,7 @@ final class GitlabRegistrarFactoryTest extends TestCase
     {
         $factory = new GitlabRegistrarFactory(new IssueSupporter());
         $issueConfig = [
+            'project' => 123,
             'due_date' => 'invalid-date',
         ];
 
@@ -82,6 +86,7 @@ final class GitlabRegistrarFactoryTest extends TestCase
     {
         $factory = new GitlabRegistrarFactory(new IssueSupporter());
         $issueConfig = [
+            'project' => 123,
             'unknown_option' => 'value',
         ];
 

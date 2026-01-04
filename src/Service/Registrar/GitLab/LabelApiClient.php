@@ -25,7 +25,6 @@ final readonly class LabelApiClient
 {
     public function __construct(
         private Projects $projects,
-        private int|string $projectIdentifier,
     ) {
     }
 
@@ -34,9 +33,9 @@ final readonly class LabelApiClient
      *
      * @return string[] Array of label names
      */
-    public function getAll(): array
+    public function getAll(int|string $project): array
     {
-        $labels = $this->projects->labels($this->projectIdentifier);
+        $labels = $this->projects->labels($project);
 
         return array_map(static fn (array $label): string => $label['name'], $labels);
     }
@@ -48,8 +47,12 @@ final readonly class LabelApiClient
      * @param string|null $color Label color (hex format, e.g., "#FF0000"). If not provided, uses default color.
      * @param string|null $description Label description
      */
-    public function create(string $name, ?string $color = null, ?string $description = null): void
-    {
+    public function create(
+        int|string $project,
+        string $name,
+        ?string $color = null,
+        ?string $description = null,
+    ): void {
         // GitLab API requires color field, so we use a default if not provided
         $params = [
             'name' => $name,
@@ -60,6 +63,6 @@ final readonly class LabelApiClient
             $params['description'] = $description;
         }
 
-        $this->projects->addLabel($this->projectIdentifier, $params);
+        $this->projects->addLabel($project, $params);
     }
 }

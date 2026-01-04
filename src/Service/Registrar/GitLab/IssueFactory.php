@@ -32,6 +32,7 @@ final readonly class IssueFactory
     public function create(TodoInterface $todo): Issue
     {
         $issue = new Issue();
+        $issue->setProject($todo->getInlineConfig()['project'] ?? $this->generalIssueConfig->getProject());
         $issue->setTitle($this->issueSupporter->getSummary($todo, $this->generalIssueConfig));
         $issue->setDescription($todo->getDescription());
 
@@ -73,15 +74,15 @@ final readonly class IssueFactory
         if (\is_int($milestone) || ctype_digit((string) $milestone)) {
             $numericValue = (int) $milestone;
             // First try to find by ID
-            if ($this->milestoneApiClient->findById($numericValue)) {
+            if ($this->milestoneApiClient->findById($issue->getProject(), $numericValue)) {
                 $milestoneId = $numericValue;
             } else {
                 // If not found by ID, try to find by IID
-                $milestoneId = $this->milestoneApiClient->findByIid($numericValue);
+                $milestoneId = $this->milestoneApiClient->findByIid($issue->getProject(), $numericValue);
             }
         } else {
             // If string, search by title
-            $milestoneId = $this->milestoneApiClient->findByTitle((string) $milestone);
+            $milestoneId = $this->milestoneApiClient->findByTitle($issue->getProject(), (string) $milestone);
         }
 
         if (null !== $milestoneId) {
