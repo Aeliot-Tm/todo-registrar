@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\GitHub;
 
+use Aeliot\TodoRegistrar\Service\ColorGenerator;
 use Github\Api\Issue\Labels as LabelsApi;
 
 /**
@@ -26,6 +27,7 @@ final class LabelApiClient
     private array $labelsCache = [];
 
     public function __construct(
+        private readonly ColorGenerator $colorGenerator,
         private readonly LabelsApi $labelsApi,
     ) {
     }
@@ -37,7 +39,10 @@ final class LabelApiClient
             $this->getAll($owner, $repository);
         }
 
-        $this->labelsApi->create($owner, $repository, ['name' => $label]);
+        $this->labelsApi->create($owner, $repository, [
+            'name' => $label,
+            'color' => $this->colorGenerator->generateColor($label),
+        ]);
         $this->labelsCache[$cacheKey][] = $label;
         sort($this->labelsCache[$cacheKey]);
     }

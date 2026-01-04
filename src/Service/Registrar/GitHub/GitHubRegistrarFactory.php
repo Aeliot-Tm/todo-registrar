@@ -15,6 +15,7 @@ namespace Aeliot\TodoRegistrar\Service\Registrar\GitHub;
 
 use Aeliot\TodoRegistrar\Enum\RegistrarType;
 use Aeliot\TodoRegistrar\Exception\ConfigValidationException;
+use Aeliot\TodoRegistrar\Service\ColorGenerator;
 use Aeliot\TodoRegistrar\Service\Registrar\IssueSupporter;
 use Aeliot\TodoRegistrarContracts\RegistrarFactoryInterface;
 use Aeliot\TodoRegistrarContracts\RegistrarInterface;
@@ -27,8 +28,10 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 #[AsTaggedItem(index: RegistrarType::GitHub->value)]
 final readonly class GitHubRegistrarFactory implements RegistrarFactoryInterface
 {
-    public function __construct(private IssueSupporter $issueSupporter)
-    {
+    public function __construct(
+        private ColorGenerator $colorGenerator,
+        private IssueSupporter $issueSupporter,
+    ) {
     }
 
     public function create(array $config): RegistrarInterface
@@ -36,7 +39,7 @@ final readonly class GitHubRegistrarFactory implements RegistrarFactoryInterface
         /** @var ValidatorInterface $validator */
         $validator = func_get_arg(1);
         $generalIssueConfig = $this->createGeneralConfig($config, $validator);
-        $apiClientFactory = new ApiClientFactory($config['service']);
+        $apiClientFactory = new ApiClientFactory($config['service'], $this->colorGenerator);
 
         return new GitHubRegistrar(
             $apiClientFactory->createIssueApiClient(),

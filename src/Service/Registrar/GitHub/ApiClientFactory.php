@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\GitHub;
 
+use Aeliot\TodoRegistrar\Service\ColorGenerator;
 use Github\AuthMethod;
 use Github\Client as GithubClient;
 use Github\HttpClient\Builder;
@@ -26,8 +27,10 @@ final readonly class ApiClientFactory
     /**
      * @param array<string,mixed> $config
      */
-    public function __construct(private array $config)
-    {
+    public function __construct(
+        private array $config,
+        private ColorGenerator $colorGenerator,
+    ) {
     }
 
     public function createIssueApiClient(): IssueApiClient
@@ -40,6 +43,7 @@ final readonly class ApiClientFactory
     public function createLabelApiClient(): LabelApiClient
     {
         return new LabelApiClient(
+            $this->colorGenerator,
             $this->createGithubClient()->api('issue')->labels(),
         );
     }
