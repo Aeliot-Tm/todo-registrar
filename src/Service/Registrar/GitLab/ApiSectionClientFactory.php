@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\GitLab;
 
+use Aeliot\TodoRegistrar\Service\ColorGenerator;
 use Gitlab\Client;
 
 /**
@@ -22,6 +23,7 @@ final readonly class ApiSectionClientFactory
 {
     public function __construct(
         private Client $client,
+        private ColorGenerator $colorGenerator,
     ) {
     }
 
@@ -32,7 +34,7 @@ final readonly class ApiSectionClientFactory
 
     public function createLabelService(): LabelApiClient
     {
-        return new LabelApiClient($this->client->projects());
+        return new LabelApiClient($this->colorGenerator, $this->client->projects());
     }
 
     public function createMilestoneService(): MilestoneApiClient

@@ -15,6 +15,7 @@ namespace Aeliot\TodoRegistrar\Service\Registrar\GitLab;
 
 use Aeliot\TodoRegistrar\Enum\RegistrarType;
 use Aeliot\TodoRegistrar\Exception\ConfigValidationException;
+use Aeliot\TodoRegistrar\Service\ColorGenerator;
 use Aeliot\TodoRegistrar\Service\Registrar\IssueSupporter;
 use Aeliot\TodoRegistrarContracts\RegistrarFactoryInterface;
 use Aeliot\TodoRegistrarContracts\RegistrarInterface;
@@ -27,8 +28,10 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 #[AsTaggedItem(index: RegistrarType::GitLab->value)]
 final readonly class GitlabRegistrarFactory implements RegistrarFactoryInterface
 {
-    public function __construct(private IssueSupporter $issueSupporter)
-    {
+    public function __construct(
+        private ColorGenerator $colorGenerator,
+        private IssueSupporter $issueSupporter,
+    ) {
     }
 
     public function create(array $config): RegistrarInterface
@@ -39,6 +42,7 @@ final readonly class GitlabRegistrarFactory implements RegistrarFactoryInterface
         $apiClientProvider = new ApiClientFactory($config['service']);
         $apiSectionClientFactory = new ApiSectionClientFactory(
             $apiClientProvider->createClient(),
+            $this->colorGenerator,
         );
         $milestoneApiClient = $apiSectionClientFactory->createMilestoneService();
 
@@ -61,8 +65,8 @@ final readonly class GitlabRegistrarFactory implements RegistrarFactoryInterface
     public function createGeneralIssueConfig(array $config, ValidatorInterface $validator): GeneralIssueConfig
     {
         $issueConfig = ($config['issue'] ?? []) + [
-            'project' => ($config['service'] ?? [])['project'] ?? null,
-        ];
+                'project' => ($config['service'] ?? [])['project'] ?? null,
+            ];
         if (isset($issueConfig['project']) && ctype_digit((string) $issueConfig['project'])) {
             $issueConfig['project'] = (int) $issueConfig['project'];
         }
