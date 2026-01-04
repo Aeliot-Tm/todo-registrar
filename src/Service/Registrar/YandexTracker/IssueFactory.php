@@ -32,8 +32,8 @@ final readonly class IssueFactory
         $request = new ExtendedIssueCreateRequest();
 
         $request
-            ->queue($this->generalIssueConfig->getQueue())
-            ->summary($this->generalIssueConfig->getSummaryPrefix() . $todo->getSummary())
+            ->queue($todo->getInlineConfig()['queue'] ?? $this->generalIssueConfig->getQueue())
+            ->summary($this->issueSupporter->getSummary($todo, $this->generalIssueConfig))
             ->description($todo->getDescription())
             ->type($this->getType($todo));
 
@@ -44,11 +44,12 @@ final readonly class IssueFactory
         return $request;
     }
 
-    private function getType(TodoInterface $todo): string
+    private function setAssignee(ExtendedIssueCreateRequest $request, TodoInterface $todo): void
     {
-        $inlineConfig = $todo->getInlineConfig();
-
-        return $inlineConfig['issue_type'] ?? $this->generalIssueConfig->getType();
+        $assignees = $this->issueSupporter->getAssignees($todo, $this->generalIssueConfig);
+        if ($assignees) {
+            $request->assignee(reset($assignees));
+        }
     }
 
     private function setPriority(ExtendedIssueCreateRequest $request, TodoInterface $todo): void
@@ -59,22 +60,18 @@ final readonly class IssueFactory
         }
     }
 
-    private function setAssignee(ExtendedIssueCreateRequest $request, TodoInterface $todo): void
-    {
-        $assignee = $todo->getAssignee()
-            ?? $todo->getInlineConfig()['assignee']
-            ?? $this->generalIssueConfig->getAssignee();
-
-        if (null !== $assignee) {
-            $request->assignee($assignee);
-        }
-    }
-
     private function setTags(ExtendedIssueCreateRequest $request, TodoInterface $todo): void
     {
         $tags = $this->issueSupporter->getLabels($todo, $this->generalIssueConfig);
         if ($tags) {
             $request->tags($tags);
         }
+    }
+
+    private function getType(TodoInterface $todo): string
+    {
+        $inlineConfig = $todo->getInlineConfig();
+
+        return $inlineConfig['issue_type'] ?? $this->generalIssueConfig->getType();
     }
 }

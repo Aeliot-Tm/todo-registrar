@@ -36,57 +36,70 @@ final class GitlabRegistrarFactoryTest extends TestCase
     public function testCreateGeneralIssueConfigWithValidData(): void
     {
         $factory = new GitlabRegistrarFactory(new IssueSupporter());
-        $issueConfig = [
-            'addTagToLabels' => true,
-            'labels' => ['bug'],
-            'assignee' => ['user1'],
-            'milestone' => 'Sprint 1',
-            'due_date' => '2025-12-31',
+        $config = [
+            'issue' => [
+                'project' => 123,
+                'addTagToLabels' => true,
+                'labels' => ['bug'],
+                'assignee' => ['user1'],
+                'milestone' => 'Sprint 1',
+                'due_date' => '2025-12-31',
+            ],
         ];
 
-        $config = $factory->createGeneralIssueConfig($issueConfig, self::$validator);
+        $generalConfig = $factory->createGeneralIssueConfig($config, self::$validator);
 
-        self::assertTrue($config->isAddTagToLabels());
-        self::assertSame(['bug'], $config->getLabels());
-        self::assertSame(['user1'], $config->getAssignee());
-        self::assertSame('Sprint 1', $config->getMilestone());
-        self::assertSame('2025-12-31', $config->getDueDate());
+        self::assertSame(123, $generalConfig->getProject());
+        self::assertTrue($generalConfig->isAddTagToLabels());
+        self::assertSame(['bug'], $generalConfig->getLabels());
+        self::assertSame(['user1'], $generalConfig->getAssignee());
+        self::assertSame('Sprint 1', $generalConfig->getMilestone());
+        self::assertSame('2025-12-31', $generalConfig->getDueDate());
     }
 
     public function testCreateGeneralIssueConfigThrowsOnInvalidData(): void
     {
         $factory = new GitlabRegistrarFactory(new IssueSupporter());
-        $issueConfig = [
-            'labels' => [123], // Invalid: must be strings
+        $config = [
+            'issue' => [
+                'project' => 123,
+                'labels' => [123], // Invalid: must be strings
+            ],
         ];
 
         $this->expectException(ConfigValidationException::class);
         $this->expectExceptionMessage('[GitLab] Invalid general issue config');
 
-        $factory->createGeneralIssueConfig($issueConfig, self::$validator);
+        $factory->createGeneralIssueConfig($config, self::$validator);
     }
 
     public function testCreateGeneralIssueConfigThrowsOnInvalidDueDate(): void
     {
         $factory = new GitlabRegistrarFactory(new IssueSupporter());
-        $issueConfig = [
-            'due_date' => 'invalid-date',
+        $config = [
+            'issue' => [
+                'project' => 123,
+                'due_date' => 'invalid-date',
+            ],
         ];
 
         $this->expectException(ConfigValidationException::class);
 
-        $factory->createGeneralIssueConfig($issueConfig, self::$validator);
+        $factory->createGeneralIssueConfig($config, self::$validator);
     }
 
     public function testCreateGeneralIssueConfigThrowsOnUnknownOptions(): void
     {
         $factory = new GitlabRegistrarFactory(new IssueSupporter());
-        $issueConfig = [
-            'unknown_option' => 'value',
+        $config = [
+            'issue' => [
+                'project' => 123,
+                'unknown_option' => 'value',
+            ],
         ];
 
         $this->expectException(ConfigValidationException::class);
 
-        $factory->createGeneralIssueConfig($issueConfig, self::$validator);
+        $factory->createGeneralIssueConfig($config, self::$validator);
     }
 }

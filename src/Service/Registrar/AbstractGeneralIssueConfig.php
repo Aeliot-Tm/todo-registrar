@@ -24,21 +24,6 @@ abstract class AbstractGeneralIssueConfig
      * @var string[]|null
      */
     #[Assert\Sequentially([
-        new Assert\NotNull(message: 'Option "labels" cannot be null'),
-        new Assert\Type(type: 'array', message: 'Option "labels" must be an array'),
-        new Assert\All([
-            new Assert\Sequentially([
-                new Assert\NotNull(message: 'Each label cannot be null'),
-                new Assert\Type(type: 'string', message: 'Each label must be a string'),
-            ]),
-        ]),
-    ])]
-    protected mixed $labels = [];
-
-    /**
-     * @var string[]|null
-     */
-    #[Assert\Sequentially([
         new Assert\NotNull(message: 'Option "allowedLabels" cannot be null'),
         new Assert\Type(type: 'array', message: 'Option "allowedLabels" must be an array'),
         new Assert\All([
@@ -50,14 +35,29 @@ abstract class AbstractGeneralIssueConfig
     ])]
     protected mixed $allowedLabels = [];
 
-    #[Assert\Type(type: 'string', message: 'Option "tagPrefix" must be a string')]
-    protected mixed $tagPrefix = null;
+    #[Assert\IsNull(message: 'Unknown configuration options detected: {{ value }}')]
+    protected mixed $invalidKeys = null;
+
+    /**
+     * @var string[]|null
+     */
+    #[Assert\Sequentially([
+        new Assert\NotNull(message: 'Option "labels" cannot be null'),
+        new Assert\Type(type: 'array', message: 'Option "labels" must be an array'),
+        new Assert\All([
+            new Assert\Sequentially([
+                new Assert\NotNull(message: 'Each label cannot be null'),
+                new Assert\Type(type: 'string', message: 'Each label must be a string'),
+            ]),
+        ]),
+    ])]
+    protected mixed $labels = [];
 
     #[Assert\Type(type: 'string', message: 'Option "summaryPrefix" must be a string')]
     protected mixed $summaryPrefix = null;
 
-    #[Assert\IsNull(message: 'Unknown configuration options detected: {{ value }}')]
-    protected mixed $invalidKeys = null;
+    #[Assert\Type(type: 'string', message: 'Option "tagPrefix" must be a string')]
+    protected mixed $tagPrefix = null;
 
     /**
      * @param array<string,mixed> $config

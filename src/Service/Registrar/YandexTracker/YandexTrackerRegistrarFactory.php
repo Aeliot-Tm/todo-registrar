@@ -25,7 +25,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  * @internal
  */
 #[AsTaggedItem(index: RegistrarType::YandexTracker->value)]
-final class YandexTrackerRegistrarFactory implements RegistrarFactoryInterface
+final readonly class YandexTrackerRegistrarFactory implements RegistrarFactoryInterface
 {
     public function __construct(private IssueSupporter $issueSupporter)
     {

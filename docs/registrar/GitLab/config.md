@@ -9,6 +9,7 @@ Description of keys of general config:
 ```php
 $config->setRegistrar('GitLab', [
     'issue' => [
+        'project' => 123,                           // required: either project ID (integer: 123) or project path (string: owner/repo)
         'assignee' => ['username1', 'username2'],   // optional: String or array of strings. Identifiers of GitLab users (username or email),
                                                     //           which will be assigned to issue when "assignee-suffix"
                                                     //           was not used with tag.
@@ -21,10 +22,9 @@ $config->setRegistrar('GitLab', [
                                                     //           addTagToLabels=true) will be filtered to match this list.
         'due_date' => '2025-12-31',                 // optional: due date in format YYYY-MM-DD (optional)
         'milestone' => 123,                         // optional: either ID (integer: 123) or title (string) of milestone (optional)
+        'summaryPrefix' => '[TODO] ',               // optional: prefix which will be added to issue subject
     ],
     'service' => [
-        'project' => 123,                           // required: either project ID (integer: 123) or project path (string: owner/repo)
-                                                    //           (projectPath takes priority if both are specified)
         'host' => 'https://gitlab.com',             // optional: GitLab host URL (optional, defaults to https://gitlab.com)
         'personalAccessToken' => 'string',          // optional: personal access token (for http_token auth method)
         'oauthToken' => 'string',                   // optional: OAuth token (for oauth_token auth method)
@@ -33,6 +33,11 @@ $config->setRegistrar('GitLab', [
 ```
 
 **Note:** either `personalAccessToken` or `oauthToken` is required.
+
+### Option 'project'
+
+It is expected that `project` is in `issue` array, but script tries to get it from `service` too.
+And it can be overridden by inline config.
 
 ## Authentication methods
 

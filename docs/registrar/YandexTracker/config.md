@@ -10,8 +10,8 @@ or php-config-file `.todo-registrar.php` ([example](../../../examples/YandexTrac
 ```yaml
 registrar:
   type: YandexTracker
-  queue: MYQUEUE                                    # required: key of Yandex Tracker queue (required)
   issue:
+    queue: MYQUEUE                                  # required: key of Yandex Tracker queue (required)
     type: task                                      # required: type of issue (task, bug, story, epic, etc.)
     priority: normal                                # priority of issue (blocker, critical, normal, minor, trivial)
     assignee: developer.login                       # optional: login of Yandex Tracker user, which will be assigned to issue
@@ -38,8 +38,8 @@ registrar:
 Description of keys of general config:
 ```php
 $config->setRegistrar('YandexTracker', [
-    'queue' => 'MYQUEUE',                           // required: key of Yandex Tracker queue (required)
     'issue' => [
+        'queue' => 'MYQUEUE',                       // required: key of Yandex Tracker queue (required)
         'type' => 'task',                           // required: type of issue (task, bug, story, epic, etc.)
         'priority' => 'normal',                     // required: priority of issue (blocker, critical, normal, minor, trivial)
         'assignee' => 'string',                     // optional: login of Yandex Tracker user, which will be assigned to issue
@@ -61,6 +61,11 @@ $config->setRegistrar('YandexTracker', [
     ]
 ]);
 ```
+
+### Option 'queue'
+
+It is expected that `queue` is in `issue` array, but script tries to get it from root too.
+And it can be overridden by inline config.
 
 ### Option 'isCloud'
 

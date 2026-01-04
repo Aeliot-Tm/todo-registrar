@@ -15,6 +15,7 @@ namespace Aeliot\TodoRegistrar\Service\Registrar\Redmine;
 
 use Aeliot\TodoRegistrar\Enum\RegistrarType;
 use Aeliot\TodoRegistrar\Exception\ConfigValidationException;
+use Aeliot\TodoRegistrar\Service\Registrar\IssueSupporter;
 use Aeliot\TodoRegistrarContracts\RegistrarFactoryInterface;
 use Aeliot\TodoRegistrarContracts\RegistrarInterface;
 use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
@@ -24,8 +25,12 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  * @internal
  */
 #[AsTaggedItem(index: RegistrarType::Redmine->value)]
-final class RedmineRegistrarFactory implements RegistrarFactoryInterface
+final readonly class RedmineRegistrarFactory implements RegistrarFactoryInterface
 {
+    public function __construct(private IssueSupporter $issueSupporter)
+    {
+    }
+
     public function create(array $config): RegistrarInterface
     {
         /** @var ValidatorInterface $validator */
@@ -35,12 +40,13 @@ final class RedmineRegistrarFactory implements RegistrarFactoryInterface
         $client = (new ServiceFactory($config['service']))->createClient();
 
         return new RedmineRegistrar(
-            new IssueFactory(
-                $generalIssueConfig,
-                new UserResolver($client),
-                new EntityResolver($client, $generalIssueConfig->getProjectIdentifier()),
-            ),
             new IssueApiClient($client),
+            new IssueFactory(
+                new EntityResolver($client),
+                $generalIssueConfig,
+                $this->issueSupporter,
+                new UserResolver($client),
+            ),
         );
     }
 

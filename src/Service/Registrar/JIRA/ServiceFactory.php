@@ -20,7 +20,7 @@ use JiraRestApi\IssueLink\IssueLinkService;
 /**
  * @internal
  */
-class ServiceFactory
+final readonly class ServiceFactory
 {
     /**
      * @param array<string,mixed> $config

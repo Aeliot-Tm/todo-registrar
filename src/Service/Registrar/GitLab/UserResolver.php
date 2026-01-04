@@ -138,7 +138,7 @@ final class UserResolver
     /**
      * @param array<string,mixed> $user
      */
-    public function isSameUser(array $user, string $identifier): bool
+    private function isSameUser(array $user, string $identifier): bool
     {
         return (isset($user['username']) && $user['username'] === $identifier)
             || (isset($user['email']) && $user['email'] === $identifier);

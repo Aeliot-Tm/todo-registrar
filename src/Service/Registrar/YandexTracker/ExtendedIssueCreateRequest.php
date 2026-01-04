@@ -34,7 +34,7 @@ use BugrovWeb\YandexTracker\Api\Requests\Issue\IssueRequest;
  * @method ExtendedIssueCreateRequest attachmentIds(array<int, string> $attachments) Attachments
  * @method ExtendedIssueCreateRequest tags(array<int, string> $tags) Issue tags
  */
-class ExtendedIssueCreateRequest extends IssueRequest
+final class ExtendedIssueCreateRequest extends IssueRequest
 {
     public const ACTION = 'issues';
     public const METHOD = Client::METHOD_POST;

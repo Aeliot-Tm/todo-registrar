@@ -19,7 +19,7 @@ use Aeliot\TodoRegistrarContracts\TodoInterface;
 /**
  * @internal
  */
-final class IssueFactory
+final readonly class IssueFactory
 {
     public function __construct(
         private GeneralIssueConfig $generalIssueConfig,
@@ -30,7 +30,8 @@ final class IssueFactory
     public function create(TodoInterface $todo): Issue
     {
         $issue = new Issue();
-        $issue->setTitle($this->generalIssueConfig->getSummaryPrefix() . $todo->getSummary());
+        $this->setOwnerAndRepository($issue, $todo);
+        $issue->setTitle($this->issueSupporter->getSummary($todo, $this->generalIssueConfig));
         $issue->setBody($todo->getDescription());
 
         $this->setAssignees($issue, $todo);
@@ -41,12 +42,7 @@ final class IssueFactory
 
     private function setAssignees(Issue $issue, TodoInterface $todo): void
     {
-        $assignees = array_filter([
-            $todo->getAssignee(),
-            ...$todo->getInlineConfig()['assignees'] ?? [],
-            ...$this->generalIssueConfig->getAssignees(),
-        ]);
-
+        $assignees = $this->issueSupporter->getAssignees($todo, $this->generalIssueConfig);
         foreach ($assignees as $assignee) {
             $issue->addAssignee($assignee);
         }
@@ -58,5 +54,19 @@ final class IssueFactory
         foreach ($labels as $label) {
             $issue->addLabel($label);
         }
+    }
+
+    private function setOwnerAndRepository(Issue $issue, TodoInterface $todo): void
+    {
+        $inlineConfig = $todo->getInlineConfig();
+        $owner = $inlineConfig['owner'] ?? $this->generalIssueConfig->getOwner();
+        $repository = $inlineConfig['repository'] ?? $this->generalIssueConfig->getRepository();
+
+        if (str_contains($repository, '/')) {
+            [$owner, $repository] = explode('/', $repository, 2);
+        }
+
+        $issue->setOwner($owner);
+        $issue->setRepository($repository);
     }
 }

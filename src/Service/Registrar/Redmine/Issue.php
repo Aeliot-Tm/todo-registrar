@@ -41,6 +41,11 @@ final class Issue
         $this->data['description'] = $description;
     }
 
+    public function getProjectId(): int
+    {
+        return $this->data['project_id'];
+    }
+
     public function setProjectId(int $projectId): void
     {
         $this->data['project_id'] = $projectId;

@@ -20,7 +20,7 @@ use JiraRestApi\Issue\IssueField;
 /**
  * @internal
  */
-final class IssueFieldFactory
+final readonly class IssueFieldFactory
 {
     public function __construct(
         private GeneralIssueConfig $generalIssueConfig,
@@ -32,8 +32,8 @@ final class IssueFieldFactory
     {
         $issueField = new IssueField();
         $issueField
-            ->setProjectKey($this->generalIssueConfig->getProjectKey())
-            ->setSummary($this->generalIssueConfig->getSummaryPrefix() . $todo->getSummary())
+            ->setProjectKey($todo->getInlineConfig()['projectKey'] ?? $this->generalIssueConfig->getProjectKey())
+            ->setSummary($this->issueSupporter->getSummary($todo, $this->generalIssueConfig))
             ->setDescription($todo->getDescription());
 
         $this->setIssueType($issueField, $todo);
@@ -47,12 +47,9 @@ final class IssueFieldFactory
 
     private function setAssignee(IssueField $issueField, TodoInterface $todo): void
     {
-        $assignee = $todo->getInlineConfig()['assignee']
-            ?? $todo->getAssignee()
-            ?? $this->generalIssueConfig->getAssignee();
-
-        if ($assignee) {
-            $issueField->setAssigneeNameAsString($assignee);
+        $assignees = $this->issueSupporter->getAssignees($todo, $this->generalIssueConfig);
+        if ($assignees) {
+            $issueField->setAssigneeNameAsString(reset($assignees));
         }
     }
 
