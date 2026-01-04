@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Config;
 
-use Aeliot\TodoRegistrar\Config;
-use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
+use Aeliot\TodoRegistrar\Exception\UnavailableConfigException;
+use Aeliot\TodoRegistrarContracts\GeneralConfigInterface;
 
 /**
  * @internal
@@ -27,11 +27,11 @@ final readonly class StdinConfigFactory
     ) {
     }
 
-    public function create(): Config
+    public function create(): GeneralConfigInterface
     {
         $contents = file_get_contents('php://stdin');
         if (false === $contents || '' === $contents) {
-            throw new InvalidConfigException('No configuration provided via STDIN');
+            throw new UnavailableConfigException('No configuration provided via STDIN');
         }
 
         return $this->arrayConfigFactory->create($this->yamlParser->parse($contents));

@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Service\Config;
 
 use Aeliot\EnvResolver\Service\StringProcessor;
+use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -31,11 +32,18 @@ final readonly class YamlParser
     public function parse(string $content): array
     {
         $content = $this->stringProcessor->process($content);
-        $parsed = Yaml::parse(
-            $content,
-            Yaml::PARSE_CONSTANT | Yaml::PARSE_EXCEPTION_ON_INVALID_TYPE | Yaml::PARSE_OBJECT,
-        );
+        try {
+            $parsed = Yaml::parse(
+                $content,
+                Yaml::PARSE_CONSTANT | Yaml::PARSE_EXCEPTION_ON_INVALID_TYPE | Yaml::PARSE_OBJECT,
+            );
+            if (!\is_array($parsed)) {
+                throw new \UnexpectedValueException('Invalid YAML string');
+            }
+        } catch (\Exception $e) {
+            throw new InvalidConfigException('Cannot parse YAML', 0, $e);
+        }
 
-        return \is_array($parsed) ? $parsed : [];
+        return $parsed;
     }
 }
