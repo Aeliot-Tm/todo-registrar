@@ -22,6 +22,8 @@ final class Issue
      * @var array<string,mixed>
      */
     private array $data;
+    private string $owner;
+    private string $repository;
 
     /**
      * @return array<string,mixed>
@@ -59,5 +61,25 @@ final class Issue
     {
         $this->data['assignees'] ??= [];
         $this->data['assignees'][] = $assignee;
+    }
+
+    public function getOwner(): string
+    {
+        return $this->owner;
+    }
+
+    public function setOwner(string $owner): void
+    {
+        $this->owner = $owner;
+    }
+
+    public function getRepository(): string
+    {
+        return $this->repository;
+    }
+
+    public function setRepository(string $repository): void
+    {
+        $this->repository = $repository;
     }
 }

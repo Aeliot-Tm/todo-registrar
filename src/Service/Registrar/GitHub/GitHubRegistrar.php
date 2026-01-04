@@ -33,7 +33,7 @@ final class GitHubRegistrar implements RegistrarInterface
         $issue = $this->issueFactory->create($todo);
 
         if ($issue->getLabels()) {
-            $this->registerLabels($issue->getLabels());
+            $this->registerLabels($issue);
         }
 
         $response = $this->issueApiClient->create($issue);
@@ -41,12 +41,11 @@ final class GitHubRegistrar implements RegistrarInterface
         return '#' . $response['number'];
     }
 
-    /**
-     * @param string[] $labels
-     */
-    private function registerLabels(array $labels): void
+    private function registerLabels(Issue $issue): void
     {
-        $labels = array_diff($labels, $this->labelApiClient->getAll());
-        array_walk($labels, fn (string $label) => $this->labelApiClient->create($label));
+        $owner = $issue->getOwner();
+        $repository = $issue->getRepository();
+        $labels = array_diff($issue->getLabels(), $this->labelApiClient->getAll($owner, $repository));
+        array_walk($labels, fn (string $label) => $this->labelApiClient->create($owner, $repository, $label));
     }
 }

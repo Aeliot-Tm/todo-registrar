@@ -36,7 +36,12 @@ final class GeneralIssueConfigTest extends TestCase
 
     public static function getDataForTestValidConfig(): iterable
     {
-        yield 'minimal config' => [[]];
+        yield 'minimal config' => [
+            [
+                'owner' => 'test-owner',
+                'repository' => 'test-repo',
+            ],
+        ];
 
         yield 'full config' => [
             [
@@ -45,6 +50,8 @@ final class GeneralIssueConfigTest extends TestCase
                 'tagPrefix' => 'tag-',
                 'summaryPrefix' => '[TODO] ',
                 'assignees' => ['user1', 'user2'],
+                'owner' => 'test-owner',
+                'repository' => 'test-repo',
             ],
         ];
 
@@ -52,6 +59,8 @@ final class GeneralIssueConfigTest extends TestCase
             [
                 'labels' => [],
                 'assignees' => [],
+                'owner' => 'test-owner',
+                'repository' => 'test-repo',
             ],
         ];
     }
@@ -100,7 +109,12 @@ final class GeneralIssueConfigTest extends TestCase
 
     public function testUnknownOptionsDetected(): void
     {
-        $config = ['unknown_option' => 'value', 'another_unknown' => 123];
+        $config = [
+            'unknown_option' => 'value',
+            'another_unknown' => 123,
+            'owner' => 'test-owner',
+            'repository' => 'test-repo',
+        ];
         $generalConfig = new GeneralIssueConfig($config);
         $violations = self::$validator->validate($generalConfig);
 
@@ -123,6 +137,8 @@ final class GeneralIssueConfigTest extends TestCase
             'tagPrefix' => 'prefix-',
             'summaryPrefix' => 'Summary: ',
             'assignees' => ['user1', 'user2'],
+            'owner' => 'test-owner',
+            'repository' => 'test-repo',
         ];
         $generalConfig = new GeneralIssueConfig($config);
 
@@ -131,56 +147,74 @@ final class GeneralIssueConfigTest extends TestCase
         self::assertSame('prefix-', $generalConfig->getTagPrefix());
         self::assertSame('Summary: ', $generalConfig->getSummaryPrefix());
         self::assertSame(['user1', 'user2'], $generalConfig->getAssignees());
+        self::assertSame('test-owner', $generalConfig->getOwner());
+        self::assertSame('test-repo', $generalConfig->getRepository());
     }
 
     public function testDefaultValues(): void
     {
-        $generalConfig = new GeneralIssueConfig([]);
+        $config = [
+            'owner' => 'test-owner',
+            'repository' => 'test-repo',
+        ];
+        $generalConfig = new GeneralIssueConfig($config);
 
         self::assertFalse($generalConfig->isAddTagToLabels());
         self::assertSame([], $generalConfig->getLabels());
         self::assertSame('', $generalConfig->getTagPrefix());
         self::assertSame('', $generalConfig->getSummaryPrefix());
         self::assertSame([], $generalConfig->getAssignees());
+        self::assertSame('test-owner', $generalConfig->getOwner());
+        self::assertSame('test-repo', $generalConfig->getRepository());
     }
 
     public function testAddTagToLabelsNormalization(): void
     {
+        $baseConfig = ['owner' => 'test-owner', 'repository' => 'test-repo'];
+
         // Truthy value becomes true
-        $generalConfig = new GeneralIssueConfig(['addTagToLabels' => 1]);
+        $generalConfig = new GeneralIssueConfig(['addTagToLabels' => 1] + $baseConfig);
         self::assertTrue($generalConfig->isAddTagToLabels());
 
         // Falsy value becomes false
-        $generalConfig = new GeneralIssueConfig(['addTagToLabels' => 0]);
+        $generalConfig = new GeneralIssueConfig(['addTagToLabels' => 0] + $baseConfig);
         self::assertFalse($generalConfig->isAddTagToLabels());
 
         // String "1" becomes true
-        $generalConfig = new GeneralIssueConfig(['addTagToLabels' => '1']);
+        $generalConfig = new GeneralIssueConfig(['addTagToLabels' => '1'] + $baseConfig);
         self::assertTrue($generalConfig->isAddTagToLabels());
 
         // Empty string becomes false
-        $generalConfig = new GeneralIssueConfig(['addTagToLabels' => '']);
+        $generalConfig = new GeneralIssueConfig(['addTagToLabels' => ''] + $baseConfig);
         self::assertFalse($generalConfig->isAddTagToLabels());
 
         // Array becomes true (non-empty)
-        $generalConfig = new GeneralIssueConfig(['addTagToLabels' => ['something']]);
+        $generalConfig = new GeneralIssueConfig(['addTagToLabels' => ['something']] + $baseConfig);
         self::assertTrue($generalConfig->isAddTagToLabels());
 
         // Empty array becomes false
-        $generalConfig = new GeneralIssueConfig(['addTagToLabels' => []]);
+        $generalConfig = new GeneralIssueConfig(['addTagToLabels' => []] + $baseConfig);
         self::assertFalse($generalConfig->isAddTagToLabels());
     }
 
     public function testLabelsNormalization(): void
     {
         // Single string becomes array
-        $generalConfig = new GeneralIssueConfig(['labels' => 'single-label']);
+        $generalConfig = new GeneralIssueConfig([
+            'labels' => 'single-label',
+            'owner' => 'test-owner',
+            'repository' => 'test-repo',
+        ]);
         self::assertSame(['single-label'], $generalConfig->getLabels());
     }
 
     public function testInvalidTagPrefixType(): void
     {
-        $generalConfig = new GeneralIssueConfig(['tagPrefix' => 123]);
+        $generalConfig = new GeneralIssueConfig([
+            'tagPrefix' => 123,
+            'owner' => 'test-owner',
+            'repository' => 'test-repo',
+        ]);
         $violations = self::$validator->validate($generalConfig);
 
         self::assertGreaterThan(0, \count($violations));
@@ -189,7 +223,11 @@ final class GeneralIssueConfigTest extends TestCase
 
     public function testInvalidSummaryPrefixType(): void
     {
-        $generalConfig = new GeneralIssueConfig(['summaryPrefix' => 123]);
+        $generalConfig = new GeneralIssueConfig([
+            'summaryPrefix' => 123,
+            'owner' => 'test-owner',
+            'repository' => 'test-repo',
+        ]);
         $violations = self::$validator->validate($generalConfig);
 
         self::assertGreaterThan(0, \count($violations));
@@ -201,6 +239,8 @@ final class GeneralIssueConfigTest extends TestCase
         $generalConfig = new GeneralIssueConfig([
             'foo' => 'bar',
             'baz' => 'qux',
+            'owner' => 'test-owner',
+            'repository' => 'test-repo',
         ]);
         $violations = self::$validator->validate($generalConfig);
 
