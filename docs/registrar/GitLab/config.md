@@ -10,7 +10,6 @@ Description of keys of general config:
 $config->setRegistrar('GitLab', [
     'issue' => [
         'project' => 123,                           // required: either project ID (integer: 123) or project path (string: owner/repo)
-                                                    //           (projectPath takes priority if both are specified)
         'assignee' => ['username1', 'username2'],   // optional: String or array of strings. Identifiers of GitLab users (username or email),
                                                     //           which will be assigned to issue when "assignee-suffix"
                                                     //           was not used with tag.
@@ -37,7 +36,7 @@ $config->setRegistrar('GitLab', [
 
 ### Option 'project'
 
-It is expected that `project` is in `issue` array, but script tries to get it from `service` and root too.
+It is expected that `project` is in `issue` array, but script tries to get it from `service` too.
 And it can be overridden by inline config.
 
 ## Authentication methods

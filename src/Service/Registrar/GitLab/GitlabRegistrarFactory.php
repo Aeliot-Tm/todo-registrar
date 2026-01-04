@@ -61,7 +61,7 @@ final class GitlabRegistrarFactory implements RegistrarFactoryInterface
     public function createGeneralIssueConfig(array $config, ValidatorInterface $validator): GeneralIssueConfig
     {
         $issueConfig = ($config['issue'] ?? []) + [
-            'project' => ($config['service'] ?? [])['project'] ?? $config['project'] ?? null,
+            'project' => ($config['service'] ?? [])['project'] ?? null,
         ];
         if (isset($issueConfig['project']) && ctype_digit((string) $issueConfig['project'])) {
             $issueConfig['project'] = (int) $issueConfig['project'];
