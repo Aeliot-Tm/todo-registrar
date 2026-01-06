@@ -54,7 +54,7 @@ You can use the pre-built Docker image from GitHub Container Registry:
 docker pull ghcr.io/aeliot-tm/todo-registrar:latest
 
 # Or use a specific version tag
-docker pull ghcr.io/aeliot-tm/todo-registrar:v1.8.0
+docker pull ghcr.io/aeliot-tm/todo-registrar:v3.0.0
 ```
 
 ### Downloading of PHAR directly
