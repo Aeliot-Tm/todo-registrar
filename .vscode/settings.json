@@ -1,0 +1,13 @@
+{
+    "markdown-links.autoStart": true,
+    "markdown-links.excludePatterns": [
+        "**/.idea/**",
+        "**/.git/**",
+        "**/node_modules/**",
+        "**/vendor/**"
+    ],
+    "markdown-links.fileTypes": ["md", "mdc"],
+    "markdown-links.showColumn": "beside",
+    "symfony-vscode.consolePath": "composer.json",
+    "symfony-vscode.phpExecutablePath": "docker compose exec php-cli php"
+}
