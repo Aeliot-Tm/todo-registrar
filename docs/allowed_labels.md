@@ -8,7 +8,7 @@ This is useful when you want to ensure only predefined tags from your Yandex Tra
 When `allowedLabels` is set (non-empty array), the registrar filters all collected tags
 to keep only those that are present in the `allowedLabels` list. The collected tags come from:
 
-1. Labels from [general config](config/global_config.md) (`labels` option)
+1. Labels from [general config](config/general_config) (`labels` option)
 2. Tag-based label (if `addTagToLabels` is `true`, format: `{tagPrefix}{tag}`)
 3. Labels specified in [inline config](inline_config.md) (via `{EXTRAS: {labels: [...]}}`)
 
