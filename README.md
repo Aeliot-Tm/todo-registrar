@@ -26,18 +26,26 @@ you can use all power of management to plan solving of lacks of your code.
 This script do it for you. It registers issues with all necessary params. Then injects IDs/Keys of created issues
 into comment in code. This prevents creating of issues twice and injected marks helps to find proper places in code quickly.
 
+## How it works
+
+1. Detect TODO in comment.
+2. Create issue in issue tracker ([list of supported](#supported-issue-trackers)).
+3. Inject number of ticket into TODO-comment.
+
+![detect_register_inject.png](docs/detect_register_inject.png)
+
 ## Using
 
 **Basic using:**
-1. Create [configuration file](docs/config/global_config.md)
+1. Create [configuration file](docs/config/global_config.md).
 2. Call shell script with necessary [command line options](#command-line-options).
 3. Commit updated files. You can config your pipeline/job on CI which commits updates.
 
 **There are prepared several ways of using:**
-1. Using of GitHub Action: [TODO Registrar Action](https://github.com/marketplace/actions/todo-registrar)
-2. [Using of Docker Container](#using-of-docker-container)
-3. [Using of PHAR file](#using-of-phar-file)
-4. [Using of Composer Package](#using-of-composer-package)
+1. Using of GitHub Action: [TODO Registrar Action](https://github.com/marketplace/actions/todo-registrar).
+2. [Using of Docker Container](#using-of-docker-container).
+3. [Using of PHAR file](#using-of-phar-file).
+4. [Using of Composer Package](#using-of-composer-package).
 
 I recommend [TODO Registrar Action](https://github.com/marketplace/actions/todo-registrar) for repositories hosted on GitHub.
 
