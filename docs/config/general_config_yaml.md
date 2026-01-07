@@ -1,33 +1,5 @@
 # Configuration YAML file
 
-## Environment Variables
-
-YAML configuration files support environment variable substitution using the Symfony-style syntax:
-
-```yaml
-registrar:
-  type: GitHub
-  options:
-    service:
-      personalAccessToken: '%env(GITHUB_TOKEN)%'
-      owner: '%env(GITHUB_OWNER)%'
-      repository: '%env(GITHUB_REPO)%'
-```
-
-### Syntax
-
-Use `%env(VARIABLE_NAME)%` to reference environment variables. The value must be the **entire string** — 
-partial substitution like `prefix_%env(VAR)%_suffix` is not supported.
-
-### Resolution Order
-
-1. `$_ENV['VARIABLE_NAME']` — checked first
-2. `getenv('VARIABLE_NAME')` — used as fallback
-
-### Missing Variables
-
-If an environment variable is not defined, the placeholder `%env(VARIABLE_NAME)%` remains unchanged in the configuration. This allows you to detect configuration errors early.
-
 ## Loading from file
 
 It may have such structure:
@@ -60,19 +32,44 @@ tags:           # Optional. Accepts string (tag) or array of strings (tags) whic
   - my_tag
 ```
 
+## Environment Variables
+
+YAML configuration files support environment variable substitution using the Symfony-style syntax
+through the use of the project [aeliot/env-resolver](https://github.com/Aeliot-Tm/env-resolver).
+Use `%env(VARIABLE_NAME)%` to reference environment variables.
+
+```yaml
+registrar:
+  type: GitHub
+  options:
+    service:
+      personalAccessToken: '%env(GITHUB_TOKEN)%'
+      owner: '%env(GITHUB_OWNER)%'
+      repository: '%env(GITHUB_REPO)%'
+```
+
+### Resolution Order
+
+1. `$_ENV['VARIABLE_NAME']` — checked first
+2. `getenv('VARIABLE_NAME')` — used as fallback
+
+### Missing Variables
+
+If an environment variable is not defined, script will be finished with error.
+
 ## Loading from STDIN
 
 You can pass YAML configuration via STDIN using `--config=STDIN` option:
 
 ```bash
 # Pipe from file
-cat .todo-registrar.yaml | ./bin/todo-registrar register --config=STDIN
+cat .todo-registrar.yaml | php todo-registrar.phar --config=STDIN
 
 # Stdin redirection
-./bin/todo-registrar register --config=STDIN < .todo-registrar.yaml
+php todo-registrar.phar --config=STDIN < .todo-registrar.yaml
 
 # Heredoc
-./bin/todo-registrar register --config=STDIN << 'EOF'
+php todo-registrar.phar --config=STDIN << 'EOF'
 paths:
   in: /app/src
 registrar:
@@ -87,18 +84,18 @@ EOF
 
 ### Docker usage
 
-When running in Docker, use the `-T` flag with `docker compose exec` to disable TTY allocation,
+When running in Docker, use the `-t` flag with `docker run` to disable TTY allocation,
 which is required for STDIN to work properly:
 
 ```bash
 # Pipe configuration file
-cat .todo-registrar.yaml | docker compose exec -T php-cli ./bin/todo-registrar register --config=STDIN
+cat .todo-registrar.yaml | docker run --rm -i -v $(pwd):/code ghcr.io/aeliot-tm/todo-registrar:latest --config=STDIN
 
 # Stdin redirection
-docker compose exec -T php-cli ./bin/todo-registrar register --config=STDIN < .todo-registrar.yaml
+docker run --rm -i -v $(pwd):/code ghcr.io/aeliot-tm/todo-registrar:latest --config=STDIN < .todo-registrar.yaml
 
 # Heredoc with environment variable substitution by shell
-docker compose exec -T php-cli ./bin/todo-registrar register --config=STDIN << EOF
+docker run --rm -i -v $(pwd):/code ghcr.io/aeliot-tm/todo-registrar:latest --config=STDIN << EOF
 paths:
   in: /app/src
 registrar:
@@ -117,7 +114,7 @@ EOF
 
 ## Docker and Environment Variables
 
-When using `%env(VAR)%` syntax in YAML configuration with Docker, you need to ensure that environment 
+When using `%env(VAR)%` syntax in YAML configuration with Docker, you need to ensure that environment
 variables are available inside the container.
 
 ### Passing Variables Securely
@@ -125,40 +122,13 @@ variables are available inside the container.
 #### Method 1: Using `-e` flag (for single runs)
 
 ```bash
-# With docker compose exec
-docker compose exec -e GITHUB_TOKEN="$GITHUB_TOKEN" php-cli ./bin/todo-registrar register
-
-# With docker run
-docker run --rm -e GITHUB_TOKEN="$GITHUB_TOKEN" -v "$(pwd):/app" todo-registrar ./bin/todo-registrar register
+docker run --rm -it -e GITHUB_TOKEN="$GITHUB_TOKEN" -v $(pwd):/code ghcr.io/aeliot-tm/todo-registrar:latest
 ```
 
 > **Security note:** Avoid passing the token value directly in the command (e.g., `-e GITHUB_TOKEN=ghp_xxx`).
 > Always use shell variable expansion (`"$GITHUB_TOKEN"`) to prevent the secret from appearing in shell history.
 
-#### Method 2: Using `environment` in compose.yaml (recommended for development)
-
-```yaml
-services:
-  php-cli:
-    environment:
-      - GITHUB_TOKEN=${GITHUB_TOKEN}
-      - GITHUB_OWNER=${GITHUB_OWNER}
-      - GITHUB_REPO=${GITHUB_REPO}
-```
-
-Then in `.todo-registrar.yaml`:
-
-```yaml
-registrar:
-  type: GitHub
-  options:
-    service:
-      personalAccessToken: '%env(GITHUB_TOKEN)%'
-      owner: '%env(GITHUB_OWNER)%'
-      repository: '%env(GITHUB_REPO)%'
-```
-
-#### Method 3: Using env_file (recommended for CI/CD)
+#### Method 2: Using env_file (recommended for CI/CD)
 
 Create a `.env` file (never commit to VCS):
 
@@ -180,7 +150,7 @@ services:
 Or use directly with `docker run`:
 
 ```bash
-docker run --rm --env-file .env -v "$(pwd):/app" todo-registrar ./bin/todo-registrar register
+docker run --rm --env-file .env -v "$(pwd):/app" ghcr.io/aeliot-tm/todo-registrar:latest
 ```
 
 > **Tip:** This is the most secure method for `docker run` as secrets never appear in command arguments.
@@ -196,7 +166,7 @@ docker run --rm --env-file .env -v "$(pwd):/app" todo-registrar ./bin/todo-regis
    - name: Register TODOs
      env:
        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-     run: docker compose exec -T php-cli ./bin/todo-registrar register
+     run: docker run --rm -it -e GITHUB_TOKEN="$GITHUB_TOKEN" -v $(pwd):/code ghcr.io/aeliot-tm/todo-registrar:latest
    ```
 
 3. **Prefer env_file over command-line** — passing secrets via `-e` flag may expose them in process listings
