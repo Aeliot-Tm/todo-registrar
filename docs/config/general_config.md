@@ -1,8 +1,8 @@
 ## Configuration file
 
 Configuration file can either in YAML format ([see documentation about config YAML-file](general_config_yaml))
-or PHP format ([see documentation about config PHP-file](general_config_php)). You may define custom path
-to config with option `--config=/custom/path/to/cofig`. When option `--config` is omitted then script tries to find
+or PHP format ([see documentation about config PHP-file](general_config_php)). You can define custom path
+to config by option `--config=/custom/path/to/cofig`. When option `--config` is omitted then script tries to find
 default config file in the root directory of project (exactly in directory from which the script was called).
 
 The orders of files which are looked for:

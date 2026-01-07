@@ -1,52 +1,52 @@
 # Configuration PHP file
 
 It expects that file `.todo-registrar.php` or `.todo-registrar.dist.php` added in the root directory of project.
-It may be put in any other place, but you have to define path to it when call the script with option `--config=/path/to/cofig`.
+If you put it to another place, you have to define path to it while the calling of script
+by option `--config=/path/to/cofig`.
 
-Config file is php-file which returns instance of class `\Aeliot\TodoRegistrar\Config`.
+Config file have to returns instance of interface `Aeliot\TodoRegistrarContracts\GeneralConfigInterface`.
+
+You may implement it yourself (read about [customization](../customization.md))
+or use existing class `Aeliot\TodoRegistrar\Config`.
+
+At least, you have to set configured `finder` and define registrar with its options.
+
 See [example](../../examples/JIRA/.todo-registrar.php).
 
-## Methods
+**NOTE:** When you work with PHAR file you can use trick for the autoloading of classes:
+```php
+\Phar::loadPhar(__DIR__.'/todo-registrar.phar', 'todo-registrar.phar');
+require_once 'phar://todo-registrar.phar/vendor/autoload.php';
+```
 
-| Method                 | Is Required |
-|------------------------|-------------|
-| setFinder              | yes         |
-| setInlineConfigFactory | no          |
-| setInlineConfigReader  | no          |
-| setRegistrar           | yes         |
-| setTags                | no          |
+## Required configurations
 
+The main configurations are:
+- [finder](#setting-of-finder)
+- [registrar](#setting-of-registrar)
+- and probably [tags](#setting-of-tags)
 
-### setFinder
+For others read [customization](../customization.md) section.
 
-Accepts instance of configured finder (`\Aeliot\TodoRegistrar\Service\File\Finder`) responsible for finding of php-files.
-Very similar to configuration of Finder for "PHP CS Fixer".
+### Setting of Finder
 
-### setInlineConfigFactory
+Pass instance of `Aeliot\TodoRegistrarContracts\FinderInterface` to method `setFinder`.
+If you use implementation from this project (`Aeliot\TodoRegistrar\Service\File\Finder`)
+then read documentation of [Symfony Finder](https://symfony.com/doc/current/components/finder.html).
+It has the same configuration.
 
-Accepts instance of `\Aeliot\TodoRegistrar\InlineConfigFactoryInterface`
+### Setting of Registrar
 
-You can implement and expects instance of your custom inline config in your registrar.
-This method permits to provide factory for it.
-
-### setInlineConfigReader
-
-Accepts instance of `\Aeliot\TodoRegistrar\InlineConfigReaderInterface`.
-
-So, you can use your own reader of inline config which support your preferred format or relay on build-in.
-
-### setRegistrar
-
-Responsible for configuration of registrar factory.
+Method `setRegistrar` is responsible for configuration of registrar factory.
 
 It accepts two arguments:
-1. First one is registrar type (`\Aeliot\TodoRegistrar\Enum\RegistrarType`)
-   or instance of registrar factory (`\Aeliot\TodoRegistrar\Service\Registrar\RegistrarFactoryInterface`).
-2. Second one is array of config for registrar. See [example for JIRA](../registrar/JIRA/config.md).
+1. First one is registrar type (`Aeliot\TodoRegistrar\Enum\RegistrarType` or its string value)
+   or instance of registrar factory (`Aeliot\TodoRegistrarContracts\RegistrarFactoryInterface`).
+2. Second one is array of config for registrar. For example, read about [JIRA configuration](../registrar/JIRA/config.md).
 
 So, you can use build-in registrar or pass your own.
 
-### setTags
+### Setting of Tags
 
 Permit to define array of tags to be detected.
 
