@@ -13,7 +13,7 @@ Yandex Tracker Registrar creates issues in Yandex Tracker from TODO/FIXME commen
 ## Issue Fields Mapping
 
 | TODO Comment | Yandex Tracker Issue Field |
-|--------------|---------------------------|
+|---|---|
 | Summary (first line) | `summary` |
 | Description (full text) | `description` |
 | Tag assignee (`TODO@username`) | `assignee` |
@@ -70,7 +70,7 @@ Specify per-comment settings using `{EXTRAS: {...}}` syntax:
 ### Supported Inline Config Keys
 
 | Key | Type | Description |
-|-----|------|-------------|
+|---|---|---|
 | `assignee` | `string` | User login to assign |
 | `issue_type` | `string` | Issue type (task, bug, story, epic, etc.) |
 | `priority` | `string` | Priority name (blocker, critical, normal, minor, trivial) |
@@ -152,7 +152,7 @@ For on-premise installations, set `isCloud: false`.
 ### Key Classes
 
 | Class | Responsibility |
-|-------|----------------|
+|---|---|
 | `YandexTrackerRegistrar` | Main registrar, orchestrates issue creation |
 | `YandexTrackerRegistrarFactory` | Creates registrar from config |
 | `IssueFactory` | Builds issue request from Todo |

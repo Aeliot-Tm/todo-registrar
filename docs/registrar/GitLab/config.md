@@ -107,12 +107,12 @@ See [allowed labels documentation](../../allowed_labels.md)
 
 Supported keys of inline config:
 
-| Key       | Description                                                                                                              |
-|-----------|--------------------------------------------------------------------------------------------------------------------------|
-| assignee  | Identifier(s) of GitLab user(s) (username or email). Can be a string (single user) or array of strings (multiple users). |
-| labels    | List of labels which will be assigned to the issue.                                                                      |
-| milestone | either ID (integer: 123) or title (string) of milestone (optional)                                                       |
-| due_date  | Due date in format YYYY-MM-DD.                                                                                           |
+| Key | Description |
+|---|---|
+| assignee | Identifier(s) of GitLab user(s) (username or email). Can be a string (single user) or array of strings (multiple users) |
+| labels | List of labels which will be assigned to the issue |
+| milestone | either ID (integer: 123) or title (string) of milestone (optional) |
+| due_date | Due date in format YYYY-MM-DD |
 
 ### Examples
 

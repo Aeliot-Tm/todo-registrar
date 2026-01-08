@@ -16,7 +16,7 @@ GitLab Registrar creates issues in GitLab Issues from TODO/FIXME comments found 
 ## Issue Fields Mapping
 
 | TODO Comment | GitLab Issue Field |
-|--------------|-------------------|
+|---|---|
 | Summary (first line) | `title` |
 | Description (full text) | `description` |
 | Tag assignee (`TODO@username`) | `assignee_ids[]` |
@@ -78,7 +78,7 @@ Specify per-comment settings using `{EXTRAS: {...}}` syntax:
 ### Supported Inline Config Keys
 
 | Key | Type | Description |
-|-----|------|-------------|
+|---|---|---|
 | `assignee` | `string` or `string[]` | Username(s) or email(s) to assign |
 | `labels` | `string[]` | List of labels to add |
 | `milestone` | `int` or `string` | Milestone ID, IID, or title |
@@ -177,7 +177,7 @@ service:
 ### Key Classes
 
 | Class | Responsibility |
-|-------|----------------|
+|---|---|
 | `GitlabRegistrar` | Main registrar, orchestrates issue creation |
 | `GitlabRegistrarFactory` | Creates registrar from config |
 | `IssueFactory` | Builds Issue DTO from Todo |

@@ -14,7 +14,7 @@ JIRA Registrar creates issues in Atlassian JIRA from TODO/FIXME comments found i
 ## Issue Fields Mapping
 
 | TODO Comment | JIRA Issue Field |
-|--------------|-----------------|
+|---|---|
 | Summary (first line) | `summary` |
 | Description (full text) | `description` |
 | Tag assignee (`TODO@username`) | `assignee` |
@@ -44,7 +44,7 @@ registrar:
     host: 'https://company.atlassian.net'  # JIRA host
     personalAccessToken: 'token'           # Personal Access Token
     tokenBasedAuth: true                   # Use token authentication
-    
+
     # Alternative: username/password auth (tokenBasedAuth: false)
     # jiraUser: 'username'
     # jiraPassword: 'password'
@@ -81,7 +81,7 @@ Specify per-comment settings using `{EXTRAS: {...}}` syntax:
 ### Supported Inline Config Keys
 
 | Key | Type | Description |
-|-----|------|-------------|
+|---|---|---|
 | `assignee` | `string` | JIRA username to assign |
 | `issue_type` | `string` | Issue type (Bug, Task, Story, etc.) |
 | `priority` | `string` | Priority name (Highest, High, Medium, Low, Lowest) |
@@ -112,7 +112,7 @@ Uses the default link type configured in `issueLinkType` (default: "Relates").
 ### Common JIRA Link Types
 
 | Link Type | Inward Description | Outward Description |
-|-----------|-------------------|-------------------|
+|---|---|---|
 | `Blocks` | is blocked by | blocks |
 | `Cloners` | is cloned by | clones |
 | `Duplicate` | is duplicated by | duplicates |
@@ -189,7 +189,7 @@ service:
 ### Key Classes
 
 | Class | Responsibility |
-|-------|----------------|
+|---|---|
 | `JiraRegistrar` | Main registrar, orchestrates issue creation |
 | `JiraRegistrarFactory` | Creates registrar from config |
 | `IssueFieldFactory` | Builds IssueField from Todo |

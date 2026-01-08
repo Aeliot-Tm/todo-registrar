@@ -141,16 +141,16 @@ If you're running Redmine locally in Docker and the registrar runs in a Docker c
 
 Supported keys of inline config:
 
-| Key            | Type              | Description                                            |
-|----------------|-------------------|--------------------------------------------------------|
-| assignee       | `string` or `int` | Username/login/email or user ID to assign to the issue |
-| tracker        | `int` or `string` | Tracker ID or name (Bug, Feature, Support, etc.)       |
-| priority       | `int` or `string` | Priority ID or name (High, Normal, Low, etc.)          |
-| category       | `int` or `string` | Category ID or name                                    |
-| fixed_version  | `int` or `string` | Version ID or name                                     |
-| start_date     | `string`          | Start date in format YYYY-MM-DD                        |
-| due_date       | `string`          | Due date in format YYYY-MM-DD                          |
-| estimated_hours| `float`           | Estimated hours                                        |
+| Key | Type | Description |
+|---|---|---|
+| assignee | `string` or `int` | Username/login/email or user ID to assign to the issue |
+| tracker | `int` or `string` | Tracker ID or name (Bug, Feature, Support, etc.) |
+| priority | `int` or `string` | Priority ID or name (High, Normal, Low, etc.) |
+| category | `int` or `string` | Category ID or name |
+| fixed_version | `int` or `string` | Version ID or name |
+| start_date | `string` | Start date in format YYYY-MM-DD |
+| due_date | `string` | Due date in format YYYY-MM-DD |
+| estimated_hours| `float` | Estimated hours |
 
 ### Examples
 

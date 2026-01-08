@@ -46,9 +46,9 @@ See [allowed labels documentation](../../allowed_labels.md)
 
 Supported keys of inline config:
 
-| Key        | Description                                                               |
-|------------|---------------------------------------------------------------------------|
-| assignees  | List of identifiers of GitHub users, which will be assigned to the issue. |
-| labels     | List of labels which will be assigned to the issue.                       |
-| owner      | username on GitHub                                                        |
-| repository | the name of repository (part URL to repository)                           |
+| Key | Description |
+|---|---|
+| assignees | List of identifiers of GitHub users, which will be assigned to the issue |
+| labels | List of labels which will be assigned to the issue |
+| owner | username on GitHub |
+| repository | the name of repository (part URL to repository) |
