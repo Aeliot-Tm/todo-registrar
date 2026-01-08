@@ -145,7 +145,7 @@ Configure you integration depending on used git-server:
 
 ## Configuration
 
-First of all you have to create [general config](docs/config/general_config)
+First of all you have to create [general config](docs/config/general_config).
 
 Additionally, script supports [inline configuration](docs/inline_config.md) - nice feature for the fine-tuning
 of each created issue. It helps flexibly configure different aspects of created issues

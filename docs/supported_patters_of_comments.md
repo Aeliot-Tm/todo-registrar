@@ -37,8 +37,23 @@ and multiple-line comments `/* ... */` and phpDoc `/** ... **/`.
     */
    ```
 
-As a result of processing of such comments, ID of ISSUE will be injected before comment summary
-and after colon and assignee when they are presented. For example:
+
+### Assignee-part
+
+It is some "username" which separated of tag by symbol "@". It sticks to pattern `/[a-z0-9._-]+/i`.
+System pass it in payload to registrar with aim to be used as "identifier" of assignee in issue tracker.
+
+### Inline Configuration
+
+Comment can contain [inline configuration](inline_config.md).
+
+## Injection of Issue ID
+
+As a result of processing of such comments, **ID of ISSUE will be injected before comment summary**
+(after assignee and colon when they are presented).
+
+**For example:**
+
 1. Tag and comment separated by colon
    ```php
    // TODO: XX-001 comment summary
@@ -64,15 +79,3 @@ and after colon and assignee when they are presented. For example:
     *       and some complex description
     */
    ```
-
-### Assignee-part
-
-It is some "username" which separated of tag by symbol "@". It sticks to pattern `/[a-z0-9._-]+/i`.
-System pass it in payload to registrar with aim to be used as "identifier" of assignee in issue tracker.
-
-## Compatibility
-
-Script implemented to support formats of "comments with expiration" provided by [staabm/phpstan-todo-by](https://github.com/staabm/phpstan-todo-by).
-On my point of view, it is cool feature which I'd like to use in my projects.
-
-So, script ignores comments which already have mark of "expiration".

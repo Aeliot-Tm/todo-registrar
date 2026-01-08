@@ -15,16 +15,16 @@ It is expected that you are familiar with them.
    ```
 2. Install packages required by composer:
    ```shell
-   docker compose exec php-fpm composer install
+   docker compose exec php-cli composer install
    ```
 3. Install dev-tools by PHIVE:
    ```shell
-   docker compose exec php-fpm composer phive-install
+   docker compose exec php-cli composer phive-install
    ```
 4. Connect to the container for the colling of [dev-tools](used_code_quality_tools.md)
    defined in [composer.json](../composer.json)
    ```shell
-   docker compose exec php-fpm bash
+   docker compose exec php-cli bash
    ```
 
 ### Dev Notes
