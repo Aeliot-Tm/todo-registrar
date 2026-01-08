@@ -32,7 +32,7 @@ $config->setRegistrar('GitLab', [
 ]);
 ```
 
-**Note:** either `personalAccessToken` or `oauthToken` is required.
+> **Note:** either `personalAccessToken` or `oauthToken` is required.
 
 ### Option 'project'
 

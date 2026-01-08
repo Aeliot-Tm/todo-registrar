@@ -13,11 +13,11 @@ At least, you have to set configured `finder` and define registrar with its opti
 
 See [example](../../examples/JIRA/.todo-registrar.php).
 
-**NOTE:** When you work with PHAR file you can use trick for the autoloading of classes:
-```php
-\Phar::loadPhar(__DIR__.'/todo-registrar.phar', 'todo-registrar.phar');
-require_once 'phar://todo-registrar.phar/vendor/autoload.php';
-```
+> **NOTE:** When you work with PHAR file you can use trick for the autoloading of classes:
+> ```php
+> \Phar::loadPhar(__DIR__.'/todo-registrar.phar', 'todo-registrar.phar');
+> require_once 'phar://todo-registrar.phar/vendor/autoload.php';
+> ```
 
 ## Required configurations
 

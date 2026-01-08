@@ -203,9 +203,9 @@ When the same field can be set from multiple sources, priority is (highest to lo
 
 ## Notes
 
-- **User Resolution**: Usernames, logins, and emails are automatically resolved to Redmine user IDs via the Users API. Results are cached to optimize performance. User IDs can also be specified directly.
-- **Entity Resolution**: All entity names (tracker, priority, category, version) are resolved to IDs via Redmine API. Results are cached for performance.
-- **Project Resolution**: Project identifiers are resolved to project IDs via the Projects API with pagination support.
-- **Required Fields**: `project` and `tracker` are required. All other fields are optional.
-- **Date Format**: All date fields must be in format `YYYY-MM-DD`.
 - **API Permissions**: Make sure your API key has permissions to create issues in the specified project. Check project settings and user role permissions in Redmine.
+- **Required Fields**: `project` and `tracker` are required. All other fields are optional.
+- **Project Resolution**: Project identifiers are resolved to project IDs via the Projects API with pagination support.
+- **Entity Resolution**: All entity names (tracker, priority, category, version) are resolved to IDs via Redmine API. Results are cached for performance.
+- **User Resolution**: Usernames, logins, and emails are automatically resolved to Redmine user IDs via the Users API. Results are cached to optimize performance. User IDs can also be specified directly.
+- **Date Format**: All date fields must be in format `YYYY-MM-DD`.

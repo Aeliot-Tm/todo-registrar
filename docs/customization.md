@@ -62,5 +62,5 @@ composer require aeliot/todo-registrar-contracts
 
 ---
 
-**NOTE:** Don't rely on inner (`@internal`) classes and methods. Their support is not guaranteed.
-They can be changed, moved or deleted rapidly without any announcement.
+> **NOTE:** Don't rely on inner (`@internal`) classes and methods. Their support is not guaranteed.
+> They can be changed, moved or deleted rapidly without any announcement.
