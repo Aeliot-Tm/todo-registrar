@@ -1,4 +1,4 @@
-### Downloading of PHAR directly
+# Downloading of PHAR directly
 
 Download PHAR directly to root directory of the project or in another place as you wish.
 ```shell

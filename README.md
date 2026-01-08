@@ -193,3 +193,7 @@ Currently, todo-registrar supports the following issue trackers:
 ## Articles
 
 RU: https://habr.com/ru/articles/832994/
+
+## Contributing
+
+Read [contributing instructions](CONTRIBUTING.md).

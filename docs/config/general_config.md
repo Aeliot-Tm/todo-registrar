@@ -1,4 +1,4 @@
-## Configuration file
+# Configuration file
 
 Configuration file can either in YAML format ([see documentation about config YAML-file](general_config_yaml))
 or PHP format ([see documentation about config PHP-file](general_config_php)). You can define custom path

@@ -1,5 +1,4 @@
-Used Code Quality Tools
-=======================
+# Used Code Quality Tools
 
 The next Code Quality Tools are used by project
 
