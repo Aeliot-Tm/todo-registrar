@@ -12,6 +12,9 @@ registrar:
   type: GitLab
   options:
     issue:
+      # Use either <project id> (more efficient) or <project path> (more readable)
+      # Replace with your actual project identifier (or set GITLAB_PROJECT_IDENTIFIER environment variable)
+      project: '%env(GITLAB_PROJECT_IDENTIFIER)%'
       addTagToLabels: true
       assignees:
         - username1
@@ -24,13 +27,10 @@ registrar:
       due_date: '2025-12-31'  # optional, format: YYYY-MM-DD
     service:
       # Replace with your actual token (or set GITLAB_PERSONAL_ACCESS_TOKEN environment variable)
-      personalAccessToken: null
+      personalAccessToken: '%env(GITLAB_PERSONAL_ACCESS_TOKEN)%'
       # Or define oauthToken for OAuth type of authentication
       # oauthToken: null  # (or set GITLAB_OAUTH_TOKEN environment variable)
       host: https://gitlab.com  # optional, for self-hosted (default: https://gitlab.com)
-      # Use either <project id> (more efficient) or <project path> (more readable)
-      # Replace with your actual project identifier (or set GITLAB_PROJECT_IDENTIFIER environment variable)
-      project: null
 
 tags:
   - todo

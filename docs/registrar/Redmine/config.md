@@ -5,27 +5,45 @@
 Put either yaml-config-file `.todo-registrar.yaml` ([example](../../../examples/Redmine/.todo-registrar.yaml))
 or php-config-file `.todo-registrar.php` ([example](../../../examples/Redmine/.todo-registrar.php)) in the root directory.
 
+### YAML configuration
+
+```yaml
+#...
+registrar:
+  type: Redmine
+  issue:
+    project: 'testing-project'          # required: project identifier or ID
+    tracker: 'Bugs'                     # required: tracker name or ID
+    priority: 'Low'                     # optional: priority name or ID
+    assignee: null                      # optional: username, login, email, or user ID
+    category: null                      # optional: category name or ID
+    fixed_version: null                 # optional: version name or ID
+    start_date: null                    # optional: start date in format YYYY-MM-DD
+    due_date: null                      # optional: due date in format YYYY-MM-DD
+    estimated_hours: null               # optional: estimated hours as float
+    summaryPrefix: '[TODO] '            # optional: prefix which will be added to issue subject
+  service:
+    url: 'https://redmine.example.com',             # required: Redmine URL
+    apikeyOrUsername: '%env(REDMINE_USERNAME)%',    # required: API key (recommended) or username
+    password: '%env(REDMINE_PASSWORD)%',            # optional: password for Basic Auth
+                                                    #           If password is provided, Basic Auth will be used (username:password)
+                                                    #           Otherwise, apikeyOrUsername will be treated as API key
+```
+
+### PHP configuration
+
 Description of keys of general config:
 ```php
 $config->setRegistrar('Redmine', [
     'issue' => [
-        'project' => 'testing-project',          // required: project identifier or ID
-        'tracker' => 'Bugs',                     // required: tracker name or ID
-        'priority' => 'Low',                     // optional: priority name or ID
-        'assignee' => null,                      // optional: username, login, email, or user ID
-        'category' => null,                      // optional: category name or ID
-        'fixed_version' => null,                 // optional: version name or ID
-        'start_date' => null,                    // optional: start date in format YYYY-MM-DD
-        'due_date' => null,                      // optional: due date in format YYYY-MM-DD
-        'estimated_hours' => null,               // optional: estimated hours as float
-        'summaryPrefix' => '[TODO] ',            // optional: prefix which will be added to issue subject
+        // ...
+        // See description of keys in YAML config above
     ],
     'service' => [
-        'url' => 'https://redmine.example.com',  // required: Redmine URL
-        'apikeyOrUsername' => 'string',          // required: API key (recommended) or username
-        'password' => null,                      // optional: password for Basic Auth
-                                                 //           If password is provided, Basic Auth will be used (username:password)
-                                                 //           Otherwise, apikeyOrUsername will be treated as API key
+         // 'https://redmine.example.com'
+        'url' => $_ENV['REDMINE_URL'],
+        'apikeyOrUsername' => $_ENV['REDMINE_USERNAME'],
+        'password' => $_ENV['REDMINE_PASSWORD'],
     ]
 ]);
 ```
