@@ -19,7 +19,7 @@ paths:                            # Optional. Defines paths which will be walked
 
 registrar:                        # Required. Configuration of Registrar
   type: GitHub                    # Required. Type of supported issue tracker or fully qualified class of custom factory
-                                  #           of Registrar.
+                                  #           of Registrar (`App\MyTodoRegistrarFactory`).
   options:                        # Required. Options necessary for exact Registrar.
     issue:
       labels: tech-debt
