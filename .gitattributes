@@ -8,6 +8,7 @@
 /.mcp           export-ignore
 /.phive         export-ignore
 /.scripts       export-ignore
+/.vscode        export-ignore
 /examples       export-ignore
 /tools          export-ignore
 /tests          export-ignore
