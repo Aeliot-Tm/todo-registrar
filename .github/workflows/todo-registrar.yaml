@@ -11,17 +11,18 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
+
+# Define the permissions for the action
+permissions:
+  contents: write
+  pull-requests: write
+  actions: write
+  issues: write
+
 jobs:
   todo-registrar:
     name: Register TODO
     runs-on: ubuntu-latest
-
-    # Define the permissions for the action
-    permissions:
-      contents: write
-      pull-requests: write
-      actions: write
-      issues: write
 
     steps:
       - name: Checkout
