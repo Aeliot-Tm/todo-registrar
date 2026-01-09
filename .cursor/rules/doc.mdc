@@ -1,29 +1,33 @@
 ---
 alwaysApply: true
 ---
+
+# Cursor documents map
+
 Download descriptions from files IF you need to understand the work:
 1. Architecture (Technical solutions):
-   - [Overview]: .cursor/docs/API/Architecture/Overview.md
-   - [Processing Flow]: .cursor/docs/API/Architecture/ProcessingFlow.md
+   - [Overview](../docs/API/Architecture/Overview.md)
+   - [Processing Flow](../docs/API/Architecture/ProcessingFlow.md)
 
 2. Features:
-   - [GitHub Registrar]: .cursor/docs/API/Feature/GitHubRegistrar.md
-   - [GitLab Registrar]: .cursor/docs/API/Feature/GitLabRegistrar.md
-   - [JIRA Registrar]: .cursor/docs/API/Feature/JIRARegistrar.md
-   - [Yandex Tracker Registrar]: .cursor/docs/API/Feature/YandexTrackerRegistrar.md
+   - [GitHub Registrar](../docs/API/Feature/GitHubRegistrar.md)
+   - [GitLab Registrar](../docs/API/Feature/GitLabRegistrar.md)
+   - [JIRA Registrar](../docs/API/Feature/JIRARegistrar.md)
+   - [Redmine Registrar](../docs/API/Feature/RedmineRegistrar.md)
+   - [Yandex Tracker Registrar](../docs/API/Feature/YandexTrackerRegistrar.md)
 
 When updating functionality or when explicitly requested, update the corresponding documentation files.
    - First, business logic/steps with minimal technical details, then additional logic with minimal technical details,
      and finally, technical details (architecture, paths, settings, commands, etc.).
    - Update without blocks with the latest changes, as if you were doing it from scratch for complete documentation.
-   - Keep documentation of Architecture (Technical solutions) in directory `.cursor/docs/API/Architecture` and add path to such file
+   - Keep documentation of Architecture (Technical solutions) in directory [Architecture](../docs/API/Architecture) and add path to such file
      in section `1. Architecture (Technical solutions):` above like others.
-   - Keep documentation of Features in directory `.cursor/docs/API/Feature` and add path to such file in section `2. Features:` above like others.
+   - Keep documentation of Features in directory [Feature](../docs/API/Feature) and add path to such file in section `2. Features:` above like others.
 
 When creating new documentation files:
    - After creating a new Architecture documentation file, add a link to it in section `1. Architecture (Technical solutions):` above.
-     Format: `- [Description]: .cursor/docs/API/Architecture/[FileName].md`
+     Format: `- [Description](../docs/API/Architecture/[FileName].md)` (Markdown links format).
    - After creating a new Feature documentation file, add a link to it in section `2. Features:` above.
-     Format: `- [Description]: .cursor/docs/API/Feature/[FileName].md`
-   - Use relative paths from project root (starting with `.cursor/docs/`).
+     Format: `- [Description](../docs/API/Feature/[FileName].md)` (Markdown links format).
+   - Use relative paths from this file (starting with `../docs/`).
    - Keep entries in alphabetical order by description for better organization.

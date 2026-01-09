@@ -19,6 +19,8 @@ return (new Config())
     ->setFinder((new Finder())->in(dirname(__DIR__, 2).'/src/Service/Registrar/GitLab'))
     ->setRegistrar(RegistrarType::GitLab, [
         'issue' => [
+            // Use either <project id> (more efficient) or <project path> (mode readable)
+            'project' => $_ENV['GITLAB_PROJECT_IDENTIFIER'],
             'addTagToLabels' => true,
             'assignees' => ['username1', 'username2'],
             'labels' => ['tech-debt', 'Label-2'],
@@ -27,12 +29,10 @@ return (new Config())
             'due_date' => '2025-12-31', // optional, format: YYYY-MM-DD
         ],
         'service' => [
-            'personalAccessToken' => $_ENV['GITLAB_PERSONAL_ACCESS_TOKEN'] ?? null,
+            'personalAccessToken' => $_ENV['GITLAB_PERSONAL_ACCESS_TOKEN'],
             // Or define oauthToken for OAuth type of authentication
             // 'oauthToken' => $_ENV['GITLAB_OAUTH_TOKEN'] ?? null,
             'host' => $_ENV['GITLAB_HOST'] ?? 'https://gitlab.com', // optional, for self-hosted
-            // Use either <project id> (more efficient) or <project path> (mode readable)
-            'project' => $_ENV['GITLAB_PROJECT_IDENTIFIER'],
         ],
     ])
     ->setTags(['todo', 'fixme', 'a_custom_tag']);

@@ -60,4 +60,4 @@ Below are examples of settings supported by the implemented JIRA-registrar.
 ## The order of applying of configs
 1. `@assignee` joined to TODO-tag.
 2. `EXTRAS`
-3. Then the [general config](config/global_config_php.md) of the JIRA registrar.
+3. Then the [general config](config/general_config_php) of the JIRA registrar.

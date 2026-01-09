@@ -8,6 +8,7 @@ or php-config-file `.todo-registrar.php` ([example](../../../examples/YandexTrac
 ### YAML configuration
 
 ```yaml
+#...
 registrar:
   type: YandexTracker
   issue:
@@ -29,7 +30,7 @@ registrar:
   service:
     orgId: '%env(YANDEX_TRACKER_ORG_ID)%'           # required: Organization ID (required)
     token: '%env(YANDEX_TRACKER_TOKEN)%'            # required: OAuth token for Yandex Tracker API (required)
-    isCloud: '%env(YANDEX_TRACKER_IS_CLOUD)%'       # optional: Is Cloud Organization (is not passes then default: true)
+    isCloud: true                                   # optional: Is Cloud Organization (is not passes then default: true)
                                                     #           If true, X-Cloud-Org-ID header is passed instead of X-Org-ID
 ```
 
@@ -39,25 +40,13 @@ Description of keys of general config:
 ```php
 $config->setRegistrar('YandexTracker', [
     'issue' => [
-        'queue' => 'MYQUEUE',                       // required: key of Yandex Tracker queue (required)
-        'type' => 'task',                           // required: type of issue (task, bug, story, epic, etc.)
-        'priority' => 'normal',                     // required: priority of issue (blocker, critical, normal, minor, trivial)
-        'assignee' => 'string',                     // optional: login of Yandex Tracker user, which will be assigned to issue
-                                                    //           when "assignee-suffix" was not used with tag.
-        'labels' => ['a-label'],                    // optional: list of tags which will be set to issue
-        'addTagToLabels' => true,                   // optional: add detected tag into list of issue tags or not
-        'tagPrefix' => 'tag-',                      // optional: prefix which will be added to tag when "addTagToLabels=true"
-        'allowedLabels' => ['tag-1', 'tag-2'],      // optional: list of allowed tags. If set, only tags from this
-                                                    //           list will be applied to issues. Tags from inline
-                                                    //           config, general config, and tag-based tags (if
-                                                    //           addTagToLabels=true) will be filtered to match this list.
-        'summaryPrefix' => '[TODO] ',               // optional: prefix which will be added to issue summary
+        // ...
+        // See description of keys in YAML config above
     ],
     'service' => [
-        'orgId' => 'string',                        // required: Organization ID (required)
-        'token' => 'string',                        // required: OAuth token for Yandex Tracker API (required)
-        'isCloud' => true,                          // optional: Is Cloud Organization (if not passed then default: true)
-                                                    //           If true, X-Cloud-Org-ID header is passed instead of X-Org-ID
+        'orgId' => $_ENV['YANDEX_TRACKER_ORG_ID'],
+        'token' => $_ENV['YANDEX_TRACKER_TOKEN'],
+        'isCloud' => true,
     ]
 ]);
 ```
@@ -86,12 +75,12 @@ See [allowed labels documentation](../../allowed_labels.md)
 
 Supported keys of [inline config](../../inline_config.md):
 
-| Key        | Description                                                                                                              |
-|------------|--------------------------------------------------------------------------------------------------------------------------|
-| assignee   | Login of Yandex Tracker user as string, which will be assigned to the issue. This one will be used when it is defined.   |
-| issue_type | Type of issue (task, bug, story, epic, etc.).                                                                            |
-| labels     | List of tags which will be assigned to the issue.                                                                        |
-| priority   | Priority of issue as string (blocker, critical, normal, minor, trivial).                                                 |
+| Key | Description |
+|---|---|
+| assignee | Login of Yandex Tracker user as string, which will be assigned to the issue. This one will be used when it is defined. |
+| issue_type | Type of issue (task, bug, story, epic, etc.). |
+| labels | List of tags which will be assigned to the issue. |
+| priority | Priority of issue as string (blocker, critical, normal, minor, trivial). |
 
 ### Example of inline config
 

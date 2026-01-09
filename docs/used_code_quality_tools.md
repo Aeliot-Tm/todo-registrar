@@ -1,5 +1,4 @@
-Used Code Quality Tools
-=======================
+# Used Code Quality Tools
 
 The next Code Quality Tools are used by project
 
@@ -51,7 +50,7 @@ Package [PHPUnit](https://phpunit.de/index.html) is testing framework. Used to w
 
 Call script to run test:
 ```shell
-composer phpunit
+composer test-all
 ```
 
 ### Security vulnerabilities check

@@ -5,34 +5,51 @@
 Put either yaml-config-file `.todo-registrar.yaml` ([example](../../../examples/GitLab/.todo-registrar.yaml))
 or php-config-file `.todo-registrar.php` ([example](../../../examples/GitLab/.todo-registrar.php)) in the root directory.
 
+### YAML configuration
+
+```yaml
+#...
+registrar:
+  type: GitLab
+  issue:
+      project: 123                            # required: either project ID (integer: 123) or project path (string: owner/repo)
+      assignee: ['username1', 'username2']    # optional: String or array of strings. Identifiers of GitLab users (username or email),
+                                              #           which will be assigned to issue when "assignee-suffix"
+                                              #           was not used with tag.
+      labels: ['label-1', 'label-2']          # optional: list of labels which will be set to issue
+      addTagToLabels: true                    # optional: add detected tag into list of issue labels or not
+      tagPrefix: 'tag-'                       # optional: prefix which will be added to tag when "addTagToLabels=true"
+      allowedLabels: ['label-1', 'label-2']   # optional: list of allowed labels. If set, only labels from this
+                                              #           list will be applied to issues. Labels from inline
+                                              #           config, general config, and tag-based labels (if
+                                              #           addTagToLabels=true) will be filtered to match this list.
+      due_date: '2025-12-31'                  # optional: due date in format YYYY-MM-DD (optional)
+      milestone: 123                          # optional: either ID (integer: 123) or title (string) of milestone (optional)
+      summaryPrefix: '[TODO] '                # optional: prefix which will be added to issue subject
+  service:
+      host: 'https://gitlab.com',                                   # optional: GitLab host URL (optional, defaults to https://gitlab.com)
+      personalAccessToken: '%env(GITLAB_PERSONAL_ACCESS_TOKEN)%',   # optional: personal access token (for http_token auth method)
+      oauthToken: '%env(GITLAB_PERSONAL_OAUTH_TOKEN)%',             # optional: OAuth token (for oauth_token auth method)
+```
+
+### PHP configuration
+
 Description of keys of general config:
 ```php
 $config->setRegistrar('GitLab', [
     'issue' => [
-        'project' => 123,                           // required: either project ID (integer: 123) or project path (string: owner/repo)
-        'assignee' => ['username1', 'username2'],   // optional: String or array of strings. Identifiers of GitLab users (username or email),
-                                                    //           which will be assigned to issue when "assignee-suffix"
-                                                    //           was not used with tag.
-        'labels' => ['label-1', 'label-2'],         // optional: list of labels which will be set to issue
-        'addTagToLabels' => true,                   // optional: add detected tag into list of issue labels or not
-        'tagPrefix' => 'tag-',                      // optional: prefix which will be added to tag when "addTagToLabels=true"
-        'allowedLabels' => ['label-1', 'label-2'],  // optional: list of allowed labels. If set, only labels from this
-                                                    //           list will be applied to issues. Labels from inline
-                                                    //           config, general config, and tag-based labels (if
-                                                    //           addTagToLabels=true) will be filtered to match this list.
-        'due_date' => '2025-12-31',                 // optional: due date in format YYYY-MM-DD (optional)
-        'milestone' => 123,                         // optional: either ID (integer: 123) or title (string) of milestone (optional)
-        'summaryPrefix' => '[TODO] ',               // optional: prefix which will be added to issue subject
+        // ...
+        // See description of keys in YAML config above
     ],
     'service' => [
-        'host' => 'https://gitlab.com',             // optional: GitLab host URL (optional, defaults to https://gitlab.com)
-        'personalAccessToken' => 'string',          // optional: personal access token (for http_token auth method)
-        'oauthToken' => 'string',                   // optional: OAuth token (for oauth_token auth method)
+        'host' => 'https://gitlab.com',
+        'personalAccessToken' => $_ENV['GITLAB_PERSONAL_ACCESS_TOKEN'],
+        'oauthToken' => $_ENV['GITLAB_PERSONAL_OAUTH_TOKEN'],
     ]
 ]);
 ```
 
-**Note:** either `personalAccessToken` or `oauthToken` is required.
+> **Note:** either `personalAccessToken` or `oauthToken` is required.
 
 ### Option 'project'
 
@@ -107,12 +124,12 @@ See [allowed labels documentation](../../allowed_labels.md)
 
 Supported keys of inline config:
 
-| Key       | Description                                                                                                              |
-|-----------|--------------------------------------------------------------------------------------------------------------------------|
-| assignee  | Identifier(s) of GitLab user(s) (username or email). Can be a string (single user) or array of strings (multiple users). |
-| labels    | List of labels which will be assigned to the issue.                                                                      |
-| milestone | either ID (integer: 123) or title (string) of milestone (optional)                                                       |
-| due_date  | Due date in format YYYY-MM-DD.                                                                                           |
+| Key | Description |
+|---|---|
+| assignee | Identifier(s) of GitLab user(s) (username or email). Can be a string (single user) or array of strings (multiple users) |
+| labels | List of labels which will be assigned to the issue |
+| milestone | either ID (integer: 123) or title (string) of milestone (optional) |
+| due_date | Due date in format YYYY-MM-DD |
 
 ### Examples
 

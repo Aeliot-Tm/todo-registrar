@@ -6,26 +6,41 @@ Put either yaml-config-file `.todo-registrar.yaml` ([example](../../../examples/
 or php-config-file `.todo-registrar.php` ([example](../../../examples/GitHub/.todo-registrar.php)) in the root
 directory.
 
+### YAML configuration
+
+```yaml
+#...
+registrar:
+  type: GitHub
+  issue:
+      repository: 'string'                    # required: the name of repository (part URL to repository)
+      owner: 'string'                         # optional: username on GitHub
+      assignees: ['an.assignee_1']            # optional: identifiers of GitHub users, which will be assigned to ticket
+                                              #           when "assignee-suffix" was not used with tag.
+      labels: ['a-label']                     # optional: list of labels which will be set to issue
+      addTagToLabels: true                    # optional: add detected tag into list of issue labels or not
+      tagPrefix: 'tag-'                       # optional: prefix which will be added to tag when "addTagToLabels=true"
+      allowedLabels: ['label-1', 'label-2']   # optional: list of allowed labels. If set, only labels from this
+                                              #           list will be applied to issues. Labels from inline
+                                              #           config, general config, and tag-based labels (if
+                                              #           addTagToLabels=true) will be filtered to match this list.
+      summaryPrefix: '[TODO] '                # optional: prefix which will be added to issue subject
+  service:
+      personalAccessToken: '%env(GITHUB_PERSONAL_ACCESS_TOKEN)%',   # required: personal access-token
+```
+
+### PHP configuration
+
 Description of keys of general config:
 
 ```php
 $config->setRegistrar('GitHub', [
     'issue' => [
-        'repository' => 'string'                    // required: the name of repository (part URL to repository)
-        'owner' => 'string'                         // optional: username on GitHub
-        'assignees' => ['an.assignee_1']            // optional: identifiers of GitHub users, which will be assigned to ticket
-                                                    //           when "assignee-suffix" was not used with tag.
-        'labels' => ['a-label'],                    // optional: list of labels which will be set to issue
-        'addTagToLabels' => true,                   // optional: add detected tag into list of issue labels or not
-        'tagPrefix' => 'tag-',                      // optional: prefix which will be added to tag when "addTagToLabels=true"
-        'allowedLabels' => ['label-1', 'label-2'],  // optional: list of allowed labels. If set, only labels from this
-                                                    //           list will be applied to issues. Labels from inline
-                                                    //           config, general config, and tag-based labels (if
-                                                    //           addTagToLabels=true) will be filtered to match this list.
-        'summaryPrefix' => '[TODO] ',               // optional: prefix which will be added to issue subject
+        // ...
+        // See description of keys in YAML config above
     ],
     'service' => [
-        'personalAccessToken' => 'string',          // required: personal access-token
+        'personalAccessToken' => $_ENV['GITHUB_PERSONAL_ACCESS_TOKEN'],
     ]
 ]);
 ```
@@ -46,9 +61,9 @@ See [allowed labels documentation](../../allowed_labels.md)
 
 Supported keys of inline config:
 
-| Key        | Description                                                               |
-|------------|---------------------------------------------------------------------------|
-| assignees  | List of identifiers of GitHub users, which will be assigned to the issue. |
-| labels     | List of labels which will be assigned to the issue.                       |
-| owner      | username on GitHub                                                        |
-| repository | the name of repository (part URL to repository)                           |
+| Key | Description |
+|---|---|
+| assignees | List of identifiers of GitHub users, which will be assigned to the issue |
+| labels | List of labels which will be assigned to the issue |
+| owner | username on GitHub |
+| repository | the name of repository (part URL to repository) |

@@ -1,4 +1,4 @@
-## How to contribute to TODO Registrar
+# How to contribute to TODO Registrar
 
 #### Did you find a bug?
 
