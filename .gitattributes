@@ -1,6 +1,6 @@
-*.png binary
 * text eol=lf
 *.neon linguist-language=YAML
+*.png binary
 
 /.cursor        export-ignore
 /.docker        export-ignore
