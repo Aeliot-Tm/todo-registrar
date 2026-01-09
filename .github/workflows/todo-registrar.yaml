@@ -40,3 +40,4 @@ jobs:
             GH_PERSONAL_ACCESS_TOKEN
             GITHUB_REPOSITORY
             GITHUB_REPOSITORY_OWNER
+          new_branch_name: 'todo-registrar'
