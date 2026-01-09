@@ -31,7 +31,7 @@ jobs:
           fetch-depth: 0
 
       - name: Register TODOs
-        uses: Aeliot-Tm/todo-registrar-action@95c1844b11d35b05eafc5d98529cd22c92a76448
+        uses: Aeliot-Tm/todo-registrar-action@9a1d41029b8e45f0a494f7b3402757ef46a547de
         env:
           GH_PERSONAL_ACCESS_TOKEN: ${{ secrets.GH_TODO_REGISTRAR_ACCESS_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
