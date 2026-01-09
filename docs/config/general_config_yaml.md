@@ -4,8 +4,8 @@
 
 It may have such structure:
 ```yaml
-paths:                            # Optional. Defines paths which will be walked to find supported files
-  in: /app                        # Optional. Accepts string (path) or array of strings (paths) to directories which
+paths:                            # Required. Defines paths which will be walked to find supported files
+  in: /app                        # Required. Accepts string (path) or array of strings (paths) to directories which
                                   #           will be scanned to find *.php files. It uses path to directory
                                   #           where the script is called when this option is omitted.
   append: bin/todo-registrar      # Optional. Accepts string (path) or array of strings (paths). It is a set of files
@@ -28,7 +28,7 @@ registrar:                        # Required. Configuration of Registrar
       owner: am-i
       repository: am-i/a-repo
 
-tags:           # Optional. Accepts string (tag) or array of strings (tags) which should be processed by the script.
+tags:                             # Optional. Accepts string (tag) or array of strings (tags) which should be processed by the script.
   - my_tag
 ```
 

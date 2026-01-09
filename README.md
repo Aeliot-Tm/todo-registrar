@@ -55,7 +55,7 @@ and which components required by Composer (no dependency hell).
 
 The next one is using of single `PHAR` file. It frees you from dependency hell,
 but you have to pay attention to version of PHP installed in you system and its modules.
-However, this may be more familiar to you.
+However, this may be more familiar for you.
 
 The last one is using of Composer package. The most common, but less flexible method.
 
