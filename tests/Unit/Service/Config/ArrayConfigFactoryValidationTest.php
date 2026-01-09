@@ -13,9 +13,8 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Test\Unit\Service\Config;
 
-use Aeliot\TodoRegistrar\Config;
+use Aeliot\TodoRegistrar\Dto\GeneralConfig\ArrayConfig;
 use Aeliot\TodoRegistrar\Exception\ConfigValidationException;
-use Aeliot\TodoRegistrar\Service\Config\ArrayConfig;
 use Aeliot\TodoRegistrar\Service\Config\ArrayConfigFactory;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;

@@ -19,8 +19,17 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @internal
  */
-class GeneralIssueConfig extends AbstractGeneralIssueConfig
+final class GeneralIssueConfig extends AbstractGeneralIssueConfig
 {
+    #[Assert\AtLeastOneOf(
+        constraints: [
+            new Assert\IsNull(),
+            new Assert\Type(type: 'string', message: 'Assignee must be a string JIRA username'),
+        ],
+        message: 'Option "assignee" must be a string JIRA username or null'
+    )]
+    protected mixed $assignee = null;
+
     /**
      * @var string[]|null
      */
@@ -30,15 +39,6 @@ class GeneralIssueConfig extends AbstractGeneralIssueConfig
         new Assert\All([new Assert\Type(type: 'string', message: 'Each component must be a string JIRA component name')]),
     ])]
     protected mixed $components = null;
-
-    #[Assert\AtLeastOneOf(
-        constraints: [
-            new Assert\IsNull(),
-            new Assert\Type(type: 'string', message: 'Assignee must be a string JIRA username'),
-        ],
-        message: 'Option "assignee" must be a string JIRA username or null'
-    )]
-    protected mixed $assignee = null;
 
     #[Assert\NotBlank(message: 'Option "issueType" is required for JIRA registrar')]
     #[Assert\Type(type: 'string', message: 'Option "issueType" must be a string (e.g., "Task", "Bug", "Story")')]

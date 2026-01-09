@@ -13,7 +13,8 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\GitLab;
 
-use Aeliot\TodoRegistrar\Contracts\TodoInterface;
+use Aeliot\TodoRegistrar\Service\Registrar\IssueSupporter;
+use Aeliot\TodoRegistrarContracts\TodoInterface;
 
 /**
  * @internal
@@ -22,15 +23,17 @@ final readonly class IssueFactory
 {
     public function __construct(
         private GeneralIssueConfig $generalIssueConfig,
-        private UserResolver $userResolver,
+        private IssueSupporter $issueSupporter,
         private MilestoneApiClient $milestoneApiClient,
+        private UserResolver $userResolver,
     ) {
     }
 
     public function create(TodoInterface $todo): Issue
     {
         $issue = new Issue();
-        $issue->setTitle($this->generalIssueConfig->getSummaryPrefix() . $todo->getSummary());
+        $issue->setProject($todo->getInlineConfig()['project'] ?? $this->generalIssueConfig->getProject());
+        $issue->setTitle($this->issueSupporter->getSummary($todo, $this->generalIssueConfig));
         $issue->setDescription($todo->getDescription());
 
         $this->setAssignees($issue, $todo);
@@ -43,40 +46,27 @@ final readonly class IssueFactory
 
     private function setAssignees(Issue $issue, TodoInterface $todo): void
     {
-        // Collect assignees from all sources: inline config, tag assignee, global config
-        $assignees = array_filter([
-            $todo->getAssignee(),
-            ...((array) ($todo->getInlineConfig()['assignee'] ?? [])),
-            ...$this->generalIssueConfig->getAssignee(),
-        ], static fn ($value): bool => '' !== (string) $value);
-
+        $assignees = $this->issueSupporter->getAssignees($todo, $this->generalIssueConfig);
         if (!$assignees) {
             return;
         }
 
-        // Convert username/email to user IDs
-        $assigneeIds = $this->userResolver->resolveUserIds($assignees);
+        $issue->setAssigneeIds($this->userResolver->resolveUserIds($assignees));
+    }
 
-        $issue->setAssigneeIds($assigneeIds);
+    private function setDueDate(Issue $issue, TodoInterface $todo): void
+    {
+        $dueDate = $todo->getInlineConfig()['due_date']
+            ?? $this->generalIssueConfig->getDueDate();
+
+        if (null !== $dueDate) {
+            $issue->setDueDate((string) $dueDate);
+        }
     }
 
     private function setLabels(Issue $issue, TodoInterface $todo): void
     {
-        $labels = [
-            ...(array) ($todo->getInlineConfig()['labels'] ?? []),
-            ...$this->generalIssueConfig->getLabels(),
-        ];
-
-        if ($this->generalIssueConfig->isAddTagToLabels()) {
-            $labels[] = strtolower(\sprintf('%s%s', $this->generalIssueConfig->getTagPrefix(), $todo->getTag()));
-        }
-
-        $labels = array_unique($labels);
-        if ($allowedLabels = $this->generalIssueConfig->getAllowedLabels()) {
-            $labels = array_intersect($labels, $allowedLabels);
-        }
-
-        $issue->setLabels($labels);
+        $issue->setLabels($this->issueSupporter->getLabels($todo, $this->generalIssueConfig));
     }
 
     private function setMilestone(Issue $issue, TodoInterface $todo): void
@@ -94,29 +84,19 @@ final readonly class IssueFactory
         if (\is_int($milestone) || ctype_digit((string) $milestone)) {
             $numericValue = (int) $milestone;
             // First try to find by ID
-            if ($this->milestoneApiClient->findById($numericValue)) {
+            if ($this->milestoneApiClient->hasById($issue->getProject(), $numericValue)) {
                 $milestoneId = $numericValue;
             } else {
                 // If not found by ID, try to find by IID
-                $milestoneId = $this->milestoneApiClient->findByIid($numericValue);
+                $milestoneId = $this->milestoneApiClient->findIdByIid($issue->getProject(), $numericValue);
             }
         } else {
             // If string, search by title
-            $milestoneId = $this->milestoneApiClient->findByTitle((string) $milestone);
+            $milestoneId = $this->milestoneApiClient->findIdByTitle($issue->getProject(), (string) $milestone);
         }
 
         if (null !== $milestoneId) {
             $issue->setMilestoneId($milestoneId);
-        }
-    }
-
-    private function setDueDate(Issue $issue, TodoInterface $todo): void
-    {
-        $dueDate = $todo->getInlineConfig()['due_date']
-            ?? $this->generalIssueConfig->getDueDate();
-
-        if (null !== $dueDate) {
-            $issue->setDueDate((string) $dueDate);
         }
     }
 }

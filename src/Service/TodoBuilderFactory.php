@@ -14,9 +14,9 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Service;
 
 use Aeliot\TodoRegistrar\Console\OutputAdapter;
-use Aeliot\TodoRegistrar\Contracts\GeneralConfigInterface;
 use Aeliot\TodoRegistrar\Service\InlineConfig\ExtrasReader;
 use Aeliot\TodoRegistrar\Service\InlineConfig\InlineConfigFactory;
+use Aeliot\TodoRegistrarContracts\GeneralConfigInterface;
 
 /**
  * @internal

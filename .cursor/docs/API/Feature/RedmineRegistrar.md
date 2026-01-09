@@ -14,7 +14,7 @@ Redmine Registrar creates issues in Redmine from TODO/FIXME comments found in so
 ## Issue Fields Mapping
 
 | TODO Comment | Redmine Issue Field |
-|--------------|---------------------|
+|---|---|
 | Summary (first line) | `subject` |
 | Description (full text) | `description` |
 | Tag assignee (`TODO@username`) | `assigned_to_id` |
@@ -81,7 +81,7 @@ Specify per-comment settings using `{EXTRAS: {...}}` syntax:
 ### Supported Inline Config Keys
 
 | Key | Type | Description |
-|-----|------|-------------|
+|---|---|---|
 | `assignee` | `string` or `int` | Username/login or user ID to assign |
 | `tracker` | `int` or `string` | Tracker ID or name (Bug, Feature, Support, etc.) |
 | `priority` | `int` or `string` | Priority ID or name (High, Normal, Low, etc.) |
@@ -187,7 +187,7 @@ If `password` is provided, `apikeyOrUsername` is treated as username and Basic A
 ### Key Classes
 
 | Class | Responsibility |
-|-------|----------------|
+|---|---|
 | `RedmineRegistrar` | Main registrar, orchestrates issue creation |
 | `RedmineRegistrarFactory` | Creates registrar from config |
 | `IssueFactory` | Builds Issue DTO from Todo |

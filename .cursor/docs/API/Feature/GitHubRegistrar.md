@@ -15,7 +15,7 @@ GitHub Registrar creates issues in GitHub Issues from TODO/FIXME comments found 
 ## Issue Fields Mapping
 
 | TODO Comment | GitHub Issue Field |
-|--------------|-------------------|
+|---|---|
 | Summary (first line) | `title` |
 | Description (full text) | `body` |
 | Tag assignee (`TODO@username`) | `assignees[]` |
@@ -65,7 +65,7 @@ Specify per-comment settings using `{EXTRAS: {...}}` syntax:
 ### Supported Inline Config Keys
 
 | Key | Type | Description |
-|-----|------|-------------|
+|---|---|---|
 | `assignees` | `string[]` | List of GitHub usernames to assign |
 | `labels` | `string[]` | List of labels to add |
 
@@ -118,7 +118,7 @@ function complexMethod() {
 ### Key Classes
 
 | Class | Responsibility |
-|-------|----------------|
+|---|---|
 | `GitHubRegistrar` | Main registrar, orchestrates issue creation |
 | `GitHubRegistrarFactory` | Creates registrar from config |
 | `IssueFactory` | Builds Issue DTO from Todo |

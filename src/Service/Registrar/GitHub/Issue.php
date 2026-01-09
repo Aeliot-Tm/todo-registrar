@@ -22,13 +22,13 @@ final class Issue
      * @var array<string,mixed>
      */
     private array $data;
+    private string $owner;
+    private string $repository;
 
-    /**
-     * @return array<string,mixed>
-     */
-    public function getData(): array
+    public function addAssignee(string $assignee): void
     {
-        return $this->data;
+        $this->data['assignees'] ??= [];
+        $this->data['assignees'][] = $assignee;
     }
 
     public function setBody(string $body): void
@@ -36,9 +36,12 @@ final class Issue
         $this->data['body'] = $body;
     }
 
-    public function setTitle(string $title): void
+    /**
+     * @return array<string,mixed>
+     */
+    public function getData(): array
     {
-        $this->data['title'] = $title;
+        return $this->data;
     }
 
     /**
@@ -55,9 +58,28 @@ final class Issue
         $this->data['labels'][] = $label;
     }
 
-    public function addAssignee(string $assignee): void
+    public function getOwner(): string
     {
-        $this->data['assignees'] ??= [];
-        $this->data['assignees'][] = $assignee;
+        return $this->owner;
+    }
+
+    public function setOwner(string $owner): void
+    {
+        $this->owner = $owner;
+    }
+
+    public function getRepository(): string
+    {
+        return $this->repository;
+    }
+
+    public function setRepository(string $repository): void
+    {
+        $this->repository = $repository;
+    }
+
+    public function setTitle(string $title): void
+    {
+        $this->data['title'] = $title;
     }
 }

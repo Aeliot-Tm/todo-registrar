@@ -27,8 +27,8 @@ return (new Config())
         ],
         'projectKey' => 'Todo',
         'service' => [
-            'host' => $_ENV['JIRA_HOST'] ?? 'localhost',
-            'personalAccessToken' => $_ENV['JIRA_PERSONAL_ACCESS_TOKEN'] ?? null,
+            'host' => $_ENV['JIRA_HOST'],
+            'personalAccessToken' => $_ENV['JIRA_PERSONAL_ACCESS_TOKEN'],
             'tokenBasedAuth' => true,
         ],
     ])

@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\GitHub;
 
+use Aeliot\TodoRegistrar\Service\ColorGenerator;
 use Github\Api\Issue\Labels as LabelsApi;
 
 /**
@@ -21,40 +22,45 @@ use Github\Api\Issue\Labels as LabelsApi;
 final class LabelApiClient
 {
     /**
-     * @var string[]|null
+     * @var array<string, string[]>
      */
-    private ?array $labels = null;
+    private array $labelsCache = [];
 
     public function __construct(
+        private readonly ColorGenerator $colorGenerator,
         private readonly LabelsApi $labelsApi,
-        private readonly string $owner,
-        private readonly string $repository,
     ) {
+    }
+
+    public function create(string $owner, string $repository, string $label): void
+    {
+        $cacheKey = $owner . '/' . $repository;
+        if (!isset($this->labelsCache[$cacheKey])) {
+            $this->getAll($owner, $repository);
+        }
+
+        $this->labelsApi->create($owner, $repository, [
+            'name' => $label,
+            'color' => $this->colorGenerator->generateColor($label),
+        ]);
+        $this->labelsCache[$cacheKey][] = $label;
+        sort($this->labelsCache[$cacheKey]);
     }
 
     /**
      * @return string[]
      */
-    public function getAll(): array
+    public function getAll(string $owner, string $repository): array
     {
-        if (null === $this->labels) {
-            $response = $this->labelsApi->all($this->owner, $this->repository);
-            $this->labels = array_map(static fn (array $x): string => $x['name'], $response);
-            sort($this->labels);
+        $cacheKey = $owner . '/' . $repository;
+        if (!isset($this->labelsCache[$cacheKey])) {
+            $this->labelsCache[$cacheKey] = array_map(
+                static fn (array $x): string => $x['name'],
+                $this->labelsApi->all($owner, $repository),
+            );
+            sort($this->labelsCache[$cacheKey]);
         }
 
-        return $this->labels;
-    }
-
-    public function create(string $label): void
-    {
-        if (null === $this->labels) {
-            $this->getAll();
-        }
-
-        $params = ['name' => $label];
-        $this->labelsApi->create($this->owner, $this->repository, $params);
-        $this->labels[] = $label;
-        sort($this->labels);
+        return $this->labelsCache[$cacheKey];
     }
 }

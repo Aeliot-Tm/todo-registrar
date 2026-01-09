@@ -1,10 +1,11 @@
-### Downloading of PHAR directly
+# Downloading of PHAR directly
 
 Download PHAR directly to root directory of the project or in another place as you wish.
 ```shell
 # Do adjust the URL if you need a release other than the latest
 wget -O todo-registrar.phar "https://github.com/Aeliot-Tm/todo-registrar/releases/latest/download/todo-registrar.phar"
 
+# make executable
 chmod +x todo-registrar.phar
 ```
 

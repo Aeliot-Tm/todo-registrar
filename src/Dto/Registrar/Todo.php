@@ -13,9 +13,9 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Dto\Registrar;
 
-use Aeliot\TodoRegistrar\Contracts\InlineConfigInterface;
-use Aeliot\TodoRegistrar\Contracts\TodoInterface;
 use Aeliot\TodoRegistrar\Dto\Comment\CommentPart;
+use Aeliot\TodoRegistrarContracts\InlineConfigInterface;
+use Aeliot\TodoRegistrarContracts\TodoInterface;
 
 class Todo implements TodoInterface
 {
@@ -34,17 +34,17 @@ class Todo implements TodoInterface
         return $this->assignee;
     }
 
-    public function getDescription(): string
-    {
-        return $this->description;
-    }
-
     /**
      * @internal
      */
     public function getCommentPart(): CommentPart
     {
         return $this->commentPart;
+    }
+
+    public function getDescription(): string
+    {
+        return $this->description;
     }
 
     public function getInlineConfig(): InlineConfigInterface

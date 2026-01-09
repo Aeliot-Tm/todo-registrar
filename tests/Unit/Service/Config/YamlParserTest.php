@@ -13,6 +13,9 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Test\Unit\Service\Config;
 
+use Aeliot\EnvResolver\Exception\EnvNotFoundException;
+use Aeliot\EnvResolver\Service\StringProcessor;
+use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
 use Aeliot\TodoRegistrar\Service\Config\YamlParser;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -25,7 +28,7 @@ final class YamlParserTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->yamlParser = new YamlParser();
+        $this->yamlParser = new YamlParser(new StringProcessor());
     }
 
     public function testParseSimpleYaml(): void
@@ -48,11 +51,12 @@ final class YamlParserTest extends TestCase
         ], $result);
     }
 
-    public function testParseEmptyYaml(): void
+    public function testParseEmptyYamlThrowsException(): void
     {
-        $result = $this->yamlParser->parse('');
+        $this->expectException(InvalidConfigException::class);
+        $this->expectExceptionMessage('Cannot parse YAML');
 
-        self::assertSame([], $result);
+        $this->yamlParser->parse('');
     }
 
     public function testResolveEnvVar(): void
@@ -119,15 +123,16 @@ final class YamlParserTest extends TestCase
         }
     }
 
-    public function testMissingEnvVarNotReplaced(): void
+    public function testMissingEnvVarThrowsException(): void
     {
         $yaml = <<<'YAML'
             token: '%env(NON_EXISTENT_VAR_12345)%'
             YAML;
 
-        $result = $this->yamlParser->parse($yaml);
+        $this->expectException(EnvNotFoundException::class);
+        $this->expectExceptionMessage('Undefined environment variable "NON_EXISTENT_VAR_12345"');
 
-        self::assertSame(['token' => '%env(NON_EXISTENT_VAR_12345)%'], $result);
+        $this->yamlParser->parse($yaml);
     }
 
     public function testEnvVarEnvPrefersEnvOverGetenv(): void
@@ -151,21 +156,27 @@ final class YamlParserTest extends TestCase
 
     public function testNonEnvValuesNotAffected(): void
     {
-        $yaml = <<<'YAML'
-            regular: 'some value'
-            with_percent: '50%'
-            partial_env: 'prefix_%env(VAR)%_suffix'
-            env_like: 'env(NOT_REALLY)'
-            YAML;
+        $_ENV['VAR'] = 'resolved';
 
-        $result = $this->yamlParser->parse($yaml);
+        try {
+            $yaml = <<<'YAML'
+                regular: 'some value'
+                with_percent: '50%'
+                partial_env: 'prefix_%env(VAR)%_suffix'
+                env_like: 'env(NOT_REALLY)'
+                YAML;
 
-        self::assertSame([
-            'regular' => 'some value',
-            'with_percent' => '50%',
-            'partial_env' => 'prefix_%env(VAR)%_suffix',
-            'env_like' => 'env(NOT_REALLY)',
-        ], $result);
+            $result = $this->yamlParser->parse($yaml);
+
+            self::assertSame([
+                'regular' => 'some value',
+                'with_percent' => '50%',
+                'partial_env' => 'prefix_resolved_suffix',
+                'env_like' => 'env(NOT_REALLY)',
+            ], $result);
+        } finally {
+            unset($_ENV['VAR']);
+        }
     }
 
     public static function getDataForTestEnvVarNames(): iterable

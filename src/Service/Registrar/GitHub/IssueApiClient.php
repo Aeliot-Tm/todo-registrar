@@ -18,12 +18,10 @@ use Github\Api\Issue as IssueApi;
 /**
  * @internal
  */
-final class IssueApiClient
+final readonly class IssueApiClient
 {
     public function __construct(
         private IssueApi $issueAPI,
-        private string $owner,
-        private string $repository,
     ) {
     }
 
@@ -32,6 +30,6 @@ final class IssueApiClient
      */
     public function create(Issue $issue): array
     {
-        return $this->issueAPI->create($this->owner, $this->repository, $issue->getData());
+        return $this->issueAPI->create($issue->getOwner(), $issue->getRepository(), $issue->getData());
     }
 }

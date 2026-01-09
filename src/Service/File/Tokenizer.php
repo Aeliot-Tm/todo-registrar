@@ -16,7 +16,7 @@ namespace Aeliot\TodoRegistrar\Service\File;
 /**
  * @internal
  */
-class Tokenizer
+final readonly class Tokenizer
 {
     /**
      * @return \PhpToken[]

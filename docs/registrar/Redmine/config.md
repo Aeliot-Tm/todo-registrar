@@ -1,37 +1,61 @@
-# Configuration of Redmine-registrar
+# Configuration of Redmine Registrar
 
 ## General config
 
-Put config php-file `.todo-registrar.php` or yaml-file `.todo-registrar.yaml` in the root directory.
-See [example](../../../examples/Redmine/.todo-registrar.php) or [example](../../../examples/Redmine/.todo-registrar.yaml).
+Put either yaml-config-file `.todo-registrar.yaml` ([example](../../../examples/Redmine/.todo-registrar.yaml))
+or php-config-file `.todo-registrar.php` ([example](../../../examples/Redmine/.todo-registrar.php)) in the root directory.
+
+### YAML configuration
+
+```yaml
+#...
+registrar:
+  type: Redmine
+  issue:
+    project: 'testing-project'          # required: project identifier or ID
+    tracker: 'Bugs'                     # required: tracker name or ID
+    priority: 'Low'                     # optional: priority name or ID
+    assignee: null                      # optional: username, login, email, or user ID
+    category: null                      # optional: category name or ID
+    fixed_version: null                 # optional: version name or ID
+    start_date: null                    # optional: start date in format YYYY-MM-DD
+    due_date: null                      # optional: due date in format YYYY-MM-DD
+    estimated_hours: null               # optional: estimated hours as float
+    summaryPrefix: '[TODO] '            # optional: prefix which will be added to issue subject
+  service:
+    url: 'https://redmine.example.com',             # required: Redmine URL
+    apikeyOrUsername: '%env(REDMINE_USERNAME)%',    # required: API key (recommended) or username
+    password: '%env(REDMINE_PASSWORD)%',            # optional: password for Basic Auth
+                                                    #           If password is provided, Basic Auth will be used (username:password)
+                                                    #           Otherwise, apikeyOrUsername will be treated as API key
+```
+
+### PHP configuration
 
 Description of keys of general config:
 ```php
-$redmineConfig = [
+$config->setRegistrar('Redmine', [
     'issue' => [
-        'tracker' => 'Bugs',                     // tracker name or ID (required, can be overridden by inline issue)
-        'addTagToLabels' => false,               // Redmine doesn't support labels directly (optional)
-        'labels' => [],                          // not used for Redmine (optional)
-        'tagPrefix' => 'tag-',                   // prefix which will be added to tag when "addTagToLabels=true"
-        'summaryPrefix' => '[TODO] ',            // prefix which will be added to issue subject (optional)
-        'assignee' => null,                      // username, login, email, or user ID (optional)
-        'priority' => 'Low',                     // priority name or ID (optional)
-        'category' => null,                      // category name or ID (optional)
-        'fixed_version' => null,                 // version name or ID (optional)
-        'start_date' => null,                    // start date in format YYYY-MM-DD (optional)
-        'due_date' => null,                      // due date in format YYYY-MM-DD (optional)
-        'estimated_hours' => null,               // estimated hours as float (optional)
+        // ...
+        // See description of keys in YAML config above
     ],
-    'project' => 'testing-project',              // project identifier or ID (required)
     'service' => [
-        'url' => 'https://redmine.example.com',  // Redmine URL
-        'apikeyOrUsername' => 'string',          // API key (recommended) or username
-        'password' => null,                      // password for Basic Auth (optional)
-                                                 // If password is provided, Basic Auth will be used (username:password)
-                                                 // Otherwise, apikeyOrUsername will be treated as API key
+         // 'https://redmine.example.com'
+        'url' => $_ENV['REDMINE_URL'],
+        'apikeyOrUsername' => $_ENV['REDMINE_USERNAME'],
+        'password' => $_ENV['REDMINE_PASSWORD'],
     ]
-];
+]);
 ```
+
+### Option 'project'
+
+It is expected that `project` is in `issue` array, but script tries to get it from root too.
+And it can be overridden by inline config.
+
+## Labels
+
+Redmine doesn't support labels.
 
 ## Authentication methods
 
@@ -135,16 +159,16 @@ If you're running Redmine locally in Docker and the registrar runs in a Docker c
 
 Supported keys of inline config:
 
-| Key            | Type              | Description                                            |
-|----------------|-------------------|--------------------------------------------------------|
-| assignee       | `string` or `int` | Username/login/email or user ID to assign to the issue |
-| tracker        | `int` or `string` | Tracker ID or name (Bug, Feature, Support, etc.)       |
-| priority       | `int` or `string` | Priority ID or name (High, Normal, Low, etc.)          |
-| category       | `int` or `string` | Category ID or name                                    |
-| fixed_version  | `int` or `string` | Version ID or name                                     |
-| start_date     | `string`          | Start date in format YYYY-MM-DD                        |
-| due_date       | `string`          | Due date in format YYYY-MM-DD                          |
-| estimated_hours| `float`           | Estimated hours                                        |
+| Key | Type | Description |
+|---|---|---|
+| assignee | `string` or `int` | Username/login/email or user ID to assign to the issue |
+| tracker | `int` or `string` | Tracker ID or name (Bug, Feature, Support, etc.) |
+| priority | `int` or `string` | Priority ID or name (High, Normal, Low, etc.) |
+| category | `int` or `string` | Category ID or name |
+| fixed_version | `int` or `string` | Version ID or name |
+| start_date | `string` | Start date in format YYYY-MM-DD |
+| due_date | `string` | Due date in format YYYY-MM-DD |
+| estimated_hours| `float` | Estimated hours |
 
 ### Examples
 
@@ -197,9 +221,9 @@ When the same field can be set from multiple sources, priority is (highest to lo
 
 ## Notes
 
-- **User Resolution**: Usernames, logins, and emails are automatically resolved to Redmine user IDs via the Users API. Results are cached to optimize performance. User IDs can also be specified directly.
-- **Entity Resolution**: All entity names (tracker, priority, category, version) are resolved to IDs via Redmine API. Results are cached for performance.
-- **Project Resolution**: Project identifiers are resolved to project IDs via the Projects API with pagination support.
-- **Required Fields**: `project` and `tracker` are required. All other fields are optional.
-- **Date Format**: All date fields must be in format `YYYY-MM-DD`.
 - **API Permissions**: Make sure your API key has permissions to create issues in the specified project. Check project settings and user role permissions in Redmine.
+- **Required Fields**: `project` and `tracker` are required. All other fields are optional.
+- **Project Resolution**: Project identifiers are resolved to project IDs via the Projects API with pagination support.
+- **Entity Resolution**: All entity names (tracker, priority, category, version) are resolved to IDs via Redmine API. Results are cached for performance.
+- **User Resolution**: Usernames, logins, and emails are automatically resolved to Redmine user IDs via the Users API. Results are cached to optimize performance. User IDs can also be specified directly.
+- **Date Format**: All date fields must be in format `YYYY-MM-DD`.

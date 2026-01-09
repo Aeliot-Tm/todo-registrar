@@ -13,14 +13,14 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\InlineConfig;
 
-use Aeliot\TodoRegistrar\Contracts\InlineConfigFactoryInterface;
-use Aeliot\TodoRegistrar\Contracts\InlineConfigInterface;
 use Aeliot\TodoRegistrar\Dto\InlineConfig\InlineConfig;
+use Aeliot\TodoRegistrarContracts\InlineConfigFactoryInterface;
+use Aeliot\TodoRegistrarContracts\InlineConfigInterface;
 
 /**
  * @internal
  */
-final class InlineConfigFactory implements InlineConfigFactoryInterface
+final readonly class InlineConfigFactory implements InlineConfigFactoryInterface
 {
     /**
      * TODO: #125 create config specific for configured registrar.

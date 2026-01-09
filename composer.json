@@ -56,6 +56,7 @@
         "ext-mbstring": "*",
         "ext-simplexml": "*",
         "ext-tokenizer": "*",
+        "aeliot/env-resolver": "^1.0.2",
         "aeliot/todo-registrar-contracts": "^1.0.2",
         "bugrov/yandex-tracker": "0.1.0",
         "guzzlehttp/guzzle": "^7.9",
@@ -80,9 +81,10 @@
         "roave/security-advisories": "dev-latest"
     },
     "scripts": {
+        "bin-phpunit": "XDEBUG_MODE=off tools/phpunit.phar -c .scripts/phpunit/phpunit.xml",
         "build": [
-            "php scripts/box/prepare-config.php",
-            "box compile --config=scripts/box/config.json"
+            "php .scripts/box/prepare-config.php",
+            "box compile --config=.scripts/box/config.json"
         ],
         "check-all": [
             "@cs-fixer-check",
@@ -92,23 +94,27 @@
         "cs-baseline": "@cs-fixer-baseline",
         "cs-check": "@cs-fixer-check",
         "cs-fix": "@cs-fixer-fix",
-        "cs-fixer-baseline": "XDEBUG_MODE=off tools/pcsf-baseline.phar -b scripts/php-cs-fixer/baseline.json -c scripts/php-cs-fixer/config.php -f scripts/php-cs-fixer/finder.php",
+        "cs-fixer-baseline": "XDEBUG_MODE=off tools/pcsf-baseline.phar -b .scripts/php-cs-fixer/baseline.json -c .scripts/php-cs-fixer/config.php -f .scripts/php-cs-fixer/finder.php",
         "cs-fixer-check": "@cs-fixer-fix --dry-run",
-        "cs-fixer-fix": "tools/php-cs-fixer.phar fix -vv --config=scripts/php-cs-fixer/config.php",
+        "cs-fixer-fix": "tools/php-cs-fixer.phar fix -vv --config=.scripts/php-cs-fixer/config.php",
         "phive-install": "phive install --trust-gpg-keys $(cat .phive/trust-gpg-keys.txt)",
         "phpstan": [
             "@phpstan-clear",
             "@phpstan-analyse"
         ],
-        "phpstan-analyse": "vendor/bin/phpstan analyse  -c scripts/phpstan/config.neon ",
+        "phpstan-analyse": "vendor/bin/phpstan analyse  -c .scripts/phpstan/config.neon ",
         "phpstan-baseline": [
             "@phpstan-clear",
-            "@phpstan-analyse --generate-baseline scripts/phpstan/baseline.neon --allow-empty-baseline"
+            "@phpstan-analyse --generate-baseline .scripts/phpstan/baseline.neon --allow-empty-baseline"
         ],
-        "phpstan-clear": "vendor/bin/phpstan clear-result-cache -c scripts/phpstan/config.neon",
-        "phpunit": "tools/phpunit.phar -c scripts/phpunit/phpunit.xml",
-        "require-check": "tools/composer-require-checker.phar check --config-file=scripts/composer-require-checker/config.json composer.json --output=text",
-        "unused": "XDEBUG_MODE=off tools/composer-unused.phar unused -c ./scripts/composer-unused/config.php"
+        "phpstan-clear": "vendor/bin/phpstan clear-result-cache -c .scripts/phpstan/config.neon",
+        "phpunit": "@test-all",
+        "require-check": "tools/composer-require-checker.phar check --config-file=.scripts/composer-require-checker/config.json composer.json --output=text",
+        "test-all": "@bin-phpunit",
+        "test-func": "@bin-phpunit --testsuite functional",
+        "test-int": "@bin-phpunit --testsuite integration",
+        "test-unit": "@bin-phpunit --testsuite unit",
+        "unused": "XDEBUG_MODE=off tools/composer-unused.phar unused -c .scripts/composer-unused/config.php"
     },
     "support": {
         "issues": "https://github.com/Aeliot-Tm/todo-registrar/issues"

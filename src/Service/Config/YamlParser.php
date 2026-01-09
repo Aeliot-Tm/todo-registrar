@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Config;
 
+use Aeliot\EnvResolver\Service\StringProcessor;
+use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -20,39 +22,28 @@ use Symfony\Component\Yaml\Yaml;
  */
 final readonly class YamlParser
 {
+    public function __construct(private StringProcessor $stringProcessor)
+    {
+    }
+
     /**
      * @return array<string, mixed>
      */
     public function parse(string $content): array
     {
-        $parsed = Yaml::parse(
-            $content,
-            Yaml::PARSE_CONSTANT | Yaml::PARSE_EXCEPTION_ON_INVALID_TYPE | Yaml::PARSE_OBJECT,
-        );
-
-        if (!\is_array($parsed)) {
-            return [];
+        $content = $this->stringProcessor->process($content);
+        try {
+            $parsed = Yaml::parse(
+                $content,
+                Yaml::PARSE_CONSTANT | Yaml::PARSE_EXCEPTION_ON_INVALID_TYPE | Yaml::PARSE_OBJECT,
+            );
+            if (!\is_array($parsed)) {
+                throw new \UnexpectedValueException('Invalid YAML string');
+            }
+        } catch (\Exception $e) {
+            throw new InvalidConfigException('Cannot parse YAML', 0, $e);
         }
 
-        return $this->resolveEnvVars($parsed);
-    }
-
-    /**
-     * @param array<string, mixed> $config
-     *
-     * @return array<string, mixed>
-     */
-    private function resolveEnvVars(array $config): array
-    {
-        array_walk_recursive($config, static function (mixed &$value): void {
-            if (\is_string($value) && preg_match('/^%env\(([^)]+)\)%$/', $value, $matches)) {
-                $envValue = $_ENV[$matches[1]] ?? getenv($matches[1]);
-                if (false !== $envValue) {
-                    $value = $envValue;
-                }
-            }
-        });
-
-        return $config;
+        return $parsed;
     }
 }

@@ -13,7 +13,8 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\Redmine;
 
-use Aeliot\TodoRegistrar\Contracts\TodoInterface;
+use Aeliot\TodoRegistrar\Service\Registrar\IssueSupporter;
+use Aeliot\TodoRegistrarContracts\TodoInterface;
 
 /**
  * @internal
@@ -21,22 +22,23 @@ use Aeliot\TodoRegistrar\Contracts\TodoInterface;
 final readonly class IssueFactory
 {
     public function __construct(
-        private GeneralIssueConfig $generalIssueConfig,
-        private UserResolver $userResolver,
         private EntityResolver $entityResolver,
+        private GeneralIssueConfig $generalIssueConfig,
+        private IssueSupporter $issueSupporter,
+        private UserResolver $userResolver,
     ) {
     }
 
     public function create(TodoInterface $todo): Issue
     {
         $issue = new Issue();
-        $issue->setSubject($this->generalIssueConfig->getSummaryPrefix() . $todo->getSummary());
+        $issue->setSubject($this->issueSupporter->getSummary($todo, $this->generalIssueConfig));
         $issue->setDescription($todo->getDescription());
 
-        $projectIdentifier = $this->generalIssueConfig->getProjectIdentifier();
+        $projectIdentifier = $todo->getInlineConfig()['project'] ?? $this->generalIssueConfig->getProjectIdentifier();
         $projectId = $this->entityResolver->resolveProjectId($projectIdentifier);
         if (null === $projectId) {
-            throw new \RuntimeException(\sprintf('Project "%s" not found', $projectIdentifier));
+            throw new ProjectNotFoundException(\sprintf('Project "%s" not found', $projectIdentifier));
         }
         $issue->setProjectId($projectId);
 
@@ -52,54 +54,16 @@ final readonly class IssueFactory
         return $issue;
     }
 
-    private function setTracker(Issue $issue, TodoInterface $todo): void
-    {
-        $inlineConfig = $todo->getInlineConfig();
-        $tracker = $inlineConfig['tracker'] ?? $this->generalIssueConfig->getTracker();
-
-        if (null === $tracker) {
-            throw new \RuntimeException('Tracker must be specified in config or inline config');
-        }
-
-        $trackerId = $this->entityResolver->resolveTrackerId($tracker);
-        if (null === $trackerId) {
-            throw new \RuntimeException(\sprintf('Tracker "%s" not found', $tracker));
-        }
-
-        $issue->setTrackerId($trackerId);
-    }
-
     private function setAssignee(Issue $issue, TodoInterface $todo): void
     {
-        // Collect assignee from all sources: inline config, tag assignee, global config
-        $assignee = $todo->getInlineConfig()['assignee']
-            ?? $todo->getAssignee()
-            ?? $this->generalIssueConfig->getAssignee();
-
-        if (null === $assignee || '' === (string) $assignee) {
+        $assignees = $this->issueSupporter->getAssignees($todo, $this->generalIssueConfig);
+        if (!$assignees) {
             return;
         }
 
-        // Convert username/login/ID to user ID
-        $assigneeId = $this->userResolver->resolveUserId($assignee);
-
+        $assigneeId = $this->userResolver->resolveUserId(reset($assignees));
         if (null !== $assigneeId) {
             $issue->setAssignedToId($assigneeId);
-        }
-    }
-
-    private function setPriority(Issue $issue, TodoInterface $todo): void
-    {
-        $inlineConfig = $todo->getInlineConfig();
-        $priority = $inlineConfig['priority'] ?? $this->generalIssueConfig->getPriority();
-
-        if (null === $priority) {
-            return;
-        }
-
-        $priorityId = $this->entityResolver->resolvePriorityId($priority);
-        if (null !== $priorityId) {
-            $issue->setPriorityId($priorityId);
         }
     }
 
@@ -112,34 +76,9 @@ final readonly class IssueFactory
             return;
         }
 
-        $categoryId = $this->entityResolver->resolveCategoryId($category);
+        $categoryId = $this->entityResolver->resolveCategoryId($category, $issue->getProjectId());
         if (null !== $categoryId) {
             $issue->setCategoryId($categoryId);
-        }
-    }
-
-    private function setFixedVersion(Issue $issue, TodoInterface $todo): void
-    {
-        $inlineConfig = $todo->getInlineConfig();
-        $fixedVersion = $inlineConfig['fixed_version'] ?? $this->generalIssueConfig->getFixedVersion();
-
-        if (null === $fixedVersion) {
-            return;
-        }
-
-        $versionId = $this->entityResolver->resolveVersionId($fixedVersion);
-        if (null !== $versionId) {
-            $issue->setFixedVersionId($versionId);
-        }
-    }
-
-    private function setStartDate(Issue $issue, TodoInterface $todo): void
-    {
-        $startDate = $todo->getInlineConfig()['start_date']
-            ?? $this->generalIssueConfig->getStartDate();
-
-        if (null !== $startDate) {
-            $issue->setStartDate($startDate);
         }
     }
 
@@ -161,5 +100,62 @@ final readonly class IssueFactory
         if (null !== $estimatedHours) {
             $issue->setEstimatedHours($estimatedHours);
         }
+    }
+
+    private function setFixedVersion(Issue $issue, TodoInterface $todo): void
+    {
+        $inlineConfig = $todo->getInlineConfig();
+        $fixedVersion = $inlineConfig['fixed_version'] ?? $this->generalIssueConfig->getFixedVersion();
+
+        if (null === $fixedVersion) {
+            return;
+        }
+
+        $versionId = $this->entityResolver->resolveVersionId($fixedVersion, $issue->getProjectId());
+        if (null !== $versionId) {
+            $issue->setFixedVersionId($versionId);
+        }
+    }
+
+    private function setPriority(Issue $issue, TodoInterface $todo): void
+    {
+        $inlineConfig = $todo->getInlineConfig();
+        $priority = $inlineConfig['priority'] ?? $this->generalIssueConfig->getPriority();
+
+        if (null === $priority) {
+            return;
+        }
+
+        $priorityId = $this->entityResolver->resolvePriorityId($priority);
+        if (null !== $priorityId) {
+            $issue->setPriorityId($priorityId);
+        }
+    }
+
+    private function setStartDate(Issue $issue, TodoInterface $todo): void
+    {
+        $startDate = $todo->getInlineConfig()['start_date']
+            ?? $this->generalIssueConfig->getStartDate();
+
+        if (null !== $startDate) {
+            $issue->setStartDate($startDate);
+        }
+    }
+
+    private function setTracker(Issue $issue, TodoInterface $todo): void
+    {
+        $inlineConfig = $todo->getInlineConfig();
+        $tracker = $inlineConfig['tracker'] ?? $this->generalIssueConfig->getTracker();
+
+        if (null === $tracker) {
+            throw new \RuntimeException('Tracker must be specified in config or inline config');
+        }
+
+        $trackerId = $this->entityResolver->resolveTrackerId($tracker);
+        if (null === $trackerId) {
+            throw new \RuntimeException(\sprintf('Tracker "%s" not found', $tracker));
+        }
+
+        $issue->setTrackerId($trackerId);
     }
 }

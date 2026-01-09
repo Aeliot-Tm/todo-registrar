@@ -21,6 +21,12 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 final class GeneralIssueConfig extends AbstractGeneralIssueConfig
 {
+    #[Assert\Type(type: 'string', message: 'Option "assignee" must be a string')]
+    protected mixed $assignee = null;
+
+    #[Assert\Type(type: 'string', message: 'Option "priority" must be a string')]
+    protected mixed $priority = null;
+
     #[Assert\NotNull(message: 'Option "queue" is required')]
     #[Assert\NotBlank(message: 'Option "queue" must not be empty')]
     #[Assert\Type(type: 'string', message: 'Option "queue" must be a string')]
@@ -30,11 +36,15 @@ final class GeneralIssueConfig extends AbstractGeneralIssueConfig
     #[Assert\Type(type: 'string', message: 'Option "type" must be a string')]
     protected mixed $type = null;
 
-    #[Assert\Type(type: 'string', message: 'Option "priority" must be a string')]
-    protected mixed $priority = null;
+    public function getAssignee(): ?string
+    {
+        return $this->assignee;
+    }
 
-    #[Assert\Type(type: 'string', message: 'Option "assignee" must be a string')]
-    protected mixed $assignee = null;
+    public function getPriority(): ?string
+    {
+        return $this->priority;
+    }
 
     public function getQueue(): string
     {
@@ -44,16 +54,6 @@ final class GeneralIssueConfig extends AbstractGeneralIssueConfig
     public function getType(): string
     {
         return $this->type;
-    }
-
-    public function getPriority(): ?string
-    {
-        return $this->priority;
-    }
-
-    public function getAssignee(): ?string
-    {
-        return $this->assignee;
     }
 
     protected function normalizeConfig(array $config): array

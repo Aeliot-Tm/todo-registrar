@@ -13,16 +13,18 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\JIRA;
 
-use Aeliot\TodoRegistrar\Contracts\TodoInterface;
+use Aeliot\TodoRegistrar\Service\Registrar\IssueSupporter;
+use Aeliot\TodoRegistrarContracts\TodoInterface;
 use JiraRestApi\Issue\IssueField;
 
 /**
  * @internal
  */
-final class IssueFieldFactory
+final readonly class IssueFieldFactory
 {
     public function __construct(
         private GeneralIssueConfig $generalIssueConfig,
+        private IssueSupporter $issueSupporter,
     ) {
     }
 
@@ -30,8 +32,8 @@ final class IssueFieldFactory
     {
         $issueField = new IssueField();
         $issueField
-            ->setProjectKey($this->generalIssueConfig->getProjectKey())
-            ->setSummary($this->generalIssueConfig->getSummaryPrefix() . $todo->getSummary())
+            ->setProjectKey($todo->getInlineConfig()['projectKey'] ?? $this->generalIssueConfig->getProjectKey())
+            ->setSummary($this->issueSupporter->getSummary($todo, $this->generalIssueConfig))
             ->setDescription($todo->getDescription());
 
         $this->setIssueType($issueField, $todo);
@@ -45,12 +47,9 @@ final class IssueFieldFactory
 
     private function setAssignee(IssueField $issueField, TodoInterface $todo): void
     {
-        $assignee = $todo->getInlineConfig()['assignee']
-            ?? $todo->getAssignee()
-            ?? $this->generalIssueConfig->getAssignee();
-
-        if ($assignee) {
-            $issueField->setAssigneeNameAsString($assignee);
+        $assignees = $this->issueSupporter->getAssignees($todo, $this->generalIssueConfig);
+        if ($assignees) {
+            $issueField->setAssigneeNameAsString(reset($assignees));
         }
     }
 
@@ -74,20 +73,7 @@ final class IssueFieldFactory
 
     private function setLabels(IssueField $issueField, TodoInterface $todo): void
     {
-        $labels = [
-            ...(array) ($todo->getInlineConfig()['labels'] ?? []),
-            ...$this->generalIssueConfig->getLabels(),
-        ];
-
-        if ($this->generalIssueConfig->isAddTagToLabels()) {
-            $labels[] = strtolower(\sprintf('%s%s', $this->generalIssueConfig->getTagPrefix(), $todo->getTag()));
-        }
-
-        $labels = array_unique($labels);
-        if ($allowedLabels = $this->generalIssueConfig->getAllowedLabels()) {
-            $labels = array_intersect($labels, $allowedLabels);
-        }
-
+        $labels = $this->issueSupporter->getLabels($todo, $this->generalIssueConfig);
         foreach ($labels as $label) {
             $issueField->addLabelAsString($label);
         }

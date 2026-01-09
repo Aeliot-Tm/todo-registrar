@@ -13,11 +13,12 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\GitLab;
 
-use Aeliot\TodoRegistrar\Contracts\RegistrarFactoryInterface;
-use Aeliot\TodoRegistrar\Contracts\RegistrarInterface;
 use Aeliot\TodoRegistrar\Enum\RegistrarType;
 use Aeliot\TodoRegistrar\Exception\ConfigValidationException;
-use Aeliot\TodoRegistrar\Service\ValidatorFactory;
+use Aeliot\TodoRegistrar\Service\ColorGenerator;
+use Aeliot\TodoRegistrar\Service\Registrar\IssueSupporter;
+use Aeliot\TodoRegistrarContracts\RegistrarFactoryInterface;
+use Aeliot\TodoRegistrarContracts\RegistrarInterface;
 use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -25,16 +26,23 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  * @internal
  */
 #[AsTaggedItem(index: RegistrarType::GitLab->value)]
-final class GitlabRegistrarFactory implements RegistrarFactoryInterface
+final readonly class GitlabRegistrarFactory implements RegistrarFactoryInterface
 {
-    public function create(array $config, ?ValidatorInterface $validator = null): RegistrarInterface
+    public function __construct(
+        private ColorGenerator $colorGenerator,
+        private IssueSupporter $issueSupporter,
+    ) {
+    }
+
+    public function create(array $config): RegistrarInterface
     {
-        $validator ??= ValidatorFactory::create();
-        $generalIssueConfig = $this->createGeneralIssueConfig($config['issue'] ?? [], $validator);
+        /** @var ValidatorInterface $validator */
+        $validator = func_get_arg(1);
+        $generalIssueConfig = $this->createGeneralIssueConfig($config, $validator);
         $apiClientProvider = new ApiClientFactory($config['service']);
         $apiSectionClientFactory = new ApiSectionClientFactory(
             $apiClientProvider->createClient(),
-            $this->getProjectIdentifier($config['service']),
+            $this->colorGenerator,
         );
         $milestoneApiClient = $apiSectionClientFactory->createMilestoneService();
 
@@ -42,8 +50,9 @@ final class GitlabRegistrarFactory implements RegistrarFactoryInterface
             $apiSectionClientFactory->createIssueService(),
             new IssueFactory(
                 $generalIssueConfig,
-                $apiSectionClientFactory->createUserResolver(),
+                $this->issueSupporter,
                 $milestoneApiClient,
+                $apiSectionClientFactory->createUserResolver(),
             ),
             $apiSectionClientFactory->createLabelService(),
             $milestoneApiClient,
@@ -51,36 +60,23 @@ final class GitlabRegistrarFactory implements RegistrarFactoryInterface
     }
 
     /**
-     * @param array<string,mixed> $issue
+     * @param array<string,mixed> $config
      */
-    public function createGeneralIssueConfig(array $issue, ValidatorInterface $validator): GeneralIssueConfig
+    public function createGeneralIssueConfig(array $config, ValidatorInterface $validator): GeneralIssueConfig
     {
-        $generalIssueConfig = new GeneralIssueConfig($issue);
+        $issueConfig = ($config['issue'] ?? []) + [
+            'project' => ($config['service'] ?? [])['project'] ?? null,
+        ];
+        if (isset($issueConfig['project']) && ctype_digit((string) $issueConfig['project'])) {
+            $issueConfig['project'] = (int) $issueConfig['project'];
+        }
+
+        $generalIssueConfig = new GeneralIssueConfig($issueConfig);
         $violations = $validator->validate($generalIssueConfig);
         if (\count($violations) > 0) {
             throw new ConfigValidationException($violations, '[GitLab] Invalid general issue config');
         }
 
         return $generalIssueConfig;
-    }
-
-    /**
-     * @param array<string,mixed> $config
-     */
-    private function getProjectIdentifier(array $config): int|string
-    {
-        // Either path or ID
-        $projectIdentifier = $config['project'] ?? null;
-        if ('' === (string) $projectIdentifier) {
-            throw new \InvalidArgumentException('Project identifier must be specified in service config');
-        }
-
-        // If already an integer, return as is
-        if (\is_int($projectIdentifier) || ctype_digit((string) $projectIdentifier)) {
-            return (int) $projectIdentifier;
-        }
-
-        // Otherwise, it's a project path (return as string, API will URL-encode it)
-        return $projectIdentifier;
     }
 }

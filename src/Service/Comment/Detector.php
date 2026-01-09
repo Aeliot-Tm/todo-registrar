@@ -16,7 +16,7 @@ namespace Aeliot\TodoRegistrar\Service\Comment;
 /**
  * @internal
  */
-class Detector
+final readonly class Detector
 {
     /**
      * @param \PhpToken[] $tokens

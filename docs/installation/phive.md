@@ -1,4 +1,4 @@
-### Installation with PHIVE
+# Installation with PHIVE
 
 You can install this package with [PHIVE](https://phar.io/). It permits you to install package by one console command
 without extending dependencies in your composer-files.

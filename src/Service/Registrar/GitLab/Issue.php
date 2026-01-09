@@ -23,17 +23,19 @@ final class Issue
      */
     private array $data = [];
 
+    private int|string $project;
+
     /**
      * @return array<string,mixed>
      */
     public function getData(): array
     {
-        return $this->data;
-    }
+        $data = $this->data;
+        if ($labels = $data['labels'] ?? null) {
+            $data['labels'] = implode(', ', $labels);
+        }
 
-    public function setTitle(string $title): void
-    {
-        $this->data['title'] = $title;
+        return $data;
     }
 
     public function setDescription(string $description): void
@@ -51,24 +53,6 @@ final class Issue
         }
     }
 
-    /**
-     * @param string[] $labels
-     */
-    public function setLabels(array $labels): void
-    {
-        if (!empty($labels)) {
-            // GitLab API requires labels as comma-separated string
-            $this->data['labels'] = implode(',', array_unique($labels));
-        }
-    }
-
-    public function setMilestoneId(?int $milestoneId): void
-    {
-        if (null !== $milestoneId) {
-            $this->data['milestone_id'] = $milestoneId;
-        }
-    }
-
     public function setDueDate(?string $dueDate): void
     {
         if (null !== $dueDate && '' !== $dueDate) {
@@ -83,11 +67,36 @@ final class Issue
      */
     public function getLabels(): array
     {
-        if (!isset($this->data['labels']) || '' === $this->data['labels']) {
-            return [];
-        }
+        return $this->data['labels'];
+    }
 
-        // Labels are stored as comma-separated string in GitLab
-        return array_map('trim', explode(',', $this->data['labels']));
+    /**
+     * @param string[] $labels
+     */
+    public function setLabels(array $labels): void
+    {
+        $this->data['labels'] = $labels;
+    }
+
+    public function setMilestoneId(?int $milestoneId): void
+    {
+        if (null !== $milestoneId) {
+            $this->data['milestone_id'] = $milestoneId;
+        }
+    }
+
+    public function getProject(): int|string
+    {
+        return $this->project;
+    }
+
+    public function setProject(int|string $project): void
+    {
+        $this->project = $project;
+    }
+
+    public function setTitle(string $title): void
+    {
+        $this->data['title'] = $title;
     }
 }

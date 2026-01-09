@@ -125,7 +125,7 @@ $commentTokens = array_filter($tokens, fn($token) =>
 ```
 
 | Token Type | Description | Example |
-|------------|-------------|---------|
+|---|---|---|
 | `T_COMMENT` | Single-line or multi-line comment | `// comment`, `/* comment */` |
 | `T_DOC_COMMENT` | PHPDoc comment | `/** @param ... */` |
 
@@ -208,7 +208,7 @@ Each registrar implementation:
 3. Returns issue key/number
 
 | Registrar | Returns |
-|-----------|---------|
+|---|---|
 | JIRA | `PROJ-123` |
 | GitHub | `#123` |
 | GitLab | `#123` |

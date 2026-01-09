@@ -3,6 +3,10 @@ services:
     autowire: true
     autoconfigure: true
 
+  _instanceof:
+    Aeliot\TodoRegistrarContracts\RegistrarFactoryInterface:
+      tags: ['aeliot.todo_registrar.registrar_factory']
+
   Aeliot\TodoRegistrar\:
     resource: '../src/*'
     exclude:
@@ -27,11 +31,17 @@ services:
     public: true
     tags: [ 'console.command' ]
 
+  # Services for testing
+  Aeliot\TodoRegistrar\Service\Registrar\RegistrarFactoryRegistry:
+    public: true
+
   Aeliot\TodoRegistrar\Service\Registrar\GitHub\GitHubRegistrarFactory: ~
   Aeliot\TodoRegistrar\Service\Registrar\GitLab\GitlabRegistrarFactory: ~
   Aeliot\TodoRegistrar\Service\Registrar\JIRA\JiraRegistrarFactory: ~
   Aeliot\TodoRegistrar\Service\Registrar\Redmine\RedmineRegistrarFactory: ~
   Aeliot\TodoRegistrar\Service\Registrar\YandexTracker\YandexTrackerRegistrarFactory: ~
+
+  Aeliot\EnvResolver\Service\StringProcessor: ~
 
   Symfony\Component\Validator\Validator\ValidatorInterface:
     factory: ['Aeliot\TodoRegistrar\Service\ValidatorFactory', 'create']

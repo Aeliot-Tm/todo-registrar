@@ -14,16 +14,16 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Service;
 
 use Aeliot\TodoRegistrar\Console\OutputAdapter;
-use Aeliot\TodoRegistrar\Contracts\InlineConfigFactoryInterface;
-use Aeliot\TodoRegistrar\Contracts\InlineConfigInterface;
-use Aeliot\TodoRegistrar\Contracts\InlineConfigReaderInterface;
 use Aeliot\TodoRegistrar\Dto\Comment\CommentPart;
 use Aeliot\TodoRegistrar\Dto\Registrar\Todo;
+use Aeliot\TodoRegistrarContracts\InlineConfigFactoryInterface;
+use Aeliot\TodoRegistrarContracts\InlineConfigInterface;
+use Aeliot\TodoRegistrarContracts\InlineConfigReaderInterface;
 
 /**
  * @internal
  */
-class TodoBuilder
+final readonly class TodoBuilder
 {
     public function __construct(
         private InlineConfigFactoryInterface $inlineConfigFactory,

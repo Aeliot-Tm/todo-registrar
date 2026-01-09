@@ -10,43 +10,14 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  preflight:
-    name: Check opened pull requests
-    runs-on: ubuntu-latest
-
-    # Define the permissions for the action
-    permissions:
-      pull-requests: read
-
-    outputs:
-      count: ${{ steps.get_count.outputs.count }}
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Get count of opened PRs
-        id: get_count
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          export TODO_PR_COUNT=$(gh pr list --base main --state open --search TODO-REGISTRAR | wc -l)
-          echo "count=$TODO_PR_COUNT" >> "$GITHUB_OUTPUT"
-          echo "Count of opened PRs: $TODO_PR_COUNT" >> $GITHUB_STEP_SUMMARY
-
   todo-registrar:
     name: Register TODO
-    needs: preflight
-    if: 0 == needs.preflight.outputs.count
     runs-on: ubuntu-latest
 
     # Define the permissions for the action
     permissions:
       contents: write
       pull-requests: write
-      actions: write
       issues: write
 
     steps:
@@ -55,23 +26,16 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Generate new branch name
-        id: branch_name
-        run: |
-          export TR_NEW_BRANCH=todo-registrar-$(echo "$RANDOM$RANDOM$RANDOM" | base64 | head -c 8; echo)
-          echo "branch_name=$TR_NEW_BRANCH" >>  "$GITHUB_OUTPUT"
-
       - name: Register TODOs
-        uses: Aeliot-Tm/todo-registrar-action@1.1.0
+        uses: Aeliot-Tm/todo-registrar-action@1.2.0
         env:
           GH_PERSONAL_ACCESS_TOKEN: ${{ secrets.GH_TODO_REGISTRAR_ACCESS_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
           GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}
         with:
-          config_path: scripts/todo-registrar/config.php
+          config_path: .scripts/todo-registrar/config.php
           env_vars: |
             GH_PERSONAL_ACCESS_TOKEN
             GITHUB_REPOSITORY
             GITHUB_REPOSITORY_OWNER
-          new_branch_name: ${{ steps.branch_name.outputs.branch_name }}
-          target_branch_name: main
+          new_branch_name: 'todo-registrar'

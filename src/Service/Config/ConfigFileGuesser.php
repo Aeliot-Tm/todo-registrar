@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Config;
 
+use Aeliot\TodoRegistrar\Exception\UnavailableConfigException;
+
 /**
  * @internal
  */
@@ -40,6 +42,6 @@ final readonly class ConfigFileGuesser
             }
         }
 
-        throw new \DomainException('Cannot detect default config file');
+        throw new UnavailableConfigException('Cannot detect default config file');
     }
 }

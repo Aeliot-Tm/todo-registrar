@@ -20,7 +20,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * @internal
  */
-final class OutputAdapter implements OutputInterface
+final readonly class OutputAdapter implements OutputInterface
 {
     public const VERBOSITY_SILENT = OutputInterface::VERBOSITY_SILENT;
     public const VERBOSITY_QUIET = OutputInterface::VERBOSITY_QUIET;

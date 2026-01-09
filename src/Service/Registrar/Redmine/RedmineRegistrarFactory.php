@@ -13,11 +13,11 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\Redmine;
 
-use Aeliot\TodoRegistrar\Contracts\RegistrarFactoryInterface;
-use Aeliot\TodoRegistrar\Contracts\RegistrarInterface;
 use Aeliot\TodoRegistrar\Enum\RegistrarType;
 use Aeliot\TodoRegistrar\Exception\ConfigValidationException;
-use Aeliot\TodoRegistrar\Service\ValidatorFactory;
+use Aeliot\TodoRegistrar\Service\Registrar\IssueSupporter;
+use Aeliot\TodoRegistrarContracts\RegistrarFactoryInterface;
+use Aeliot\TodoRegistrarContracts\RegistrarInterface;
 use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -25,22 +25,28 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  * @internal
  */
 #[AsTaggedItem(index: RegistrarType::Redmine->value)]
-final class RedmineRegistrarFactory implements RegistrarFactoryInterface
+final readonly class RedmineRegistrarFactory implements RegistrarFactoryInterface
 {
-    public function create(array $config, ?ValidatorInterface $validator = null): RegistrarInterface
+    public function __construct(private IssueSupporter $issueSupporter)
     {
-        $validator ??= ValidatorFactory::create();
+    }
+
+    public function create(array $config): RegistrarInterface
+    {
+        /** @var ValidatorInterface $validator */
+        $validator = func_get_arg(1);
         $issueConfig = ($config['issue'] ?? []) + ['project' => $config['project'] ?? null];
         $generalIssueConfig = $this->createGeneralIssueConfig($issueConfig, $validator);
         $client = (new ServiceFactory($config['service']))->createClient();
 
         return new RedmineRegistrar(
-            new IssueFactory(
-                $generalIssueConfig,
-                new UserResolver($client),
-                new EntityResolver($client, $generalIssueConfig->getProjectIdentifier()),
-            ),
             new IssueApiClient($client),
+            new IssueFactory(
+                new EntityResolver($client),
+                $generalIssueConfig,
+                $this->issueSupporter,
+                new UserResolver($client),
+            ),
         );
     }
 

@@ -16,7 +16,7 @@ namespace Aeliot\TodoRegistrar\Dto\Tag;
 /**
  * @internal
  */
-class TagMetadata
+final readonly class TagMetadata
 {
     public function __construct(
         private ?string $tag = null,

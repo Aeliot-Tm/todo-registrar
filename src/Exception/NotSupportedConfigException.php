@@ -11,13 +11,10 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Aeliot\TodoRegistrar\Service\Config;
+namespace Aeliot\TodoRegistrar\Exception;
 
-use Aeliot\TodoRegistrar\Dto\GeneralConfig\ArrayConfig as ArrayConfigDto;
+use Aeliot\TodoRegistrarContracts\Exception\RegistrarException;
 
-/**
- * @deprecated use {@see ArrayConfigDto }
- */
-final class ArrayConfig extends ArrayConfigDto
+class NotSupportedConfigException extends \DomainException implements RegistrarException
 {
 }

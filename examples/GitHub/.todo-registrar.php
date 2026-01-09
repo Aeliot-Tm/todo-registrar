@@ -25,7 +25,7 @@ return (new Config())
         ],
         'projectKey' => 'Todo',
         'service' => [
-            'personalAccessToken' => $_ENV['GITHUB_PERSONAL_ACCESS_TOKEN'] ?? null,
+            'personalAccessToken' => $_ENV['GITHUB_PERSONAL_ACCESS_TOKEN'],
             'owner' => 'Aeliot-Tm',
             'repository' => 'todo-registrar',
         ],

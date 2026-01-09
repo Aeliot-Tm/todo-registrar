@@ -30,7 +30,6 @@ final class EntityResolver
 
     public function __construct(
         private Client $client,
-        private int|string $projectIdentifier,
     ) {
     }
 
@@ -41,63 +40,29 @@ final class EntityResolver
      */
     public function resolveProjectId(int|string $identifier): ?int
     {
-        // If already an integer, return as is
-        if (\is_int($identifier)) {
-            return $identifier;
-        }
-
-        if (isset($this->cache['project'][$identifier])) {
-            return $this->cache['project'][$identifier];
-        }
-
-        // Load projects if not cached
-        if (!isset($this->cache['project'])) {
-            $this->cache['project'] = [];
+        return $this->resolveEntityId('project', $identifier, function (string $entityType): void {
             $page = 1;
             $limit = 100;
             do {
-                $response = $this->client->getApi('project')->list(['limit' => $limit, 'offset' => ($page - 1) * $limit]);
-                if (!\is_array($response) || !isset($response['projects']) || empty($response['projects'])) {
-                    break;
-                }
-
-                $projects = $response['projects'];
-                foreach ($projects as $project) {
-                    if (!isset($project['id'])) {
-                        continue;
+                $response = $this->client->getApi('project')->list([
+                    'limit' => $limit,
+                    'offset' => ($page - 1) * $limit,
+                ]);
+                $items = $response['projects'] ?? [];
+                $this->casheIdentifiers($entityType, $items, function (array $item) use ($entityType) {
+                    $id = (int) $item['id'];
+                    $this->cache[$entityType][$id] = $id;
+                    if (isset($item['name'])) {
+                        $this->cache[$entityType][$item['name']] = $id;
                     }
-
-                    $projectId = (int) $project['id'];
-                    // Cache by ID
-                    $this->cache['project'][$projectId] = $projectId;
-                    // Cache by name if available
-                    if (isset($project['name'])) {
-                        $this->cache['project'][$project['name']] = $projectId;
+                    if (isset($item['identifier'])) {
+                        $this->cache[$entityType][$item['identifier']] = $id;
                     }
-                    // Cache by identifier if available
-                    if (isset($project['identifier'])) {
-                        $this->cache['project'][$project['identifier']] = $projectId;
-                    }
-                }
-
-                // Continue to next page if we got full page of results
+                });
                 ++$page;
-            } while (\count($projects) === $limit);
-        }
-
-        return $this->cache['project'][$identifier] ?? null;
-    }
-
-    /**
-     * Get project ID from project identifier.
-     */
-    private function getProjectId(): ?int
-    {
-        if (\is_int($this->projectIdentifier)) {
-            return $this->projectIdentifier;
-        }
-
-        return $this->resolveProjectId($this->projectIdentifier);
+                // Continue to next page if we got full page of results
+            } while (\count($items) === $limit);
+        });
     }
 
     /**
@@ -107,117 +72,75 @@ final class EntityResolver
      */
     public function resolveTrackerId(int|string $identifier): ?int
     {
-        return $this->resolveEntityId('tracker', $identifier, function (): array {
-            $response = $this->client->getApi('tracker')->list();
-            if (!\is_array($response) || !isset($response['trackers'])) {
-                return [];
-            }
-
-            $result = [];
-            foreach ($response['trackers'] as $tracker) {
-                if (isset($tracker['id'], $tracker['name'])) {
-                    $result[(int) $tracker['id']] = $tracker['name'];
-                }
-            }
-
-            return $result;
+        return $this->resolveEntityId('tracker', $identifier, function (string $entityType): void {
+            $items = $this->client->getApi('tracker')->list()['trackers'] ?? [];
+            $this->casheIdentifiers($entityType, $items);
         });
     }
 
     /**
-     * Resolve priority identifier to priority ID.
-     *
      * @param int|string $identifier Priority ID or name
      */
     public function resolvePriorityId(int|string $identifier): ?int
     {
-        return $this->resolveEntityId('priority', $identifier, function (): array {
-            $response = $this->client->getApi('issue_priority')->list();
-            if (!\is_array($response) || !isset($response['issue_priorities'])) {
-                return [];
-            }
-
-            $result = [];
-            foreach ($response['issue_priorities'] as $priority) {
-                if (isset($priority['id'], $priority['name'])) {
-                    $result[(int) $priority['id']] = $priority['name'];
-                }
-            }
-
-            return $result;
+        return $this->resolveEntityId('priority', $identifier, function (string $entityType): void {
+            $items = $this->client->getApi('issue_priority')->list()['issue_priorities'] ?? [];
+            $this->casheIdentifiers($entityType, $items);
         });
     }
 
     /**
-     * Resolve category identifier to category ID.
-     *
      * @param int|string $identifier Category ID or name
      */
-    public function resolveCategoryId(int|string $identifier): ?int
+    public function resolveCategoryId(int|string $identifier, int $projectId): ?int
     {
-        $projectId = $this->getProjectId();
-        if (null === $projectId) {
-            throw new \RuntimeException(\sprintf('Project "%s" not found', $this->projectIdentifier));
-        }
-
-        return $this->resolveEntityId('category', $identifier, function () use ($projectId): array {
+        return $this->resolveEntityId('category', $identifier, function (string $entityType) use ($projectId): void {
             try {
-                $response = $this->client->getApi('issue_category')->listByProject($projectId);
-                if (!\is_array($response) || !isset($response['issue_categories'])) {
-                    return [];
-                }
+                $items = $this->client->getApi('issue_category')->listByProject($projectId)['issue_categories'] ?? [];
             } catch (\Throwable) {
                 // 403 Forbidden or other errors - return empty list (project may have no categories or no access)
-                return [];
+                $items = [];
             }
 
-            $result = [];
-            foreach ($response['issue_categories'] as $category) {
-                if (isset($category['id'], $category['name'])) {
-                    $result[(int) $category['id']] = $category['name'];
-                }
-            }
-
-            return $result;
+            $this->casheIdentifiers($entityType, $items);
         });
     }
 
     /**
-     * Resolve version identifier to version ID.
-     *
      * @param int|string $identifier Version ID or name
      */
-    public function resolveVersionId(int|string $identifier): ?int
+    public function resolveVersionId(int|string $identifier, int $projectId): ?int
     {
-        $projectId = $this->getProjectId();
-        if (null === $projectId) {
-            throw new \RuntimeException(\sprintf('Project "%s" not found', $this->projectIdentifier));
-        }
-
-        return $this->resolveEntityId('version', $identifier, function () use ($projectId): array {
+        return $this->resolveEntityId('version', $identifier, function (string $entityType) use ($projectId): void {
             try {
-                $response = $this->client->getApi('version')->listByProject($projectId);
-                if (!\is_array($response) || !isset($response['versions'])) {
-                    return [];
-                }
+                $items = $this->client->getApi('version')->listByProject($projectId)['versions'] ?? [];
             } catch (\Throwable) {
                 // 403 Forbidden or other errors - return empty list (project may have no versions or no access)
-                return [];
+                $items = [];
             }
 
-            $result = [];
-            foreach ($response['versions'] as $version) {
-                if (isset($version['id'], $version['name'])) {
-                    $result[(int) $version['id']] = $version['name'];
-                }
-            }
-
-            return $result;
+            $this->casheIdentifiers($entityType, $items);
         });
     }
 
     /**
-     * @param callable(): array<int,string> $loadEntities
+     * @param array<array<string,int|string>> $items
+     */
+    private function casheIdentifiers(string $entityType, array $items, ?\Closure $casher = null): void
+    {
+        $casher ??= function (array $item) use ($entityType) {
+            $id = (int) $item['id'];
+            $this->cache[$entityType][$id] = $id;
+            $this->cache[$entityType][$item['name']] = $id;
+        };
+
+        foreach ($items as $item) {
+            $casher($item);
+        }
+    }
+
+    /**
+     * @param callable(string): void $loadEntities
      */
     private function resolveEntityId(string $entityType, int|string $identifier, callable $loadEntities): ?int
     {
@@ -226,22 +149,10 @@ final class EntityResolver
             return $identifier;
         }
 
-        if (isset($this->cache[$entityType][$identifier])) {
-            return $this->cache[$entityType][$identifier];
-        }
-
-        // Load entities if not cached
         if (!isset($this->cache[$entityType])) {
-            $entities = $loadEntities();
             $this->cache[$entityType] = [];
-            // Cache by ID
-            foreach ($entities as $id => $name) {
-                $this->cache[$entityType][$id] = $id;
-            }
-            // Cache by name
-            foreach ($entities as $id => $name) {
-                $this->cache[$entityType][$name] = $id;
-            }
+            // Load entities if not cached
+            $loadEntities($entityType);
         }
 
         return $this->cache[$entityType][$identifier] ?? null;

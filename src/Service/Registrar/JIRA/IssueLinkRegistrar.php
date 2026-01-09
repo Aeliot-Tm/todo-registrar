@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\JIRA;
 
-use Aeliot\TodoRegistrar\Contracts\TodoInterface;
+use Aeliot\TodoRegistrarContracts\TodoInterface;
 use JiraRestApi\IssueLink\IssueLink;
 use JiraRestApi\IssueLink\IssueLinkService;
 

@@ -13,15 +13,18 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\YandexTracker;
 
-use Aeliot\TodoRegistrar\Contracts\TodoInterface;
+use Aeliot\TodoRegistrar\Service\Registrar\IssueSupporter;
+use Aeliot\TodoRegistrarContracts\TodoInterface;
 
 /**
  * @internal
  */
 final readonly class IssueFactory
 {
-    public function __construct(private GeneralIssueConfig $generalIssueConfig)
-    {
+    public function __construct(
+        private GeneralIssueConfig $generalIssueConfig,
+        private IssueSupporter $issueSupporter,
+    ) {
     }
 
     public function create(TodoInterface $todo): ExtendedIssueCreateRequest
@@ -29,8 +32,8 @@ final readonly class IssueFactory
         $request = new ExtendedIssueCreateRequest();
 
         $request
-            ->queue($this->generalIssueConfig->getQueue())
-            ->summary($this->generalIssueConfig->getSummaryPrefix() . $todo->getSummary())
+            ->queue($todo->getInlineConfig()['queue'] ?? $this->generalIssueConfig->getQueue())
+            ->summary($this->issueSupporter->getSummary($todo, $this->generalIssueConfig))
             ->description($todo->getDescription())
             ->type($this->getType($todo));
 
@@ -41,11 +44,12 @@ final readonly class IssueFactory
         return $request;
     }
 
-    private function getType(TodoInterface $todo): string
+    private function setAssignee(ExtendedIssueCreateRequest $request, TodoInterface $todo): void
     {
-        $inlineConfig = $todo->getInlineConfig();
-
-        return $inlineConfig['issue_type'] ?? $this->generalIssueConfig->getType();
+        $assignees = $this->issueSupporter->getAssignees($todo, $this->generalIssueConfig);
+        if ($assignees) {
+            $request->assignee(reset($assignees));
+        }
     }
 
     private function setPriority(ExtendedIssueCreateRequest $request, TodoInterface $todo): void
@@ -56,44 +60,18 @@ final readonly class IssueFactory
         }
     }
 
-    private function setAssignee(ExtendedIssueCreateRequest $request, TodoInterface $todo): void
-    {
-        $assignee = $todo->getAssignee()
-            ?? $todo->getInlineConfig()['assignee']
-            ?? $this->generalIssueConfig->getAssignee();
-
-        if (null !== $assignee) {
-            $request->assignee($assignee);
-        }
-    }
-
     private function setTags(ExtendedIssueCreateRequest $request, TodoInterface $todo): void
     {
-        $tags = $this->getTags($todo);
+        $tags = $this->issueSupporter->getLabels($todo, $this->generalIssueConfig);
         if ($tags) {
             $request->tags($tags);
         }
     }
 
-    /**
-     * @return string[]
-     */
-    private function getTags(TodoInterface $todo): array
+    private function getType(TodoInterface $todo): string
     {
-        $tags = [
-            ...(array) ($todo->getInlineConfig()['labels'] ?? []),
-            ...$this->generalIssueConfig->getLabels(),
-        ];
+        $inlineConfig = $todo->getInlineConfig();
 
-        if ($this->generalIssueConfig->isAddTagToLabels()) {
-            $tags[] = strtolower(\sprintf('%s%s', $this->generalIssueConfig->getTagPrefix(), $todo->getTag()));
-        }
-
-        $tags = array_unique($tags);
-        if ($allowedLabels = $this->generalIssueConfig->getAllowedLabels()) {
-            $tags = array_intersect($tags, $allowedLabels);
-        }
-
-        return array_values($tags);
+        return $inlineConfig['issue_type'] ?? $this->generalIssueConfig->getType();
     }
 }

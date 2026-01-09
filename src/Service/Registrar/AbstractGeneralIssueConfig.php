@@ -17,40 +17,47 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 abstract class AbstractGeneralIssueConfig
 {
-    #[Assert\NotNull(message: 'Option "addTagToLabels" is required')]
     #[Assert\Type(type: 'bool', message: 'Option "addTagToLabels" must be a boolean value')]
-    protected mixed $addTagToLabels = null;
+    protected mixed $addTagToLabels = false;
 
     /**
      * @var string[]|null
      */
     #[Assert\Sequentially([
-        new Assert\NotNull(message: 'Option "labels" is required'),
-        new Assert\Type(type: 'array', message: 'Option "labels" must be an array'),
-        new Assert\All([new Assert\Type(type: 'string', message: 'Each label must be a string')]),
+        new Assert\NotNull(message: 'Option "allowedLabels" cannot be null'),
+        new Assert\Type(type: 'array', message: 'Option "allowedLabels" must be an array'),
+        new Assert\All([
+            new Assert\Sequentially([
+                new Assert\NotNull(message: 'Each allowed label cannot be null'),
+                new Assert\Type(type: 'string', message: 'Each allowed label must be a string'),
+            ]),
+        ]),
     ])]
-    protected mixed $labels = null;
-
-    /**
-     * @var string[]|null
-     */
-    #[Assert\Sequentially([
-        new Assert\NotNull(message: 'Option "labels" is required'),
-        new Assert\Type(type: 'array', message: 'Option "labels" must be an array'),
-        new Assert\All([new Assert\Type(type: 'string', message: 'Each label must be a string')]),
-    ])]
-    protected mixed $allowedLabels = null;
-
-    #[Assert\NotNull(message: 'Option "tagPrefix" is required')]
-    #[Assert\Type(type: 'string', message: 'Option "tagPrefix" must be a string')]
-    protected mixed $tagPrefix = null;
-
-    #[Assert\NotNull(message: 'Option "summaryPrefix" is required')]
-    #[Assert\Type(type: 'string', message: 'Option "summaryPrefix" must be a string')]
-    protected mixed $summaryPrefix = null;
+    protected mixed $allowedLabels = [];
 
     #[Assert\IsNull(message: 'Unknown configuration options detected: {{ value }}')]
     protected mixed $invalidKeys = null;
+
+    /**
+     * @var string[]|null
+     */
+    #[Assert\Sequentially([
+        new Assert\NotNull(message: 'Option "labels" cannot be null'),
+        new Assert\Type(type: 'array', message: 'Option "labels" must be an array'),
+        new Assert\All([
+            new Assert\Sequentially([
+                new Assert\NotNull(message: 'Each label cannot be null'),
+                new Assert\Type(type: 'string', message: 'Each label must be a string'),
+            ]),
+        ]),
+    ])]
+    protected mixed $labels = [];
+
+    #[Assert\Type(type: 'string', message: 'Option "summaryPrefix" must be a string')]
+    protected mixed $summaryPrefix = null;
+
+    #[Assert\Type(type: 'string', message: 'Option "tagPrefix" must be a string')]
+    protected mixed $tagPrefix = null;
 
     /**
      * @param array<string,mixed> $config
@@ -70,7 +77,7 @@ abstract class AbstractGeneralIssueConfig
 
     public function isAddTagToLabels(): bool
     {
-        return $this->addTagToLabels;
+        return (bool) $this->addTagToLabels;
     }
 
     /**
@@ -83,12 +90,12 @@ abstract class AbstractGeneralIssueConfig
 
     public function getSummaryPrefix(): string
     {
-        return $this->summaryPrefix;
+        return (string) $this->summaryPrefix;
     }
 
     public function getTagPrefix(): string
     {
-        return $this->tagPrefix;
+        return (string) $this->tagPrefix;
     }
 
     /**

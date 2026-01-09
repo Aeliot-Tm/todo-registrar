@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Test\Unit\Service\Config;
 
-use Aeliot\TodoRegistrar\Contracts\GeneralConfigInterface;
+use Aeliot\EnvResolver\Service\StringProcessor;
 use Aeliot\TodoRegistrar\Enum\RegistrarType;
 use Aeliot\TodoRegistrar\Exception\ConfigValidationException;
 use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
@@ -26,6 +26,7 @@ use Aeliot\TodoRegistrar\Service\Config\ConfigProvider;
 use Aeliot\TodoRegistrar\Service\Config\StdinConfigFactory;
 use Aeliot\TodoRegistrar\Service\Config\YamlParser;
 use Aeliot\TodoRegistrar\Service\ValidatorFactory;
+use Aeliot\TodoRegistrarContracts\GeneralConfigInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
@@ -50,7 +51,7 @@ final class ConfigProviderTest extends TestCase
             new ConfigFileGuesser($absolutePathMaker),
         );
         $arrayConfigFactory = new ArrayConfigFactory(self::$validator);
-        $yamlParser = new YamlParser();
+        $yamlParser = new YamlParser(new StringProcessor());
         $configFactory = new ConfigFactory($arrayConfigFactory, $yamlParser);
         $stdinConfigFactory = new StdinConfigFactory($arrayConfigFactory, $yamlParser);
 
@@ -68,7 +69,7 @@ final class ConfigProviderTest extends TestCase
 
         $config = $this->configProvider->getConfig($path);
 
-        self::assertSame(RegistrarType::GitHub, $config->getRegistrarType());
+        self::assertSame(RegistrarType::GitHub->value, $config->getRegistrarType());
         self::assertSame(['todo'], $config->getTags());
     }
 

@@ -86,7 +86,7 @@ Each issue tracker has its own implementation in subdirectories:
 Located in `Contracts/`:
 
 | Interface | Purpose |
-|-----------|---------|
+|---|---|
 | `RegistrarInterface` | Contract for issue registration (`register(TodoInterface): string`) |
 | `RegistrarFactoryInterface` | Contract for creating registrars from config |
 | `TodoInterface` | Contract for TODO data transfer object |
@@ -115,7 +115,7 @@ Located in `Dto/`:
 ## Design Patterns
 
 | Pattern | Usage |
-|---------|-------|
+|---|---|
 | **Factory** | `HeapRunnerFactory`, `TodoBuilderFactory`, `*RegistrarFactory` |
 | **Strategy** | `RegistrarInterface` implementations for different issue trackers |
 | **Service Locator** | `RegistrarFactoryRegistry` with Symfony's `#[AutowireLocator]` |

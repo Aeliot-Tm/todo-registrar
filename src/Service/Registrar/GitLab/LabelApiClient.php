@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\GitLab;
 
+use Aeliot\TodoRegistrar\Service\ColorGenerator;
 use Gitlab\Api\Projects;
 
 /**
@@ -24,9 +25,22 @@ use Gitlab\Api\Projects;
 final readonly class LabelApiClient
 {
     public function __construct(
+        private ColorGenerator $colorGenerator,
         private Projects $projects,
-        private int|string $projectIdentifier,
     ) {
+    }
+
+    /**
+     * Create a new label in the project.
+     *
+     * @param string $name Label name
+     */
+    public function create(int|string $project, string $name): void
+    {
+        $this->projects->addLabel($project, [
+            'name' => $name,
+            'color' => $this->colorGenerator->generateColor($name),
+        ]);
     }
 
     /**
@@ -34,32 +48,10 @@ final readonly class LabelApiClient
      *
      * @return string[] Array of label names
      */
-    public function getAll(): array
+    public function getAll(int|string $project): array
     {
-        $labels = $this->projects->labels($this->projectIdentifier);
+        $labels = $this->projects->labels($project);
 
         return array_map(static fn (array $label): string => $label['name'], $labels);
-    }
-
-    /**
-     * Create a new label in the project.
-     *
-     * @param string $name Label name
-     * @param string|null $color Label color (hex format, e.g., "#FF0000"). If not provided, uses default color.
-     * @param string|null $description Label description
-     */
-    public function create(string $name, ?string $color = null, ?string $description = null): void
-    {
-        // GitLab API requires color field, so we use a default if not provided
-        $params = [
-            'name' => $name,
-            'color' => $color ?? '#428BCA', // Default blue color if not specified
-        ];
-
-        if (null !== $description) {
-            $params['description'] = $description;
-        }
-
-        $this->projects->addLabel($this->projectIdentifier, $params);
     }
 }

@@ -35,12 +35,11 @@ return (new Config())
         'project' => 'testing-project',  # Project identifier or ID
         'service' => [
             // https://redmine.example.com
-            // For local Redmine in Docker: use 'http://host.docker.internal:3000' instead of 'http://localhost:3000'
-            'url' => $_ENV['REDMINE_URL'] ?? null,
-            'apikeyOrUsername' => $_ENV['REDMINE_API_KEY'] ?? $_ENV['REDMINE_USERNAME'] ?? null,
+            'url' => $_ENV['REDMINE_URL'],
+            'apikeyOrUsername' => $_ENV['REDMINE_USERNAME'],
             // If password is provided, Basic Auth will be used (username:password)
             // Otherwise, apikeyOrUsername will be treated as API key
-            'password' => $_ENV['REDMINE_PASSWORD'] ?? null,
+            'password' => $_ENV['REDMINE_PASSWORD'],
         ],
     ])
     ->setTags(['todo', 'fixme', 'a_custom_tag']);

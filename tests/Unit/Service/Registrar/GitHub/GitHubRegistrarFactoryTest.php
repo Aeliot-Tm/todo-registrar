@@ -14,7 +14,10 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Test\Unit\Service\Registrar\GitHub;
 
 use Aeliot\TodoRegistrar\Exception\ConfigValidationException;
+use Aeliot\TodoRegistrar\Service\ColorGenerator;
 use Aeliot\TodoRegistrar\Service\Registrar\GitHub\GitHubRegistrarFactory;
+use Aeliot\TodoRegistrar\Service\Registrar\IssueSupporter;
+use Aeliot\TodoRegistrarContracts\RegistrarInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\Validation;
@@ -32,44 +35,63 @@ final class GitHubRegistrarFactoryTest extends TestCase
             ->getValidator();
     }
 
-    public function testCreateGeneralConfigWithValidData(): void
+    public function testCreateWithValidData(): void
     {
-        $factory = new GitHubRegistrarFactory();
-        $issueConfig = [
-            'addTagToLabels' => true,
-            'labels' => ['bug'],
-            'assignees' => ['user1'],
+        $factory = new GitHubRegistrarFactory(new ColorGenerator(), new IssueSupporter());
+        $config = [
+            'issue' => [
+                'addTagToLabels' => true,
+                'labels' => ['bug'],
+                'assignees' => ['user1'],
+            ],
+            'service' => [
+                'personalAccessToken' => 'test-token',
+                'owner' => 'test-owner',
+                'repository' => 'test-repo',
+            ],
         ];
 
-        $config = $factory->createGeneralConfig($issueConfig, self::$validator);
+        $registrar = $factory->create($config, self::$validator);
 
-        self::assertTrue($config->isAddTagToLabels());
-        self::assertSame(['bug'], $config->getLabels());
-        self::assertSame(['user1'], $config->getAssignees());
+        self::assertInstanceOf(RegistrarInterface::class, $registrar);
     }
 
-    public function testCreateGeneralConfigThrowsOnInvalidData(): void
+    public function testCreateThrowsOnInvalidData(): void
     {
-        $factory = new GitHubRegistrarFactory();
-        $issueConfig = [
-            'labels' => [123], // Invalid: must be strings
+        $factory = new GitHubRegistrarFactory(new ColorGenerator(), new IssueSupporter());
+        $config = [
+            'issue' => [
+                'labels' => [123], // Invalid: must be strings
+            ],
+            'service' => [
+                'personalAccessToken' => 'test-token',
+                'owner' => 'test-owner',
+                'repository' => 'test-repo',
+            ],
         ];
 
         $this->expectException(ConfigValidationException::class);
         $this->expectExceptionMessage('[GitHub] Invalid general issue config');
 
-        $factory->createGeneralConfig($issueConfig, self::$validator);
+        $factory->create($config, self::$validator);
     }
 
-    public function testCreateGeneralConfigThrowsOnUnknownOptions(): void
+    public function testCreateThrowsOnUnknownOptions(): void
     {
-        $factory = new GitHubRegistrarFactory();
-        $issueConfig = [
-            'unknown_option' => 'value',
+        $factory = new GitHubRegistrarFactory(new ColorGenerator(), new IssueSupporter());
+        $config = [
+            'issue' => [
+                'unknown_option' => 'value',
+            ],
+            'service' => [
+                'personalAccessToken' => 'test-token',
+                'owner' => 'test-owner',
+                'repository' => 'test-repo',
+            ],
         ];
 
         $this->expectException(ConfigValidationException::class);
 
-        $factory->createGeneralConfig($issueConfig, self::$validator);
+        $factory->create($config, self::$validator);
     }
 }

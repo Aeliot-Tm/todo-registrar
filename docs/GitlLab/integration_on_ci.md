@@ -1,4 +1,4 @@
-## Integration on GitLab CI
+# Integration on GitLab CI
 
 ### Preconditions
 

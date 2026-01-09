@@ -11,13 +11,10 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Aeliot\TodoRegistrar\Service\Config;
+namespace Aeliot\TodoRegistrar\Exception;
 
-use Aeliot\TodoRegistrar\Dto\GeneralConfig\PathsConfig as PathsConfigDto;
+use Aeliot\TodoRegistrarContracts\Exception\RegistrarException;
 
-/**
- * @deprecated use {@see PathsConfigDto }
- */
-final class PathsConfig extends PathsConfigDto
+class UnavailableConfigException extends \RuntimeException implements RegistrarException
 {
 }

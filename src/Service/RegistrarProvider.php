@@ -13,12 +13,12 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service;
 
-use Aeliot\TodoRegistrar\Contracts\GeneralConfigInterface;
-use Aeliot\TodoRegistrar\Contracts\RegistrarFactoryInterface;
-use Aeliot\TodoRegistrar\Contracts\RegistrarInterface;
 use Aeliot\TodoRegistrar\Enum\RegistrarType;
 use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
 use Aeliot\TodoRegistrar\Service\Registrar\RegistrarFactoryRegistry;
+use Aeliot\TodoRegistrarContracts\GeneralConfigInterface;
+use Aeliot\TodoRegistrarContracts\RegistrarFactoryInterface;
+use Aeliot\TodoRegistrarContracts\RegistrarInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
@@ -36,28 +36,28 @@ final readonly class RegistrarProvider
     {
         $registrarType = $config->getRegistrarType();
 
-        if (\is_string($registrarType)) {
-            if (class_exists($registrarType) && is_a($registrarType, RegistrarFactoryInterface::class, true)) {
-                $registrarType = new $registrarType();
-            } else {
-                // add some backward compatibility
-                if ('github' === strtolower($registrarType)) {
-                    $registrarType = RegistrarType::GitHub->value;
-                }
-                $newType = RegistrarType::tryFrom($registrarType);
-                if (!$newType) {
-                    throw new InvalidConfigException(\sprintf('Invalid type of registrar: %s', $registrarType));
-                }
-                $registrarType = $newType;
-            }
-        }
-
         if ($registrarType instanceof RegistrarFactoryInterface) {
             $registrarFactory = $registrarType;
+        } elseif (class_exists($registrarType) && is_a($registrarType, RegistrarFactoryInterface::class, true)) {
+            $registrarFactory = new $registrarType();
         } else {
-            $registrarFactory = $this->registrarFactoryRegistry->getFactory($registrarType);
+            $registrarFactory = $this->getByEnumValue($registrarType);
         }
 
         return $registrarFactory->create($config->getRegistrarConfig(), $this->validator);
+    }
+
+    private function getByEnumValue(string $registrarType): RegistrarFactoryInterface
+    {
+        // add some backward compatibility
+        if ('github' === strtolower($registrarType)) {
+            $registrarType = RegistrarType::GitHub->value;
+        }
+        $transformedType = RegistrarType::tryFrom($registrarType);
+        if (!$transformedType) {
+            throw new InvalidConfigException(\sprintf('Invalid type of registrar: %s', $registrarType));
+        }
+
+        return $this->registrarFactoryRegistry->getFactory($transformedType);
     }
 }

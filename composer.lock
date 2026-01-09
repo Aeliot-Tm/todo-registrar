@@ -4,8 +4,54 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f4f357b8e936e961503dc67fdb5e3097",
+    "content-hash": "c805a14e79ebfe9721ae9c487fa30b6c",
     "packages": [
+        {
+            "name": "aeliot/env-resolver",
+            "version": "1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Aeliot-Tm/env-resolver.git",
+                "reference": "1c4b2d22dcd5cfaaf7fc8dca9cb63470fb7d6e7e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Aeliot-Tm/env-resolver/zipball/1c4b2d22dcd5cfaaf7fc8dca9cb63470fb7d6e7e",
+                "reference": "1c4b2d22dcd5cfaaf7fc8dca9cb63470fb7d6e7e",
+                "shasum": ""
+            },
+            "require": {
+                "ext-filter": "*",
+                "php": "^8.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Aeliot\\EnvResolver\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Anatoliy Melnikov",
+                    "email": "5785276@gmail.com"
+                }
+            ],
+            "description": "Resolver of environment variables",
+            "keywords": [
+                "env",
+                "env-processor",
+                "env-resolver"
+            ],
+            "support": {
+                "issues": "https://github.com/Aeliot-Tm/env-resolver/issues",
+                "source": "https://github.com/Aeliot-Tm/env-resolver/tree/1.0.2"
+            },
+            "time": "2026-01-04T10:17:58+00:00"
+        },
         {
             "name": "aeliot/todo-registrar-contracts",
             "version": "1.0.2",

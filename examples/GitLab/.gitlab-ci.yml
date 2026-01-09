@@ -13,14 +13,14 @@ stages:
         - |
             export MR_TARGET_BRANCH=development
             export TR_NEW_BRANCH=todo-registrar-$(echo "$RANDOM$RANDOM$RANDOM" | base64 | head -c 8; echo)
-            export TR_MR_EXISTS=$(bash scripts/gitlab/mr_check_existing.sh $MR_TARGET_BRANCH "todo-registrar-[[:alnum:]]{8}")
+            export TR_MR_EXISTS=$(bash .gitlab/scripts/mr_check_existing.sh $MR_TARGET_BRANCH "todo-registrar-[[:alnum:]]{8}")
             if [[ "0" == "$TR_MR_EXISTS" ]]; then
                 echo "NO opened MR exists! Looking for new TODOs..."
-                vendor/bin/todo-registrar --config=scripts/todo-registrar/config.php
+                vendor/bin/todo-registrar --config=.scripts/todo-registrar/config.php
                 export TR_TITLE="TODO-REGISTRAR: automated registering of new TODOs "
-                export TR_PUSHED=$(bash scripts/gitlab/commit_and_push.sh $TR_NEW_BRANCH "$TR_TITLE")
+                export TR_PUSHED=$(bash .gitlab/scripts/commit_and_push.sh $TR_NEW_BRANCH "$TR_TITLE")
                 if [[ "1" == "$TR_PUSHED" ]]; then
-                    bash scripts/gitlab/mr_create.sh $MR_TARGET_BRANCH $TR_NEW_BRANCH "$TR_TITLE"
+                    bash .gitlab/scripts/mr_create.sh $MR_TARGET_BRANCH $TR_NEW_BRANCH "$TR_TITLE"
                 else
                     echo "No changes, nothing to commit & push!"
                 fi
