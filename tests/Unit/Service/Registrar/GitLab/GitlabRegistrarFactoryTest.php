@@ -15,7 +15,7 @@ namespace Aeliot\TodoRegistrar\Test\Unit\Service\Registrar\GitLab;
 
 use Aeliot\TodoRegistrar\Exception\ConfigValidationException;
 use Aeliot\TodoRegistrar\Service\ColorGenerator;
-use Aeliot\TodoRegistrar\Service\File\ContextPathBuilder;
+use Aeliot\TodoRegistrar\Service\ContextPath\ContextPathBuilderRegistry;
 use Aeliot\TodoRegistrar\Service\Registrar\GitLab\GitlabRegistrarFactory;
 use Aeliot\TodoRegistrar\Service\Registrar\IssueSupporter;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -107,6 +107,6 @@ final class GitlabRegistrarFactoryTest extends TestCase
 
     private function createIssueSupporter(): IssueSupporter
     {
-        return new IssueSupporter($this->createMock(ContextPathBuilder::class));
+        return new IssueSupporter($this->createMock(ContextPathBuilderRegistry::class));
     }
 }

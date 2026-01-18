@@ -11,16 +11,20 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Aeliot\TodoRegistrar\Service\File;
+namespace Aeliot\TodoRegistrar\Service\ContextPath\Builder;
 
+use Aeliot\TodoRegistrar\Enum\ContextPathBuilderFormat;
+use Aeliot\TodoRegistrar\Service\ContextPath\ContextPathBuilderInterface;
 use Aeliot\TodoRegistrarContracts\ContextNodeInterface;
+use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
 
 /**
  * Builds context path string in code block format.
  *
  * @internal
  */
-final readonly class ContextPathBuilder
+#[AsTaggedItem(index: ContextPathBuilderFormat::CODE_BLOCK->value)]
+final readonly class CodeBlockContextPathBuilder implements ContextPathBuilderInterface
 {
     /**
      * @param list<ContextNodeInterface> $nodes

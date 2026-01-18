@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Test\Unit\Service\Registrar\JIRA;
 
 use Aeliot\TodoRegistrar\Exception\ConfigValidationException;
-use Aeliot\TodoRegistrar\Service\File\ContextPathBuilder;
+use Aeliot\TodoRegistrar\Service\ContextPath\ContextPathBuilderRegistry;
 use Aeliot\TodoRegistrar\Service\Registrar\IssueSupporter;
 use Aeliot\TodoRegistrar\Service\Registrar\JIRA\JiraRegistrarFactory;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -140,6 +140,6 @@ final class JiraRegistrarFactoryTest extends TestCase
 
     private function createIssueSupporter(): IssueSupporter
     {
-        return new IssueSupporter($this->createMock(ContextPathBuilder::class));
+        return new IssueSupporter($this->createMock(ContextPathBuilderRegistry::class));
     }
 }
