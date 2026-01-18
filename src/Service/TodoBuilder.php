@@ -15,6 +15,7 @@ namespace Aeliot\TodoRegistrar\Service;
 
 use Aeliot\TodoRegistrar\Console\OutputAdapter;
 use Aeliot\TodoRegistrar\Dto\Comment\CommentPart;
+use Aeliot\TodoRegistrar\Dto\Registrar\ContextAwareTodo;
 use Aeliot\TodoRegistrar\Dto\Registrar\Todo;
 use Aeliot\TodoRegistrarContracts\InlineConfigFactoryInterface;
 use Aeliot\TodoRegistrarContracts\InlineConfigInterface;
@@ -36,7 +37,7 @@ final readonly class TodoBuilder
     {
         $description = $commentPart->getDescription();
 
-        return new Todo(
+        return new ContextAwareTodo(
             $commentPart->getTag(),
             $commentPart->getSummary(),
             $description,

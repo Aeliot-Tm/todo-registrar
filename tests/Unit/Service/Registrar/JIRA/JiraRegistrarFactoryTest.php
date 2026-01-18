@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Test\Unit\Service\Registrar\JIRA;
 
 use Aeliot\TodoRegistrar\Exception\ConfigValidationException;
+use Aeliot\TodoRegistrar\Service\File\ContextPathBuilder;
 use Aeliot\TodoRegistrar\Service\Registrar\IssueSupporter;
 use Aeliot\TodoRegistrar\Service\Registrar\JIRA\JiraRegistrarFactory;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -35,7 +36,7 @@ final class JiraRegistrarFactoryTest extends TestCase
 
     public function testCreateGeneralIssueConfigWithValidData(): void
     {
-        $factory = new JiraRegistrarFactory(new IssueSupporter());
+        $factory = new JiraRegistrarFactory($this->createIssueSupporter());
         $issueConfig = [
             'projectKey' => 'PROJ',
             'issueType' => 'Task',
@@ -59,7 +60,7 @@ final class JiraRegistrarFactoryTest extends TestCase
 
     public function testCreateGeneralIssueConfigThrowsOnMissingProjectKey(): void
     {
-        $factory = new JiraRegistrarFactory(new IssueSupporter());
+        $factory = new JiraRegistrarFactory($this->createIssueSupporter());
         $issueConfig = [
             'issueType' => 'Task',
         ];
@@ -72,7 +73,7 @@ final class JiraRegistrarFactoryTest extends TestCase
 
     public function testCreateGeneralIssueConfigThrowsOnMissingIssueType(): void
     {
-        $factory = new JiraRegistrarFactory(new IssueSupporter());
+        $factory = new JiraRegistrarFactory($this->createIssueSupporter());
         $issueConfig = [
             'projectKey' => 'PROJ',
         ];
@@ -84,7 +85,7 @@ final class JiraRegistrarFactoryTest extends TestCase
 
     public function testCreateGeneralIssueConfigThrowsOnInvalidLabels(): void
     {
-        $factory = new JiraRegistrarFactory(new IssueSupporter());
+        $factory = new JiraRegistrarFactory($this->createIssueSupporter());
         $issueConfig = [
             'projectKey' => 'PROJ',
             'issueType' => 'Task',
@@ -98,7 +99,7 @@ final class JiraRegistrarFactoryTest extends TestCase
 
     public function testCreateGeneralIssueConfigThrowsOnConflictingTypeKeys(): void
     {
-        $factory = new JiraRegistrarFactory(new IssueSupporter());
+        $factory = new JiraRegistrarFactory($this->createIssueSupporter());
         $issueConfig = [
             'projectKey' => 'PROJ',
             'issueType' => 'Task',
@@ -112,7 +113,7 @@ final class JiraRegistrarFactoryTest extends TestCase
 
     public function testCreateGeneralIssueConfigThrowsOnOutdatedTypeProperty(): void
     {
-        $factory = new JiraRegistrarFactory(new IssueSupporter());
+        $factory = new JiraRegistrarFactory($this->createIssueSupporter());
         $issueConfig = [
             'projectKey' => 'PROJ',
             'type' => 'Task', // Outdated property
@@ -125,7 +126,7 @@ final class JiraRegistrarFactoryTest extends TestCase
 
     public function testCreateGeneralIssueConfigThrowsOnUnknownOptions(): void
     {
-        $factory = new JiraRegistrarFactory(new IssueSupporter());
+        $factory = new JiraRegistrarFactory($this->createIssueSupporter());
         $issueConfig = [
             'projectKey' => 'PROJ',
             'issueType' => 'Task',
@@ -135,5 +136,10 @@ final class JiraRegistrarFactoryTest extends TestCase
         $this->expectException(ConfigValidationException::class);
 
         $factory->createGeneralIssueConfig($issueConfig, self::$validator);
+    }
+
+    private function createIssueSupporter(): IssueSupporter
+    {
+        return new IssueSupporter($this->createMock(ContextPathBuilder::class));
     }
 }

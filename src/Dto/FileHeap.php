@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Dto;
 
+use Aeliot\TodoRegistrar\Dto\Parsing\CommentNode;
+use Aeliot\TodoRegistrar\Dto\Parsing\ParsedFile;
 use Aeliot\TodoRegistrar\Service\File\Saver;
 
 /**
@@ -23,31 +25,26 @@ final class FileHeap
     private \Closure $fileUpdateCallback;
     private int $registrationCounter = 0;
 
-    /**
-     * @param \PhpToken[] $commentTokens
-     * @param \PhpToken[] $tokens
-     */
     public function __construct(
-        private array $commentTokens,
-        private array $tokens,
-        \SplFileInfo $file,
+        private ParsedFile $parsedFile,
         ProcessStatistic $statistic,
         Saver $saver,
     ) {
+        $file = $parsedFile->getFile();
         $statistic->setFileRegistrationCount($file->getPathname(), $this->registrationCounter);
         $this->fileUpdateCallback = function () use ($file, $statistic, $saver): void {
             ++$this->registrationCounter;
             $statistic->setFileRegistrationCount($file->getPathname(), $this->registrationCounter);
-            $saver->save($file, $this->tokens);
+            $saver->save($file, $this->parsedFile->getAllTokens());
         };
     }
 
     /**
-     * @return \PhpToken[]
+     * @return CommentNode[]
      */
-    public function getCommentTokens(): array
+    public function getCommentNodes(): array
     {
-        return $this->commentTokens;
+        return $this->parsedFile->getCommentNodes();
     }
 
     public function getFileUpdateCallback(): \Closure

@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Dto\Comment;
 
+use Aeliot\TodoRegistrar\Dto\Parsing\ContextInterface;
 use Aeliot\TodoRegistrar\Dto\Tag\TagMetadata;
 use Aeliot\TodoRegistrar\Exception\NoLineException;
 use Aeliot\TodoRegistrar\Exception\NoPrefixException;
@@ -30,6 +31,7 @@ final class CommentPart
     public function __construct(
         private \PhpToken $token,
         private ?TagMetadata $tagMetadata,
+        private ContextInterface $context,
     ) {
     }
 
@@ -93,6 +95,11 @@ final class CommentPart
     public function getToken(): \PhpToken
     {
         return $this->token;
+    }
+
+    public function getContext(): ContextInterface
+    {
+        return $this->context;
     }
 
     public function getContent(): string

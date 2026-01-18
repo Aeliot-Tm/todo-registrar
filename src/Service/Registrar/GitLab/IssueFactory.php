@@ -34,7 +34,7 @@ final readonly class IssueFactory
         $issue = new Issue();
         $issue->setProject($todo->getInlineConfig()['project'] ?? $this->generalIssueConfig->getProject());
         $issue->setTitle($this->issueSupporter->getSummary($todo, $this->generalIssueConfig));
-        $issue->setDescription($todo->getDescription());
+        $issue->setDescription($this->issueSupporter->getDescription($todo, $this->generalIssueConfig));
 
         $this->setAssignees($issue, $todo);
         $this->setLabels($issue, $todo);

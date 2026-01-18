@@ -35,6 +35,9 @@ abstract class AbstractGeneralIssueConfig
     ])]
     protected mixed $allowedLabels = [];
 
+    #[Assert\Type(type: 'bool', message: 'Option "showContext" must be a boolean value')]
+    protected mixed $showContext = false;
+
     #[Assert\IsNull(message: 'Unknown configuration options detected: {{ value }}')]
     protected mixed $invalidKeys = null;
 
@@ -88,6 +91,11 @@ abstract class AbstractGeneralIssueConfig
         return $this->labels;
     }
 
+    public function isShowContext(): bool
+    {
+        return (bool) $this->showContext;
+    }
+
     public function getSummaryPrefix(): string
     {
         return (string) $this->summaryPrefix;
@@ -109,6 +117,7 @@ abstract class AbstractGeneralIssueConfig
             'addTagToLabels' => false,
             'labels' => [],
             'allowedLabels' => [],
+            'showContext' => false,
             'summaryPrefix' => '',
             'tagPrefix' => '',
         ];
@@ -116,6 +125,7 @@ abstract class AbstractGeneralIssueConfig
         $config['addTagToLabels'] = (bool) $config['addTagToLabels'];
         $config['labels'] = (array) $config['labels'];
         $config['allowedLabels'] = (array) $config['allowedLabels'];
+        $config['showContext'] = (bool) $config['showContext'];
 
         return $config;
     }

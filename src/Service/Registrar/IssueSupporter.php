@@ -13,10 +13,32 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar;
 
+use Aeliot\TodoRegistrar\Service\File\ContextPathBuilder;
+use Aeliot\TodoRegistrarContracts\ContextAwareTodoInterface;
 use Aeliot\TodoRegistrarContracts\TodoInterface;
 
-final class IssueSupporter
+final readonly class IssueSupporter
 {
+    public function __construct(
+        private ContextPathBuilder $contextPathBuilder,
+    ) {
+    }
+
+    public function getDescription(TodoInterface $todo, AbstractGeneralIssueConfig $generalIssueConfig): string
+    {
+        $description = $todo->getDescription();
+
+        if ($generalIssueConfig->isShowContext() && $todo instanceof ContextAwareTodoInterface) {
+            $context = $todo->getContext();
+            if ($context) {
+                $contextPath = $this->contextPathBuilder->build(array_values($context));
+                $description = $contextPath . "\n\n" . $description;
+            }
+        }
+
+        return $description;
+    }
+
     /**
      * @return array<string>
      */

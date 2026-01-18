@@ -20,12 +20,12 @@ use Aeliot\TodoRegistrarContracts\TodoInterface;
 class Todo implements TodoInterface
 {
     public function __construct(
-        private string $tag,
-        private string $summary,
-        private string $description,
-        private ?string $assignee,
-        private CommentPart $commentPart,
-        private InlineConfigInterface $inlineConfig,
+        protected string $tag,
+        protected string $summary,
+        protected string $description,
+        protected ?string $assignee,
+        protected CommentPart $commentPart,
+        protected InlineConfigInterface $inlineConfig,
     ) {
     }
 
