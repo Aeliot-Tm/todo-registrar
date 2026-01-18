@@ -25,6 +25,8 @@ registrar:
                                               #           config, general config, and tag-based labels (if
                                               #           addTagToLabels=true) will be filtered to match this list.
       summaryPrefix: '[TODO] '                # optional: prefix which will be added to issue subject
+      showContext: true                       # optional: include code context in issue description
+                                              #           values: false (default), true, 'arrow', 'code_block'
   service:
       personalAccessToken: '%env(GITHUB_PERSONAL_ACCESS_TOKEN)%',   # required: personal access-token
 ```
@@ -53,9 +55,13 @@ Option `owner` can be omitted when `repository` match pattern `{owner}/{reposito
 They can be overridden by inline config. If `repository` in inline config match pattern `{owner}/{repository}`
 then `owner` will be taken from `repository`.
 
-## Allowed Labels
+### Allowed Labels
 
 See [allowed labels documentation](../../allowed_labels.md)
+
+### Option showContext
+
+See [show context documentation](../../context_display.md)
 
 ## Inline config
 

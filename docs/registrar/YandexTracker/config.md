@@ -27,6 +27,8 @@ registrar:
                                                     #           config, general config, and tag-based tags (if
                                                     #           addTagToLabels=true) will be filtered to match this list.
     summaryPrefix: '[TODO] '                        # optional: prefix which will be added to issue summary
+    showContext: true                               # optional: include code context in issue description
+                                                    #           values: false (default), true, 'arrow', 'code_block'
   service:
     orgId: '%env(YANDEX_TRACKER_ORG_ID)%'           # required: Organization ID (required)
     token: '%env(YANDEX_TRACKER_TOKEN)%'            # required: OAuth token for Yandex Tracker API (required)
@@ -70,6 +72,10 @@ You may pass different comfortable literals to it.
 ### Option Allowed Labels
 
 See [allowed labels documentation](../../allowed_labels.md)
+
+### Option showContext
+
+See [show context documentation](../../context_display.md)
 
 ## Inline config
 

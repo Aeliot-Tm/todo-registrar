@@ -22,6 +22,8 @@ registrar:
     due_date: null                      # optional: due date in format YYYY-MM-DD
     estimated_hours: null               # optional: estimated hours as float
     summaryPrefix: '[TODO] '            # optional: prefix which will be added to issue subject
+    showContext: true                   # optional: include code context in issue description
+                                        #           values: false (default), true, 'arrow', 'code_block'
   service:
     url: 'https://redmine.example.com',             # required: Redmine URL
     apikeyOrUsername: '%env(REDMINE_USERNAME)%',    # required: API key (recommended) or username
@@ -53,9 +55,13 @@ $config->setRegistrar('Redmine', [
 It is expected that `project` is in `issue` array, but script tries to get it from root too.
 And it can be overridden by inline config.
 
-## Labels
+### Labels
 
 Redmine doesn't support labels.
+
+### Option showContext
+
+See [show context documentation](../../context_display.md)
 
 ## Authentication methods
 

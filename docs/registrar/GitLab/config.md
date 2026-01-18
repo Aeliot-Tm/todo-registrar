@@ -26,6 +26,8 @@ registrar:
       due_date: '2025-12-31'                  # optional: due date in format YYYY-MM-DD (optional)
       milestone: 123                          # optional: either ID (integer: 123) or title (string) of milestone (optional)
       summaryPrefix: '[TODO] '                # optional: prefix which will be added to issue subject
+      showContext: true                       # optional: include code context in issue description
+                                              #           values: false (default), true, 'arrow', 'code_block'
   service:
       host: 'https://gitlab.com',                                   # optional: GitLab host URL (optional, defaults to https://gitlab.com)
       personalAccessToken: '%env(GITLAB_PERSONAL_ACCESS_TOKEN)%',   # optional: personal access token (for http_token auth method)
@@ -116,9 +118,13 @@ For self-hosted GitLab instances, specify the host URL:
 ]
 ```
 
-## Allowed Labels
+### Allowed Labels
 
 See [allowed labels documentation](../../allowed_labels.md)
+
+### Option showContext
+
+See [show context documentation](../../context_display.md)
 
 ## Inline config
 

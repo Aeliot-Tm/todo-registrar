@@ -26,6 +26,8 @@ registrar:
                                               #           addTagToLabels=true) will be filtered to match this list.
       components: ['a-component']             # optional: list of components which will be set to issue
       summaryPrefix: '[TODO] '                # optional: prefix which will be added to issue subject
+      showContext: true                       # optional: include code context in issue description
+                                              #           values: false (default), true, 'arrow', 'code_block'
   service:
       host: '%env(JIRA_HOST)%'                                  # required: host of JIRA-server
       personalAccessToken: '%env(JIRA_PERSONAL_ACCESS_TOKEN)%'  # optional: personal access-token
@@ -60,9 +62,13 @@ $config->setRegistrar('JIRA', [
 It is expected that `projectKey` is in `issue` array, but script tries to get it from root too.
 And it can be overridden by inline config.
 
-## Allowed Labels
+### Allowed Labels
 
 See [allowed labels documentation](../../allowed_labels.md)
+
+### Option showContext
+
+See [show context documentation](../../context_display.md)
 
 ## Inline config
 
