@@ -15,6 +15,7 @@ namespace Aeliot\TodoRegistrar\Enum;
 
 enum ContextPathBuilderFormat: string
 {
+    case ARROW = 'arrow';
     case CODE_BLOCK = 'code_block';
 
     /**

@@ -18,15 +18,13 @@ use Aeliot\TodoRegistrar\Service\ContextPath\ContextPathBuilderInterface;
 use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
 
 /**
- * Builds context path string in code block format.
- *
  * @internal
  */
-#[AsTaggedItem(index: ContextPathBuilderFormat::CODE_BLOCK->value)]
-final readonly class CodeBlockContextPathBuilder extends AbstractContextPathBuilder implements ContextPathBuilderInterface
+#[AsTaggedItem(index: ContextPathBuilderFormat::ARROW->value)]
+final readonly class ArrowContextPathBuilder extends AbstractContextPathBuilder implements ContextPathBuilderInterface
 {
     public function build(array $nodes): string
     {
-        return "```\n" . implode("\n", $this->getLines($nodes)) . "\n```";
+        return implode(' -> ', $this->getLines($nodes));
     }
 }
