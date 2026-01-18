@@ -15,10 +15,22 @@ namespace Aeliot\TodoRegistrar\Dto\Parsing;
 
 use Aeliot\TodoRegistrarContracts\ContextNodeInterface;
 use PhpParser\Node;
+use PhpParser\Node\Const_;
+use PhpParser\Node\Expr\ArrowFunction;
+use PhpParser\Node\Expr\Closure;
+use PhpParser\Node\Expr\Match_;
 use PhpParser\Node\Param;
+use PhpParser\Node\PropertyItem;
+use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\ClassConst;
+use PhpParser\Node\Stmt\ClassMethod;
+use PhpParser\Node\Stmt\Enum_;
 use PhpParser\Node\Stmt\EnumCase;
+use PhpParser\Node\Stmt\Function_;
+use PhpParser\Node\Stmt\Interface_;
+use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\Node\Stmt\Property;
+use PhpParser\Node\Stmt\Trait_;
 use PhpParser\NodeVisitorAbstract;
 
 /**
@@ -58,7 +70,7 @@ final class ContextMapVisitor extends NodeVisitorAbstract
 
     public function __construct(string $filePath)
     {
-        $this->stack = [ContextNode::file($filePath)];
+        $this->stack = [new ContextNode(ContextNodeInterface::KIND_FILE, $filePath)];
     }
 
     /**
@@ -156,11 +168,11 @@ final class ContextMapVisitor extends NodeVisitorAbstract
     private function createContextNode(Node $node): ?ContextNode
     {
         return match (true) {
-            $node instanceof Node\Expr\ArrowFunction => new ContextNode(
+            $node instanceof ArrowFunction => new ContextNode(
                 ContextNodeInterface::KIND_ARROW_FUNCTION,
                 null
             ),
-            $node instanceof Node\Stmt\Class_ => new ContextNode(
+            $node instanceof Class_ => new ContextNode(
                 ContextNodeInterface::KIND_CLASS,
                 $node->name?->toString()
             ),
@@ -168,11 +180,11 @@ final class ContextMapVisitor extends NodeVisitorAbstract
                 ContextNodeInterface::KIND_CLASS_CONST,
                 $this->getClassConstName($node)
             ),
-            $node instanceof Node\Expr\Closure => new ContextNode(
+            $node instanceof Closure => new ContextNode(
                 ContextNodeInterface::KIND_CLOSURE,
                 null
             ),
-            $node instanceof Node\Stmt\Enum_ => new ContextNode(
+            $node instanceof Enum_ => new ContextNode(
                 ContextNodeInterface::KIND_ENUM,
                 $node->name->toString()
             ),
@@ -180,23 +192,23 @@ final class ContextMapVisitor extends NodeVisitorAbstract
                 ContextNodeInterface::KIND_ENUM_CASE,
                 $node->name->toString()
             ),
-            $node instanceof Node\Stmt\Function_ => new ContextNode(
+            $node instanceof Function_ => new ContextNode(
                 ContextNodeInterface::KIND_FUNCTION,
                 $node->name->toString()
             ),
-            $node instanceof Node\Stmt\Interface_ => new ContextNode(
+            $node instanceof Interface_ => new ContextNode(
                 ContextNodeInterface::KIND_INTERFACE,
                 $node->name->toString()
             ),
-            $node instanceof Node\Expr\Match_ => new ContextNode(
+            $node instanceof Match_ => new ContextNode(
                 ContextNodeInterface::KIND_MATCH,
                 null
             ),
-            $node instanceof Node\Stmt\ClassMethod => new ContextNode(
+            $node instanceof ClassMethod => new ContextNode(
                 ContextNodeInterface::KIND_METHOD,
                 $node->name->toString()
             ),
-            $node instanceof Node\Stmt\Namespace_ => new ContextNode(
+            $node instanceof Namespace_ => new ContextNode(
                 ContextNodeInterface::KIND_NAMESPACE,
                 $node->name?->toString()
             ),
@@ -208,7 +220,7 @@ final class ContextMapVisitor extends NodeVisitorAbstract
                 ContextNodeInterface::KIND_PROPERTY,
                 $this->getPropertyName($node)
             ),
-            $node instanceof Node\Stmt\Trait_ => new ContextNode(
+            $node instanceof Trait_ => new ContextNode(
                 ContextNodeInterface::KIND_TRAIT,
                 $node->name->toString()
             ),
@@ -241,11 +253,13 @@ final class ContextMapVisitor extends NodeVisitorAbstract
             $commentContext = $this->contextMap[$commentStart];
             $nodeContext = $this->contextMap[$nodeStartLine] ?? [];
 
-            if ($this->hasOnlyAttributesAndBlankLinesBetween($commentEnd, $nodeStartLine) && $this->isSameParentContext($commentContext, $nodeContext, $node)) {
-                if (null === $closestCommentStart || $commentEnd > $closestCommentEnd) {
-                    $closestCommentStart = $commentStart;
-                    $closestCommentEnd = $commentEnd;
-                }
+            if (
+                (null === $closestCommentStart || $commentEnd > $closestCommentEnd)
+                && $this->hasOnlyAttributesAndBlankLinesBetween($commentEnd, $nodeStartLine)
+                && $this->isSameParentContext($commentContext, $nodeContext, $node)
+            ) {
+                $closestCommentStart = $commentStart;
+                $closestCommentEnd = $commentEnd;
             }
         }
 
@@ -267,7 +281,7 @@ final class ContextMapVisitor extends NodeVisitorAbstract
             return null;
         }
 
-        $names = array_map(static fn (Node\Const_ $const) => $const->name->toString(), $node->consts);
+        $names = array_map(static fn (Const_ $const) => $const->name->toString(), $node->consts);
 
         return implode(', ', $names);
     }
@@ -282,7 +296,7 @@ final class ContextMapVisitor extends NodeVisitorAbstract
             return null;
         }
 
-        $names = array_map(static fn (Node\PropertyItem $prop) => $prop->name->toString(), $node->props);
+        $names = array_map(static fn (PropertyItem $prop) => $prop->name->toString(), $node->props);
 
         return implode(', ', $names);
     }
@@ -305,7 +319,7 @@ final class ContextMapVisitor extends NodeVisitorAbstract
                 continue;
             }
 
-            // If line has context but it's not from an attribute, there's code between
+            // If line has context, but it's not from an attribute, there's code between
             // We check if this line belongs to the same context as the comment
             // Attributes don't create their own context levels
             $lineContext = $this->contextMap[$line];
@@ -390,19 +404,19 @@ final class ContextMapVisitor extends NodeVisitorAbstract
 
     private function shouldTrack(Node $node): bool
     {
-        return $node instanceof Node\Expr\ArrowFunction
-            || $node instanceof Node\Stmt\Class_
+        return $node instanceof ArrowFunction
+            || $node instanceof Class_
             || $node instanceof ClassConst
-            || $node instanceof Node\Stmt\ClassMethod
-            || $node instanceof Node\Expr\Closure
-            || $node instanceof Node\Stmt\Enum_
+            || $node instanceof ClassMethod
+            || $node instanceof Closure
+            || $node instanceof Enum_
             || $node instanceof EnumCase
-            || $node instanceof Node\Stmt\Function_
-            || $node instanceof Node\Stmt\Interface_
-            || $node instanceof Node\Stmt\Namespace_
-            || $node instanceof Node\Expr\Match_
+            || $node instanceof Function_
+            || $node instanceof Interface_
+            || $node instanceof Namespace_
+            || $node instanceof Match_
             || $node instanceof Property
             || $node instanceof Param
-            || $node instanceof Node\Stmt\Trait_;
+            || $node instanceof Trait_;
     }
 }

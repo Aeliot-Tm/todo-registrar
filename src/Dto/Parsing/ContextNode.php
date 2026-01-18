@@ -28,11 +28,6 @@ final readonly class ContextNode implements ContextNodeInterface
     ) {
     }
 
-    public static function file(string $path): self
-    {
-        return new self(self::KIND_FILE, $path);
-    }
-
     public function getKind(): string
     {
         return $this->kind;
