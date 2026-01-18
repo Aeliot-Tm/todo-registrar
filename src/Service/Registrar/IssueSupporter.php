@@ -30,8 +30,8 @@ final readonly class IssueSupporter
 
         if (
             $todo instanceof ContextAwareTodoInterface
-            && ($showContext = $generalIssueConfig->getShowContext())
             && ($context = $todo->getContext())
+            && ($showContext = ($todo->getInlineConfig()['showContext'] ?? $generalIssueConfig->getShowContext()))
         ) {
             $description .= "\n\n" . $this->contextPathBuilderRegistry
                     ->getBuilder($showContext)
