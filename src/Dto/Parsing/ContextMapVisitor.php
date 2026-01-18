@@ -26,18 +26,26 @@ use PhpParser\NodeVisitorAbstract;
 final class ContextMapVisitor extends NodeVisitorAbstract
 {
     /**
-     * @var list<ContextNode>
-     */
-    private array $stack;
-
-    /**
      * @var array<int, list<ContextNode>>
      */
     private array $contextMap = [];
 
+    /**
+     * @var list<ContextNode>
+     */
+    private array $stack;
+
     public function __construct(string $filePath)
     {
         $this->stack = [ContextNode::file($filePath)];
+    }
+
+    /**
+     * @return array<int, list<ContextNode>>
+     */
+    public function getContextMap(): array
+    {
+        return $this->contextMap;
     }
 
     public function enterNode(Node $node): ?int
@@ -67,45 +75,45 @@ final class ContextMapVisitor extends NodeVisitorAbstract
     private function createContextNode(Node $node): ?ContextNode
     {
         return match (true) {
-            $node instanceof Node\Stmt\Namespace_ => new ContextNode(
-                ContextNodeInterface::KIND_NAMESPACE,
-                $node->name?->toString()
+            $node instanceof Node\Expr\ArrowFunction => new ContextNode(
+                ContextNodeInterface::KIND_ARROW_FUNCTION,
+                null
             ),
             $node instanceof Node\Stmt\Class_ => new ContextNode(
                 ContextNodeInterface::KIND_CLASS,
                 $node->name?->toString()
             ),
-            $node instanceof Node\Stmt\Interface_ => new ContextNode(
-                ContextNodeInterface::KIND_INTERFACE,
-                $node->name->toString()
-            ),
-            $node instanceof Node\Stmt\Trait_ => new ContextNode(
-                ContextNodeInterface::KIND_TRAIT,
-                $node->name->toString()
+            $node instanceof Node\Expr\Closure => new ContextNode(
+                ContextNodeInterface::KIND_CLOSURE,
+                null
             ),
             $node instanceof Node\Stmt\Enum_ => new ContextNode(
                 ContextNodeInterface::KIND_ENUM,
-                $node->name->toString()
-            ),
-            $node instanceof Node\Stmt\ClassMethod => new ContextNode(
-                ContextNodeInterface::KIND_METHOD,
                 $node->name->toString()
             ),
             $node instanceof Node\Stmt\Function_ => new ContextNode(
                 ContextNodeInterface::KIND_FUNCTION,
                 $node->name->toString()
             ),
-            $node instanceof Node\Expr\Closure => new ContextNode(
-                ContextNodeInterface::KIND_CLOSURE,
-                null
-            ),
-            $node instanceof Node\Expr\ArrowFunction => new ContextNode(
-                ContextNodeInterface::KIND_ARROW_FUNCTION,
-                null
+            $node instanceof Node\Stmt\Interface_ => new ContextNode(
+                ContextNodeInterface::KIND_INTERFACE,
+                $node->name->toString()
             ),
             $node instanceof Node\Expr\Match_ => new ContextNode(
                 ContextNodeInterface::KIND_MATCH,
                 null
+            ),
+            $node instanceof Node\Stmt\ClassMethod => new ContextNode(
+                ContextNodeInterface::KIND_METHOD,
+                $node->name->toString()
+            ),
+            $node instanceof Node\Stmt\Namespace_ => new ContextNode(
+                ContextNodeInterface::KIND_NAMESPACE,
+                $node->name?->toString()
+            ),
+            $node instanceof Node\Stmt\Trait_ => new ContextNode(
+                ContextNodeInterface::KIND_TRAIT,
+                $node->name->toString()
             ),
             default => null,
         };
@@ -113,23 +121,15 @@ final class ContextMapVisitor extends NodeVisitorAbstract
 
     private function shouldTrack(Node $node): bool
     {
-        return $node instanceof Node\Stmt\Namespace_
+        return $node instanceof Node\Expr\ArrowFunction
             || $node instanceof Node\Stmt\Class_
-            || $node instanceof Node\Stmt\Interface_
-            || $node instanceof Node\Stmt\Trait_
-            || $node instanceof Node\Stmt\Enum_
             || $node instanceof Node\Stmt\ClassMethod
-            || $node instanceof Node\Stmt\Function_
             || $node instanceof Node\Expr\Closure
-            || $node instanceof Node\Expr\ArrowFunction
-            || $node instanceof Node\Expr\Match_;
-    }
-
-    /**
-     * @return array<int, list<ContextNode>>
-     */
-    public function getContextMap(): array
-    {
-        return $this->contextMap;
+            || $node instanceof Node\Stmt\Enum_
+            || $node instanceof Node\Stmt\Function_
+            || $node instanceof Node\Stmt\Interface_
+            || $node instanceof Node\Stmt\Namespace_
+            || $node instanceof Node\Expr\Match_
+            || $node instanceof Node\Stmt\Trait_;
     }
 }
