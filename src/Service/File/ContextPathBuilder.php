@@ -33,14 +33,18 @@ final readonly class ContextPathBuilder
             $lines[] = match ($node->getKind()) {
                 ContextNodeInterface::KIND_ARROW_FUNCTION => 'Arrow function',
                 ContextNodeInterface::KIND_CLASS => 'Class: ' . ($node->getName() ?? '{anonymous}'),
+                ContextNodeInterface::KIND_CLASS_CONST => 'Constant: ' . ($node->getName() ?? '{unknown}'),
                 ContextNodeInterface::KIND_CLOSURE => 'Closure',
                 ContextNodeInterface::KIND_ENUM => "Enum: {$node->getName()}",
+                ContextNodeInterface::KIND_ENUM_CASE => "Enum case: {$node->getName()}",
                 ContextNodeInterface::KIND_FILE => "File: {$node->getName()}",
                 ContextNodeInterface::KIND_FUNCTION => "Function: {$node->getName()}()",
                 ContextNodeInterface::KIND_INTERFACE => "Interface: {$node->getName()}",
                 ContextNodeInterface::KIND_MATCH => 'Match expression',
                 ContextNodeInterface::KIND_METHOD => "Method: {$node->getName()}()",
                 ContextNodeInterface::KIND_NAMESPACE => "Namespace: {$node->getName()}",
+                ContextNodeInterface::KIND_PARAMETER => 'Parameter: ' . ($node->getName() ?? '{unknown}'),
+                ContextNodeInterface::KIND_PROPERTY => 'Property: ' . ($node->getName() ?? '{unknown}'),
                 ContextNodeInterface::KIND_TRAIT => "Trait: {$node->getName()}",
                 default => ucfirst($node->getKind()) . ($node->getName() ? ": {$node->getName()}" : ''),
             };
