@@ -33,9 +33,9 @@ final readonly class IssueSupporter
             && ($showContext = $generalIssueConfig->getShowContext())
             && ($context = $todo->getContext())
         ) {
-            $description = $this->contextPathBuilderRegistry
+            $description .= "\n\n" . $this->contextPathBuilderRegistry
                     ->getBuilder($showContext)
-                    ->build($context) . "\n\n" . $description;
+                    ->build($context);
         }
 
         return $description;
