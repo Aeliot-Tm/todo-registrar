@@ -42,18 +42,6 @@ final readonly class FileParser
     }
 
     /**
-     * Filter EOF token (id=0) added by parser to avoid null byte in saved file.
-     *
-     * @param \PhpToken[] $tokens
-     *
-     * @return \PhpToken[]
-     */
-    private function filterEofToken(array $tokens): array
-    {
-        return array_filter($tokens, static fn (\PhpToken $t): bool => 0 !== $t->id);
-    }
-
-    /**
      * @param \PhpToken[] $tokens
      * @param array<\PhpParser\Node\Stmt> $ast
      *
@@ -73,6 +61,18 @@ final readonly class FileParser
         }
 
         return $commentNodes;
+    }
+
+    /**
+     * Filter EOF token (id=0) added by parser to avoid null byte in saved file.
+     *
+     * @param \PhpToken[] $tokens
+     *
+     * @return \PhpToken[]
+     */
+    private function filterEofToken(array $tokens): array
+    {
+        return array_filter($tokens, static fn (\PhpToken $t): bool => 0 !== $t->id);
     }
 
     private function isComment(\PhpToken $token): bool
