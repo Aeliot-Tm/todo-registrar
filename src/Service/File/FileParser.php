@@ -14,11 +14,9 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Service\File;
 
 use Aeliot\TodoRegistrar\Dto\Parsing\CommentNode;
-use Aeliot\TodoRegistrar\Dto\Parsing\ContextMapVisitor;
-use Aeliot\TodoRegistrar\Dto\Parsing\ContextNode;
+use Aeliot\TodoRegistrar\Dto\Parsing\LazyContextMap;
 use Aeliot\TodoRegistrar\Dto\Parsing\MappedContext;
 use Aeliot\TodoRegistrar\Dto\Parsing\ParsedFile;
-use PhpParser\NodeTraverser;
 use PhpParser\ParserFactory;
 
 /**
@@ -40,10 +38,7 @@ final readonly class FileParser
         $ast = $parser->parse($content) ?? [];
         $tokens = $this->filterEofToken($parser->getTokens());
 
-        $contextMap = $this->buildContextMap($ast, $pathname);
-        $commentNodes = $this->buildCommentNodes($tokens, $contextMap);
-
-        return new ParsedFile($file, $tokens, $commentNodes);
+        return new ParsedFile($file, $tokens, $this->buildCommentNodes($tokens, $ast, $pathname));
     }
 
     /**
@@ -59,37 +54,22 @@ final readonly class FileParser
     }
 
     /**
-     * @param array<\PhpParser\Node\Stmt> $ast
-     *
-     * @return array<int, list<ContextNode>>
-     */
-    private function buildContextMap(array $ast, string $filePath): array
-    {
-        $visitor = new ContextMapVisitor($filePath);
-
-        $traverser = new NodeTraverser();
-        $traverser->addVisitor($visitor);
-        $traverser->traverse($ast);
-
-        return $visitor->getContextMap();
-    }
-
-    /**
      * @param \PhpToken[] $tokens
-     * @param array<int, list<ContextNode>> $contextMap
+     * @param array<\PhpParser\Node\Stmt> $ast
      *
      * @return CommentNode[]
      */
-    private function buildCommentNodes(array $tokens, array $contextMap): array
+    private function buildCommentNodes(array $tokens, array $ast, string $filePath): array
     {
         $commentNodes = [];
+        $lazyContextMap = new LazyContextMap($ast, $filePath);
 
         foreach ($tokens as $token) {
             if (!$this->isComment($token)) {
                 continue;
             }
 
-            $commentNodes[] = new CommentNode($token, new MappedContext($token->line, $contextMap));
+            $commentNodes[] = new CommentNode($token, new MappedContext($token->line, $lazyContextMap));
         }
 
         return $commentNodes;
