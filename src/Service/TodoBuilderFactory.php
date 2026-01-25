@@ -34,6 +34,6 @@ final readonly class TodoBuilderFactory
         $inlineConfigReader = $config->getInlineConfigReader() ?? $this->extrasReader;
         $inlineConfigFactory = $config->getInlineConfigFactory() ?? $this->inlineConfigFactory;
 
-        return new TodoBuilder($inlineConfigFactory, $inlineConfigReader, $output);
+        return new TodoBuilder($inlineConfigFactory, $inlineConfigReader, $output, $config->getIssueKeyPosition());
     }
 }

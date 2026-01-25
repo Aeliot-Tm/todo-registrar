@@ -24,18 +24,24 @@ final readonly class Detector
 
     /**
      * @param string[] $tags
+     * @param string[] $separators
      */
-    public function __construct(array $tags = ['todo', 'fixme'])
+    public function __construct(array $tags = ['todo', 'fixme'], array $separators = [':', '-'])
     {
         $tagsPart = implode('|', $tags);
         $keyRegex = implode('|', $this->getTicketKeyRegExpressions());
+        $sepRegex = implode('', array_map(
+            static fn (string $sep): string => preg_quote($sep, '~'),
+            $separators
+        ));
+
         $this->pattern = <<<REGEXP
 ~
 ^(
     [\s\#*/]*@?(?P<tag>$tagsPart)           # tags
     (?:@(?P<assignee>[a-z0-9._-]+))?        # assignee
-    (\s*[:-]?\s+(?P<ticketKey>$keyRegex))?  # keyword/ticket separator & ticket key
-    \s*[:-]?\s*                             # optional spaces and colon or hyphen
+    (\s*(?P<sep1>[$sepRegex])?\s+(?P<ticketKey>$keyRegex))?  # keyword/ticket separator & ticket key
+    \s*(?P<sep2>[$sepRegex])?\s*            # optional separator
 )
 ~ix
 REGEXP;
@@ -47,11 +53,14 @@ REGEXP;
             return null;
         }
 
+        $separator = $matches['sep1'] ?? $matches['sep2'] ?? null;
+
         return new TagMetadata(
             strtoupper($matches['tag']),
             \strlen(rtrim($matches[1])),
             $matches['assignee'],
             $matches['ticketKey'],
+            $separator,
         );
     }
 

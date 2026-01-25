@@ -24,6 +24,6 @@ final readonly class CommentExtractorFactory
 {
     public function create(GeneralConfigInterface $config): CommentExtractor
     {
-        return new CommentExtractor(new TagDetector($config->getTags()));
+        return new CommentExtractor(new TagDetector($config->getTags(), $config->getSummarySeparator()));
     }
 }

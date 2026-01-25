@@ -23,6 +23,7 @@ final readonly class TagMetadata
         private ?int $prefixLength = null,
         private ?string $assignee = null,
         private ?string $ticketKey = null,
+        private ?string $separator = null,
     ) {
     }
 
@@ -31,9 +32,19 @@ final readonly class TagMetadata
         return $this->assignee;
     }
 
+    public function getHasSeparator(): bool
+    {
+        return $this->separator !== null;
+    }
+
     public function getPrefixLength(): ?int
     {
         return $this->prefixLength;
+    }
+
+    public function getSeparator(): ?string
+    {
+        return $this->separator;
     }
 
     public function getTag(): ?string

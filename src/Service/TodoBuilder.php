@@ -17,6 +17,7 @@ use Aeliot\TodoRegistrar\Console\OutputAdapter;
 use Aeliot\TodoRegistrar\Dto\Comment\CommentPart;
 use Aeliot\TodoRegistrar\Dto\Registrar\ContextAwareTodo;
 use Aeliot\TodoRegistrar\Dto\Registrar\Todo;
+use Aeliot\TodoRegistrar\Enum\IssueKeyPosition;
 use Aeliot\TodoRegistrarContracts\InlineConfigFactoryInterface;
 use Aeliot\TodoRegistrarContracts\InlineConfigInterface;
 use Aeliot\TodoRegistrarContracts\InlineConfigReaderInterface;
@@ -29,6 +30,7 @@ final readonly class TodoBuilder
     public function __construct(
         private InlineConfigFactoryInterface $inlineConfigFactory,
         private InlineConfigReaderInterface $inlineConfigReader,
+        private IssueKeyPosition $issueKeyPosition,
         private OutputAdapter $output,
     ) {
     }
@@ -44,6 +46,7 @@ final readonly class TodoBuilder
             $commentPart->getTagMetadata()?->getAssignee(),
             $commentPart,
             $this->getInlineConfig($description),
+            $this->issueKeyPosition,
         );
     }
 

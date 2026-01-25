@@ -15,6 +15,7 @@ namespace Aeliot\TodoRegistrar\Dto\Comment;
 
 use Aeliot\TodoRegistrar\Dto\Parsing\ContextInterface;
 use Aeliot\TodoRegistrar\Dto\Tag\TagMetadata;
+use Aeliot\TodoRegistrar\Enum\IssueKeyPosition;
 use Aeliot\TodoRegistrar\Exception\NoLineException;
 use Aeliot\TodoRegistrar\Exception\NoPrefixException;
 
@@ -111,7 +112,7 @@ final class CommentPart
         return $this->token;
     }
 
-    public function injectKey(string $key): void
+    public function injectKey(string $key, IssueKeyPosition $position): void
     {
         if (!$this->lines) {
             throw new NoLineException('Cannot inject key till added one line');
@@ -123,11 +124,52 @@ final class CommentPart
         }
 
         $line = $this->lines[0];
-        $injection = [' ', $key];
-        if (' ' !== $line[$prefixLength]) {
-            $injection[] = ' ';
+        $hasSeparator = $this->tagMetadata?->getHasSeparator() ?? false;
+        $separator = $this->tagMetadata?->getSeparator();
+
+        if (!$hasSeparator || IssueKeyPosition::AFTER_SEPARATOR === $position) {
+            $injection = [' ', $key];
+            if (' ' !== $line[$prefixLength]) {
+                $injection[] = ' ';
+            }
+
+            $this->lines[0] = substr($line, 0, $prefixLength) . implode('', $injection) . substr($line, $prefixLength);
+
+            return;
         }
 
-        $this->lines[0] = substr($line, 0, $prefixLength) . implode('', $injection) . substr($line, $prefixLength);
+        $separatorPosition = $this->findSeparatorPosition($line, $separator, $prefixLength);
+        if (null === $separatorPosition) {
+            $injection = [' ', $key];
+            if (' ' !== $line[$prefixLength]) {
+                $injection[] = ' ';
+            }
+
+            $this->lines[0] = substr($line, 0, $prefixLength) . implode('', $injection) . substr($line, $prefixLength);
+
+            return;
+        }
+
+        $beforeSeparator = substr($line, 0, $separatorPosition);
+        $afterSeparator = substr($line, $separatorPosition);
+
+        $beforeSeparator = rtrim($beforeSeparator);
+        $injection = ' ' . $key;
+        if ('' !== $afterSeparator && ' ' !== $afterSeparator[0]) {
+            $afterSeparator = ' ' . $afterSeparator;
+        }
+
+        $this->lines[0] = $beforeSeparator . $injection . $afterSeparator;
+    }
+
+    private function findSeparatorPosition(string $line, ?string $separator, int $startFrom): ?int
+    {
+        if (null === $separator) {
+            return null;
+        }
+
+        $position = strpos($line, $separator, $startFrom);
+
+        return false === $position ? null : $position;
     }
 }

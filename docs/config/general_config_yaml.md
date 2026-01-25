@@ -35,6 +35,14 @@ registrar:                        # Required. Configuration of Registrar
 
 tags:                             # Optional. Accepts string (tag) or array of strings (tags) which should be processed by the script.
   - my_tag
+
+issueKeyPosition: after_separator # Optional. Position where issue key will be injected: 'before_separator' or 'after_separator'.
+                                  #           Default: 'after_separator' (e.g., "TODO: PROJ-123 title").
+                                  #           With 'before_separator': "TODO PROJ-123: title".
+
+summarySeparator:                 # Optional. Array of single-character separators between tag and title.
+  - ':'                           #           Default: [':', '-']. Each separator must be exactly 1 character.
+  - '-'                           #           Special regex characters (like '.', '*', '|') are automatically escaped.
 ```
 
 ### Registrar options

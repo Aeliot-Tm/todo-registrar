@@ -80,3 +80,45 @@ You don't need to configure it when you want to use only this tags. Nevertheless
 when you want to use them together with your custom tags.
 
 Don't wary about case of tags. They will be found in case-insensitive mode.
+
+## Optional configurations
+
+### Setting Issue Key Position
+
+Method `setIssueKeyPosition` allows you to configure where the issue key will be injected in the comment.
+
+```php
+use Aeliot\TodoRegistrar\Enum\IssueKeyPosition;
+
+$config->setIssueKeyPosition(IssueKeyPosition::BEFORE_SEPARATOR);
+// or
+$config->setIssueKeyPosition(IssueKeyPosition::AFTER_SEPARATOR); // default
+```
+
+**Options:**
+- `IssueKeyPosition::AFTER_SEPARATOR` (default) - Injects key after separator: `// TODO: PROJ-123 title`
+- `IssueKeyPosition::BEFORE_SEPARATOR` - Injects key before separator: `// TODO PROJ-123: title`
+
+**Behavior with assignees:**
+- After separator: `// TODO@user: PROJ-123 title`
+- Before separator: `// TODO@user PROJ-123: title`
+
+### Setting Summary Separator
+
+Method `setSummarySeparator` allows you to configure which characters are recognized as separators between the tag and the title.
+
+```php
+$config->setSummarySeparator([':', '-']); // default
+// or custom separators
+$config->setSummarySeparator(['|', '>']);
+```
+
+**Requirements:**
+- Must be an array of strings
+- Each separator must be exactly 1 character long
+- Special regex characters (`.`, `*`, `(`, `)`, `[`, `]`, `{`, `}`, `+`, `?`, `|`, `^`, `$`, `\`) are automatically escaped
+
+**Examples:**
+- Default `[':', '-']`: Recognizes `// TODO: title` and `// TODO- title`
+- Custom `['|']`: Recognizes `// TODO| title`
+- Custom `['.']`: Recognizes `// TODO. title` (dot is automatically escaped in regex)

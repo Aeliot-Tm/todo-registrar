@@ -49,10 +49,28 @@ Comment can contain [inline configuration](inline_config.md).
 
 ## Injection of Issue ID
 
-As a result of processing of such comments, **ID of ISSUE will be injected before comment summary**
-(after assignee and colon when they are presented).
+As a result of processing of such comments, **ID of ISSUE will be injected into the comment**.
+The position where the key is injected is configurable (see [configuration](config/general_config.md)).
 
-**For example:**
+### Injection Position
+
+The position can be configured using the `issueKeyPosition` option:
+
+- **After Separator** (default): `// TODO: XX-001 comment summary`
+- **Before Separator**: `// TODO XX-001: comment summary`
+
+### Custom Separators
+
+You can configure which characters are recognized as separators using the `summarySeparator` option.
+Default separators are `:` and `-`. Special regex characters are automatically escaped.
+
+**Examples:**
+- Default separators `[':', '-']`: Recognizes `// TODO: title` and `// TODO- title`
+- Custom separator `['|']`: Recognizes `// TODO| title`
+
+### Injection Examples
+
+**With default position (after separator):**
 
 1. Tag and comment separated by colon
    ```php
@@ -72,10 +90,25 @@ As a result of processing of such comments, **ID of ISSUE will be injected befor
    ```
 5. Multiline comment with complex description. All lines after the first one with tag MUST have indentation
    same to the text of the first line. So, all af them will be detected af part of description of TODO.
-   Multiple line comments may have assignee and colon same as single-line comments/.
+   Multiple line comments may have assignee and colon same as single-line comments.
    ```php
    /**
     * TODO: XX-001 comment summary
     *       and some complex description
     */
+   ```
+
+**With before_separator position:**
+
+1. Tag and comment separated by colon
+   ```php
+   // TODO XX-001: comment summary
+   ```
+2. Tag with assignee and comment separated by colon
+   ```php
+   // TODO@assigne XX-001: comment summary
+   ```
+3. With custom separator `|`
+   ```php
+   // TODO XX-001| comment summary
    ```

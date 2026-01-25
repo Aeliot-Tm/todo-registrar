@@ -13,13 +13,10 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Enum;
 
-enum ContextPathBuilderFormat: string
+enum IssueKeyPosition: string
 {
     use GetStringEnumValuesTrait;
 
-    case ARROW_CHAINED = 'arrow_chained';
-    case ASTERISK = 'asterisk';
-    case CODE_BLOCK = 'code_block';
-    case NUMBER_SIGN = 'number_sign';
-    case NUMBERED = 'numbered';
+    case AFTER_SEPARATOR = 'after_separator';
+    case BEFORE_SEPARATOR = 'before_separator';
 }

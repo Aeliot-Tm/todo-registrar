@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar;
 
+use Aeliot\TodoRegistrar\Enum\IssueKeyPosition;
 use Aeliot\TodoRegistrar\Enum\RegistrarType;
 use Aeliot\TodoRegistrarContracts\FinderInterface;
 use Aeliot\TodoRegistrarContracts\GeneralConfigInterface;
@@ -28,11 +29,18 @@ class Config implements GeneralConfigInterface
     private FinderInterface $finder;
     private ?InlineConfigFactoryInterface $InlineConfigFactory = null;
     private ?InlineConfigReaderInterface $inlineConfigReader = null;
+    private string $issueKeyPosition = IssueKeyPosition::AFTER_SEPARATOR->value;
     /**
      * @var array<string,mixed>
      */
     private array $registrarConfig;
     private RegistrarFactoryInterface|string $registrarType;
+
+    /**
+     * @var string[]
+     */
+    private array $summarySeparator = [':', '-'];
+
     /**
      * @var string[]
      */
@@ -70,6 +78,16 @@ class Config implements GeneralConfigInterface
         $this->inlineConfigReader = $inlineConfigReader;
     }
 
+    public function getIssueKeyPosition(): string
+    {
+        return $this->issueKeyPosition;
+    }
+
+    public function setIssueKeyPosition(IssueKeyPosition|string $position): void
+    {
+        $this->issueKeyPosition = $position instanceof IssueKeyPosition ? $position->value : $position;
+    }
+
     public function getRegistrarConfig(): array
     {
         return $this->registrarConfig;
@@ -93,6 +111,22 @@ class Config implements GeneralConfigInterface
         $this->registrarConfig = $config;
 
         return $this;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getSummarySeparator(): array
+    {
+        return $this->summarySeparator;
+    }
+
+    /**
+     * @param string[] $summarySeparator
+     */
+    public function setSummarySeparator(array $summarySeparator): void
+    {
+        $this->summarySeparator = $summarySeparator;
     }
 
     public function getTags(): array

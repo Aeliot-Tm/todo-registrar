@@ -44,6 +44,16 @@ final readonly class ArrayConfigFactory
             ->setFinder($this->createFinder($pathsConfig))
             ->setRegistrar($registrarConfig->getType(), $registrarConfig->getOptions() ?? []);
 
+        $issueKeyPosition = $arrayConfig->getIssueKeyPosition();
+        if ($issueKeyPosition) {
+            $config->setIssueKeyPosition($issueKeyPosition);
+        }
+
+        $summarySeparator = $arrayConfig->getSummarySeparator();
+        if ($summarySeparator) {
+            $config->setSummarySeparator($summarySeparator);
+        }
+
         $tags = $arrayConfig->getTags();
         if ($tags) {
             $config->setTags($tags);
