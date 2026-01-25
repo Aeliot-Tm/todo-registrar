@@ -18,8 +18,6 @@ use Aeliot\TodoRegistrar\Service\ContextPath\ContextPathBuilderInterface;
 use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
 
 /**
- * Builds context path string in code block format.
- *
  * @internal
  */
 #[AsTaggedItem(index: ContextPathBuilderFormat::CODE_BLOCK->value)]
