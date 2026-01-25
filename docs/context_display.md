@@ -142,6 +142,8 @@ The context display includes the following information depending on where the TO
 
 You may add any text as title/description of context position of TODO.
 
+It is ignored when showing of context is undefined.
+
 ## Notes
 
 - Context is only added when the TODO implements `ContextAwareTodoInterface`
