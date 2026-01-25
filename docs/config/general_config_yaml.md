@@ -1,8 +1,13 @@
 # Configuration YAML file
 
-## Loading from file
+> There is described yaml-form of [general config file](general_config.md).
 
-It may have such structure:
+It can be loaded both from file and from STDIN.
+
+## Structure of config
+
+Generally, it has structure:
+
 ```yaml
 paths:                            # Required. Defines paths which will be walked to find supported files
   in: /app                        # Required. Accepts string (path) or array of strings (paths) to directories which
@@ -31,6 +36,16 @@ registrar:                        # Required. Configuration of Registrar
 tags:                             # Optional. Accepts string (tag) or array of strings (tags) which should be processed by the script.
   - my_tag
 ```
+
+### Registrar options
+
+Registrar options specific for each issue tracker see in separate documentation:
+
+1. [GitHub](../registrar/GitHub/config.md)
+2. [GitLab](../registrar/GitLab/config.md)
+3. [JIRA](../registrar/JIRA/config.md)
+4. [Redmine](../registrar/Redmine/config.md)
+5. [Yandex Tracker](../registrar/YandexTracker/config.md)
 
 ## Environment Variables
 

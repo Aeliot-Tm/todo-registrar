@@ -14,3 +14,11 @@ The orders of files which are looked for:
 6. `.todo-registrar.dist.yml`
 
 Otherwise, you may pass a special value`--config=STDIN` then [it obtains YAML from STDIN](general_config_yaml.md#loading-from-stdin).
+
+## Configs specific for issue trackers
+
+1. [GitHub](../registrar/GitHub/config.md)
+2. [GitLab](../registrar/GitLab/config.md)
+3. [JIRA](../registrar/JIRA/config.md)
+4. [Redmine](../registrar/Redmine/config.md)
+5. [Yandex Tracker](../registrar/YandexTracker/config.md)
