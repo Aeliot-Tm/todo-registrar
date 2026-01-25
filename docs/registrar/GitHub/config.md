@@ -55,7 +55,7 @@ Option `owner` can be omitted when `repository` match pattern `{owner}/{reposito
 They can be overridden by inline config. If `repository` in inline config match pattern `{owner}/{repository}`
 then `owner` will be taken from `repository`.
 
-### Allowed Labels
+### Option allowedLabels
 
 See [allowed labels documentation](../../allowed_labels.md)
 

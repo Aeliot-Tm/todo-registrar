@@ -62,7 +62,7 @@ $config->setRegistrar('JIRA', [
 It is expected that `projectKey` is in `issue` array, but script tries to get it from root too.
 And it can be overridden by inline config.
 
-### Allowed Labels
+### Option allowedLabels
 
 See [allowed labels documentation](../../allowed_labels.md)
 

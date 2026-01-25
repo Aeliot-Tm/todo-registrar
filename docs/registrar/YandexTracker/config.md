@@ -69,7 +69,7 @@ You may pass different comfortable literals to it.
 | true | true (bool or string), 1 (int or string), y (string), yes (string) |
 | false | false (bool or string), 0 (int or string), n (string), no (string), not (string) |
 
-### Option Allowed Labels
+### Option allowedLabels
 
 See [allowed labels documentation](../../allowed_labels.md)
 

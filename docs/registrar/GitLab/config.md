@@ -118,7 +118,7 @@ For self-hosted GitLab instances, specify the host URL:
 ]
 ```
 
-### Allowed Labels
+### Option allowedLabels
 
 See [allowed labels documentation](../../allowed_labels.md)
 
