@@ -14,7 +14,7 @@ registrar:
   issue:
       projectKey: 'string'                    # required: key-name of project
       type: 'Bug'                             # required: type of issue
-      priority: 'string'                      # required: priority of issue
+      priority: 'string'                      # optional: priority of issue
       assignee: 'string'                      # optional: identifier of JIRA-user, which will be assigned to ticket
                                               #           when "assignee-suffix" was not used with tag.
       labels: ['a-label']                     # optional: list of labels which will be set to issue
