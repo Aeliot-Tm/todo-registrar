@@ -35,6 +35,7 @@ d
 | `false` | bool | (default) - context is not displayed |
 | `true` | bool | context is displayed in the default format (`code_block`) |
 | `arrow_chained` | string | context is displayed in arrow-chained format (one line) |
+| `asterisk` | string | context is displayed as list prefixed by asterisk (multi-line) |
 | `code_block` | string | context is displayed in code block format (multi-line) |
 | `number_sign` | string | context is displayed as numbered list (multi-line) |
 | `numbered` | string | context is displayed as numbered list (multi-line) |
@@ -53,6 +54,20 @@ File: /app/src/Service/UserService.php -> Namespace: App\Service -> Class: UserS
 ```
 
 This format is compact and useful when you want to save space in the issue description.
+
+### Code Block Format (`'asterisk'`)
+
+Displays context as a list with 'asterisk' symbol as prefix for each line:
+
+**Example:**
+```
+User needs to verify email before updating profile
+
+* File: /app/src/Service/UserService.php
+* Namespace: App\Service
+* Class: UserService
+* Method: updateUser()
+```
 
 ### Code Block Format (`'code_block'`)
 
