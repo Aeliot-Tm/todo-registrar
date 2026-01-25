@@ -25,6 +25,6 @@ final readonly class ArrowContextPathBuilder extends AbstractContextPathBuilder 
 {
     public function build(array $nodes): string
     {
-        return implode(' -> ', $this->getLines($nodes));
+        return implode(' -> ', $this->getLines($nodes)) . "\n";
     }
 }

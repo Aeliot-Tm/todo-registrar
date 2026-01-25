@@ -25,6 +25,6 @@ final readonly class CodeBlockContextPathBuilder extends AbstractContextPathBuil
 {
     public function build(array $nodes): string
     {
-        return "```\n" . implode("\n", $this->getLines($nodes)) . "\n```";
+        return "```\n" . implode("\n", $this->getLines($nodes)) . "\n```\n";
     }
 }
