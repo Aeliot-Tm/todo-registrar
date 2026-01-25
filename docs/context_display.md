@@ -29,7 +29,7 @@ $config->setRegistrar('GitHub', [
 ```
 
 ### Values
-d
+
 | Value | Data Type | Description |
 |---|---|---|
 | `null` | null | (default) - context is not displayed |
