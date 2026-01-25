@@ -36,6 +36,9 @@ abstract class AbstractGeneralIssueConfig
     ])]
     protected mixed $allowedLabels = [];
 
+    #[Assert\Type(type: 'string', message: 'Option "contextTitle" must be a string')]
+    protected mixed $contextTitle = null;
+
     #[Assert\IsNull(message: 'Unknown configuration options detected: {{ value }}')]
     protected mixed $invalidKeys = null;
 
@@ -98,6 +101,11 @@ abstract class AbstractGeneralIssueConfig
     public function isAddTagToLabels(): bool
     {
         return (bool) $this->addTagToLabels;
+    }
+
+    public function getContextTitle(): string
+    {
+        return (string) $this->contextTitle;
     }
 
     /**

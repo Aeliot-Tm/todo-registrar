@@ -29,6 +29,7 @@ registrar:
       showContext: 'numbered'                 # optional: include code context in issue description
                                               #           values: null (default), 'arrow_chained', 'asterisk', 'code_block',
                                               #                   'number_sign', 'numbered'
+      contextTitle: null                      # optional: title of context path
   service:
       host: '%env(JIRA_HOST)%'                                  # required: host of JIRA-server
       personalAccessToken: '%env(JIRA_PERSONAL_ACCESS_TOKEN)%'  # optional: personal access-token

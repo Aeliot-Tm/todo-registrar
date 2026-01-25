@@ -30,6 +30,7 @@ registrar:
     showContext: 'numbered'                         # optional: include code context in issue description
                                                     #           values: null (default), 'arrow_chained', 'asterisk', 'code_block',
                                                     #                   'number_sign', 'numbered'
+    contextTitle: null                              # optional: title of context path
   service:
     orgId: '%env(YANDEX_TRACKER_ORG_ID)%'           # required: Organization ID (required)
     token: '%env(YANDEX_TRACKER_TOKEN)%'            # required: OAuth token for Yandex Tracker API (required)

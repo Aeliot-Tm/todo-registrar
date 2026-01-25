@@ -16,6 +16,7 @@ registrar:
   options:
     issue:
       showContext: 'numbered'
+      contextTitle: '## Added in position:'   # optional: title of context path
 ```
 
 ### PHP Configuration
@@ -24,6 +25,7 @@ registrar:
 $config->setRegistrar('GitHub', [
     'issue' => [
         'showContext' => 'numbered',
+        'contextTitle' => '## Added in position:',
     ],
 ]);
 ```
@@ -135,6 +137,10 @@ The context display includes the following information depending on where the TO
 | Property | Property name | `Property: email` |
 | Parameter | Parameter name | `Parameter: userId` |
 | Constant | Class constant name | `Constant: MAX_SIZE` |
+
+## Option 'contextTitle'
+
+You may add any text as title/description of context position of TODO.
 
 ## Notes
 

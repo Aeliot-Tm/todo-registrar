@@ -25,6 +25,7 @@ registrar:
     showContext: 'numbered'             # optional: include code context in issue description
                                         #           values: null (default), 'arrow_chained', 'asterisk', 'code_block',
                                         #                   'number_sign', 'numbered'
+    contextTitle: null                  # optional: title of context path
   service:
     url: 'https://redmine.example.com',             # required: Redmine URL
     apikeyOrUsername: '%env(REDMINE_USERNAME)%',    # required: API key (recommended) or username

@@ -29,6 +29,7 @@ registrar:
       showContext: 'numbered'                 # optional: include code context in issue description
                                               #           values: null (default), 'arrow_chained', 'asterisk', 'code_block',
                                               #                   'number_sign', 'numbered'
+      contextTitle: null                      # optional: title of context path
   service:
       host: 'https://gitlab.com',                                   # optional: GitLab host URL (optional, defaults to https://gitlab.com)
       personalAccessToken: '%env(GITLAB_PERSONAL_ACCESS_TOKEN)%',   # optional: personal access token (for http_token auth method)
