@@ -26,7 +26,7 @@ final class ArrowContextPathBuilderTest extends TestCase
     public static function getDataForTestBuild(): iterable
     {
         yield [
-            'File: /path/to/file -> Class: MyClass -> Method: doSomething() -> Closure -> Class: {anonymous} -> Property: aProperty',
+            "File: /path/to/file -> Class: MyClass -> Method: doSomething() -> Closure -> Class: {anonymous} -> Property: aProperty\n",
             [
                 new ContextNode(ContextNodeInterface::KIND_FILE, '/path/to/file'),
                 new ContextNode(ContextNodeInterface::KIND_CLASS, 'MyClass'),

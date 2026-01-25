@@ -33,7 +33,7 @@ final class CodeBlockContextPathBuilderTest extends TestCase
             . "Closure\n"
             . "Class: {anonymous}\n"
             . "Property: aProperty\n"
-            . '```',
+            . "```\n",
             [
                 new ContextNode(ContextNodeInterface::KIND_FILE, '/path/to/file'),
                 new ContextNode(ContextNodeInterface::KIND_CLASS, 'MyClass'),
