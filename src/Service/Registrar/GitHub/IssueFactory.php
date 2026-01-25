@@ -32,7 +32,7 @@ final readonly class IssueFactory
         $issue = new Issue();
         $this->setOwnerAndRepository($issue, $todo);
         $issue->setTitle($this->issueSupporter->getSummary($todo, $this->generalIssueConfig));
-        $issue->setBody($todo->getDescription());
+        $issue->setBody($this->issueSupporter->getDescription($todo, $this->generalIssueConfig));
 
         $this->setAssignees($issue, $todo);
         $this->setLabels($issue, $todo);

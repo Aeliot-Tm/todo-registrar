@@ -13,34 +13,35 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Test\Unit\Service\File;
 
+use Aeliot\TodoRegistrar\Service\File\FileParser;
 use Aeliot\TodoRegistrar\Service\File\Saver;
-use Aeliot\TodoRegistrar\Service\File\Tokenizer;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(Saver::class)]
-#[CoversClass(Tokenizer::class)]
-final class TokenizerAndSaverTest extends TestCase
+#[UsesClass(FileParser::class)]
+final class SaverTest extends TestCase
 {
     /**
      * @return iterable<array{0: string}>
      */
-    public static function getDataForTestTokenizeAndSave(): iterable
+    public static function getDataForTestParseAndSave(): iterable
     {
         yield [__DIR__ . '/../../../fixtures/single_line.php'];
         yield [__DIR__ . '/../../../fixtures/multi_line_comment.php'];
         yield [__DIR__ . '/../../../fixtures/multi_line_doc_block.php'];
     }
 
-    #[DataProvider('getDataForTestTokenizeAndSave')]
-    public function testTokenizeAndSave($incomingPathame): void
+    #[DataProvider('getDataForTestParseAndSave')]
+    public function testParseAndSave($incomingPathame): void
     {
         $outgoingPathname = sys_get_temp_dir() . '/tr-' . microtime(true) . '-' . mt_rand() . '.php';
 
-        $tokens = (new Tokenizer())->tokenize($this->getMockSplFileInfo($incomingPathame));
-        (new Saver())->save($this->getMockSplFileInfo($outgoingPathname), $tokens);
+        $parsedFile = (new FileParser())->parse($this->getMockSplFileInfo($incomingPathame));
+        (new Saver())->save($this->getMockSplFileInfo($outgoingPathname), $parsedFile->getAllTokens());
 
         self::assertFileEquals($incomingPathame, $outgoingPathname);
     }

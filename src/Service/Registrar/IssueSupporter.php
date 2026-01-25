@@ -13,10 +13,17 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar;
 
+use Aeliot\TodoRegistrar\Service\ContextPath\ContextPathBuilderRegistry;
+use Aeliot\TodoRegistrarContracts\ContextAwareTodoInterface;
 use Aeliot\TodoRegistrarContracts\TodoInterface;
 
-final class IssueSupporter
+final readonly class IssueSupporter
 {
+    public function __construct(
+        private ContextPathBuilderRegistry $contextPathBuilderRegistry,
+    ) {
+    }
+
     /**
      * @return array<string>
      */
@@ -35,6 +42,25 @@ final class IssueSupporter
         }
 
         return array_values(array_unique(array_filter($assignees, static fn ($value): bool => '' !== (string) $value)));
+    }
+
+    public function getDescription(TodoInterface $todo, AbstractGeneralIssueConfig $generalIssueConfig): string
+    {
+        $description = $todo->getDescription();
+
+        if (
+            $todo instanceof ContextAwareTodoInterface
+            && ($context = $todo->getContext())
+            && ($showContext = ($todo->getInlineConfig()['showContext'] ?? $generalIssueConfig->getShowContext()))
+        ) {
+            $description .= "\n\n";
+            if ($contextTitle = ($todo->getInlineConfig()['contextTitle'] ?? $generalIssueConfig->getContextTitle())) {
+                $description .= $contextTitle . "\n";
+            }
+            $description .= $this->contextPathBuilderRegistry->getBuilder($showContext)->build($context);
+        }
+
+        return $description;
     }
 
     /**

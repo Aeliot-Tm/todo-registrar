@@ -19,10 +19,9 @@ use Aeliot\TodoRegistrar\Dto\FileHeap;
 use Aeliot\TodoRegistrar\Dto\ProcessStatistic;
 use Aeliot\TodoRegistrar\Dto\Registrar\Todo;
 use Aeliot\TodoRegistrar\Exception\CommentRegistrationException;
-use Aeliot\TodoRegistrar\Service\Comment\Detector as CommentDetector;
 use Aeliot\TodoRegistrar\Service\Comment\Extractor as CommentExtractor;
+use Aeliot\TodoRegistrar\Service\File\FileParser;
 use Aeliot\TodoRegistrar\Service\File\Saver;
-use Aeliot\TodoRegistrar\Service\File\Tokenizer;
 use Aeliot\TodoRegistrarContracts\FinderInterface;
 use Aeliot\TodoRegistrarContracts\RegistrarInterface;
 
@@ -32,14 +31,13 @@ use Aeliot\TodoRegistrarContracts\RegistrarInterface;
 final readonly class HeapRunner
 {
     public function __construct(
-        private CommentDetector $commentDetector,
         private CommentExtractor $commentExtractor,
         private FinderInterface $finder,
+        private FileParser $fileParser,
         private OutputAdapter $output,
         private RegistrarInterface $registrar,
         private Saver $saver,
         private TodoBuilder $todoBuilder,
-        private Tokenizer $tokenizer,
     ) {
     }
 
@@ -60,9 +58,11 @@ final readonly class HeapRunner
     private function getCommentParts(ProcessStatistic $statistic): \Generator
     {
         foreach ($this->getFileHeaps($statistic) as $fileHeap) {
-            foreach ($fileHeap->getCommentTokens() as $token) {
+            foreach ($fileHeap->getCommentNodes() as $commentNode) {
                 // TODO: #13 implement gluing of simple comments
-                $commentParts = $this->commentExtractor->extract($token->text, $token);
+                $token = $commentNode->getToken();
+                $commentParts = $this->commentExtractor->extract($token->text, $token, $commentNode->getContext());
+
                 foreach ($commentParts->getTodos() as $commentPart) {
                     $ticketKey = $commentPart->getTagMetadata()?->getTicketKey();
                     if ($ticketKey) {
@@ -90,18 +90,15 @@ final readonly class HeapRunner
         foreach ($this->finder as $file) {
             $this->output->writeln("Begin process file: {$file->getPathname()}", OutputAdapter::VERBOSITY_DEBUG);
             try {
-                $tokens = $this->tokenizer->tokenize($file);
-                $commentTokens = $this->commentDetector->filter($tokens);
-                $countCommentTokens = \count($commentTokens);
+                $parsedFile = $this->fileParser->parse($file);
+                $countCommentNodes = \count($parsedFile->getCommentNodes());
 
                 if ($this->output->isDebug()) {
-                    $this->output->writeln("Detected comment tokens: {$countCommentTokens}");
+                    $this->output->writeln("Detected comment nodes: {$countCommentNodes}");
                 }
 
                 $fileHeap = new FileHeap(
-                    $commentTokens,
-                    $tokens,
-                    $file,
+                    $parsedFile,
                     $statistic,
                     $this->saver,
                 );
@@ -109,7 +106,7 @@ final readonly class HeapRunner
 
                 if (
                     $this->output->isDebug()
-                    || ($this->output->isVeryVerbose() && $countCommentTokens)
+                    || ($this->output->isVeryVerbose() && $countCommentNodes)
                     || ($this->output->isVerbose() && $fileHeap->getRegistrationCounter())
                 ) {
                     $this->output->writeln(

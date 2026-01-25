@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Dto\Comment;
 
+use Aeliot\TodoRegistrar\Dto\Parsing\ContextInterface;
 use Aeliot\TodoRegistrar\Dto\Tag\TagMetadata;
 use Aeliot\TodoRegistrar\Exception\NoLineException;
 use Aeliot\TodoRegistrar\Exception\NoPrefixException;
@@ -30,6 +31,7 @@ final class CommentPart
     public function __construct(
         private \PhpToken $token,
         private ?TagMetadata $tagMetadata,
+        private ContextInterface $context,
     ) {
     }
 
@@ -38,10 +40,24 @@ final class CommentPart
         $this->lines[] = $line;
     }
 
+    public function getContent(): string
+    {
+        if (!$this->lines) {
+            throw new NoLineException('Cannot get content till added one line');
+        }
+
+        return implode('', $this->lines);
+    }
+
+    public function getContext(): ContextInterface
+    {
+        return $this->context;
+    }
+
     public function getDescription(): string
     {
         if (!$this->lines) {
-            throw new NoLineException('Cannot get description till added one line');
+            throw new NoLineException('Cannot get description till not added at least one line');
         }
 
         $prefixLength = (int) $this->tagMetadata?->getPrefixLength();
@@ -93,15 +109,6 @@ final class CommentPart
     public function getToken(): \PhpToken
     {
         return $this->token;
-    }
-
-    public function getContent(): string
-    {
-        if (!$this->lines) {
-            throw new NoLineException('Cannot get content till added one line');
-        }
-
-        return implode('', $this->lines);
     }
 
     public function injectKey(string $key): void

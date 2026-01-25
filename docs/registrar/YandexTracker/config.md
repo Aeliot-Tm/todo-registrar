@@ -24,9 +24,13 @@ registrar:
     tagPrefix: 'tag-'                               # optional: prefix which will be added to tag when "addTagToLabels=true"
     allowedLabels: [tech-debt, another-label]       # optional: list of allowed tags. If set, only tags from this
                                                     #           list will be applied to issues. Tags from inline
-                                                    #           config, general config, and tag-based tags (if
-                                                    #           addTagToLabels=true) will be filtered to match this list.
+                                                    #           config, general config, and tag-based tags (if addTagToLabels=true)
+                                                    #           will be filtered to match this list.
     summaryPrefix: '[TODO] '                        # optional: prefix which will be added to issue summary
+    showContext: 'numbered'                         # optional: include code context in issue description
+                                                    #           values: null (default), 'arrow_chained', 'asterisk', 'code_block',
+                                                    #                   'number_sign', 'numbered'
+    contextTitle: null                              # optional: title of context path
   service:
     orgId: '%env(YANDEX_TRACKER_ORG_ID)%'           # required: Organization ID (required)
     token: '%env(YANDEX_TRACKER_TOKEN)%'            # required: OAuth token for Yandex Tracker API (required)
@@ -67,9 +71,13 @@ You may pass different comfortable literals to it.
 | true | true (bool or string), 1 (int or string), y (string), yes (string) |
 | false | false (bool or string), 0 (int or string), n (string), no (string), not (string) |
 
-### Option Allowed Labels
+### Option allowedLabels
 
 See [allowed labels documentation](../../allowed_labels.md)
+
+### Option showContext
+
+See [show context documentation](../../context_display.md)
 
 ## Inline config
 

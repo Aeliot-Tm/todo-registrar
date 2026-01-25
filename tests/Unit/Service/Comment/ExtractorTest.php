@@ -15,6 +15,7 @@ namespace Aeliot\TodoRegistrar\Test\Unit\Service\Comment;
 
 use Aeliot\TodoRegistrar\Dto\Comment\CommentPart;
 use Aeliot\TodoRegistrar\Dto\Comment\CommentParts;
+use Aeliot\TodoRegistrar\Dto\Parsing\MappedContext;
 use Aeliot\TodoRegistrar\Dto\Tag\TagMetadata;
 use Aeliot\TodoRegistrar\Service\Comment\Extractor;
 use Aeliot\TodoRegistrar\Service\Tag\Detector as TagDetector;
@@ -91,7 +92,7 @@ CONT,
     public function testCatchLineSeparator(string $comment): void
     {
         $token = $this->createPhpToken($comment);
-        $parts = (new Extractor(new TagDetector()))->extract($comment, $token);
+        $parts = (new Extractor(new TagDetector()))->extract($comment, $token, $this->createLazyContext());
         self::assertSame($comment, $parts->getContent());
     }
 
@@ -99,7 +100,7 @@ CONT,
     public function testCountOfParts(int $expectedTotalCount, int $expectedTodoCount, string $comment): void
     {
         $token = $this->createPhpToken($comment);
-        $parts = (new Extractor(new TagDetector()))->extract($comment, $token);
+        $parts = (new Extractor(new TagDetector()))->extract($comment, $token, $this->createLazyContext());
         self::assertCount($expectedTotalCount, $parts->getParts());
         self::assertCount($expectedTodoCount, $parts->getTodos());
     }
@@ -108,5 +109,10 @@ CONT,
     {
         // Fallback: create a token manually if no comment found
         return new \PhpToken(\T_COMMENT, $comment, 0, 0);
+    }
+
+    private function createLazyContext(): MappedContext
+    {
+        return new MappedContext(1, []);
     }
 }

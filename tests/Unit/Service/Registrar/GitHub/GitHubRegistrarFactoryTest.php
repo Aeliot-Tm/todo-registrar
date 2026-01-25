@@ -15,6 +15,7 @@ namespace Aeliot\TodoRegistrar\Test\Unit\Service\Registrar\GitHub;
 
 use Aeliot\TodoRegistrar\Exception\ConfigValidationException;
 use Aeliot\TodoRegistrar\Service\ColorGenerator;
+use Aeliot\TodoRegistrar\Service\ContextPath\ContextPathBuilderRegistry;
 use Aeliot\TodoRegistrar\Service\Registrar\GitHub\GitHubRegistrarFactory;
 use Aeliot\TodoRegistrar\Service\Registrar\IssueSupporter;
 use Aeliot\TodoRegistrarContracts\RegistrarInterface;
@@ -37,7 +38,7 @@ final class GitHubRegistrarFactoryTest extends TestCase
 
     public function testCreateWithValidData(): void
     {
-        $factory = new GitHubRegistrarFactory(new ColorGenerator(), new IssueSupporter());
+        $factory = new GitHubRegistrarFactory(new ColorGenerator(), $this->createIssueSupporter());
         $config = [
             'issue' => [
                 'addTagToLabels' => true,
@@ -58,7 +59,7 @@ final class GitHubRegistrarFactoryTest extends TestCase
 
     public function testCreateThrowsOnInvalidData(): void
     {
-        $factory = new GitHubRegistrarFactory(new ColorGenerator(), new IssueSupporter());
+        $factory = new GitHubRegistrarFactory(new ColorGenerator(), $this->createIssueSupporter());
         $config = [
             'issue' => [
                 'labels' => [123], // Invalid: must be strings
@@ -78,7 +79,7 @@ final class GitHubRegistrarFactoryTest extends TestCase
 
     public function testCreateThrowsOnUnknownOptions(): void
     {
-        $factory = new GitHubRegistrarFactory(new ColorGenerator(), new IssueSupporter());
+        $factory = new GitHubRegistrarFactory(new ColorGenerator(), $this->createIssueSupporter());
         $config = [
             'issue' => [
                 'unknown_option' => 'value',
@@ -93,5 +94,10 @@ final class GitHubRegistrarFactoryTest extends TestCase
         $this->expectException(ConfigValidationException::class);
 
         $factory->create($config, self::$validator);
+    }
+
+    private function createIssueSupporter(): IssueSupporter
+    {
+        return new IssueSupporter($this->createMock(ContextPathBuilderRegistry::class));
     }
 }

@@ -34,7 +34,7 @@ final readonly class IssueFactory
         $request
             ->queue($todo->getInlineConfig()['queue'] ?? $this->generalIssueConfig->getQueue())
             ->summary($this->issueSupporter->getSummary($todo, $this->generalIssueConfig))
-            ->description($todo->getDescription())
+            ->description($this->issueSupporter->getDescription($todo, $this->generalIssueConfig))
             ->type($this->getType($todo));
 
         $this->setPriority($request, $todo);

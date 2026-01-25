@@ -22,9 +22,13 @@ registrar:
       tagPrefix: 'tag-'                       # optional: prefix which will be added to tag when "addTagToLabels=true"
       allowedLabels: ['label-1', 'label-2']   # optional: list of allowed labels. If set, only labels from this
                                               #           list will be applied to issues. Labels from inline
-                                              #           config, general config, and tag-based labels (if
-                                              #           addTagToLabels=true) will be filtered to match this list.
+                                              #           config, general config, and tag-based labels (if addTagToLabels=true)
+                                              #           will be filtered to match this list.
       summaryPrefix: '[TODO] '                # optional: prefix which will be added to issue subject
+      showContext: 'numbered'                 # optional: include code context in issue description
+                                              #           values: null (default), 'arrow_chained', 'asterisk', 'code_block',
+                                              #                   'number_sign', 'numbered'
+      contextTitle: null                      # optional: title of context path
   service:
       personalAccessToken: '%env(GITHUB_PERSONAL_ACCESS_TOKEN)%',   # required: personal access-token
 ```
@@ -53,9 +57,13 @@ Option `owner` can be omitted when `repository` match pattern `{owner}/{reposito
 They can be overridden by inline config. If `repository` in inline config match pattern `{owner}/{repository}`
 then `owner` will be taken from `repository`.
 
-## Allowed Labels
+### Option allowedLabels
 
 See [allowed labels documentation](../../allowed_labels.md)
+
+### Option showContext
+
+See [show context documentation](../../context_display.md)
 
 ## Inline config
 

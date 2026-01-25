@@ -22,10 +22,14 @@ registrar:
       tagPrefix: 'tag-'                       # optional: prefix which will be added to tag when "addTagToLabels=true"
       allowedLabels: ['label-1', 'label-2']   # optional: list of allowed labels. If set, only labels from this
                                               #           list will be applied to issues. Labels from inline
-                                              #           config, general config, and tag-based labels (if
-                                              #           addTagToLabels=true) will be filtered to match this list.
+                                              #           config, general config, and tag-based labels (if addTagToLabels=true)
+                                              #           will be filtered to match this list.
       components: ['a-component']             # optional: list of components which will be set to issue
       summaryPrefix: '[TODO] '                # optional: prefix which will be added to issue subject
+      showContext: 'numbered'                 # optional: include code context in issue description
+                                              #           values: null (default), 'arrow_chained', 'asterisk', 'code_block',
+                                              #                   'number_sign', 'numbered'
+      contextTitle: null                      # optional: title of context path
   service:
       host: '%env(JIRA_HOST)%'                                  # required: host of JIRA-server
       personalAccessToken: '%env(JIRA_PERSONAL_ACCESS_TOKEN)%'  # optional: personal access-token
@@ -60,9 +64,13 @@ $config->setRegistrar('JIRA', [
 It is expected that `projectKey` is in `issue` array, but script tries to get it from root too.
 And it can be overridden by inline config.
 
-## Allowed Labels
+### Option allowedLabels
 
 See [allowed labels documentation](../../allowed_labels.md)
+
+### Option showContext
+
+See [show context documentation](../../context_display.md)
 
 ## Inline config
 

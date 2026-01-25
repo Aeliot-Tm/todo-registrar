@@ -33,7 +33,7 @@ final readonly class IssueFactory
     {
         $issue = new Issue();
         $issue->setSubject($this->issueSupporter->getSummary($todo, $this->generalIssueConfig));
-        $issue->setDescription($todo->getDescription());
+        $issue->setDescription($this->issueSupporter->getDescription($todo, $this->generalIssueConfig));
 
         $projectIdentifier = $todo->getInlineConfig()['project'] ?? $this->generalIssueConfig->getProjectIdentifier();
         $projectId = $this->entityResolver->resolveProjectId($projectIdentifier);

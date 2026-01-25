@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Test\Unit\Dto\Comment;
 
 use Aeliot\TodoRegistrar\Dto\Comment\CommentPart;
+use Aeliot\TodoRegistrar\Dto\Parsing\MappedContext;
 use Aeliot\TodoRegistrar\Dto\Tag\TagMetadata;
 use Aeliot\TodoRegistrar\Exception\NoLineException;
 use Aeliot\TodoRegistrar\Exception\NoPrefixException;
@@ -131,7 +132,7 @@ final class CommentPartTest extends TestCase
     {
         $this->expectException(NoLineException::class);
         $token = $this->createPhpToken();
-        $commentPart = new CommentPart($token, null);
+        $commentPart = new CommentPart($token, null, $this->createLazyContext());
         $commentPart->getContent();
     }
 
@@ -139,7 +140,7 @@ final class CommentPartTest extends TestCase
     {
         $this->expectException(NoLineException::class);
         $token = $this->createPhpToken();
-        $commentPart = new CommentPart($token, null);
+        $commentPart = new CommentPart($token, null, $this->createLazyContext());
         $commentPart->getFirstLine();
     }
 
@@ -152,7 +153,7 @@ final class CommentPartTest extends TestCase
         $token = $this->createPhpToken();
         $metadata = $this->createMock(TagMetadata::class);
         $metadata->method('getPrefixLength')->willReturn($prefixLength);
-        $commentPart = new CommentPart($token, $metadata);
+        $commentPart = new CommentPart($token, $metadata, $this->createLazyContext());
         array_walk($lines, static fn (string $line) => $commentPart->addLine($line));
 
         self::assertEquals($expected, $commentPart->getDescription());
@@ -167,7 +168,7 @@ final class CommentPartTest extends TestCase
         $token = $this->createPhpToken();
         $metadata = $this->createMock(TagMetadata::class);
         $metadata->method('getPrefixLength')->willReturn($prefixLength);
-        $commentPart = new CommentPart($token, $metadata);
+        $commentPart = new CommentPart($token, $metadata, $this->createLazyContext());
         array_walk($lines, static fn (string $line) => $commentPart->addLine($line));
 
         self::assertEquals($expected, $commentPart->getSummary());
@@ -189,7 +190,7 @@ final class CommentPartTest extends TestCase
     {
         $this->expectException(NoLineException::class);
         $token = $this->createPhpToken();
-        $commentPart = new CommentPart($token, null);
+        $commentPart = new CommentPart($token, null, $this->createLazyContext());
         $commentPart->injectKey('any key');
     }
 
@@ -199,7 +200,7 @@ final class CommentPartTest extends TestCase
         $this->expectException(NoPrefixException::class);
 
         $token = $this->createPhpToken();
-        $commentPart = new CommentPart($token, new TagMetadata(null, $prefixLength));
+        $commentPart = new CommentPart($token, new TagMetadata(null, $prefixLength), $this->createLazyContext());
         $commentPart->addLine('any text of line');
         $commentPart->injectKey('any key');
     }
@@ -210,7 +211,7 @@ final class CommentPartTest extends TestCase
     private function createCommentPartWithLines(array $lines, ?TagMetadata $tagMetadata = null): CommentPart
     {
         $token = $this->createPhpToken();
-        $commentPart = new CommentPart($token, $tagMetadata);
+        $commentPart = new CommentPart($token, $tagMetadata, $this->createLazyContext());
         foreach ($lines as $line) {
             $commentPart->addLine($line);
         }
@@ -221,5 +222,10 @@ final class CommentPartTest extends TestCase
     private function createPhpToken(): \PhpToken
     {
         return new \PhpToken(\T_COMMENT, '// comment', 0, 0);
+    }
+
+    private function createLazyContext(): MappedContext
+    {
+        return new MappedContext(1, []);
     }
 }

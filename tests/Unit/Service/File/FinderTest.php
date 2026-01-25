@@ -27,9 +27,10 @@ final class FinderTest extends TestCase
             ->exclude('config')
             ->sortByName(true);
 
-        self::assertCount(3, $finder);
+        self::assertCount(4, $finder);
 
         $expectedPathnames = [
+            __DIR__ . '/../../../fixtures/complex_context.php',
             __DIR__ . '/../../../fixtures/multi_line_comment.php',
             __DIR__ . '/../../../fixtures/multi_line_doc_block.php',
             __DIR__ . '/../../../fixtures/single_line.php',

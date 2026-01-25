@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar;
 
+use Aeliot\TodoRegistrar\Enum\ContextPathBuilderFormat;
 use Symfony\Component\Validator\Constraints as Assert;
 
 abstract class AbstractGeneralIssueConfig
@@ -35,6 +36,9 @@ abstract class AbstractGeneralIssueConfig
     ])]
     protected mixed $allowedLabels = [];
 
+    #[Assert\Type(type: 'string', message: 'Option "contextTitle" must be a string')]
+    protected mixed $contextTitle = null;
+
     #[Assert\IsNull(message: 'Unknown configuration options detected: {{ value }}')]
     protected mixed $invalidKeys = null;
 
@@ -52,6 +56,25 @@ abstract class AbstractGeneralIssueConfig
         ]),
     ])]
     protected mixed $labels = [];
+
+    #[Assert\AtLeastOneOf(
+        constraints: [
+            new Assert\IsNull(message: 'Option "showContext" must be a null'),
+            new Assert\Type(
+                type: ContextPathBuilderFormat::class,
+                message: 'Option "showContext" must be a ContextPathBuilderFormat enum'
+            ),
+            new Assert\Sequentially([
+                new Assert\Type(type: 'string', message: 'Option "showContext" must be a string'),
+                new Assert\Choice(
+                    callback: [ContextPathBuilderFormat::class, 'getValues'],
+                    message: 'Option "showContext" must be one of: {{ choices }}'
+                ),
+            ]),
+        ],
+        message: 'Option "showContext" must be a null, a valid format string or a ContextPathBuilderFormat enum'
+    )]
+    protected mixed $showContext = null;
 
     #[Assert\Type(type: 'string', message: 'Option "summaryPrefix" must be a string')]
     protected mixed $summaryPrefix = null;
@@ -80,12 +103,22 @@ abstract class AbstractGeneralIssueConfig
         return (bool) $this->addTagToLabels;
     }
 
+    public function getContextTitle(): string
+    {
+        return (string) $this->contextTitle;
+    }
+
     /**
      * @return string[]
      */
     public function getLabels(): array
     {
         return $this->labels;
+    }
+
+    public function getShowContext(): ContextPathBuilderFormat|string|null
+    {
+        return $this->showContext;
     }
 
     public function getSummaryPrefix(): string

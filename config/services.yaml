@@ -4,6 +4,8 @@ services:
     autoconfigure: true
 
   _instanceof:
+    Aeliot\TodoRegistrar\Service\ContextPath\ContextPathBuilderInterface:
+      tags: ['aeliot.todo_registrar.context_path_builder']
     Aeliot\TodoRegistrarContracts\RegistrarFactoryInterface:
       tags: ['aeliot.todo_registrar.registrar_factory']
 
