@@ -53,11 +53,11 @@ Below are examples of settings supported by the implemented JIRA-registrar.
 1. [GitHub](registrar/GitHub/config.md#inline-config)
 2. [GitLab](registrar/GitLab/config.md#inline-config)
 3. [JIRA](registrar/JIRA/config.md#inline-config)
-4. [Readmine](registrar/Redmine/config.md#inline-config)
-5. [Yandex Tracker](registrar/Redmine/config.md#inline-config)
+4. [Redmine](registrar/Redmine/config.md#inline-config)
+5. [Yandex Tracker](registrar/YandexTracker/config.md#inline-config)
 
 
 ## The order of applying of configs
 1. `@assignee` joined to TODO-tag.
 2. `EXTRAS`
-3. Then the [general config](config/general_config_php) of the JIRA registrar.
+3. Then the [general config](config/general_config_php.md) of the JIRA registrar.

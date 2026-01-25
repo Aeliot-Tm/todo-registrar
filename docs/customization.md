@@ -49,8 +49,8 @@ Nevertheless, you may implement your own. Just implement interface `Aeliot\TodoR
 
 ## General Config
 
-Finally, have to pass all that stuff as [global config](config/general_config).
-If you decided implement [PHP version of global config](config/general_config_php)
+Finally, have to pass all that stuff as [global config](config/general_config.md).
+If you decided implement [PHP version of global config](config/general_config_php.md)
 then implement `Aeliot\TodoRegistrarContracts\GeneralConfigInterface`.
 
 ## Contracts package

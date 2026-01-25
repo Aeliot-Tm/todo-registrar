@@ -37,7 +37,7 @@ into comment in code. This prevents creating of issues twice and injected marks 
 ## Using
 
 **Basic using:**
-1. Create [configuration file](docs/config/general_config).
+1. Create [configuration file](docs/config/general_config.md).
 2. Call shell script with necessary [command line options](#command-line-options).
 3. Commit updated files. You can config your pipeline/job on CI which commits updates.
 
@@ -124,10 +124,10 @@ First of all, pay attention to **available options:**
 
 | Long Form | Short From | Description |
 |---|---|---|
-| `--config=/path/to/config` | `-c /path/to/config` | Path to [configuration file](docs/config/general_config) when it is not in default place |
+| `--config=/path/to/config` | `-c /path/to/config` | Path to [configuration file](docs/config/general_config.md) when it is not in default place |
 | | `-q`, `-v`, `-vv`, `-vvv` | Verbosity levels. The command uses [Symfony Console verbosity levels](https://symfony.com/doc/7.4/console/verbosity.html) |
 
-**NOTE:** You can pass a special value`--config=STDIN` then [script obtains YAML from STDIN](docs/config/general_config_yaml#loading-from-stdin).
+**NOTE:** You can pass a special value`--config=STDIN` then [script obtains YAML from STDIN](docs/config/general_config_yaml.md#loading-from-stdin).
 
 ### Integration on CI
 
@@ -145,7 +145,7 @@ Configure you integration depending on used git-server:
 
 ## Configuration
 
-First of all you have to create [general config](docs/config/general_config).
+First of all you have to create [general config](docs/config/general_config.md).
 
 Additionally, script supports [inline configuration](docs/inline_config.md) - nice feature for the fine-tuning
 of each created issue. It helps flexibly configure different aspects of created issues
