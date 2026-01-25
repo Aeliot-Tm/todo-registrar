@@ -17,6 +17,7 @@ enum ContextPathBuilderFormat: string
 {
     case ARROW_CHAINED = 'arrow_chained';
     case CODE_BLOCK = 'code_block';
+    case NUMBERED = 'numbered';
 
     /**
      * @return string[]

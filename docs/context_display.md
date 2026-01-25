@@ -29,13 +29,14 @@ $config->setRegistrar('GitHub', [
 ```
 
 ### Values
-
-| Value | Data Type | Description                                               |
-|---|---|-----------------------------------------------------------|
-| `false` | bool | (default) - context is not displayed                      |
+d
+| Value | Data Type | Description |
+|---|---|---|
+| `false` | bool | (default) - context is not displayed |
 | `true` | bool | context is displayed in the default format (`code_block`) |
-| `arrow_chained` | string | context is displayed in arrow-chained format (one line)   |
-| `code_block` | string | context is displayed in code block format (multi-line)    |
+| `arrow_chained` | string | context is displayed in arrow-chained format (one line) |
+| `code_block` | string | context is displayed in code block format (multi-line) |
+| `numbered` | string | context is displayed as numbered list (multi-line) |
 
 ## Output Formats
 
