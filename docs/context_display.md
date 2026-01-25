@@ -36,6 +36,7 @@ d
 | `true` | bool | context is displayed in the default format (`code_block`) |
 | `arrow_chained` | string | context is displayed in arrow-chained format (one line) |
 | `code_block` | string | context is displayed in code block format (multi-line) |
+| `number_sign` | string | context is displayed as numbered list (multi-line) |
 | `numbered` | string | context is displayed as numbered list (multi-line) |
 
 ## Output Formats
@@ -68,6 +69,20 @@ Class: UserService
 Method: updateUser()
 ```
 ````
+
+### Code Block Format (`'number_sign'`)
+
+Displays context as a list with number sign symbol as prefix for each line:
+
+**Example:**
+```
+User needs to verify email before updating profile
+
+# File: /app/src/Service/UserService.php
+# Namespace: App\Service
+# Class: UserService
+# Method: updateUser()
+```
 
 ### Code Block Format (`'numbered'`)
 
