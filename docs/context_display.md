@@ -48,7 +48,7 @@ Displays context as a single line with arrows (`->`) separating each level:
 ```
 User needs to verify email before updating profile
 
-File: /app/src/Service/UserService.php -> Namespace: App\Service -> Class: UserService -> Method: updateUser()v
+File: /app/src/Service/UserService.php -> Namespace: App\Service -> Class: UserService -> Method: updateUser()
 ```
 
 This format is compact and useful when you want to save space in the issue description.
