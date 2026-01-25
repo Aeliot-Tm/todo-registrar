@@ -19,13 +19,13 @@ return (new Config())
     ->setFinder((new Finder())->in(__DIR__))
     ->setRegistrar(RegistrarType::JIRA, [
         'issue' => [
+            'projectKey' => 'Todo',
             'addTagToLabels' => true,
             'components' => ['Component-1', 'Component-2'],
             'labels' => ['Label-1', 'Label-2'],
             'tagPrefix' => 'tag-',
             'type' => 'Bug',
         ],
-        'projectKey' => 'Todo',
         'service' => [
             'host' => $_ENV['JIRA_HOST'],
             'personalAccessToken' => $_ENV['JIRA_PERSONAL_ACCESS_TOKEN'],
