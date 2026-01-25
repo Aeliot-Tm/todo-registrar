@@ -26,13 +26,13 @@ final readonly class CommentNode
     ) {
     }
 
-    public function getToken(): \PhpToken
-    {
-        return $this->token;
-    }
-
     public function getContext(): ContextInterface
     {
         return $this->context;
+    }
+
+    public function getToken(): \PhpToken
+    {
+        return $this->token;
     }
 }
