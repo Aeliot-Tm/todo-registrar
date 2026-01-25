@@ -27,6 +27,7 @@ registrar:
                                                     #           config, general config, and tag-based tags (if addTagToLabels=true)
                                                     #           will be filtered to match this list.
     summaryPrefix: '[TODO] '                        # optional: prefix which will be added to issue summary
+                                                    #           supports dynamic placeholders: {tag}, {tag_caps}, {assignee}
     showContext: 'numbered'                         # optional: include code context in issue description
                                                     #           values: null (default), 'arrow_chained', 'asterisk', 'code_block',
                                                     #                   'number_sign', 'numbered'
@@ -78,6 +79,10 @@ See [allowed labels documentation](../../allowed_labels.md)
 ### Option showContext
 
 See [show context documentation](../../context_display.md)
+
+### Option summaryPrefix
+
+See [dynamic summary prefix documentation](../../dynamic_summary_prefix.md)
 
 ## Inline config
 

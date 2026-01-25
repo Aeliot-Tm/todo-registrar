@@ -96,6 +96,40 @@ final class IssueFactoryTest extends TestCase
         self::assertSame('[TODO] Test Summary', $data['subject']);
     }
 
+    public function testCreateIssueWithDynamicSummaryPrefix(): void
+    {
+        $todo = $this->createMock(TodoInterface::class);
+        $todo->method('getTag')->willReturn('fixme');
+        $todo->method('getSummary')->willReturn('Test Summary');
+        $todo->method('getDescription')->willReturn('Test Description');
+        $todo->method('getInlineConfig')->willReturn(new InlineConfig([]));
+        $todo->method('getAssignee')->willReturn(null);
+
+        $generalConfig = $this->createMock(GeneralIssueConfig::class);
+        $generalConfig->method('getSummaryPrefix')->willReturn('[{tag}] {tag_caps}: ');
+        $generalConfig->method('getProjectIdentifier')->willReturn(1);
+        $generalConfig->method('getTracker')->willReturn(2);
+        $generalConfig->method('getAssignee')->willReturn(null);
+        $generalConfig->method('getPriority')->willReturn(null);
+        $generalConfig->method('getCategory')->willReturn(null);
+        $generalConfig->method('getFixedVersion')->willReturn(null);
+        $generalConfig->method('getStartDate')->willReturn(null);
+        $generalConfig->method('getDueDate')->willReturn(null);
+        $generalConfig->method('getEstimatedHours')->willReturn(null);
+
+        $userResolver = $this->createMock(UserResolver::class);
+
+        $entityResolver = $this->createMock(EntityResolver::class);
+        $entityResolver->method('resolveProjectId')->with(1)->willReturn(1);
+        $entityResolver->method('resolveTrackerId')->with(2)->willReturn(2);
+
+        $factory = new IssueFactory($entityResolver, $generalConfig, $this->createIssueSupporter(), $userResolver);
+        $issue = $factory->create($todo);
+
+        $data = $issue->getData();
+        self::assertSame('[fixme] FIXME: Test Summary', $data['subject']);
+    }
+
     public function testCreateIssueWithAllFields(): void
     {
         $todo = $this->createMock(TodoInterface::class);

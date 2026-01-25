@@ -22,6 +22,7 @@ registrar:
     due_date: null                      # optional: due date in format YYYY-MM-DD
     estimated_hours: null               # optional: estimated hours as float
     summaryPrefix: '[TODO] '            # optional: prefix which will be added to issue subject
+                                        #           supports dynamic placeholders: {tag}, {tag_caps}, {assignee}
     showContext: 'numbered'             # optional: include code context in issue description
                                         #           values: null (default), 'arrow_chained', 'asterisk', 'code_block',
                                         #                   'number_sign', 'numbered'
@@ -64,6 +65,10 @@ Redmine doesn't support labels.
 ### Option showContext
 
 See [show context documentation](../../context_display.md)
+
+### Option summaryPrefix
+
+See [dynamic summary prefix documentation](../../dynamic_summary_prefix.md)
 
 ## Authentication methods
 
