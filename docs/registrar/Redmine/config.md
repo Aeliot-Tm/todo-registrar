@@ -22,8 +22,8 @@ registrar:
     due_date: null                      # optional: due date in format YYYY-MM-DD
     estimated_hours: null               # optional: estimated hours as float
     summaryPrefix: '[TODO] '            # optional: prefix which will be added to issue subject
-    showContext: true                   # optional: include code context in issue description
-                                        #           values: false (default), true, 'arrow_chained', 'asterisk', 'code_block',
+    showContext: 'numbered'             # optional: include code context in issue description
+                                        #           values: null (default), 'arrow_chained', 'asterisk', 'code_block',
                                         #                   'number_sign', 'numbered'
   service:
     url: 'https://redmine.example.com',             # required: Redmine URL

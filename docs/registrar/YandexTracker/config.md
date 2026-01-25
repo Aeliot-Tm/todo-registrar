@@ -27,8 +27,8 @@ registrar:
                                                     #           config, general config, and tag-based tags (if
                                                     #           addTagToLabels=true) will be filtered to match this list.
     summaryPrefix: '[TODO] '                        # optional: prefix which will be added to issue summary
-    showContext: true                               # optional: include code context in issue description
-                                                    #           values: false (default), true, 'arrow_chained', 'asterisk', 'code_block',
+    showContext: 'numbered'                         # optional: include code context in issue description
+                                                    #           values: null (default), 'arrow_chained', 'asterisk', 'code_block',
                                                     #                   'number_sign', 'numbered'
   service:
     orgId: '%env(YANDEX_TRACKER_ORG_ID)%'           # required: Organization ID (required)

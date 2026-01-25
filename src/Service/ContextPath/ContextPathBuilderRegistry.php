@@ -29,7 +29,7 @@ final readonly class ContextPathBuilderRegistry
     ) {
     }
 
-    public function getBuilder(ContextPathBuilderFormat|string|true $format): ContextPathBuilderInterface
+    public function getBuilder(ContextPathBuilderFormat|string $format): ContextPathBuilderInterface
     {
         $format = $this->getTransformFormat($format);
         if (!$this->contextPathBuilderLocator->has($format->value)) {
@@ -39,17 +39,15 @@ final readonly class ContextPathBuilderRegistry
         return $this->contextPathBuilderLocator->get($format->value);
     }
 
-    private function getTransformFormat(ContextPathBuilderFormat|string|true $income): ContextPathBuilderFormat
+    private function getTransformFormat(ContextPathBuilderFormat|string $income): ContextPathBuilderFormat
     {
         if ($income instanceof ContextPathBuilderFormat) {
             $outgoing = $income;
-        } elseif (\is_string($income)) {
+        } else {
             $outgoing = ContextPathBuilderFormat::tryFrom($income);
             if (!$outgoing) {
                 throw new InvalidConfigException(\sprintf('Unknown context path builder format "%s"', $income));
             }
-        } elseif (true === $income) {
-            $outgoing = ContextPathBuilderFormat::CODE_BLOCK;
         }
 
         return $outgoing;

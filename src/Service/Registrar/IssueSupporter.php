@@ -53,9 +53,8 @@ final readonly class IssueSupporter
             && ($context = $todo->getContext())
             && ($showContext = ($todo->getInlineConfig()['showContext'] ?? $generalIssueConfig->getShowContext()))
         ) {
-            $description .= "\n\n" . $this->contextPathBuilderRegistry
-                    ->getBuilder($showContext)
-                    ->build($context);
+            $description .= "\n\n";
+            $description .= $this->contextPathBuilderRegistry->getBuilder($showContext)->build($context);
         }
 
         return $description;

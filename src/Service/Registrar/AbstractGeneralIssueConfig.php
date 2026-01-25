@@ -54,27 +54,24 @@ abstract class AbstractGeneralIssueConfig
     ])]
     protected mixed $labels = [];
 
-    #[Assert\Sequentially([
-        new Assert\NotNull(message: 'Option "showContext" cannot be null'),
-        new Assert\AtLeastOneOf(
-            constraints: [
-                new Assert\Type(type: 'bool', message: 'Option "showContext" must be a boolean value'),
-                new Assert\Type(
-                    type: ContextPathBuilderFormat::class,
-                    message: 'Option "showContext" must be a ContextPathBuilderFormat enum'
+    #[Assert\AtLeastOneOf(
+        constraints: [
+            new Assert\IsNull(message: 'Option "showContext" must be a null'),
+            new Assert\Type(
+                type: ContextPathBuilderFormat::class,
+                message: 'Option "showContext" must be a ContextPathBuilderFormat enum'
+            ),
+            new Assert\Sequentially([
+                new Assert\Type(type: 'string', message: 'Option "showContext" must be a string'),
+                new Assert\Choice(
+                    callback: [ContextPathBuilderFormat::class, 'getValues'],
+                    message: 'Option "showContext" must be one of: {{ choices }}'
                 ),
-                new Assert\Sequentially([
-                    new Assert\Type(type: 'string', message: 'Option "showContext" must be a string'),
-                    new Assert\Choice(
-                        callback: [ContextPathBuilderFormat::class, 'getValues'],
-                        message: 'Option "showContext" must be one of: {{ choices }}'
-                    ),
-                ]),
-            ],
-            message: 'Option "showContext" must be a boolean, a valid format string, or a ContextPathBuilderFormat enum'
-        ),
-    ])]
-    protected mixed $showContext = false;
+            ]),
+        ],
+        message: 'Option "showContext" must be a null, a valid format string or a ContextPathBuilderFormat enum'
+    )]
+    protected mixed $showContext = null;
 
     #[Assert\Type(type: 'string', message: 'Option "summaryPrefix" must be a string')]
     protected mixed $summaryPrefix = null;
@@ -111,7 +108,7 @@ abstract class AbstractGeneralIssueConfig
         return $this->labels;
     }
 
-    public function getShowContext(): ContextPathBuilderFormat|string|bool
+    public function getShowContext(): ContextPathBuilderFormat|string|null
     {
         return $this->showContext;
     }
@@ -137,7 +134,6 @@ abstract class AbstractGeneralIssueConfig
             'addTagToLabels' => false,
             'labels' => [],
             'allowedLabels' => [],
-            'showContext' => false,
             'summaryPrefix' => '',
             'tagPrefix' => '',
         ];

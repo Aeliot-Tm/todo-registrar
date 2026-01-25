@@ -26,8 +26,8 @@ registrar:
                                               #           addTagToLabels=true) will be filtered to match this list.
       components: ['a-component']             # optional: list of components which will be set to issue
       summaryPrefix: '[TODO] '                # optional: prefix which will be added to issue subject
-      showContext: true                       # optional: include code context in issue description
-                                              #           values: false (default), true, 'arrow_chained', 'asterisk', 'code_block',
+      showContext: 'numbered'                 # optional: include code context in issue description
+                                              #           values: null (default), 'arrow_chained', 'asterisk', 'code_block',
                                               #                   'number_sign', 'numbered'
   service:
       host: '%env(JIRA_HOST)%'                                  # required: host of JIRA-server

@@ -26,8 +26,8 @@ registrar:
       due_date: '2025-12-31'                  # optional: due date in format YYYY-MM-DD (optional)
       milestone: 123                          # optional: either ID (integer: 123) or title (string) of milestone (optional)
       summaryPrefix: '[TODO] '                # optional: prefix which will be added to issue subject
-      showContext: true                       # optional: include code context in issue description
-                                              #           values: false (default), true, 'arrow_chained', 'asterisk', 'code_block',
+      showContext: 'numbered'                 # optional: include code context in issue description
+                                              #           values: null (default), 'arrow_chained', 'asterisk', 'code_block',
                                               #                   'number_sign', 'numbered'
   service:
       host: 'https://gitlab.com',                                   # optional: GitLab host URL (optional, defaults to https://gitlab.com)

@@ -15,7 +15,7 @@ registrar:
   type: GitHub
   options:
     issue:
-      showContext: true             # Default format (code_block)
+      showContext: 'numbered'
 ```
 
 ### PHP Configuration
@@ -23,7 +23,7 @@ registrar:
 ```php
 $config->setRegistrar('GitHub', [
     'issue' => [
-        'showContext' => true,      // Default format (code_block)
+        'showContext' => 'numbered',
     ],
 ]);
 ```
@@ -32,8 +32,7 @@ $config->setRegistrar('GitHub', [
 d
 | Value | Data Type | Description |
 |---|---|---|
-| `false` | bool | (default) - context is not displayed |
-| `true` | bool | context is displayed in the default format (`code_block`) |
+| `null` | null | (default) - context is not displayed |
 | `arrow_chained` | string | context is displayed in arrow-chained format (one line) |
 | `asterisk` | string | context is displayed as list prefixed by asterisk (multi-line) |
 | `code_block` | string | context is displayed in code block format (multi-line) |
