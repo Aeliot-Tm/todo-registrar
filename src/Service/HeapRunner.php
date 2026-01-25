@@ -60,8 +60,8 @@ final readonly class HeapRunner
         foreach ($this->getFileHeaps($statistic) as $fileHeap) {
             foreach ($fileHeap->getCommentNodes() as $commentNode) {
                 // TODO: #13 implement gluing of simple comments
-                $token = $commentNode->token;
-                $commentParts = $this->commentExtractor->extract($token->text, $token, $commentNode->context);
+                $token = $commentNode->getToken();
+                $commentParts = $this->commentExtractor->extract($token->text, $token, $commentNode->getContext());
 
                 foreach ($commentParts->getTodos() as $commentPart) {
                     $ticketKey = $commentPart->getTagMetadata()?->getTicketKey();

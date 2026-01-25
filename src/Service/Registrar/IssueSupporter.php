@@ -24,23 +24,6 @@ final readonly class IssueSupporter
     ) {
     }
 
-    public function getDescription(TodoInterface $todo, AbstractGeneralIssueConfig $generalIssueConfig): string
-    {
-        $description = $todo->getDescription();
-
-        if (
-            $todo instanceof ContextAwareTodoInterface
-            && ($context = $todo->getContext())
-            && ($showContext = ($todo->getInlineConfig()['showContext'] ?? $generalIssueConfig->getShowContext()))
-        ) {
-            $description .= "\n\n" . $this->contextPathBuilderRegistry
-                    ->getBuilder($showContext)
-                    ->build($context);
-        }
-
-        return $description;
-    }
-
     /**
      * @return array<string>
      */
@@ -59,6 +42,23 @@ final readonly class IssueSupporter
         }
 
         return array_values(array_unique(array_filter($assignees, static fn ($value): bool => '' !== (string) $value)));
+    }
+
+    public function getDescription(TodoInterface $todo, AbstractGeneralIssueConfig $generalIssueConfig): string
+    {
+        $description = $todo->getDescription();
+
+        if (
+            $todo instanceof ContextAwareTodoInterface
+            && ($context = $todo->getContext())
+            && ($showContext = ($todo->getInlineConfig()['showContext'] ?? $generalIssueConfig->getShowContext()))
+        ) {
+            $description .= "\n\n" . $this->contextPathBuilderRegistry
+                    ->getBuilder($showContext)
+                    ->build($context);
+        }
+
+        return $description;
     }
 
     /**

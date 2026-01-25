@@ -39,7 +39,7 @@ final readonly class ContextPathBuilderRegistry
         return $this->contextPathBuilderLocator->get($format->value);
     }
 
-    private function getTransformFormat(true|ContextPathBuilderFormat|string $income): ContextPathBuilderFormat
+    private function getTransformFormat(ContextPathBuilderFormat|string|true $income): ContextPathBuilderFormat
     {
         if ($income instanceof ContextPathBuilderFormat) {
             $outgoing = $income;

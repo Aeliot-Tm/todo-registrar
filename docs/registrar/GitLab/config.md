@@ -27,7 +27,7 @@ registrar:
       milestone: 123                          # optional: either ID (integer: 123) or title (string) of milestone (optional)
       summaryPrefix: '[TODO] '                # optional: prefix which will be added to issue subject
       showContext: true                       # optional: include code context in issue description
-                                              #           values: false (default), true, 'arrow', 'code_block'
+                                              #           values: false (default), true, 'arrow_chained', 'code_block'
   service:
       host: 'https://gitlab.com',                                   # optional: GitLab host URL (optional, defaults to https://gitlab.com)
       personalAccessToken: '%env(GITLAB_PERSONAL_ACCESS_TOKEN)%',   # optional: personal access token (for http_token auth method)

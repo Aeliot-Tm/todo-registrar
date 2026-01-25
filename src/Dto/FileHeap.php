@@ -26,7 +26,7 @@ final class FileHeap
     private int $registrationCounter = 0;
 
     public function __construct(
-        private ParsedFile $parsedFile,
+        private readonly ParsedFile $parsedFile,
         ProcessStatistic $statistic,
         Saver $saver,
     ) {

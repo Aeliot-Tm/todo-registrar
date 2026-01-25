@@ -27,7 +27,7 @@ registrar:
       components: ['a-component']             # optional: list of components which will be set to issue
       summaryPrefix: '[TODO] '                # optional: prefix which will be added to issue subject
       showContext: true                       # optional: include code context in issue description
-                                              #           values: false (default), true, 'arrow', 'code_block'
+                                              #           values: false (default), true, 'arrow_chained', 'code_block'
   service:
       host: '%env(JIRA_HOST)%'                                  # required: host of JIRA-server
       personalAccessToken: '%env(JIRA_PERSONAL_ACCESS_TOKEN)%'  # optional: personal access-token

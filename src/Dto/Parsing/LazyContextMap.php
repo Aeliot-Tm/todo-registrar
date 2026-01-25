@@ -35,14 +35,14 @@ final class LazyContextMap implements \ArrayAccess
      * @param array<Stmt> $ast
      */
     public function __construct(
-        private array $ast,
-        private string $filePath,
+        private readonly array $ast,
+        private readonly string $filePath,
     ) {
     }
 
     public function offsetExists(mixed $offset): bool
     {
-        $this->ensureContextMapInitialized();
+        $this->contextMap ??= $this->buildContextMap();
 
         return isset($this->contextMap[$offset]);
     }
@@ -52,7 +52,7 @@ final class LazyContextMap implements \ArrayAccess
      */
     public function offsetGet(mixed $offset): array
     {
-        $this->ensureContextMapInitialized();
+        $this->contextMap ??= $this->buildContextMap();
 
         return $this->contextMap[$offset] ?? [];
     }
@@ -65,13 +65,6 @@ final class LazyContextMap implements \ArrayAccess
     public function offsetUnset(mixed $offset): void
     {
         throw new \BadMethodCallException('LazyContextMap is read-only');
-    }
-
-    private function ensureContextMapInitialized(): void
-    {
-        if (null === $this->contextMap) {
-            $this->contextMap = $this->buildContextMap();
-        }
     }
 
     /**

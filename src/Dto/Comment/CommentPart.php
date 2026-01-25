@@ -40,10 +40,24 @@ final class CommentPart
         $this->lines[] = $line;
     }
 
+    public function getContent(): string
+    {
+        if (!$this->lines) {
+            throw new NoLineException('Cannot get content till added one line');
+        }
+
+        return implode('', $this->lines);
+    }
+
+    public function getContext(): ContextInterface
+    {
+        return $this->context;
+    }
+
     public function getDescription(): string
     {
         if (!$this->lines) {
-            throw new NoLineException('Cannot get description till added one line');
+            throw new NoLineException('Cannot get description till not added at least one line');
         }
 
         $prefixLength = (int) $this->tagMetadata?->getPrefixLength();
@@ -95,20 +109,6 @@ final class CommentPart
     public function getToken(): \PhpToken
     {
         return $this->token;
-    }
-
-    public function getContext(): ContextInterface
-    {
-        return $this->context;
-    }
-
-    public function getContent(): string
-    {
-        if (!$this->lines) {
-            throw new NoLineException('Cannot get content till added one line');
-        }
-
-        return implode('', $this->lines);
     }
 
     public function injectKey(string $key): void

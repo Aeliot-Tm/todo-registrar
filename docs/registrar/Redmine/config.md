@@ -23,7 +23,7 @@ registrar:
     estimated_hours: null               # optional: estimated hours as float
     summaryPrefix: '[TODO] '            # optional: prefix which will be added to issue subject
     showContext: true                   # optional: include code context in issue description
-                                        #           values: false (default), true, 'arrow', 'code_block'
+                                        #           values: false (default), true, 'arrow_chained', 'code_block'
   service:
     url: 'https://redmine.example.com',             # required: Redmine URL
     apikeyOrUsername: '%env(REDMINE_USERNAME)%',    # required: API key (recommended) or username

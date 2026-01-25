@@ -88,7 +88,7 @@ final class ContextMapVisitor extends NodeVisitorAbstract
      */
     public function beforeTraverse(array $nodes): ?array
     {
-        $this->collectAllComments($nodes);
+        $this->collectAllCommentsPositions($nodes);
 
         return null;
     }
@@ -131,37 +131,40 @@ final class ContextMapVisitor extends NodeVisitorAbstract
      *
      * @param Node[] $nodes
      */
-    private function collectAllComments(array $nodes): void
+    private function collectAllCommentsPositions(array $nodes): void
     {
         foreach ($nodes as $node) {
-            foreach ($node->getComments() as $comment) {
-                $startLine = $comment->getStartLine();
-                $endLine = $comment->getEndLine();
-                $key = "{$startLine}:{$endLine}";
-
-                // Skip if already collected (same comment attached to multiple nodes)
-                if (isset($this->collectedComments[$key])) {
-                    continue;
-                }
-
-                $this->commentRanges[] = [
-                    'startLine' => $startLine,
-                    'endLine' => $endLine,
-                ];
-
-                $this->collectedComments[$key] = true;
-            }
-
+            $this->collectNodeCommentsPositions($node);
             // Recursively collect from child nodes
             foreach ($node->getSubNodeNames() as $name) {
                 $subNode = $node->$name;
-
                 if (\is_array($subNode)) {
-                    $this->collectAllComments($subNode);
+                    $this->collectAllCommentsPositions($subNode);
                 } elseif ($subNode instanceof Node) {
-                    $this->collectAllComments([$subNode]);
+                    $this->collectAllCommentsPositions([$subNode]);
                 }
             }
+        }
+    }
+
+    private function collectNodeCommentsPositions(Node $node): void
+    {
+        foreach ($node->getComments() as $comment) {
+            $startLine = $comment->getStartLine();
+            $endLine = $comment->getEndLine();
+            $key = "{$startLine}:{$endLine}";
+
+            // Skip if already collected (same comment attached to multiple nodes)
+            if (isset($this->collectedComments[$key])) {
+                continue;
+            }
+
+            $this->commentRanges[] = [
+                'startLine' => $startLine,
+                'endLine' => $endLine,
+            ];
+
+            $this->collectedComments[$key] = true;
         }
     }
 
@@ -242,32 +245,22 @@ final class ContextMapVisitor extends NodeVisitorAbstract
             $commentStart = $commentRange['startLine'];
             $commentEnd = $commentRange['endLine'];
 
-            if ($commentEnd >= $nodeStartLine) {
+            if ($commentEnd >= $nodeStartLine || !isset($this->contextMap[$commentStart])) {
                 continue;
             }
-
-            if (!isset($this->contextMap[$commentStart])) {
-                continue;
-            }
-
-            $commentContext = $this->contextMap[$commentStart];
-            $nodeContext = $this->contextMap[$nodeStartLine] ?? [];
 
             if (
                 (null === $closestCommentStart || $commentEnd > $closestCommentEnd)
                 && $this->hasOnlyAttributesAndBlankLinesBetween($commentEnd, $nodeStartLine)
-                && $this->isSameParentContext($commentContext, $nodeContext, $node)
+                && $this->isSameParentContext($node, $this->contextMap[$nodeStartLine] ?? [], $this->contextMap[$commentStart])
             ) {
                 $closestCommentStart = $commentStart;
                 $closestCommentEnd = $commentEnd;
             }
         }
 
-        if (null !== $closestCommentStart) {
-            $contextNode = $this->createContextNode($node);
-            if ($contextNode) {
-                $this->contextMap[$closestCommentStart][] = $contextNode;
-            }
+        if (null !== $closestCommentStart && ($contextNode = $this->createContextNode($node))) {
+            $this->contextMap[$closestCommentStart][] = $contextNode;
         }
     }
 
@@ -338,68 +331,39 @@ final class ContextMapVisitor extends NodeVisitorAbstract
      * Check if comment and node have the same parent context.
      * For parameters, parent is method/function. For properties, parent is class.
      *
-     * @param list<ContextNode> $commentContext
      * @param list<ContextNode> $nodeContext
+     * @param list<ContextNode> $commentContext
      */
-    private function isSameParentContext(array $commentContext, array $nodeContext, Node $node): bool
+    private function isSameParentContext(Node $node, array $nodeContext, array $commentContext): bool
     {
-        if ($node instanceof Param) {
-            $commentParentCount = \count($commentContext);
-            $nodeParentCount = \count($nodeContext) - 1;
-
-            if ($commentParentCount !== $nodeParentCount) {
-                return false;
-            }
-
-            $lastCommentContext = end($commentContext);
-            if (!$lastCommentContext) {
-                return false;
-            }
-
-            return \in_array($lastCommentContext->getKind(), [
+        $previousKinds = match (true) {
+            $node instanceof ClassConst, $node instanceof Property => [
+                ContextNodeInterface::KIND_CLASS,
+                ContextNodeInterface::KIND_TRAIT,
+            ],
+            $node instanceof EnumCase => [
+                ContextNodeInterface::KIND_ENUM,
+            ],
+            $node instanceof Param => [
                 ContextNodeInterface::KIND_METHOD,
                 ContextNodeInterface::KIND_FUNCTION,
                 ContextNodeInterface::KIND_CLOSURE,
                 ContextNodeInterface::KIND_ARROW_FUNCTION,
-            ], true);
+            ],
+            default => null,
+        };
+
+        if (null === $previousKinds) {
+            return false;
         }
 
-        if ($node instanceof Property || $node instanceof ClassConst) {
-            $commentParentCount = \count($commentContext);
-            $nodeParentCount = \count($nodeContext) - 1;
-
-            if ($commentParentCount !== $nodeParentCount) {
-                return false;
-            }
-
-            $lastCommentContext = end($commentContext);
-            if (!$lastCommentContext) {
-                return false;
-            }
-
-            return \in_array($lastCommentContext->getKind(), [
-                ContextNodeInterface::KIND_CLASS,
-                ContextNodeInterface::KIND_TRAIT,
-            ], true);
+        if (\count($commentContext) !== (\count($nodeContext) - 1)) {
+            return false;
         }
 
-        if ($node instanceof EnumCase) {
-            $commentParentCount = \count($commentContext);
-            $nodeParentCount = \count($nodeContext) - 1;
+        $lastCommentContext = end($commentContext);
 
-            if ($commentParentCount !== $nodeParentCount) {
-                return false;
-            }
-
-            $lastCommentContext = end($commentContext);
-            if (!$lastCommentContext) {
-                return false;
-            }
-
-            return ContextNodeInterface::KIND_ENUM === $lastCommentContext->getKind();
-        }
-
-        return false;
+        return $lastCommentContext && \in_array($lastCommentContext->getKind(), $previousKinds, true);
     }
 
     private function shouldTrack(Node $node): bool

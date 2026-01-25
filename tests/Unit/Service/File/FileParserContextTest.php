@@ -36,14 +36,14 @@ final class FileParserContextTest extends TestCase
         $expectedContexts = $this->getExpectedContexts();
 
         foreach ($commentNodes as $index => $commentNode) {
-            $context = $commentNode->context->getContextNodes();
+            $context = $commentNode->getContext()->getContextNodes();
             $actualPath = $this->buildContextPath($context);
 
             self::assertArrayHasKey($index, $expectedContexts, "Missing expected context for comment #{$index}");
             self::assertSame(
                 $expectedContexts[$index],
                 $actualPath,
-                "Context mismatch for comment #{$index}: {$commentNode->token->text}"
+                "Context mismatch for comment #{$index}: {$commentNode->getToken()->text}"
             );
         }
     }
@@ -60,10 +60,10 @@ final class FileParserContextTest extends TestCase
 
         $firstCommentNode = $commentNodes[0];
 
-        $reflectionClass = new \ReflectionClass($firstCommentNode->context);
+        $reflectionClass = new \ReflectionClass($firstCommentNode->getContext());
         $contextMapProperty = $reflectionClass->getProperty('contextMap');
         $contextMapProperty->setAccessible(true);
-        $contextMapObject = $contextMapProperty->getValue($firstCommentNode->context);
+        $contextMapObject = $contextMapProperty->getValue($firstCommentNode->getContext());
 
         self::assertInstanceOf(\ArrayAccess::class, $contextMapObject, 'contextMap should implement ArrayAccess');
 
@@ -76,7 +76,7 @@ final class FileParserContextTest extends TestCase
             'contextMap should be null before first access'
         );
 
-        $context = $firstCommentNode->context->getContextNodes();
+        $context = $firstCommentNode->getContext()->getContextNodes();
 
         self::assertIsArray($context, 'getContextNodes should return array');
 
@@ -96,12 +96,12 @@ final class FileParserContextTest extends TestCase
 
         self::assertGreaterThanOrEqual(2, \count($commentNodes), 'Expected at least two comments');
 
-        $reflectionClass = new \ReflectionClass($commentNodes[0]->context);
+        $reflectionClass = new \ReflectionClass($commentNodes[0]->getContext());
         $contextMapProperty = $reflectionClass->getProperty('contextMap');
         $contextMapProperty->setAccessible(true);
 
-        $firstContextMap = $contextMapProperty->getValue($commentNodes[0]->context);
-        $secondContextMap = $contextMapProperty->getValue($commentNodes[1]->context);
+        $firstContextMap = $contextMapProperty->getValue($commentNodes[0]->getContext());
+        $secondContextMap = $contextMapProperty->getValue($commentNodes[1]->getContext());
 
         self::assertSame(
             $firstContextMap,
@@ -120,10 +120,10 @@ final class FileParserContextTest extends TestCase
 
         self::assertGreaterThan(0, \count($commentNodes), 'Expected at least one comment');
 
-        $reflectionClass = new \ReflectionClass($commentNodes[0]->context);
+        $reflectionClass = new \ReflectionClass($commentNodes[0]->getContext());
         $contextMapProperty = $reflectionClass->getProperty('contextMap');
         $contextMapProperty->setAccessible(true);
-        $contextMapObject = $contextMapProperty->getValue($commentNodes[0]->context);
+        $contextMapObject = $contextMapProperty->getValue($commentNodes[0]->getContext());
 
         $this->expectException(\BadMethodCallException::class);
         $this->expectExceptionMessage('LazyContextMap is read-only');

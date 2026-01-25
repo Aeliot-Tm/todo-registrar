@@ -34,12 +34,12 @@ $config->setRegistrar('GitHub', [
 |---|---|-----------------------------------------------------------|
 | `false` | bool | (default) - context is not displayed                      |
 | `true` | bool | context is displayed in the default format (`code_block`) |
-| `arrow` | string | context is displayed in arrow format (one line)           |
+| `arrow_chained` | string | context is displayed in arrow-chained format (one line)   |
 | `code_block` | string | context is displayed in code block format (multi-line)    |
 
 ## Output Formats
 
-### Arrow Format (`'arrow'`)
+### Arrow Format (`'arrow_chained'`)
 
 Displays context as a single line with arrows (`->`) separating each level:
 

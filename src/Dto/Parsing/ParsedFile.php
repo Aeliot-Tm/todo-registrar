@@ -31,11 +31,6 @@ final readonly class ParsedFile
     ) {
     }
 
-    public function getFile(): \SplFileInfo
-    {
-        return $this->file;
-    }
-
     /**
      * @return \PhpToken[]
      */
@@ -50,5 +45,10 @@ final readonly class ParsedFile
     public function getCommentNodes(): array
     {
         return $this->commentNodes;
+    }
+
+    public function getFile(): \SplFileInfo
+    {
+        return $this->file;
     }
 }

@@ -21,8 +21,18 @@ namespace Aeliot\TodoRegistrar\Dto\Parsing;
 final readonly class CommentNode
 {
     public function __construct(
-        public \PhpToken $token,
-        public ContextInterface $context,
+        private \PhpToken $token,
+        private ContextInterface $context,
     ) {
+    }
+
+    public function getToken(): \PhpToken
+    {
+        return $this->token;
+    }
+
+    public function getContext(): ContextInterface
+    {
+        return $this->context;
     }
 }

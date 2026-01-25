@@ -20,7 +20,7 @@ use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
 /**
  * @internal
  */
-#[AsTaggedItem(index: ContextPathBuilderFormat::ARROW->value)]
+#[AsTaggedItem(index: ContextPathBuilderFormat::ARROW_CHAINED->value)]
 final readonly class ArrowContextPathBuilder extends AbstractContextPathBuilder implements ContextPathBuilderInterface
 {
     public function build(array $nodes): string

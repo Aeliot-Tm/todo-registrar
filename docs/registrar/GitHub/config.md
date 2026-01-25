@@ -26,7 +26,7 @@ registrar:
                                               #           addTagToLabels=true) will be filtered to match this list.
       summaryPrefix: '[TODO] '                # optional: prefix which will be added to issue subject
       showContext: true                       # optional: include code context in issue description
-                                              #           values: false (default), true, 'arrow', 'code_block'
+                                              #           values: false (default), true, 'arrow_chained', 'code_block'
   service:
       personalAccessToken: '%env(GITHUB_PERSONAL_ACCESS_TOKEN)%',   # required: personal access-token
 ```
