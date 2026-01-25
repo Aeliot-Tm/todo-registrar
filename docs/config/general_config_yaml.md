@@ -47,32 +47,7 @@ Registrar options specific for each issue tracker see in separate documentation:
 4. [Redmine](../registrar/Redmine/config.md)
 5. [Yandex Tracker](../registrar/YandexTracker/config.md)
 
-## Environment Variables
-
-YAML configuration files support environment variable substitution using the Symfony-style syntax
-through the use of the project [aeliot/env-resolver](https://github.com/Aeliot-Tm/env-resolver).
-Use `%env(VARIABLE_NAME)%` to reference environment variables.
-
-```yaml
-registrar:
-  type: GitHub
-  options:
-    service:
-      personalAccessToken: '%env(GITHUB_TOKEN)%'
-      owner: '%env(GITHUB_OWNER)%'
-      repository: '%env(GITHUB_REPO)%'
-```
-
-### Resolution Order
-
-1. `$_ENV['VARIABLE_NAME']` — checked first
-2. `getenv('VARIABLE_NAME')` — used as fallback
-
-### Missing Variables
-
-If an environment variable is not defined, script will be finished with error.
-
-## Loading from STDIN
+### Loading from STDIN
 
 You can pass YAML configuration via STDIN using `--config=STDIN` option:
 
@@ -97,7 +72,7 @@ registrar:
 EOF
 ```
 
-### Docker usage
+#### Docker usage
 
 When running in Docker, use the `-t` flag with `docker run` to disable TTY allocation,
 which is required for STDIN to work properly:
@@ -117,15 +92,36 @@ registrar:
   type: GitHub
   options:
     service:
-      personalAccessToken: ${GITHUB_TOKEN}
-      owner: ${GITHUB_OWNER}
-      repository: ${GITHUB_REPO}
+      personalAccessToken: your-token
+      owner: your-org
+      repository: your-repo
 EOF
 ```
 
-> **Note:** In the heredoc example above, environment variables like `${GITHUB_TOKEN}` are substituted
-> by the shell **before** the YAML is passed to the application. Use unquoted `EOF` to enable variable
-> substitution, or `'EOF'` (quoted) to pass the literal `${VAR}` strings without substitution.
+## Environment Variables
+
+YAML configuration files support environment variable substitution using the Symfony-style syntax
+through the use of the project [aeliot/env-resolver](https://github.com/Aeliot-Tm/env-resolver).
+Use `%env(VARIABLE_NAME)%` to reference environment variables.
+
+```yaml
+registrar:
+  type: GitHub
+  options:
+    service:
+      personalAccessToken: '%env(GITHUB_TOKEN)%'
+      owner: '%env(GITHUB_OWNER)%'
+      repository: '%env(GITHUB_REPO)%'
+```
+
+### Resolution Order
+
+1. `$_ENV['VARIABLE_NAME']` — checked first
+2. `getenv('VARIABLE_NAME')` — used as fallback
+
+### Missing Variables
+
+If an environment variable is not defined, script will be finished with error.
 
 ## Docker and Environment Variables
 
