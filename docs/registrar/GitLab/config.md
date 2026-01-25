@@ -26,6 +26,7 @@ registrar:
       due_date: '2025-12-31'                  # optional: due date in format YYYY-MM-DD (optional)
       milestone: 123                          # optional: either ID (integer: 123) or title (string) of milestone (optional)
       summaryPrefix: '[TODO] '                # optional: prefix which will be added to issue subject
+                                              #           supports dynamic placeholders: {tag}, {tag_caps}, {assignee}
       showContext: 'numbered'                 # optional: include code context in issue description
                                               #           values: null (default), 'arrow_chained', 'asterisk', 'code_block',
                                               #                   'number_sign', 'numbered'
@@ -127,6 +128,10 @@ See [allowed labels documentation](../../allowed_labels.md)
 ### Option showContext
 
 See [show context documentation](../../context_display.md)
+
+### Option summaryPrefix
+
+See [dynamic summary prefix documentation](../../dynamic_summary_prefix.md)
 
 ## Inline config
 

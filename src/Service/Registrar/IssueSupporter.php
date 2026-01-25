@@ -87,6 +87,21 @@ final readonly class IssueSupporter
 
     public function getSummary(TodoInterface $todo, AbstractGeneralIssueConfig $generalIssueConfig): string
     {
-        return $generalIssueConfig->getSummaryPrefix() . $todo->getSummary();
+        return $this->getSummaryPrefix($todo, $generalIssueConfig) . $todo->getSummary();
+    }
+
+    public function getSummaryPrefix(TodoInterface $todo, AbstractGeneralIssueConfig $generalIssueConfig): string
+    {
+        return preg_replace_callback('/\\{(?:assignee|tag|tag_caps)}/iu', function (
+            array $matches,
+        ) use ($todo, $generalIssueConfig): string {
+            return match (strtolower($matches[0])) {
+                '{assignee}' => ($this->getAssignees($todo, $generalIssueConfig)[0] ?? ''),
+                '{tag}' => $todo->getTag(),
+                '{tag_caps}' => mb_strtoupper($todo->getTag()),
+                // unreachable statement but leave it here
+                default => throw new \RuntimeException('Unknown issue summary tag: ' . $matches[0]),
+            };
+        }, $generalIssueConfig->getSummaryPrefix());
     }
 }
