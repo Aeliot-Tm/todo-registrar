@@ -17,7 +17,6 @@ registrar:
         - Label-1
         - Label-2
       tagPrefix: tag-
-    projectKey: Todo
     service:
       # Replace with your actual token (or set GITHUB_PERSONAL_ACCESS_TOKEN environment variable)
       personalAccessToken: '%env(GITHUB_PERSONAL_ACCESS_TOKEN)%'

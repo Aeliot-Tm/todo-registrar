@@ -23,7 +23,6 @@ return (new Config())
             'labels' => ['Label-1', 'Label-2'],
             'tagPrefix' => 'tag-',
         ],
-        'projectKey' => 'Todo',
         'service' => [
             'personalAccessToken' => $_ENV['GITHUB_PERSONAL_ACCESS_TOKEN'],
             'owner' => 'Aeliot-Tm',
