@@ -22,8 +22,8 @@ registrar:
       tagPrefix: 'tag-'                       # optional: prefix which will be added to tag when "addTagToLabels=true"
       allowedLabels: ['label-1', 'label-2']   # optional: list of allowed labels. If set, only labels from this
                                               #           list will be applied to issues. Labels from inline
-                                              #           config, general config, and tag-based labels (if
-                                              #           addTagToLabels=true) will be filtered to match this list.
+                                              #           config, general config, and tag-based labels (if addTagToLabels=true)
+                                              #           will be filtered to match this list.
       summaryPrefix: '[TODO] '                # optional: prefix which will be added to issue subject
       showContext: 'numbered'                 # optional: include code context in issue description
                                               #           values: null (default), 'arrow_chained', 'asterisk', 'code_block',

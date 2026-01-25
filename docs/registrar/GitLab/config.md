@@ -21,8 +21,8 @@ registrar:
       tagPrefix: 'tag-'                       # optional: prefix which will be added to tag when "addTagToLabels=true"
       allowedLabels: ['label-1', 'label-2']   # optional: list of allowed labels. If set, only labels from this
                                               #           list will be applied to issues. Labels from inline
-                                              #           config, general config, and tag-based labels (if
-                                              #           addTagToLabels=true) will be filtered to match this list.
+                                              #           config, general config, and tag-based labels (if addTagToLabels=true)
+                                              #           will be filtered to match this list.
       due_date: '2025-12-31'                  # optional: due date in format YYYY-MM-DD (optional)
       milestone: 123                          # optional: either ID (integer: 123) or title (string) of milestone (optional)
       summaryPrefix: '[TODO] '                # optional: prefix which will be added to issue subject

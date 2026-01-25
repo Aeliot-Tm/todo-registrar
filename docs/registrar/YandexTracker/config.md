@@ -24,8 +24,8 @@ registrar:
     tagPrefix: 'tag-'                               # optional: prefix which will be added to tag when "addTagToLabels=true"
     allowedLabels: [tech-debt, another-label]       # optional: list of allowed tags. If set, only tags from this
                                                     #           list will be applied to issues. Tags from inline
-                                                    #           config, general config, and tag-based tags (if
-                                                    #           addTagToLabels=true) will be filtered to match this list.
+                                                    #           config, general config, and tag-based tags (if addTagToLabels=true)
+                                                    #           will be filtered to match this list.
     summaryPrefix: '[TODO] '                        # optional: prefix which will be added to issue summary
     showContext: 'numbered'                         # optional: include code context in issue description
                                                     #           values: null (default), 'arrow_chained', 'asterisk', 'code_block',
