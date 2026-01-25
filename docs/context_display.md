@@ -69,6 +69,20 @@ Method: updateUser()
 ```
 ````
 
+### Code Block Format (`'numbered'`)
+
+Displays context as a formatted numbered list:
+
+**Example:**
+```
+User needs to verify email before updating profile
+
+1. File: /app/src/Service/UserService.php
+2. Namespace: App\Service
+3. Class: UserService
+4. Method: updateUser()
+```
+
 This format is more readable and useful when you need clear visual separation of context levels.
 
 ## Context Information
