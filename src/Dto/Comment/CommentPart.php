@@ -123,35 +123,41 @@ final class CommentPart
         $line = $this->lines[0];
         $before = substr($line, 0, $offset);
         $after = substr($line, $offset);
-        $hasSpaceAfter = false;
-        $hasSpaceBefore = false;
-        if (preg_match('/(\s+)$/', $before, $matches)) {
-            $spaces = $matches[1];
-            $hasSpaceBefore = true;
-            if (\strlen($spaces) > 1) {
-                $after = substr($before, -1) . $after;
-                $before = substr($before, 0, -1);
-                $hasSpaceAfter = true;
-            }
-        }
+        $addSpaceBefore = true;
+        $addSpaceAfter = true;
 
-        if (preg_match('/^(\s+)/', $after, $matches)) {
-            $spaces = $matches[1];
-            $hasSpaceAfter = true;
-            if (!$hasSpaceBefore && \strlen($spaces) > 1) {
-                $before .= $after[0];
-                $after = substr($after, 1);
-                $hasSpaceBefore = true;
+        if (IssueKeyPosition::BEFORE_SEPARATOR_STICKY === $position) {
+            $addSpaceBefore = !preg_match('/\s$/', $before);
+            $addSpaceAfter = false;
+        } else {
+            if (preg_match('/(\s+)$/', $before, $matches)) {
+                $spaces = $matches[1];
+                $addSpaceBefore = false;
+                if (\strlen($spaces) > 1) {
+                    $after = substr($before, -1) . $after;
+                    $before = substr($before, 0, -1);
+                    $addSpaceAfter = false;
+                }
+            }
+
+            if (preg_match('/^(\s+)/', $after, $matches)) {
+                $spaces = $matches[1];
+                $addSpaceAfter = false;
+                if ($addSpaceBefore && \strlen($spaces) > 1) {
+                    $before .= $after[0];
+                    $after = substr($after, 1);
+                    $addSpaceBefore = false;
+                }
             }
         }
 
         $parts = [$before];
-        if (!$hasSpaceBefore) {
+        if ($addSpaceBefore) {
             $parts[] = ' ';
         }
 
         $parts[] = $key;
-        if (!$hasSpaceAfter) {
+        if ($addSpaceAfter) {
             $parts[] = ' ';
         }
 
@@ -162,7 +168,7 @@ final class CommentPart
 
     private function getSeparatorOffset(IssueKeyPosition $position): int
     {
-        $prefixLength = (int)$this->tagMetadata?->getPrefixLength();
+        $prefixLength = (int) $this->tagMetadata?->getPrefixLength();
         if (1 > $prefixLength) {
             throw new NoPrefixException('Cannot get prefix length');
         }
@@ -172,8 +178,9 @@ final class CommentPart
             $offset = $prefixLength;
         } else {
             $offset = match ($position) {
-                IssueKeyPosition::BEFORE_SEPARATOR => $separatorOffset,
                 IssueKeyPosition::AFTER_SEPARATOR => $separatorOffset + 1,
+                IssueKeyPosition::BEFORE_SEPARATOR,
+                IssueKeyPosition::BEFORE_SEPARATOR_STICKY => $separatorOffset,
             };
         }
 

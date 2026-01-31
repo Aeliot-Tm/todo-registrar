@@ -267,6 +267,86 @@ final class CommentPartTest extends TestCase
             null,
             ['TODOdescription'],
         ];
+
+        // BEFORE_SEPARATOR_STICKY
+        yield [
+            'TODO KEY-123: description',
+            'KEY-123',
+            IssueKeyPosition::BEFORE_SEPARATOR_STICKY,
+            4,
+            4,
+            ['TODO: description'],
+        ];
+        yield [
+            'TODO KEY-123: description',
+            'KEY-123',
+            IssueKeyPosition::BEFORE_SEPARATOR_STICKY,
+            4,
+            5,
+            ['TODO : description'],
+        ];
+        yield [
+            'TODO  KEY-123: description',
+            'KEY-123',
+            IssueKeyPosition::BEFORE_SEPARATOR_STICKY,
+            4,
+            6,
+            ['TODO  : description'],
+        ];
+        yield [
+            'TODO    KEY-123: description',
+            'KEY-123',
+            IssueKeyPosition::BEFORE_SEPARATOR_STICKY,
+            4,
+            8,
+            ['TODO    : description'],
+        ];
+        yield [
+            'TODO KEY-123- description',
+            'KEY-123',
+            IssueKeyPosition::BEFORE_SEPARATOR_STICKY,
+            4,
+            4,
+            ['TODO- description'],
+        ];
+        yield [
+            'TODO   KEY-123- description',
+            'KEY-123',
+            IssueKeyPosition::BEFORE_SEPARATOR_STICKY,
+            4,
+            7,
+            ['TODO   - description'],
+        ];
+        yield [
+            'TODO KEY-123: description',
+            'KEY-123',
+            IssueKeyPosition::BEFORE_SEPARATOR_STICKY,
+            4,
+            4,
+            ['TODO: description'],
+        ];
+        yield [
+            " * TODO KEY-123: first line of description\n *       second line of description\n",
+            'KEY-123',
+            IssueKeyPosition::BEFORE_SEPARATOR_STICKY,
+            8,
+            7,
+            [
+                " * TODO: first line of description\n",
+                " *       second line of description\n",
+            ],
+        ];
+        yield [
+            " * TODO    KEY-123: first line of description\n *       second line of description\n",
+            'KEY-123',
+            IssueKeyPosition::BEFORE_SEPARATOR_STICKY,
+            8,
+            11,
+            [
+                " * TODO    : first line of description\n",
+                " *       second line of description\n",
+            ],
+        ];
     }
 
     /**

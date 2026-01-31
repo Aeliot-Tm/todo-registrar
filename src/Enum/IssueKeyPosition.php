@@ -19,4 +19,5 @@ enum IssueKeyPosition: string
 
     case AFTER_SEPARATOR = 'after_separator';
     case BEFORE_SEPARATOR = 'before_separator';
+    case BEFORE_SEPARATOR_STICKY = 'before_separator_sticky';
 }
