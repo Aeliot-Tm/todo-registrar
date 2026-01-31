@@ -118,22 +118,9 @@ final class CommentPart
             throw new NoLineException('Cannot inject key till added one line');
         }
 
-        $prefixLength = (int) $this->tagMetadata?->getPrefixLength();
-        if (1 > $prefixLength) {
-            throw new NoPrefixException('Cannot get prefix length');
-        }
+        $offset = $this->getSeparatorOffset($position);
 
         $line = $this->lines[0];
-        $separatorOffset = $this->tagMetadata?->getSeparatorOffset();
-        if (null === $separatorOffset) {
-            $offset = $prefixLength;
-        } else {
-            $offset = match ($position) {
-                IssueKeyPosition::BEFORE_SEPARATOR => $separatorOffset,
-                IssueKeyPosition::AFTER_SEPARATOR => $separatorOffset + 1,
-            };
-        }
-
         $before = substr($line, 0, $offset);
         $after = substr($line, $offset);
         $hasSpaceAfter = false;
@@ -171,5 +158,25 @@ final class CommentPart
         $parts[] = $after;
 
         $this->lines[0] = implode('', $parts);
+    }
+
+    private function getSeparatorOffset(IssueKeyPosition $position): int
+    {
+        $prefixLength = (int)$this->tagMetadata?->getPrefixLength();
+        if (1 > $prefixLength) {
+            throw new NoPrefixException('Cannot get prefix length');
+        }
+
+        $separatorOffset = $this->tagMetadata?->getSeparatorOffset();
+        if (null === $separatorOffset) {
+            $offset = $prefixLength;
+        } else {
+            $offset = match ($position) {
+                IssueKeyPosition::BEFORE_SEPARATOR => $separatorOffset,
+                IssueKeyPosition::AFTER_SEPARATOR => $separatorOffset + 1,
+            };
+        }
+
+        return $offset;
     }
 }
