@@ -25,6 +25,7 @@ services:
       - '../src/Service/Registrar/JIRA/'
       - '../src/Service/Registrar/Redmine/'
       - '../src/Service/Registrar/YandexTracker/'
+      - '../src/Service/Tag/Detector.php'
       - '../src/Service/TodoBuilder.php'
       - '../src/Config.php'
 
