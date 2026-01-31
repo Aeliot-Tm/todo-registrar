@@ -13,10 +13,13 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service;
 
+use Aeliot\TodoRegistrar\Config;
 use Aeliot\TodoRegistrar\Console\OutputAdapter;
+use Aeliot\TodoRegistrar\Enum\IssueKeyPosition;
 use Aeliot\TodoRegistrar\Service\InlineConfig\ExtrasReader;
 use Aeliot\TodoRegistrar\Service\InlineConfig\InlineConfigFactory;
 use Aeliot\TodoRegistrarContracts\GeneralConfigInterface;
+use Aeliot\TodoRegistrarContracts\IssueKeyPositionConfigInterface;
 
 /**
  * @internal
@@ -33,7 +36,12 @@ final readonly class TodoBuilderFactory
     {
         $inlineConfigReader = $config->getInlineConfigReader() ?? $this->extrasReader;
         $inlineConfigFactory = $config->getInlineConfigFactory() ?? $this->inlineConfigFactory;
+        $issueKeyPosition = null;
+        if ($config instanceof IssueKeyPositionConfigInterface) {
+            $issueKeyPosition = $config->getIssueKeyPosition();
+        }
+        $issueKeyPosition = IssueKeyPosition::from($issueKeyPosition ?? Config::DEFAULT_ISSUE_KEY_POSITION);
 
-        return new TodoBuilder($inlineConfigFactory, $inlineConfigReader, $output);
+        return new TodoBuilder($inlineConfigFactory, $inlineConfigReader, $issueKeyPosition, $output);
     }
 }

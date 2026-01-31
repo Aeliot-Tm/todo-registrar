@@ -19,6 +19,7 @@ use Aeliot\TodoRegistrar\Dto\InlineConfig\IndexedCollection;
 use Aeliot\TodoRegistrar\Dto\InlineConfig\NamedCollection;
 use Aeliot\TodoRegistrar\Dto\InlineConfig\Token;
 use Aeliot\TodoRegistrar\Dto\Tag\TagMetadata;
+use Aeliot\TodoRegistrar\Enum\IssueKeyPosition;
 use Aeliot\TodoRegistrar\Service\InlineConfig\ArrayFromJsonLikeLexerBuilder;
 use Aeliot\TodoRegistrar\Service\InlineConfig\ExtrasReader;
 use Aeliot\TodoRegistrar\Service\InlineConfig\InlineConfigFactory;
@@ -33,6 +34,7 @@ use Symfony\Component\Console\Output\NullOutput;
 #[UsesClass(ArrayFromJsonLikeLexerBuilder::class)]
 #[UsesClass(ExtrasReader::class)]
 #[UsesClass(IndexedCollection::class)]
+#[UsesClass(IssueKeyPosition::class)]
 #[UsesClass(JsonLikeLexer::class)]
 #[UsesClass(NamedCollection::class)]
 #[UsesClass(Token::class)]
@@ -77,6 +79,7 @@ final class TodoFactoryTest extends TestCase
         return new TodoBuilder(
             new InlineConfigFactory(),
             new ExtrasReader(new ArrayFromJsonLikeLexerBuilder()),
+            IssueKeyPosition::AFTER_SEPARATOR,
             new OutputAdapter(new NullOutput())
         );
     }

@@ -13,26 +13,44 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar;
 
+use Aeliot\TodoRegistrar\Enum\IssueKeyPosition;
 use Aeliot\TodoRegistrar\Enum\RegistrarType;
 use Aeliot\TodoRegistrarContracts\FinderInterface;
 use Aeliot\TodoRegistrarContracts\GeneralConfigInterface;
 use Aeliot\TodoRegistrarContracts\InlineConfigFactoryInterface;
 use Aeliot\TodoRegistrarContracts\InlineConfigReaderInterface;
+use Aeliot\TodoRegistrarContracts\IssueKeyPositionConfigInterface;
 use Aeliot\TodoRegistrarContracts\RegistrarFactoryInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 #[Assert\Callback('validate')]
-class Config implements GeneralConfigInterface
+class Config implements GeneralConfigInterface, IssueKeyPositionConfigInterface
 {
+    public const DEFAULT_ISSUE_KEY_POSITION = IssueKeyPosition::AFTER_SEPARATOR->value;
+    public const DEFAULT_SEPARATORS = [':', '-'];
+
     private FinderInterface $finder;
     private ?InlineConfigFactoryInterface $InlineConfigFactory = null;
     private ?InlineConfigReaderInterface $inlineConfigReader = null;
+
+    #[Assert\Choice(
+        callback: [IssueKeyPosition::class, 'getValues'],
+        message: 'Option "issueKeyPosition" must be one of: {{ choices }}'
+    )]
+    private string $issueKeyPosition = self::DEFAULT_ISSUE_KEY_POSITION;
+
     /**
      * @var array<string,mixed>
      */
     private array $registrarConfig;
     private RegistrarFactoryInterface|string $registrarType;
+
+    /**
+     * @var string[]
+     */
+    private array $summarySeparator = self::DEFAULT_SEPARATORS;
+
     /**
      * @var string[]
      */
@@ -70,6 +88,16 @@ class Config implements GeneralConfigInterface
         $this->inlineConfigReader = $inlineConfigReader;
     }
 
+    public function getIssueKeyPosition(): ?string
+    {
+        return $this->issueKeyPosition;
+    }
+
+    public function setIssueKeyPosition(IssueKeyPosition|string $position): void
+    {
+        $this->issueKeyPosition = $position instanceof IssueKeyPosition ? $position->value : $position;
+    }
+
     public function getRegistrarConfig(): array
     {
         return $this->registrarConfig;
@@ -93,6 +121,19 @@ class Config implements GeneralConfigInterface
         $this->registrarConfig = $config;
 
         return $this;
+    }
+
+    public function getSummarySeparators(): array
+    {
+        return $this->summarySeparator;
+    }
+
+    /**
+     * @param string[] $summarySeparator
+     */
+    public function setSummarySeparators(array $summarySeparator): void
+    {
+        $this->summarySeparator = $summarySeparator;
     }
 
     public function getTags(): array

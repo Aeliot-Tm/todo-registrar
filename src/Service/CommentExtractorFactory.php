@@ -13,9 +13,11 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service;
 
+use Aeliot\TodoRegistrar\Config;
 use Aeliot\TodoRegistrar\Service\Comment\Extractor as CommentExtractor;
 use Aeliot\TodoRegistrar\Service\Tag\Detector as TagDetector;
 use Aeliot\TodoRegistrarContracts\GeneralConfigInterface;
+use Aeliot\TodoRegistrarContracts\IssueKeyPositionConfigInterface;
 
 /**
  * @internal
@@ -24,6 +26,16 @@ final readonly class CommentExtractorFactory
 {
     public function create(GeneralConfigInterface $config): CommentExtractor
     {
-        return new CommentExtractor(new TagDetector($config->getTags()));
+        $separators = [];
+        if ($config instanceof IssueKeyPositionConfigInterface) {
+            $separators = $config->getSummarySeparators();
+        }
+        if (!$separators) {
+            $separators = Config::DEFAULT_SEPARATORS;
+        }
+
+        $tags = $config->getTags() ?: ['todo', 'fixme'];
+
+        return new CommentExtractor(new TagDetector($tags, $separators));
     }
 }

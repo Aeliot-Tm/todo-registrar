@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Dto\GeneralConfig;
 
+use Aeliot\TodoRegistrar\Enum\IssueKeyPosition;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
@@ -48,6 +49,26 @@ final class ArrayConfig
     ])]
     private mixed $tags;
 
+    #[Assert\Choice(
+        callback: [IssueKeyPosition::class, 'getValues'],
+        message: 'Option "issueKeyPosition" must be one of: {{ choices }}'
+    )]
+    private mixed $issueKeyPosition;
+
+    #[Assert\Sequentially(constraints: [
+        new Assert\Type(type: 'array', message: 'Option "summarySeparator" must be an array'),
+        new Assert\All(constraints: [
+            new Assert\Sequentially(constraints: [
+                new Assert\Type(type: 'string', message: 'Each separator must be a string'),
+                new Assert\Length(
+                    exactly: 1,
+                    exactMessage: 'Each separator must be exactly 1 character'
+                ),
+            ]),
+        ]),
+    ])]
+    private mixed $summarySeparators;
+
     #[Assert\IsNull(message: 'Unknown configuration options detected: {{ value }}')]
     private mixed $invalidKeys = null;
 
@@ -62,9 +83,12 @@ final class ArrayConfig
         $registrar = $options['registrar'] ?? null;
         $this->registrar = \is_array($registrar) ? new RegistrarConfig($registrar) : $registrar;
 
+        $this->issueKeyPosition = $options['issueKeyPosition'] ?? null;
+        $this->summarySeparators = (array) ($options['summarySeparator'] ?? [':', '-']);
+
         $this->tags = $options['tags'] ?? [];
 
-        $knownKeys = ['paths', 'registrar', 'tags'];
+        $knownKeys = ['issueKeyPosition', 'paths', 'registrar', 'summarySeparator', 'tags'];
         $unknownKeys = array_diff(array_keys($options), $knownKeys);
         if ($unknownKeys) {
             $this->invalidKeys = implode(', ', $unknownKeys);
@@ -87,6 +111,19 @@ final class ArrayConfig
     public function getTags(): array
     {
         return $this->tags;
+    }
+
+    public function getIssueKeyPosition(): ?string
+    {
+        return $this->issueKeyPosition;
+    }
+
+    /**
+     * @return string[]|null
+     */
+    public function getSummarySeparators(): ?array
+    {
+        return $this->summarySeparators;
     }
 
     public function getInvalidKeys(): ?string
