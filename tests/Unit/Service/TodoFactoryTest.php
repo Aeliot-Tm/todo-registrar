@@ -80,7 +80,9 @@ final class TodoFactoryTest extends TestCase
             new InlineConfigFactory(),
             new ExtrasReader(new ArrayFromJsonLikeLexerBuilder()),
             IssueKeyPosition::AFTER_SEPARATOR,
-            new OutputAdapter(new NullOutput())
+            null,
+            new OutputAdapter(new NullOutput()),
+            false,
         );
     }
 }

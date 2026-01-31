@@ -69,6 +69,16 @@ final class ArrayConfig
     ])]
     private mixed $summarySeparators;
 
+    #[Assert\Sequentially(constraints: [
+        new Assert\Type(type: 'string', message: 'Option "newSeparator" must be a string'),
+        new Assert\Length(exactly: 1, exactMessage: 'Option "newSeparator" must be exactly 1 character'),
+    ])]
+    private mixed $newSeparator;
+
+    #[Assert\NotNull(message: 'Option "replaceSeparator" cannot be null')]
+    #[Assert\Type(type: 'bool', message: 'Option "replaceSeparator" must be a boolean')]
+    private mixed $replaceSeparator;
+
     #[Assert\IsNull(message: 'Unknown configuration options detected: {{ value }}')]
     private mixed $invalidKeys = null;
 
@@ -84,11 +94,21 @@ final class ArrayConfig
         $this->registrar = \is_array($registrar) ? new RegistrarConfig($registrar) : $registrar;
 
         $this->issueKeyPosition = $options['issueKeyPosition'] ?? null;
+        $this->newSeparator = $options['newSeparator'] ?? null;
+        $this->replaceSeparator = $options['replaceSeparator'] ?? false;
         $this->summarySeparators = (array) ($options['summarySeparator'] ?? [':', '-']);
 
         $this->tags = $options['tags'] ?? [];
 
-        $knownKeys = ['issueKeyPosition', 'paths', 'registrar', 'summarySeparator', 'tags'];
+        $knownKeys = [
+            'issueKeyPosition',
+            'newSeparator',
+            'paths',
+            'registrar',
+            'replaceSeparator',
+            'summarySeparator',
+            'tags',
+        ];
         $unknownKeys = array_diff(array_keys($options), $knownKeys);
         if ($unknownKeys) {
             $this->invalidKeys = implode(', ', $unknownKeys);
@@ -116,6 +136,16 @@ final class ArrayConfig
     public function getIssueKeyPosition(): ?string
     {
         return $this->issueKeyPosition;
+    }
+
+    public function getNewSeparator(): ?string
+    {
+        return $this->newSeparator;
+    }
+
+    public function getReplaceSeparator(): bool
+    {
+        return $this->replaceSeparator;
     }
 
     /**

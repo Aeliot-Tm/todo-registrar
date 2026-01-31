@@ -20,4 +20,19 @@ enum IssueKeyPosition: string
     case AFTER_SEPARATOR = 'after_separator';
     case BEFORE_SEPARATOR = 'before_separator';
     case BEFORE_SEPARATOR_STICKY = 'before_separator_sticky';
+
+    public function isAfterSeparator(): bool
+    {
+        return self::AFTER_SEPARATOR === $this;
+    }
+
+    public function isBeforeSeparator(): bool
+    {
+        return self::BEFORE_SEPARATOR === $this;
+    }
+
+    public function isBeforeSeparatorSticky(): bool
+    {
+        return self::BEFORE_SEPARATOR_STICKY === $this;
+    }
 }

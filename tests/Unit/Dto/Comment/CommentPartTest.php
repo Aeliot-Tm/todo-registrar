@@ -94,7 +94,16 @@ final class CommentPartTest extends TestCase
     }
 
     /**
-     * @return iterable<array{0: string, 1: string, 2: IssueKeyPosition, 3: int, 4: int|null, 5: array<string>}>
+     * @return iterable<array{
+     *     0: string,
+     *     1: string,
+     *     2: IssueKeyPosition,
+     *     3: int,
+     *     4: int|null,
+     *     5: array<string>,
+     *     6: string|null,
+     *     7: bool
+     * }>
      */
     public static function getDataForTestInjectKey(): iterable
     {
@@ -106,6 +115,8 @@ final class CommentPartTest extends TestCase
             4,
             null,
             ['TODO description'],
+            null,
+            false,
         ];
         yield [
             'TODO KEY-123 description',
@@ -114,6 +125,8 @@ final class CommentPartTest extends TestCase
             4,
             null,
             ['TODO description'],
+            null,
+            false,
         ];
         yield [
             'TODO KEY-123 description',
@@ -122,6 +135,8 @@ final class CommentPartTest extends TestCase
             4,
             null,
             ['TODO  description'],
+            null,
+            false,
         ];
 
         // BEFORE_SEPARATOR
@@ -132,6 +147,8 @@ final class CommentPartTest extends TestCase
             4,
             4,
             ['TODO: description'],
+            null,
+            false,
         ];
         yield [
             'TODO KEY-123 : description',
@@ -140,6 +157,8 @@ final class CommentPartTest extends TestCase
             4,
             5,
             ['TODO : description'],
+            null,
+            false,
         ];
         yield [
             'TODO KEY-123 : description',
@@ -148,14 +167,18 @@ final class CommentPartTest extends TestCase
             4,
             6,
             ['TODO  : description'],
+            null,
+            false,
         ];
         yield [
-            'TODO  KEY-123 : description',
+            'TODO KEY-123  : description',
             'KEY-123',
             IssueKeyPosition::BEFORE_SEPARATOR,
             4,
             7,
             ['TODO   : description'],
+            null,
+            false,
         ];
         yield [
             'TODO KEY-123 - description',
@@ -164,6 +187,8 @@ final class CommentPartTest extends TestCase
             4,
             4,
             ['TODO- description'],
+            null,
+            false,
         ];
 
         // AFTER_SEPARATOR
@@ -174,6 +199,8 @@ final class CommentPartTest extends TestCase
             4,
             4,
             ['TODO: description'],
+            null,
+            false,
         ];
         yield [
             'TODO: KEY-123 description',
@@ -182,6 +209,8 @@ final class CommentPartTest extends TestCase
             4,
             4,
             ['TODO:  description'],
+            null,
+            false,
         ];
         yield [
             'TODO : KEY-123 description',
@@ -190,6 +219,8 @@ final class CommentPartTest extends TestCase
             4,
             5,
             ['TODO : description'],
+            null,
+            false,
         ];
         yield [
             'TODO : KEY-123 description',
@@ -198,6 +229,8 @@ final class CommentPartTest extends TestCase
             4,
             5,
             ['TODO :  description'],
+            null,
+            false,
         ];
         yield [
             'TODO : KEY-123  description',
@@ -206,6 +239,8 @@ final class CommentPartTest extends TestCase
             4,
             5,
             ['TODO :   description'],
+            null,
+            false,
         ];
         yield [
             'TODO- KEY-123 description',
@@ -214,6 +249,8 @@ final class CommentPartTest extends TestCase
             4,
             4,
             ['TODO- description'],
+            null,
+            false,
         ];
 
         // Multi-line comments with AFTER_SEPARATOR
@@ -227,6 +264,8 @@ final class CommentPartTest extends TestCase
                 " * TODO: first line of description\n",
                 " *       second line of description\n",
             ],
+            null,
+            false,
         ];
 
         // Multi-line comments with BEFORE_SEPARATOR
@@ -240,6 +279,8 @@ final class CommentPartTest extends TestCase
                 " * TODO: first line of description\n",
                 " *       second line of description\n",
             ],
+            null,
+            false,
         ];
 
         // Edge cases: no spaces
@@ -250,6 +291,8 @@ final class CommentPartTest extends TestCase
             4,
             4,
             ['TODO:description'],
+            null,
+            false,
         ];
         yield [
             'TODO: KEY-123 description',
@@ -258,6 +301,8 @@ final class CommentPartTest extends TestCase
             4,
             4,
             ['TODO:description'],
+            null,
+            false,
         ];
         yield [
             'TODO KEY-123 description',
@@ -266,6 +311,8 @@ final class CommentPartTest extends TestCase
             4,
             null,
             ['TODOdescription'],
+            null,
+            false,
         ];
 
         // BEFORE_SEPARATOR_STICKY
@@ -276,6 +323,8 @@ final class CommentPartTest extends TestCase
             4,
             4,
             ['TODO: description'],
+            null,
+            false,
         ];
         yield [
             'TODO KEY-123: description',
@@ -284,6 +333,8 @@ final class CommentPartTest extends TestCase
             4,
             5,
             ['TODO : description'],
+            null,
+            false,
         ];
         yield [
             'TODO  KEY-123: description',
@@ -292,6 +343,8 @@ final class CommentPartTest extends TestCase
             4,
             6,
             ['TODO  : description'],
+            null,
+            false,
         ];
         yield [
             'TODO    KEY-123: description',
@@ -300,6 +353,8 @@ final class CommentPartTest extends TestCase
             4,
             8,
             ['TODO    : description'],
+            null,
+            false,
         ];
         yield [
             'TODO KEY-123- description',
@@ -308,6 +363,8 @@ final class CommentPartTest extends TestCase
             4,
             4,
             ['TODO- description'],
+            null,
+            false,
         ];
         yield [
             'TODO   KEY-123- description',
@@ -316,6 +373,8 @@ final class CommentPartTest extends TestCase
             4,
             7,
             ['TODO   - description'],
+            null,
+            false,
         ];
         yield [
             'TODO KEY-123: description',
@@ -324,6 +383,8 @@ final class CommentPartTest extends TestCase
             4,
             4,
             ['TODO: description'],
+            null,
+            false,
         ];
         yield [
             " * TODO KEY-123: first line of description\n *       second line of description\n",
@@ -335,6 +396,8 @@ final class CommentPartTest extends TestCase
                 " * TODO: first line of description\n",
                 " *       second line of description\n",
             ],
+            null,
+            false,
         ];
         yield [
             " * TODO    KEY-123: first line of description\n *       second line of description\n",
@@ -346,6 +409,107 @@ final class CommentPartTest extends TestCase
                 " * TODO    : first line of description\n",
                 " *       second line of description\n",
             ],
+            null,
+            false,
+        ];
+
+        // NewSeparator tests
+        // Case 1: NewSeparator=null (ignore ReplaceSeparator)
+        yield [
+            'TODO: KEY-123 text',
+            'KEY-123',
+            IssueKeyPosition::AFTER_SEPARATOR,
+            4,
+            4,
+            ['TODO: text'],
+            null,
+            true,
+        ];
+        yield [
+            'TODO: KEY-123 text',
+            'KEY-123',
+            IssueKeyPosition::AFTER_SEPARATOR,
+            4,
+            4,
+            ['TODO: text'],
+            null,
+            false,
+        ];
+
+        // Case 2: ReplaceSeparator=true and separator is found
+        yield [
+            'TODO- KEY-123 text',
+            'KEY-123',
+            IssueKeyPosition::AFTER_SEPARATOR,
+            4,
+            4,
+            ['TODO: text'],
+            '-',
+            true,
+        ];
+        yield [
+            'TODO | KEY-123 text',
+            'KEY-123',
+            IssueKeyPosition::AFTER_SEPARATOR,
+            4,
+            5,
+            ['TODO : text'],
+            '|',
+            true,
+        ];
+
+        // Case 3: ReplaceSeparator=false and separator is found (ignore NewSeparator)
+        yield [
+            'TODO: KEY-123 text',
+            'KEY-123',
+            IssueKeyPosition::AFTER_SEPARATOR,
+            4,
+            4,
+            ['TODO: text'],
+            '-',
+            false,
+        ];
+        yield [
+            'TODO- KEY-123 text',
+            'KEY-123',
+            IssueKeyPosition::AFTER_SEPARATOR,
+            4,
+            4,
+            ['TODO- text'],
+            ':',
+            false,
+        ];
+
+        // Case 4: Separator is found and NewSeparator is defined
+        yield [
+            'TODO KEY-123 - text',
+            'KEY-123',
+            IssueKeyPosition::BEFORE_SEPARATOR,
+            4,
+            null,
+            ['TODO text'],
+            '-',
+            false,
+        ];
+        yield [
+            'TODO KEY-123 - text',
+            'KEY-123',
+            IssueKeyPosition::BEFORE_SEPARATOR,
+            4,
+            null,
+            ['TODO text'],
+            '-',
+            true,
+        ];
+        yield [
+            'TODO KEY-123 : text',
+            'KEY-123',
+            IssueKeyPosition::BEFORE_SEPARATOR,
+            4,
+            null,
+            ['TODO  text'],
+            ':',
+            false,
         ];
     }
 
@@ -425,11 +589,13 @@ final class CommentPartTest extends TestCase
         IssueKeyPosition $position,
         int $prefixLength,
         ?int $separatorOffset,
-        array $lines
+        array $lines,
+        ?string $newSeparator,
+        bool $replaceSeparator
     ): void {
         $tagMetadata = new TagMetadata(null, $prefixLength, null, $separatorOffset, null);
         $commentPart = $this->createCommentPartWithLines($lines, $tagMetadata);
-        $commentPart->injectKey($key, $position);
+        $commentPart->injectKey($key, $position, $newSeparator, $replaceSeparator);
         self::assertEquals($expectedContent, $commentPart->getContent());
     }
 
@@ -438,7 +604,7 @@ final class CommentPartTest extends TestCase
         $this->expectException(NoLineException::class);
         $token = $this->createPhpToken();
         $commentPart = new CommentPart($token, null, $this->createLazyContext());
-        $commentPart->injectKey('any key', IssueKeyPosition::AFTER_SEPARATOR);
+        $commentPart->injectKey('any key', IssueKeyPosition::AFTER_SEPARATOR, null, false);
     }
 
     #[DataProvider('getDataForTestInjectKeyThrowsExceptionWithoutPrefix')]
@@ -449,7 +615,7 @@ final class CommentPartTest extends TestCase
         $token = $this->createPhpToken();
         $commentPart = new CommentPart($token, new TagMetadata(null, $prefixLength, null, null, null), $this->createLazyContext());
         $commentPart->addLine('any text of line');
-        $commentPart->injectKey('any key', IssueKeyPosition::AFTER_SEPARATOR);
+        $commentPart->injectKey('any key', IssueKeyPosition::AFTER_SEPARATOR, null, false);
     }
 
     /**

@@ -31,7 +31,9 @@ final readonly class TodoBuilder
         private InlineConfigFactoryInterface $inlineConfigFactory,
         private InlineConfigReaderInterface $inlineConfigReader,
         private IssueKeyPosition $issueKeyPosition,
+        private ?string $newSeparator,
         private OutputAdapter $output,
+        private bool $replaceSeparator,
     ) {
     }
 
@@ -47,6 +49,8 @@ final readonly class TodoBuilder
             $commentPart,
             $this->getInlineConfig($description),
             $this->issueKeyPosition,
+            $this->newSeparator,
+            $this->replaceSeparator,
         );
     }
 

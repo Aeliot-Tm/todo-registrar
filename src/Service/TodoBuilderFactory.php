@@ -37,11 +37,15 @@ final readonly class TodoBuilderFactory
         $inlineConfigReader = $config->getInlineConfigReader() ?? $this->extrasReader;
         $inlineConfigFactory = $config->getInlineConfigFactory() ?? $this->inlineConfigFactory;
         $issueKeyPosition = null;
+        $newSeparator = null;
+        $replaceSeparator = Config::DEFAULT_REPLACE_SEPARATOR;
         if ($config instanceof IssueKeyPositionConfigInterface) {
             $issueKeyPosition = $config->getIssueKeyPosition();
+            $newSeparator = $config->getNewSeparator();
+            $replaceSeparator = $config->getReplaceSeparator();
         }
         $issueKeyPosition = IssueKeyPosition::from($issueKeyPosition ?? Config::DEFAULT_ISSUE_KEY_POSITION);
 
-        return new TodoBuilder($inlineConfigFactory, $inlineConfigReader, $issueKeyPosition, $output);
+        return new TodoBuilder($inlineConfigFactory, $inlineConfigReader, $issueKeyPosition, $newSeparator, $output, $replaceSeparator);
     }
 }

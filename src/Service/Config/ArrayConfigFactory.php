@@ -49,6 +49,13 @@ final readonly class ArrayConfigFactory
             $config->setIssueKeyPosition($issueKeyPosition);
         }
 
+        $newSeparator = $arrayConfig->getNewSeparator();
+        if (null !== $newSeparator) {
+            $config->setNewSeparator($newSeparator);
+        }
+
+        $config->setReplaceSeparator($arrayConfig->getReplaceSeparator());
+
         $summarySeparator = $arrayConfig->getSummarySeparators();
         if ($summarySeparator) {
             $config->setSummarySeparators($summarySeparator);

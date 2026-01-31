@@ -28,6 +28,7 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 class Config implements GeneralConfigInterface, IssueKeyPositionConfigInterface
 {
     public const DEFAULT_ISSUE_KEY_POSITION = IssueKeyPosition::AFTER_SEPARATOR->value;
+    public const DEFAULT_REPLACE_SEPARATOR = false;
     public const DEFAULT_SEPARATORS = [':', '-'];
 
     private FinderInterface $finder;
@@ -39,6 +40,10 @@ class Config implements GeneralConfigInterface, IssueKeyPositionConfigInterface
         message: 'Option "issueKeyPosition" must be one of: {{ choices }}'
     )]
     private string $issueKeyPosition = self::DEFAULT_ISSUE_KEY_POSITION;
+
+    #[Assert\Length(exactly: 1, exactMessage: 'Option "newSeparator" must be exactly 1 character')]
+    private ?string $newSeparator = null;
+    private bool $replaceSeparator = self::DEFAULT_REPLACE_SEPARATOR;
 
     /**
      * @var array<string,mixed>
@@ -96,6 +101,26 @@ class Config implements GeneralConfigInterface, IssueKeyPositionConfigInterface
     public function setIssueKeyPosition(IssueKeyPosition|string $position): void
     {
         $this->issueKeyPosition = $position instanceof IssueKeyPosition ? $position->value : $position;
+    }
+
+    public function getNewSeparator(): ?string
+    {
+        return $this->newSeparator;
+    }
+
+    public function setNewSeparator(?string $newSeparator): void
+    {
+        $this->newSeparator = $newSeparator;
+    }
+
+    public function getReplaceSeparator(): bool
+    {
+        return $this->replaceSeparator;
+    }
+
+    public function setReplaceSeparator(bool $replaceSeparator): void
+    {
+        $this->replaceSeparator = $replaceSeparator;
     }
 
     public function getRegistrarConfig(): array

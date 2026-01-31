@@ -112,55 +112,45 @@ final class CommentPart
         return $this->token;
     }
 
-    public function injectKey(string $key, IssueKeyPosition $position): void
+    public function injectKey(string $key, IssueKeyPosition $position, ?string $newSeparator, bool $replaceSeparator): void
     {
         if (!$this->lines) {
             throw new NoLineException('Cannot inject key till added one line');
         }
 
         $offset = $this->getSeparatorOffset($position);
-
         $line = $this->lines[0];
-        $before = substr($line, 0, $offset);
-        $after = substr($line, $offset);
-        $addSpaceBefore = true;
-        $addSpaceAfter = true;
+        $separatorOffset = $this->tagMetadata?->getSeparatorOffset();
 
-        if (IssueKeyPosition::BEFORE_SEPARATOR_STICKY === $position) {
-            $addSpaceBefore = !preg_match('/\s$/', $before);
-            $addSpaceAfter = false;
-        } else {
-            if (preg_match('/(\s+)$/', $before, $matches)) {
-                $spaces = $matches[1];
-                $addSpaceBefore = false;
-                if (\strlen($spaces) > 1) {
-                    $after = substr($before, -1) . $after;
-                    $before = substr($before, 0, -1);
-                    $addSpaceAfter = false;
-                }
-            }
-
-            if (preg_match('/^(\s+)/', $after, $matches)) {
-                $spaces = $matches[1];
-                $addSpaceAfter = false;
-                if ($addSpaceBefore && \strlen($spaces) > 1) {
-                    $before .= $after[0];
-                    $after = substr($after, 1);
-                    $addSpaceBefore = false;
-                }
-            }
+        if ($replaceSeparator && null !== $newSeparator && null !== $separatorOffset) {
+            $line[$separatorOffset] = $newSeparator;
         }
 
+        [$before, $after, $middleSpace] = $this->splitLine($line, $offset);
+
         $parts = [$before];
-        if ($addSpaceBefore) {
-            $parts[] = ' ';
+        $parts[] = $middleSpace->getSpace();
+
+        if (null !== $newSeparator && null === $separatorOffset && $position->isAfterSeparator()) {
+            $parts[] = $newSeparator;
+            $parts[] = $middleSpace->getSpace();
+        }
+
+        if ($position->isBeforeSeparatorSticky()) {
+            $parts[] = $middleSpace->grabTail();
         }
 
         $parts[] = $key;
-        if ($addSpaceAfter) {
-            $parts[] = ' ';
+        if (!$position->isBeforeSeparatorSticky()) {
+            $parts[] = $middleSpace->getSpace();
         }
 
+        if (null !== $newSeparator && null === $separatorOffset && $position->isBeforeSeparator()) {
+            $parts[] = $newSeparator;
+            $parts[] = $middleSpace->getSpace();
+        }
+
+        $parts[] = $middleSpace->grabTail();
         $parts[] = $after;
 
         $this->lines[0] = implode('', $parts);
@@ -185,5 +175,26 @@ final class CommentPart
         }
 
         return $offset;
+    }
+
+    /**
+     * @return array{0: string, 1: string, 2: MiddleSpace}
+     */
+    private function splitLine(string $line, int $offset): array
+    {
+        $before = substr($line, 0, $offset);
+        $after = substr($line, $offset);
+        $middleSpace = new MiddleSpace();
+        if (preg_match('/(\s+)$/', $before, $matches)) {
+            $middleSpace->addSpace($spaces = $matches[1]);
+            $before = substr($before, 0, -1 * \strlen($spaces));
+        }
+
+        if (preg_match('/^(\s+)/', $after, $matches)) {
+            $middleSpace->addSpace($spaces = $matches[1]);
+            $after = substr($after, \strlen($spaces));
+        }
+
+        return [$before, $after, $middleSpace];
     }
 }

@@ -28,6 +28,8 @@ class Todo implements TodoInterface
         protected CommentPart $commentPart,
         protected InlineConfigInterface $inlineConfig,
         protected IssueKeyPosition $issueKeyPosition,
+        protected ?string $newSeparator,
+        protected bool $replaceSeparator,
     ) {
     }
 
@@ -69,6 +71,6 @@ class Todo implements TodoInterface
      */
     public function injectKey(string $key): void
     {
-        $this->commentPart->injectKey($key, $this->issueKeyPosition);
+        $this->commentPart->injectKey($key, $this->issueKeyPosition, $this->newSeparator, $this->replaceSeparator);
     }
 }
