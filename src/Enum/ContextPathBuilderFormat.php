@@ -15,17 +15,11 @@ namespace Aeliot\TodoRegistrar\Enum;
 
 enum ContextPathBuilderFormat: string
 {
+    use GetStringEnumValuesTrait;
+
     case ARROW_CHAINED = 'arrow_chained';
     case ASTERISK = 'asterisk';
     case CODE_BLOCK = 'code_block';
     case NUMBER_SIGN = 'number_sign';
     case NUMBERED = 'numbered';
-
-    /**
-     * @return string[]
-     */
-    public static function getValues(): array
-    {
-        return array_map(static fn (self $enum): string => $enum->value, self::cases());
-    }
 }
