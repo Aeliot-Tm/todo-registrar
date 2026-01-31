@@ -15,6 +15,7 @@ namespace Aeliot\TodoRegistrar\Dto\Comment;
 
 use Aeliot\TodoRegistrar\Dto\Parsing\ContextInterface;
 use Aeliot\TodoRegistrar\Dto\Tag\TagMetadata;
+use Aeliot\TodoRegistrar\Enum\IssueKeyPosition;
 use Aeliot\TodoRegistrar\Exception\NoLineException;
 use Aeliot\TodoRegistrar\Exception\NoPrefixException;
 
@@ -111,7 +112,7 @@ final class CommentPart
         return $this->token;
     }
 
-    public function injectKey(string $key): void
+    public function injectKey(string $key, IssueKeyPosition $position): void
     {
         if (!$this->lines) {
             throw new NoLineException('Cannot inject key till added one line');
@@ -123,11 +124,52 @@ final class CommentPart
         }
 
         $line = $this->lines[0];
-        $injection = [' ', $key];
-        if (' ' !== $line[$prefixLength]) {
-            $injection[] = ' ';
+        $separatorOffset = $this->tagMetadata?->getSeparatorOffset();
+        if (null === $separatorOffset) {
+            $offset = $prefixLength;
+        } else {
+            $offset = match ($position) {
+                IssueKeyPosition::BEFORE_SEPARATOR => $separatorOffset,
+                IssueKeyPosition::AFTER_SEPARATOR => $separatorOffset + 1,
+            };
         }
 
-        $this->lines[0] = substr($line, 0, $prefixLength) . implode('', $injection) . substr($line, $prefixLength);
+        $before = substr($line, 0, $offset);
+        $after = substr($line, $offset);
+        $hasSpaceAfter = false;
+        $hasSpaceBefore = false;
+        if (preg_match('/(\s+)$/', $before, $matches)) {
+            $spaces = $matches[1];
+            $hasSpaceBefore = true;
+            if (\strlen($spaces) > 1) {
+                $after = substr($before, -1) . $after;
+                $before = substr($before, 0, -1);
+                $hasSpaceAfter = true;
+            }
+        }
+
+        if (preg_match('/^(\s+)/', $after, $matches)) {
+            $spaces = $matches[1];
+            $hasSpaceAfter = true;
+            if (!$hasSpaceBefore && \strlen($spaces) > 1) {
+                $before .= $after[0];
+                $after = substr($after, 1);
+                $hasSpaceBefore = true;
+            }
+        }
+
+        $parts = [$before];
+        if (!$hasSpaceBefore) {
+            $parts[] = ' ';
+        }
+
+        $parts[] = $key;
+        if (!$hasSpaceAfter) {
+            $parts[] = ' ';
+        }
+
+        $parts[] = $after;
+
+        $this->lines[0] = implode('', $parts);
     }
 }
