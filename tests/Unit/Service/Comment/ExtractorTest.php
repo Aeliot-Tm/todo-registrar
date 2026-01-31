@@ -92,7 +92,7 @@ CONT,
     public function testCatchLineSeparator(string $comment): void
     {
         $token = $this->createPhpToken($comment);
-        $parts = (new Extractor(new TagDetector()))->extract($comment, $token, $this->createLazyContext());
+        $parts = (new Extractor(new TagDetector(['todo', 'fixme'], [':', '-'])))->extract($comment, $token, $this->createLazyContext());
         self::assertSame($comment, $parts->getContent());
     }
 
@@ -100,7 +100,7 @@ CONT,
     public function testCountOfParts(int $expectedTotalCount, int $expectedTodoCount, string $comment): void
     {
         $token = $this->createPhpToken($comment);
-        $parts = (new Extractor(new TagDetector()))->extract($comment, $token, $this->createLazyContext());
+        $parts = (new Extractor(new TagDetector(['todo', 'fixme'], [':', '-'])))->extract($comment, $token, $this->createLazyContext());
         self::assertCount($expectedTotalCount, $parts->getParts());
         self::assertCount($expectedTodoCount, $parts->getTodos());
     }

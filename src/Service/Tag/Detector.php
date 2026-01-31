@@ -26,7 +26,7 @@ final readonly class Detector
      * @param non-empty-array<string> $tags
      * @param non-empty-array<string> $separators
      */
-    public function __construct(array $tags = ['todo', 'fixme'], array $separators = [':', '-'])
+    public function __construct(array $tags, array $separators)
     {
         $tagsPart = implode('|', $tags);
         $keyRegex = implode('|', $this->getTicketKeyRegExpressions());

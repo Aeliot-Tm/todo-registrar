@@ -212,7 +212,7 @@ final class DetectorTest extends TestCase
     #[DataProvider('getDataForTestTagNotDetected')]
     public function testTagNotDetected(string $line, array $tags): void
     {
-        $tagMetadata = (new Detector($tags))->getTagMetadata($line);
+        $tagMetadata = (new Detector($tags, [':', '-']))->getTagMetadata($line);
         self::assertNull($tagMetadata);
     }
 
@@ -231,7 +231,7 @@ final class DetectorTest extends TestCase
 
     private function getTagMetadata(string $line, array $tags = []): TagMetadata
     {
-        $detector = $tags ? new Detector($tags) : new Detector();
+        $detector = $tags ? new Detector($tags, [':', '-']) : new Detector(['todo', 'fixme'], [':', '-']);
         $tagMetadata = $detector->getTagMetadata($line);
         self::assertInstanceOf(TagMetadata::class, $tagMetadata);
 
