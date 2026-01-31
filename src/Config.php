@@ -30,6 +30,7 @@ class Config implements GeneralConfigInterface, IssueKeyPositionConfigInterface
     public const DEFAULT_ISSUE_KEY_POSITION = IssueKeyPosition::AFTER_SEPARATOR->value;
     public const DEFAULT_REPLACE_SEPARATOR = false;
     public const DEFAULT_SEPARATORS = [':', '-'];
+    public const DEFAULT_TAGS = ['todo', 'fixme'];
 
     private FinderInterface $finder;
     private ?InlineConfigFactoryInterface $InlineConfigFactory = null;
@@ -59,7 +60,7 @@ class Config implements GeneralConfigInterface, IssueKeyPositionConfigInterface
     /**
      * @var string[]
      */
-    private array $tags = ['todo', 'fixme'];
+    private array $tags = self::DEFAULT_TAGS;
 
     public function getFinder(): FinderInterface
     {

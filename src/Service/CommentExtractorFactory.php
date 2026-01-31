@@ -34,7 +34,7 @@ final readonly class CommentExtractorFactory
             $separators = Config::DEFAULT_SEPARATORS;
         }
 
-        $tags = $config->getTags() ?: ['todo', 'fixme'];
+        $tags = $config->getTags() ?: Config::DEFAULT_TAGS;
 
         return new CommentExtractor(new TagDetector($tags, $separators));
     }
