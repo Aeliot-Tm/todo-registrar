@@ -19,10 +19,11 @@ namespace Aeliot\TodoRegistrar\Dto\Tag;
 final readonly class TagMetadata
 {
     public function __construct(
-        private ?string $tag = null,
-        private ?int $prefixLength = null,
-        private ?string $assignee = null,
-        private ?string $ticketKey = null,
+        private ?string $tag,
+        private ?int $prefixLength,
+        private ?string $assignee,
+        private ?int $separatorOffset,
+        private ?string $ticketKey,
     ) {
     }
 
@@ -34,6 +35,11 @@ final readonly class TagMetadata
     public function getPrefixLength(): ?int
     {
         return $this->prefixLength;
+    }
+
+    public function getSeparatorOffset(): ?int
+    {
+        return $this->separatorOffset;
     }
 
     public function getTag(): ?string

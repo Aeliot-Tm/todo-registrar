@@ -180,7 +180,7 @@ final class CommentPartTest extends TestCase
     #[DataProvider('getDataForTestInjectKey')]
     public function testInjectKey(string $expectedContent, string $key, int $prefixLength, array $lines): void
     {
-        $tagMetadata = new TagMetadata(null, $prefixLength);
+        $tagMetadata = new TagMetadata(null, $prefixLength, null, null, null);
         $commentPart = $this->createCommentPartWithLines($lines, $tagMetadata);
         $commentPart->injectKey($key);
         self::assertEquals($expectedContent, $commentPart->getContent());
@@ -200,7 +200,7 @@ final class CommentPartTest extends TestCase
         $this->expectException(NoPrefixException::class);
 
         $token = $this->createPhpToken();
-        $commentPart = new CommentPart($token, new TagMetadata(null, $prefixLength), $this->createLazyContext());
+        $commentPart = new CommentPart($token, new TagMetadata(null, $prefixLength, null, null, null), $this->createLazyContext());
         $commentPart->addLine('any text of line');
         $commentPart->injectKey('any key');
     }

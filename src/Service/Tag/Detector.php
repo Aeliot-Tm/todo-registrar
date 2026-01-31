@@ -23,35 +23,64 @@ final readonly class Detector
     private string $pattern;
 
     /**
-     * @param string[] $tags
+     * @param non-empty-array<string> $tags
+     * @param non-empty-array<string> $separators
      */
-    public function __construct(array $tags = ['todo', 'fixme'])
+    public function __construct(array $tags = ['todo', 'fixme'], array $separators = [':', '-'])
     {
         $tagsPart = implode('|', $tags);
         $keyRegex = implode('|', $this->getTicketKeyRegExpressions());
-        $this->pattern = <<<REGEXP
-~
-^(
-    [\s\#*/]*@?(?P<tag>$tagsPart)           # tags
-    (?:@(?P<assignee>[a-z0-9._-]+))?        # assignee
-    (\s*[:-]?\s+(?P<ticketKey>$keyRegex))?  # keyword/ticket separator & ticket key
-    \s*[:-]?\s*                             # optional spaces and colon or hyphen
-)
-~ix
-REGEXP;
+        $sepRegex = implode('|', $this->getSeparatorExpressions($separators));
+        $this->pattern = implode('', [
+            '~^(?P<prefix>',
+            "[\s\#*/]*@?(?P<tag>$tagsPart)",
+            "(?:@(?P<assignee>[a-z0-9._-]+\b))?",
+            "(?:\s*(?P<sepBefore>$sepRegex))?",
+            "\s*(?P<ticketKey>$keyRegex)?",
+            "\s*(?P<sepAfter>$sepRegex)?\s*",
+            ')~ix',
+        ]);
+    }
+
+    /**
+     * @param non-empty-array<string> $separators
+     *
+     * @return non-empty-array<string>
+     */
+    public function getSeparatorExpressions(array $separators): array
+    {
+        return array_map(
+            static fn (string $sep): string => preg_quote($sep, '~'),
+            $separators
+        );
+    }
+
+    /**
+     * @param array<string,array{0:string|null,1:int}> $matches
+     */
+    private function getSeparatorOffset(array $matches): ?int
+    {
+        foreach (['sepBefore', 'sepAfter'] as $key) {
+            if (null !== $matches[$key][0]) {
+                return $matches[$key][1];
+            }
+        }
+
+        return null;
     }
 
     public function getTagMetadata(string $line): ?TagMetadata
     {
-        if (!preg_match($this->pattern, $line, $matches, \PREG_UNMATCHED_AS_NULL)) {
+        if (!preg_match($this->pattern, $line, $matches, \PREG_UNMATCHED_AS_NULL | \PREG_OFFSET_CAPTURE)) {
             return null;
         }
 
         return new TagMetadata(
-            strtoupper($matches['tag']),
-            \strlen(rtrim($matches[1])),
-            $matches['assignee'],
-            $matches['ticketKey'],
+            strtoupper($matches['tag'][0]),
+            \strlen(rtrim($matches['prefix'][0])),
+            $matches['assignee'][0],
+            $this->getSeparatorOffset($matches),
+            $matches['ticketKey'][0],
         );
     }
 

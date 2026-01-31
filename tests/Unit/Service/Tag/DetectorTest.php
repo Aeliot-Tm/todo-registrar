@@ -36,6 +36,23 @@ final class DetectorTest extends TestCase
         yield ['// TODO @an_assignee'];
     }
 
+    public static function getDataForTestSeparatorOffset(): iterable
+    {
+        yield [7, '// TODO: fix it'];
+        yield [15, '// TODO APP-123: fix it'];
+        yield [14, '// TODO@markus: fix it'];
+        yield [22, '// TODO@markus APP-123: fix it'];
+        yield [7, '// TODO- fix it'];
+        yield [8, '// TODO - fix it'];
+    }
+
+    public static function getDataForTestSeparatorOffsetNull(): iterable
+    {
+        yield ['// TODO fix it'];
+        yield ['// TODO APP-123 fix it'];
+        yield ['// TODO@markus APP-123 fix it'];
+    }
+
     public static function getDataForTestTagDetection(): iterable
     {
         // tags collections
@@ -172,6 +189,18 @@ final class DetectorTest extends TestCase
     public function testPrefixLength(int $expectedPrefixLength, string $line): void
     {
         self::assertSame($expectedPrefixLength, $this->getTagMetadata($line)->getPrefixLength());
+    }
+
+    #[DataProvider('getDataForTestSeparatorOffset')]
+    public function testSeparatorOffset(int $expectedOffset, string $line): void
+    {
+        self::assertSame($expectedOffset, $this->getTagMetadata($line)->getSeparatorOffset());
+    }
+
+    #[DataProvider('getDataForTestSeparatorOffsetNull')]
+    public function testSeparatorOffsetNull(string $line): void
+    {
+        self::assertNull($this->getTagMetadata($line)->getSeparatorOffset());
     }
 
     #[DataProvider('getDataForTestTagDetection')]
