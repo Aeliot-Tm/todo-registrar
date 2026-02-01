@@ -163,6 +163,8 @@ function authenticate() {
  */
 ```
 
+**Note:** The position where the issue key is injected can be configured globally. See [Issue Key Injection](IssueKeyInjection.md) for details.
+
 ## Authentication Methods
 
 ### Personal Access Token (Recommended)

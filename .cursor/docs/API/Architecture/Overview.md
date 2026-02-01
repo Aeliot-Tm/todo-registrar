@@ -107,10 +107,13 @@ Located in `Dto/`:
 - `FileHeap` — File processing context with tokens and update callback
 - `ProcessStatistic` — Statistics of processing (files updated, TODOs registered)
 - `InlineConfig/*` — Inline configuration structures
+- `GeneralConfig/IssueKeyInjectionConfig` — Issue key injection configuration
+- `GeneralConfig/IssueKeyInjectionArrayConfig` — YAML config validation for injection
 
 ### Enums
 
 - `Enum/RegistrarType` — Supported issue tracker types: GitHub, GitLab, JIRA, etc.
+- `Enum/IssueKeyPosition` — Positions for issue key injection: after_separator, before_separator, before_separator_sticky
 
 ## Design Patterns
 
@@ -134,6 +137,8 @@ Located in `Dto/`:
 - `registrar` — Issue tracker type and credentials
 - `tags` — TODO tags to detect (default: `['todo', 'fixme']`)
 - `inline_config` — Inline configuration options
+- `issueKeyInjection` — Issue key injection configuration (position, separators)
+  - See [Issue Key Injection](../../Feature/IssueKeyInjection.md) for details
 
 ### STDIN Configuration
 
