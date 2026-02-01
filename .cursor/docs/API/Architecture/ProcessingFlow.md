@@ -223,20 +223,37 @@ After successful registration, inject the key back into the comment:
 $todo->injectKey($key); // Delegates to CommentPart.injectKey()
 ```
 
-**Before:**
+The injection position is configurable via `issueKeyInjection.position` setting. Three positions are supported:
+
+**Position: `after_separator` (default)**
+
 ```php
-// TODO: Fix this bug
+// Before: TODO: Fix this bug
+// After:  TODO: PROJ-123 Fix this bug
 ```
 
-**After:**
+**Position: `before_separator`**
+
 ```php
-// TODO: PROJ-123 Fix this bug
+// Before: TODO: Fix this bug
+// After:  TODO PROJ-123: Fix this bug
+```
+
+**Position: `before_separator_sticky`**
+
+```php
+// Before: TODO: Fix this bug
+// After:  TODO PROJ-123: Fix this bug
 ```
 
 **Algorithm:**
-1. Find prefix length (position after "TODO:")
-2. Insert key with proper spacing
-3. Update first line of CommentPart
+1. Find separator offset in comment text (`:` or `-`)
+2. Calculate injection offset based on configured position
+3. Insert key at calculated offset with proper spacing
+4. Add or replace separator if configured via `newSeparator` and `replaceSeparator`
+5. Update first line of CommentPart
+
+See [Issue Key Injection](../../Feature/IssueKeyInjection.md) for detailed configuration options.
 
 ### Step 9: Update Token Text
 

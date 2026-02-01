@@ -12,6 +12,7 @@ Download descriptions from files IF you need to understand the work:
 2. Features:
    - [GitHub Registrar](../docs/API/Feature/GitHubRegistrar.md)
    - [GitLab Registrar](../docs/API/Feature/GitLabRegistrar.md)
+   - [Issue Key Injection](../docs/API/Feature/IssueKeyInjection.md)
    - [JIRA Registrar](../docs/API/Feature/JIRARegistrar.md)
    - [Redmine Registrar](../docs/API/Feature/RedmineRegistrar.md)
    - [Yandex Tracker Registrar](../docs/API/Feature/YandexTrackerRegistrar.md)

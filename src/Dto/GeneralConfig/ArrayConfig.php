@@ -48,6 +48,15 @@ final class ArrayConfig
     ])]
     private mixed $tags;
 
+    #[Assert\AtLeastOneOf(
+        constraints: [
+            new Assert\IsNull(),
+            new Assert\Type(type: IssueKeyInjectionArrayConfig::class, message: 'Option "issueKeyInjection" must be an array'),
+        ],
+        message: 'Option "issueKeyInjection" must be an object or not passed at all'
+    )]
+    private mixed $issueKeyInjection;
+
     #[Assert\IsNull(message: 'Unknown configuration options detected: {{ value }}')]
     private mixed $invalidKeys = null;
 
@@ -62,9 +71,17 @@ final class ArrayConfig
         $registrar = $options['registrar'] ?? null;
         $this->registrar = \is_array($registrar) ? new RegistrarConfig($registrar) : $registrar;
 
+        $issueKeyInjection = $options['issueKeyInjection'] ?? null;
+        $this->issueKeyInjection = \is_array($issueKeyInjection) ? new IssueKeyInjectionArrayConfig($issueKeyInjection) : $issueKeyInjection;
+
         $this->tags = $options['tags'] ?? [];
 
-        $knownKeys = ['paths', 'registrar', 'tags'];
+        $knownKeys = [
+            'issueKeyInjection',
+            'paths',
+            'registrar',
+            'tags',
+        ];
         $unknownKeys = array_diff(array_keys($options), $knownKeys);
         if ($unknownKeys) {
             $this->invalidKeys = implode(', ', $unknownKeys);
@@ -89,6 +106,11 @@ final class ArrayConfig
         return $this->tags;
     }
 
+    public function getIssueKeyInjection(): ?IssueKeyInjectionArrayConfig
+    {
+        return $this->issueKeyInjection;
+    }
+
     public function getInvalidKeys(): ?string
     {
         return $this->invalidKeys;
@@ -108,6 +130,13 @@ final class ArrayConfig
                 ->inContext($context)
                 ->atPath('registrar')
                 ->validate($this->registrar);
+        }
+
+        if ($this->issueKeyInjection instanceof IssueKeyInjectionArrayConfig) {
+            $context->getValidator()
+                ->inContext($context)
+                ->atPath('issueKeyInjection')
+                ->validate($this->issueKeyInjection);
         }
     }
 }

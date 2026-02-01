@@ -13,30 +13,39 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar;
 
+use Aeliot\TodoRegistrar\Dto\GeneralConfig\IssueKeyInjectionConfig;
 use Aeliot\TodoRegistrar\Enum\RegistrarType;
 use Aeliot\TodoRegistrarContracts\FinderInterface;
 use Aeliot\TodoRegistrarContracts\GeneralConfigInterface;
 use Aeliot\TodoRegistrarContracts\InlineConfigFactoryInterface;
 use Aeliot\TodoRegistrarContracts\InlineConfigReaderInterface;
+use Aeliot\TodoRegistrarContracts\IssueKeyInjectionAwareGeneralConfigInterface;
+use Aeliot\TodoRegistrarContracts\IssueKeyInjectionConfigInterface;
 use Aeliot\TodoRegistrarContracts\RegistrarFactoryInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 #[Assert\Callback('validate')]
-class Config implements GeneralConfigInterface
+class Config implements GeneralConfigInterface, IssueKeyInjectionAwareGeneralConfigInterface
 {
+    public const DEFAULT_TAGS = ['todo', 'fixme'];
+
     private FinderInterface $finder;
     private ?InlineConfigFactoryInterface $InlineConfigFactory = null;
     private ?InlineConfigReaderInterface $inlineConfigReader = null;
+    #[Assert\Valid]
+    private ?IssueKeyInjectionConfig $issueKeyInjectionConfig = null;
+
     /**
      * @var array<string,mixed>
      */
     private array $registrarConfig;
     private RegistrarFactoryInterface|string $registrarType;
+
     /**
      * @var string[]
      */
-    private array $tags = ['todo', 'fixme'];
+    private array $tags = self::DEFAULT_TAGS;
 
     public function getFinder(): FinderInterface
     {
@@ -68,6 +77,18 @@ class Config implements GeneralConfigInterface
     public function setInlineConfigReader(?InlineConfigReaderInterface $inlineConfigReader): void
     {
         $this->inlineConfigReader = $inlineConfigReader;
+    }
+
+    public function getIssueKeyInjectionConfig(): ?IssueKeyInjectionConfigInterface
+    {
+        return $this->issueKeyInjectionConfig;
+    }
+
+    public function setIssueKeyInjectionConfig(IssueKeyInjectionConfig $config): self
+    {
+        $this->issueKeyInjectionConfig = $config;
+
+        return $this;
     }
 
     public function getRegistrarConfig(): array

@@ -14,9 +14,12 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Service;
 
 use Aeliot\TodoRegistrar\Console\OutputAdapter;
+use Aeliot\TodoRegistrar\Dto\GeneralConfig\IssueKeyInjectionConfig;
+use Aeliot\TodoRegistrar\Enum\IssueKeyPosition;
 use Aeliot\TodoRegistrar\Service\InlineConfig\ExtrasReader;
 use Aeliot\TodoRegistrar\Service\InlineConfig\InlineConfigFactory;
 use Aeliot\TodoRegistrarContracts\GeneralConfigInterface;
+use Aeliot\TodoRegistrarContracts\IssueKeyInjectionAwareGeneralConfigInterface;
 
 /**
  * @internal
@@ -33,7 +36,18 @@ final readonly class TodoBuilderFactory
     {
         $inlineConfigReader = $config->getInlineConfigReader() ?? $this->extrasReader;
         $inlineConfigFactory = $config->getInlineConfigFactory() ?? $this->inlineConfigFactory;
+        $issueKeyPosition = null;
+        $newSeparator = null;
+        $replaceSeparator = null;
+        if ($config instanceof IssueKeyInjectionAwareGeneralConfigInterface) {
+            $injectionConfig = $config->getIssueKeyInjectionConfig();
+            $issueKeyPosition = $injectionConfig?->getIssueKeyPosition();
+            $newSeparator = $injectionConfig?->getNewSeparator();
+            $replaceSeparator = $injectionConfig?->getReplaceSeparator();
+        }
+        $issueKeyPosition = IssueKeyPosition::from($issueKeyPosition ?? IssueKeyInjectionConfig::DEFAULT_ISSUE_KEY_POSITION);
+        $replaceSeparator ??= IssueKeyInjectionConfig::DEFAULT_REPLACE_SEPARATOR;
 
-        return new TodoBuilder($inlineConfigFactory, $inlineConfigReader, $output);
+        return new TodoBuilder($inlineConfigFactory, $inlineConfigReader, $issueKeyPosition, $newSeparator, $output, $replaceSeparator);
     }
 }

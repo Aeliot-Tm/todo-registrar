@@ -36,6 +36,23 @@ final class DetectorTest extends TestCase
         yield ['// TODO @an_assignee'];
     }
 
+    public static function getDataForTestSeparatorOffset(): iterable
+    {
+        yield [7, '// TODO: fix it'];
+        yield [15, '// TODO APP-123: fix it'];
+        yield [14, '// TODO@markus: fix it'];
+        yield [22, '// TODO@markus APP-123: fix it'];
+        yield [7, '// TODO- fix it'];
+        yield [8, '// TODO - fix it'];
+    }
+
+    public static function getDataForTestSeparatorOffsetNull(): iterable
+    {
+        yield ['// TODO fix it'];
+        yield ['// TODO APP-123 fix it'];
+        yield ['// TODO@markus APP-123 fix it'];
+    }
+
     public static function getDataForTestTagDetection(): iterable
     {
         // tags collections
@@ -174,6 +191,18 @@ final class DetectorTest extends TestCase
         self::assertSame($expectedPrefixLength, $this->getTagMetadata($line)->getPrefixLength());
     }
 
+    #[DataProvider('getDataForTestSeparatorOffset')]
+    public function testSeparatorOffset(int $expectedOffset, string $line): void
+    {
+        self::assertSame($expectedOffset, $this->getTagMetadata($line)->getSeparatorOffset());
+    }
+
+    #[DataProvider('getDataForTestSeparatorOffsetNull')]
+    public function testSeparatorOffsetNull(string $line): void
+    {
+        self::assertNull($this->getTagMetadata($line)->getSeparatorOffset());
+    }
+
     #[DataProvider('getDataForTestTagDetection')]
     public function testTagDetection(string $expectedTag, string $line, array $tags): void
     {
@@ -183,7 +212,7 @@ final class DetectorTest extends TestCase
     #[DataProvider('getDataForTestTagNotDetected')]
     public function testTagNotDetected(string $line, array $tags): void
     {
-        $tagMetadata = (new Detector($tags))->getTagMetadata($line);
+        $tagMetadata = (new Detector($tags, [':', '-']))->getTagMetadata($line);
         self::assertNull($tagMetadata);
     }
 
@@ -202,7 +231,7 @@ final class DetectorTest extends TestCase
 
     private function getTagMetadata(string $line, array $tags = []): TagMetadata
     {
-        $detector = $tags ? new Detector($tags) : new Detector();
+        $detector = $tags ? new Detector($tags, [':', '-']) : new Detector(['todo', 'fixme'], [':', '-']);
         $tagMetadata = $detector->getTagMetadata($line);
         self::assertInstanceOf(TagMetadata::class, $tagMetadata);
 

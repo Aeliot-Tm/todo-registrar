@@ -15,6 +15,7 @@ namespace Aeliot\TodoRegistrar\Service\Config;
 
 use Aeliot\TodoRegistrar\Config;
 use Aeliot\TodoRegistrar\Dto\GeneralConfig\ArrayConfig;
+use Aeliot\TodoRegistrar\Dto\GeneralConfig\IssueKeyInjectionConfig;
 use Aeliot\TodoRegistrar\Dto\GeneralConfig\PathsConfig;
 use Aeliot\TodoRegistrar\Exception\ConfigValidationException;
 use Aeliot\TodoRegistrar\Service\File\Finder;
@@ -43,6 +44,30 @@ final readonly class ArrayConfigFactory
         $config = (new Config())
             ->setFinder($this->createFinder($pathsConfig))
             ->setRegistrar($registrarConfig->getType(), $registrarConfig->getOptions() ?? []);
+
+        $injectionConfigDto = $arrayConfig->getIssueKeyInjection();
+        if ($injectionConfigDto) {
+            $injectionConfig = new IssueKeyInjectionConfig();
+
+            $position = $injectionConfigDto->getPosition();
+            if ($position) {
+                $injectionConfig->setIssueKeyPosition($position);
+            }
+
+            $newSeparator = $injectionConfigDto->getNewSeparator();
+            if (null !== $newSeparator) {
+                $injectionConfig->setNewSeparator($newSeparator);
+            }
+
+            $injectionConfig->setReplaceSeparator($injectionConfigDto->getReplaceSeparator());
+
+            $summarySeparators = $injectionConfigDto->getSummarySeparators();
+            if ($summarySeparators) {
+                $injectionConfig->setSummarySeparators($summarySeparators);
+            }
+
+            $config->setIssueKeyInjectionConfig($injectionConfig);
+        }
 
         $tags = $arrayConfig->getTags();
         if ($tags) {

@@ -35,6 +35,12 @@ registrar:                        # Required. Configuration of Registrar
 
 tags:                             # Optional. Accepts string (tag) or array of strings (tags) which should be processed by the script.
   - my_tag
+
+issueKeyInjection:                # Optional. Configuration for injecting issue keys back into comments
+  position: after_separator       # Optional. Position for key injection: after_separator (default), before_separator, before_separator_sticky
+  newSeparator: ':'               # Optional. Separator to add if comment has no separator
+  replaceSeparator: false         # Optional. Replace existing separator with newSeparator
+  summarySeparators: [':', '-']   # Optional. List of recognized separators (default: [':', '-'])
 ```
 
 ### Registrar options
@@ -46,6 +52,11 @@ Registrar options specific for each issue tracker see in separate documentation:
 3. [JIRA](../registrar/JIRA/config.md)
 4. [Redmine](../registrar/Redmine/config.md)
 5. [Yandex Tracker](../registrar/YandexTracker/config.md)
+
+### Issue Key Injection options
+
+The `issueKeyInjection` section controls how issue keys are injected back into TODO comments after registration.
+For detailed documentation, see [Issue Key Injection](../issue_key_injection.md).
 
 ### Loading from STDIN
 

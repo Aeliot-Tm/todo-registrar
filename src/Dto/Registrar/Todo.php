@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Dto\Registrar;
 
 use Aeliot\TodoRegistrar\Dto\Comment\CommentPart;
+use Aeliot\TodoRegistrar\Enum\IssueKeyPosition;
 use Aeliot\TodoRegistrarContracts\InlineConfigInterface;
 use Aeliot\TodoRegistrarContracts\TodoInterface;
 
@@ -26,6 +27,9 @@ class Todo implements TodoInterface
         protected ?string $assignee,
         protected CommentPart $commentPart,
         protected InlineConfigInterface $inlineConfig,
+        protected IssueKeyPosition $issueKeyPosition,
+        protected ?string $newSeparator,
+        protected bool $replaceSeparator,
     ) {
     }
 
@@ -67,6 +71,6 @@ class Todo implements TodoInterface
      */
     public function injectKey(string $key): void
     {
-        $this->commentPart->injectKey($key);
+        $this->commentPart->injectKey($key, $this->issueKeyPosition, $this->newSeparator, $this->replaceSeparator);
     }
 }

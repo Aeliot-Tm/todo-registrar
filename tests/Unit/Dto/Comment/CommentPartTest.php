@@ -16,6 +16,7 @@ namespace Aeliot\TodoRegistrar\Test\Unit\Dto\Comment;
 use Aeliot\TodoRegistrar\Dto\Comment\CommentPart;
 use Aeliot\TodoRegistrar\Dto\Parsing\MappedContext;
 use Aeliot\TodoRegistrar\Dto\Tag\TagMetadata;
+use Aeliot\TodoRegistrar\Enum\IssueKeyPosition;
 use Aeliot\TodoRegistrar\Exception\NoLineException;
 use Aeliot\TodoRegistrar\Exception\NoPrefixException;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -25,6 +26,7 @@ use PHPUnit\Framework\TestCase;
 
 #[CoversClass(CommentPart::class)]
 #[UsesClass(TagMetadata::class)]
+#[UsesClass(IssueKeyPosition::class)]
 final class CommentPartTest extends TestCase
 {
     /**
@@ -92,19 +94,422 @@ final class CommentPartTest extends TestCase
     }
 
     /**
-     * @return iterable<array{0: string, 1: string, 2: int, 3: array<string>}>
+     * @return iterable<array{
+     *     0: string,
+     *     1: string,
+     *     2: IssueKeyPosition,
+     *     3: int,
+     *     4: int|null,
+     *     5: array<string>,
+     *     6: string|null,
+     *     7: bool
+     * }>
      */
     public static function getDataForTestInjectKey(): iterable
     {
-        yield ['TODO P-1 description', 'P-1', 4, ['TODO description']];
+        // Without separator (separatorOffset = null)
         yield [
-            " * TODO: P-1 first line of description\n *       second line of description\n",
-            'P-1',
+            'TODO KEY-123 description',
+            'KEY-123',
+            IssueKeyPosition::BEFORE_SEPARATOR,
+            4,
+            null,
+            ['TODO description'],
+            null,
+            false,
+        ];
+        yield [
+            'TODO KEY-123 description',
+            'KEY-123',
+            IssueKeyPosition::AFTER_SEPARATOR,
+            4,
+            null,
+            ['TODO description'],
+            null,
+            false,
+        ];
+        yield [
+            'TODO KEY-123 description',
+            'KEY-123',
+            IssueKeyPosition::BEFORE_SEPARATOR,
+            4,
+            null,
+            ['TODO  description'],
+            null,
+            false,
+        ];
+
+        // BEFORE_SEPARATOR
+        yield [
+            'TODO KEY-123 : description',
+            'KEY-123',
+            IssueKeyPosition::BEFORE_SEPARATOR,
+            4,
+            4,
+            ['TODO: description'],
+            null,
+            false,
+        ];
+        yield [
+            'TODO KEY-123 : description',
+            'KEY-123',
+            IssueKeyPosition::BEFORE_SEPARATOR,
+            4,
+            5,
+            ['TODO : description'],
+            null,
+            false,
+        ];
+        yield [
+            'TODO KEY-123 : description',
+            'KEY-123',
+            IssueKeyPosition::BEFORE_SEPARATOR,
+            4,
+            6,
+            ['TODO  : description'],
+            null,
+            false,
+        ];
+        yield [
+            'TODO KEY-123  : description',
+            'KEY-123',
+            IssueKeyPosition::BEFORE_SEPARATOR,
+            4,
+            7,
+            ['TODO   : description'],
+            null,
+            false,
+        ];
+        yield [
+            'TODO KEY-123 - description',
+            'KEY-123',
+            IssueKeyPosition::BEFORE_SEPARATOR,
+            4,
+            4,
+            ['TODO- description'],
+            null,
+            false,
+        ];
+
+        // AFTER_SEPARATOR
+        yield [
+            'TODO: KEY-123 description',
+            'KEY-123',
+            IssueKeyPosition::AFTER_SEPARATOR,
+            4,
+            4,
+            ['TODO: description'],
+            null,
+            false,
+        ];
+        yield [
+            'TODO: KEY-123 description',
+            'KEY-123',
+            IssueKeyPosition::AFTER_SEPARATOR,
+            4,
+            4,
+            ['TODO:  description'],
+            null,
+            false,
+        ];
+        yield [
+            'TODO : KEY-123 description',
+            'KEY-123',
+            IssueKeyPosition::AFTER_SEPARATOR,
+            4,
+            5,
+            ['TODO : description'],
+            null,
+            false,
+        ];
+        yield [
+            'TODO : KEY-123 description',
+            'KEY-123',
+            IssueKeyPosition::AFTER_SEPARATOR,
+            4,
+            5,
+            ['TODO :  description'],
+            null,
+            false,
+        ];
+        yield [
+            'TODO : KEY-123  description',
+            'KEY-123',
+            IssueKeyPosition::AFTER_SEPARATOR,
+            4,
+            5,
+            ['TODO :   description'],
+            null,
+            false,
+        ];
+        yield [
+            'TODO- KEY-123 description',
+            'KEY-123',
+            IssueKeyPosition::AFTER_SEPARATOR,
+            4,
+            4,
+            ['TODO- description'],
+            null,
+            false,
+        ];
+
+        // Multi-line comments with AFTER_SEPARATOR
+        yield [
+            " * TODO: KEY-123 first line of description\n *       second line of description\n",
+            'KEY-123',
+            IssueKeyPosition::AFTER_SEPARATOR,
+            8,
             8,
             [
                 " * TODO: first line of description\n",
                 " *       second line of description\n",
             ],
+            null,
+            false,
+        ];
+
+        // Multi-line comments with BEFORE_SEPARATOR
+        yield [
+            " * TODO: KEY-123 first line of description\n *       second line of description\n",
+            'KEY-123',
+            IssueKeyPosition::BEFORE_SEPARATOR,
+            8,
+            8,
+            [
+                " * TODO: first line of description\n",
+                " *       second line of description\n",
+            ],
+            null,
+            false,
+        ];
+
+        // Edge cases: no spaces
+        yield [
+            'TODO KEY-123 :description',
+            'KEY-123',
+            IssueKeyPosition::BEFORE_SEPARATOR,
+            4,
+            4,
+            ['TODO:description'],
+            null,
+            false,
+        ];
+        yield [
+            'TODO: KEY-123 description',
+            'KEY-123',
+            IssueKeyPosition::AFTER_SEPARATOR,
+            4,
+            4,
+            ['TODO:description'],
+            null,
+            false,
+        ];
+        yield [
+            'TODO KEY-123 description',
+            'KEY-123',
+            IssueKeyPosition::BEFORE_SEPARATOR,
+            4,
+            null,
+            ['TODOdescription'],
+            null,
+            false,
+        ];
+
+        // BEFORE_SEPARATOR_STICKY
+        yield [
+            'TODO KEY-123: description',
+            'KEY-123',
+            IssueKeyPosition::BEFORE_SEPARATOR_STICKY,
+            4,
+            4,
+            ['TODO: description'],
+            null,
+            false,
+        ];
+        yield [
+            'TODO KEY-123: description',
+            'KEY-123',
+            IssueKeyPosition::BEFORE_SEPARATOR_STICKY,
+            4,
+            5,
+            ['TODO : description'],
+            null,
+            false,
+        ];
+        yield [
+            'TODO  KEY-123: description',
+            'KEY-123',
+            IssueKeyPosition::BEFORE_SEPARATOR_STICKY,
+            4,
+            6,
+            ['TODO  : description'],
+            null,
+            false,
+        ];
+        yield [
+            'TODO    KEY-123: description',
+            'KEY-123',
+            IssueKeyPosition::BEFORE_SEPARATOR_STICKY,
+            4,
+            8,
+            ['TODO    : description'],
+            null,
+            false,
+        ];
+        yield [
+            'TODO KEY-123- description',
+            'KEY-123',
+            IssueKeyPosition::BEFORE_SEPARATOR_STICKY,
+            4,
+            4,
+            ['TODO- description'],
+            null,
+            false,
+        ];
+        yield [
+            'TODO   KEY-123- description',
+            'KEY-123',
+            IssueKeyPosition::BEFORE_SEPARATOR_STICKY,
+            4,
+            7,
+            ['TODO   - description'],
+            null,
+            false,
+        ];
+        yield [
+            'TODO KEY-123: description',
+            'KEY-123',
+            IssueKeyPosition::BEFORE_SEPARATOR_STICKY,
+            4,
+            4,
+            ['TODO: description'],
+            null,
+            false,
+        ];
+        yield [
+            " * TODO KEY-123: first line of description\n *       second line of description\n",
+            'KEY-123',
+            IssueKeyPosition::BEFORE_SEPARATOR_STICKY,
+            8,
+            7,
+            [
+                " * TODO: first line of description\n",
+                " *       second line of description\n",
+            ],
+            null,
+            false,
+        ];
+        yield [
+            " * TODO    KEY-123: first line of description\n *       second line of description\n",
+            'KEY-123',
+            IssueKeyPosition::BEFORE_SEPARATOR_STICKY,
+            8,
+            11,
+            [
+                " * TODO    : first line of description\n",
+                " *       second line of description\n",
+            ],
+            null,
+            false,
+        ];
+
+        // NewSeparator tests
+        // Case 1: NewSeparator=null (ignore ReplaceSeparator)
+        yield [
+            'TODO: KEY-123 text',
+            'KEY-123',
+            IssueKeyPosition::AFTER_SEPARATOR,
+            4,
+            4,
+            ['TODO: text'],
+            null,
+            true,
+        ];
+        yield [
+            'TODO: KEY-123 text',
+            'KEY-123',
+            IssueKeyPosition::AFTER_SEPARATOR,
+            4,
+            4,
+            ['TODO: text'],
+            null,
+            false,
+        ];
+
+        // Case 2: ReplaceSeparator=true and separator is found
+        yield [
+            'TODO- KEY-123 text',
+            'KEY-123',
+            IssueKeyPosition::AFTER_SEPARATOR,
+            4,
+            4,
+            ['TODO: text'],
+            '-',
+            true,
+        ];
+        yield [
+            'TODO | KEY-123 text',
+            'KEY-123',
+            IssueKeyPosition::AFTER_SEPARATOR,
+            4,
+            5,
+            ['TODO : text'],
+            '|',
+            true,
+        ];
+
+        // Case 3: ReplaceSeparator=false and separator is found (ignore NewSeparator)
+        yield [
+            'TODO: KEY-123 text',
+            'KEY-123',
+            IssueKeyPosition::AFTER_SEPARATOR,
+            4,
+            4,
+            ['TODO: text'],
+            '-',
+            false,
+        ];
+        yield [
+            'TODO- KEY-123 text',
+            'KEY-123',
+            IssueKeyPosition::AFTER_SEPARATOR,
+            4,
+            4,
+            ['TODO- text'],
+            ':',
+            false,
+        ];
+
+        // Case 4: Separator is found and NewSeparator is defined
+        yield [
+            'TODO KEY-123 - text',
+            'KEY-123',
+            IssueKeyPosition::BEFORE_SEPARATOR,
+            4,
+            null,
+            ['TODO text'],
+            '-',
+            false,
+        ];
+        yield [
+            'TODO KEY-123 - text',
+            'KEY-123',
+            IssueKeyPosition::BEFORE_SEPARATOR,
+            4,
+            null,
+            ['TODO text'],
+            '-',
+            true,
+        ];
+        yield [
+            'TODO KEY-123 : text',
+            'KEY-123',
+            IssueKeyPosition::BEFORE_SEPARATOR,
+            4,
+            null,
+            ['TODO  text'],
+            ':',
+            false,
         ];
     }
 
@@ -178,11 +583,19 @@ final class CommentPartTest extends TestCase
      * @param string[] $lines
      */
     #[DataProvider('getDataForTestInjectKey')]
-    public function testInjectKey(string $expectedContent, string $key, int $prefixLength, array $lines): void
-    {
-        $tagMetadata = new TagMetadata(null, $prefixLength);
+    public function testInjectKey(
+        string $expectedContent,
+        string $key,
+        IssueKeyPosition $position,
+        int $prefixLength,
+        ?int $separatorOffset,
+        array $lines,
+        ?string $newSeparator,
+        bool $replaceSeparator
+    ): void {
+        $tagMetadata = new TagMetadata(null, $prefixLength, null, $separatorOffset, null);
         $commentPart = $this->createCommentPartWithLines($lines, $tagMetadata);
-        $commentPart->injectKey($key);
+        $commentPart->injectKey($key, $position, $newSeparator, $replaceSeparator);
         self::assertEquals($expectedContent, $commentPart->getContent());
     }
 
@@ -191,7 +604,7 @@ final class CommentPartTest extends TestCase
         $this->expectException(NoLineException::class);
         $token = $this->createPhpToken();
         $commentPart = new CommentPart($token, null, $this->createLazyContext());
-        $commentPart->injectKey('any key');
+        $commentPart->injectKey('any key', IssueKeyPosition::AFTER_SEPARATOR, null, false);
     }
 
     #[DataProvider('getDataForTestInjectKeyThrowsExceptionWithoutPrefix')]
@@ -200,9 +613,9 @@ final class CommentPartTest extends TestCase
         $this->expectException(NoPrefixException::class);
 
         $token = $this->createPhpToken();
-        $commentPart = new CommentPart($token, new TagMetadata(null, $prefixLength), $this->createLazyContext());
+        $commentPart = new CommentPart($token, new TagMetadata(null, $prefixLength, null, null, null), $this->createLazyContext());
         $commentPart->addLine('any text of line');
-        $commentPart->injectKey('any key');
+        $commentPart->injectKey('any key', IssueKeyPosition::AFTER_SEPARATOR, null, false);
     }
 
     /**
