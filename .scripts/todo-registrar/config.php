@@ -29,6 +29,8 @@ return (new Config())
             'addTagToLabels' => true,
             'labels' => ['tech-debt'],
             'tagPrefix' => 'tag-',
+            'showContext' => 'numbered',
+            'contextTitle' => '## Added in position:',
         ],
         'service' => [
             'personalAccessToken' => $_ENV['GH_PERSONAL_ACCESS_TOKEN'] ?? $_SERVER['GH_PERSONAL_ACCESS_TOKEN'] ?? null,
