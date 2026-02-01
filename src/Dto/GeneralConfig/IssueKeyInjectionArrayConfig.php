@@ -21,19 +21,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 final class IssueKeyInjectionArrayConfig
 {
-    /**
-     * TODO: #273 Consider renaming field 'issueKeyPosition' to 'position'
-     *       Hove to use same name as in public interface but after the moving of it
-     *       into separate object it can be more useful to rename it to 'position'.
-     *       So it can be marked as deprecated till next major release.
-     *       Support of both fields is already added for YAML format.
-     */
-    #[Assert\Choice(
-        callback: [IssueKeyPosition::class, 'getValues'],
-        message: 'Option "issueKeyInjection.issueKeyPosition" must be one of: {{ choices }}'
-    )]
-    private mixed $issueKeyPosition;
-
     #[Assert\Length(exactly: 1, exactMessage: 'Option "issueKeyInjection.newSeparator" must be exactly 1 character')]
     private mixed $newSeparator;
 
@@ -72,7 +59,6 @@ final class IssueKeyInjectionArrayConfig
     public function __construct(array $options)
     {
         $this->position = $options['position'] ?? null;
-        $this->issueKeyPosition = $options['issueKeyPosition'] ?? null;
         $this->newSeparator = $options['newSeparator'] ?? null;
         $this->replaceSeparator = $options['replaceSeparator'] ?? false;
         $this->summarySeparators = $options['summarySeparators'] ?? null;
@@ -96,7 +82,7 @@ final class IssueKeyInjectionArrayConfig
 
     public function getPosition(): ?string
     {
-        return $this->position ?? $this->issueKeyPosition;
+        return $this->position;
     }
 
     /**

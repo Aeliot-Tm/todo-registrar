@@ -37,14 +37,6 @@ Located in `CommentPart::injectKey()`:
 3. Insert key at calculated offset with proper spacing
 4. Add or replace separator if configured
 
-### Configuration Priority
-
-Two fields describing position are available:
-- `position` (recommended)
-- `issueKeyPosition` (deprecated, added for compatibility with interface)
-
-The `position` field has priority over the deprecated `issueKeyPosition` field:
-
 ## Default Values
 
 If `issueKeyInjection` is not configured, the following defaults are used:
