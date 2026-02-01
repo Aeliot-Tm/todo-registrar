@@ -37,6 +37,12 @@ class Config implements GeneralConfigInterface, IssueKeyInjectionAwareGeneralCon
     private ?IssueKeyInjectionConfig $issueKeyInjectionConfig = null;
 
     /**
+     * NOTE: It has to be validated by registrar factory.
+     *       Symfony Validator passed for that purpose.
+     *       Even it is not described in interface (to keep it as simple as possible)
+     *
+     * @see \Aeliot\TodoRegistrar\Service\RegistrarProvider::getRegistrar()
+     *
      * @var array<string,mixed>
      */
     private array $registrarConfig;
