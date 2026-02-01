@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Dto\GeneralConfig;
 
-use Aeliot\TodoRegistrar\Enum\IssueKeyPosition;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
@@ -49,35 +48,14 @@ final class ArrayConfig
     ])]
     private mixed $tags;
 
-    #[Assert\Choice(
-        callback: [IssueKeyPosition::class, 'getValues'],
-        message: 'Option "issueKeyPosition" must be one of: {{ choices }}'
+    #[Assert\AtLeastOneOf(
+        constraints: [
+            new Assert\IsNull(),
+            new Assert\Type(type: IssueKeyInjectionArrayConfig::class, message: 'Option "issueKeyInjection" must be an array'),
+        ],
+        message: 'Option "issueKeyInjection" must be an object or not passed at all'
     )]
-    private mixed $issueKeyPosition;
-
-    #[Assert\Sequentially(constraints: [
-        new Assert\Type(type: 'array', message: 'Option "summarySeparator" must be an array'),
-        new Assert\All(constraints: [
-            new Assert\Sequentially(constraints: [
-                new Assert\Type(type: 'string', message: 'Each separator must be a string'),
-                new Assert\Length(
-                    exactly: 1,
-                    exactMessage: 'Each separator must be exactly 1 character'
-                ),
-            ]),
-        ]),
-    ])]
-    private mixed $summarySeparators;
-
-    #[Assert\Sequentially(constraints: [
-        new Assert\Type(type: 'string', message: 'Option "newSeparator" must be a string'),
-        new Assert\Length(exactly: 1, exactMessage: 'Option "newSeparator" must be exactly 1 character'),
-    ])]
-    private mixed $newSeparator;
-
-    #[Assert\NotNull(message: 'Option "replaceSeparator" cannot be null')]
-    #[Assert\Type(type: 'bool', message: 'Option "replaceSeparator" must be a boolean')]
-    private mixed $replaceSeparator;
+    private mixed $issueKeyInjection;
 
     #[Assert\IsNull(message: 'Unknown configuration options detected: {{ value }}')]
     private mixed $invalidKeys = null;
@@ -93,20 +71,15 @@ final class ArrayConfig
         $registrar = $options['registrar'] ?? null;
         $this->registrar = \is_array($registrar) ? new RegistrarConfig($registrar) : $registrar;
 
-        $this->issueKeyPosition = $options['issueKeyPosition'] ?? null;
-        $this->newSeparator = $options['newSeparator'] ?? null;
-        $this->replaceSeparator = $options['replaceSeparator'] ?? false;
-        $this->summarySeparators = (array) ($options['summarySeparator'] ?? [':', '-']);
+        $issueKeyInjection = $options['issueKeyInjection'] ?? null;
+        $this->issueKeyInjection = \is_array($issueKeyInjection) ? new IssueKeyInjectionArrayConfig($issueKeyInjection) : $issueKeyInjection;
 
         $this->tags = $options['tags'] ?? [];
 
         $knownKeys = [
-            'issueKeyPosition',
-            'newSeparator',
+            'issueKeyInjection',
             'paths',
             'registrar',
-            'replaceSeparator',
-            'summarySeparator',
             'tags',
         ];
         $unknownKeys = array_diff(array_keys($options), $knownKeys);
@@ -133,27 +106,9 @@ final class ArrayConfig
         return $this->tags;
     }
 
-    public function getIssueKeyPosition(): ?string
+    public function getIssueKeyInjection(): ?IssueKeyInjectionArrayConfig
     {
-        return $this->issueKeyPosition;
-    }
-
-    public function getNewSeparator(): ?string
-    {
-        return $this->newSeparator;
-    }
-
-    public function getReplaceSeparator(): bool
-    {
-        return $this->replaceSeparator;
-    }
-
-    /**
-     * @return string[]|null
-     */
-    public function getSummarySeparators(): ?array
-    {
-        return $this->summarySeparators;
+        return $this->issueKeyInjection;
     }
 
     public function getInvalidKeys(): ?string
@@ -175,6 +130,13 @@ final class ArrayConfig
                 ->inContext($context)
                 ->atPath('registrar')
                 ->validate($this->registrar);
+        }
+
+        if ($this->issueKeyInjection instanceof IssueKeyInjectionArrayConfig) {
+            $context->getValidator()
+                ->inContext($context)
+                ->atPath('issueKeyInjection')
+                ->validate($this->issueKeyInjection);
         }
     }
 }

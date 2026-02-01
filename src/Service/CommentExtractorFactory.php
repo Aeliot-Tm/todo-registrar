@@ -14,10 +14,11 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Service;
 
 use Aeliot\TodoRegistrar\Config;
+use Aeliot\TodoRegistrar\Dto\GeneralConfig\IssueKeyInjectionConfig;
 use Aeliot\TodoRegistrar\Service\Comment\Extractor as CommentExtractor;
 use Aeliot\TodoRegistrar\Service\Tag\Detector as TagDetector;
 use Aeliot\TodoRegistrarContracts\GeneralConfigInterface;
-use Aeliot\TodoRegistrarContracts\IssueKeyPositionConfigInterface;
+use Aeliot\TodoRegistrarContracts\IssueKeyInjectionAwareGeneralConfigInterface;
 
 /**
  * @internal
@@ -27,11 +28,11 @@ final readonly class CommentExtractorFactory
     public function create(GeneralConfigInterface $config): CommentExtractor
     {
         $separators = [];
-        if ($config instanceof IssueKeyPositionConfigInterface) {
-            $separators = $config->getSummarySeparators();
+        if ($config instanceof IssueKeyInjectionAwareGeneralConfigInterface) {
+            $separators = $config->getIssueKeyInjectionConfig()->getSummarySeparators();
         }
         if (!$separators) {
-            $separators = Config::DEFAULT_SEPARATORS;
+            $separators = IssueKeyInjectionConfig::DEFAULT_SEPARATORS;
         }
 
         $tags = $config->getTags() ?: Config::DEFAULT_TAGS;

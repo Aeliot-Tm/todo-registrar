@@ -13,38 +13,28 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar;
 
-use Aeliot\TodoRegistrar\Enum\IssueKeyPosition;
+use Aeliot\TodoRegistrar\Dto\GeneralConfig\IssueKeyInjectionConfig;
 use Aeliot\TodoRegistrar\Enum\RegistrarType;
 use Aeliot\TodoRegistrarContracts\FinderInterface;
 use Aeliot\TodoRegistrarContracts\GeneralConfigInterface;
 use Aeliot\TodoRegistrarContracts\InlineConfigFactoryInterface;
 use Aeliot\TodoRegistrarContracts\InlineConfigReaderInterface;
-use Aeliot\TodoRegistrarContracts\IssueKeyPositionConfigInterface;
+use Aeliot\TodoRegistrarContracts\IssueKeyInjectionAwareGeneralConfigInterface;
+use Aeliot\TodoRegistrarContracts\IssueKeyInjectionConfigInterface;
 use Aeliot\TodoRegistrarContracts\RegistrarFactoryInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 #[Assert\Callback('validate')]
-class Config implements GeneralConfigInterface, IssueKeyPositionConfigInterface
+class Config implements GeneralConfigInterface, IssueKeyInjectionAwareGeneralConfigInterface
 {
-    public const DEFAULT_ISSUE_KEY_POSITION = IssueKeyPosition::AFTER_SEPARATOR->value;
-    public const DEFAULT_REPLACE_SEPARATOR = false;
-    public const DEFAULT_SEPARATORS = [':', '-'];
     public const DEFAULT_TAGS = ['todo', 'fixme'];
 
     private FinderInterface $finder;
     private ?InlineConfigFactoryInterface $InlineConfigFactory = null;
     private ?InlineConfigReaderInterface $inlineConfigReader = null;
-
-    #[Assert\Choice(
-        callback: [IssueKeyPosition::class, 'getValues'],
-        message: 'Option "issueKeyPosition" must be one of: {{ choices }}'
-    )]
-    private string $issueKeyPosition = self::DEFAULT_ISSUE_KEY_POSITION;
-
-    #[Assert\Length(exactly: 1, exactMessage: 'Option "newSeparator" must be exactly 1 character')]
-    private ?string $newSeparator = null;
-    private bool $replaceSeparator = self::DEFAULT_REPLACE_SEPARATOR;
+    #[Assert\Valid]
+    private IssueKeyInjectionConfig $issueKeyInjectionConfig;
 
     /**
      * @var array<string,mixed>
@@ -55,12 +45,12 @@ class Config implements GeneralConfigInterface, IssueKeyPositionConfigInterface
     /**
      * @var string[]
      */
-    private array $summarySeparator = self::DEFAULT_SEPARATORS;
-
-    /**
-     * @var string[]
-     */
     private array $tags = self::DEFAULT_TAGS;
+
+    public function __construct()
+    {
+        $this->issueKeyInjectionConfig = new IssueKeyInjectionConfig();
+    }
 
     public function getFinder(): FinderInterface
     {
@@ -94,34 +84,16 @@ class Config implements GeneralConfigInterface, IssueKeyPositionConfigInterface
         $this->inlineConfigReader = $inlineConfigReader;
     }
 
-    public function getIssueKeyPosition(): ?string
+    public function getIssueKeyInjectionConfig(): IssueKeyInjectionConfigInterface
     {
-        return $this->issueKeyPosition;
+        return $this->issueKeyInjectionConfig;
     }
 
-    public function setIssueKeyPosition(IssueKeyPosition|string $position): void
+    public function setIssueKeyInjectionConfig(IssueKeyInjectionConfig $config): self
     {
-        $this->issueKeyPosition = $position instanceof IssueKeyPosition ? $position->value : $position;
-    }
+        $this->issueKeyInjectionConfig = $config;
 
-    public function getNewSeparator(): ?string
-    {
-        return $this->newSeparator;
-    }
-
-    public function setNewSeparator(?string $newSeparator): void
-    {
-        $this->newSeparator = $newSeparator;
-    }
-
-    public function getReplaceSeparator(): bool
-    {
-        return $this->replaceSeparator;
-    }
-
-    public function setReplaceSeparator(bool $replaceSeparator): void
-    {
-        $this->replaceSeparator = $replaceSeparator;
+        return $this;
     }
 
     public function getRegistrarConfig(): array
@@ -147,19 +119,6 @@ class Config implements GeneralConfigInterface, IssueKeyPositionConfigInterface
         $this->registrarConfig = $config;
 
         return $this;
-    }
-
-    public function getSummarySeparators(): array
-    {
-        return $this->summarySeparator;
-    }
-
-    /**
-     * @param string[] $summarySeparator
-     */
-    public function setSummarySeparators(array $summarySeparator): void
-    {
-        $this->summarySeparator = $summarySeparator;
     }
 
     public function getTags(): array
