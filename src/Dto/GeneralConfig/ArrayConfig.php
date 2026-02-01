@@ -17,11 +17,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
- * DTO for validating array configuration before creating Config object.
- *
  * @internal
  */
-#[Assert\Callback('validateNestedConfigs')]
 final class ArrayConfig
 {
     #[Assert\AtLeastOneOf(
@@ -116,6 +113,7 @@ final class ArrayConfig
         return $this->invalidKeys;
     }
 
+    #[Assert\Callback]
     public function validateNestedConfigs(ExecutionContextInterface $context): void
     {
         if ($this->paths instanceof PathsConfig) {
