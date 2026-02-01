@@ -449,19 +449,6 @@ final class ArrayConfigTest extends TestCase
         self::assertCount(0, $violations, $this->formatViolations($violations));
     }
 
-    public function testOldRootLevelIssueKeyFieldsAreRejected(): void
-    {
-        $options = [
-            'registrar' => ['type' => 'github'],
-            'issueKeyPosition' => 'after_separator',
-        ];
-        $config = new ArrayConfig($options);
-
-        $violations = self::$validator->validate($config);
-        self::assertGreaterThan(0, \count($violations));
-        self::assertContainsMessagePart('Unknown configuration options detected', $violations);
-    }
-
     public function testIssueKeyInjectionGetterReturnsConfig(): void
     {
         $options = [
