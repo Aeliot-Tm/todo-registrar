@@ -20,7 +20,7 @@ final class IssueKeyInjectionConfig implements IssueKeyInjectionConfigInterface
 {
     public const DEFAULT_ISSUE_KEY_POSITION = IssueKeyPosition::AFTER_SEPARATOR->value;
     public const DEFAULT_REPLACE_SEPARATOR = false;
-    public const DEFAULT_SEPARATORS = [':', '-'];
+    public const DEFAULT_SEPARATORS = [':', '-', '>'];
 
     private ?string $issueKeyPosition = null;
     private ?string $newSeparator = null;
