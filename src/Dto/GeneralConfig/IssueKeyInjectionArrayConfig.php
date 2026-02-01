@@ -22,7 +22,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 final class IssueKeyInjectionArrayConfig
 {
     /**
-     * TODO: Consider renaming field 'issueKeyPosition' to 'position'
+     * TODO: #273 Consider renaming field 'issueKeyPosition' to 'position'
      *       Hove to use same name as in public interface but after the moving of it
      *       into separate object it can be more useful to rename it to 'position'.
      *       So it can be marked as deprecated till next major release.
