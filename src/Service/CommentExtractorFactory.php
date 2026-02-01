@@ -29,7 +29,7 @@ final readonly class CommentExtractorFactory
     {
         $separators = [];
         if ($config instanceof IssueKeyInjectionAwareGeneralConfigInterface) {
-            $separators = $config->getIssueKeyInjectionConfig()->getSummarySeparators();
+            $separators = $config->getIssueKeyInjectionConfig()?->getSummarySeparators();
         }
         if (!$separators) {
             $separators = IssueKeyInjectionConfig::DEFAULT_SEPARATORS;

@@ -34,7 +34,7 @@ class Config implements GeneralConfigInterface, IssueKeyInjectionAwareGeneralCon
     private ?InlineConfigFactoryInterface $InlineConfigFactory = null;
     private ?InlineConfigReaderInterface $inlineConfigReader = null;
     #[Assert\Valid]
-    private IssueKeyInjectionConfig $issueKeyInjectionConfig;
+    private ?IssueKeyInjectionConfig $issueKeyInjectionConfig = null;
 
     /**
      * @var array<string,mixed>
@@ -46,11 +46,6 @@ class Config implements GeneralConfigInterface, IssueKeyInjectionAwareGeneralCon
      * @var string[]
      */
     private array $tags = self::DEFAULT_TAGS;
-
-    public function __construct()
-    {
-        $this->issueKeyInjectionConfig = new IssueKeyInjectionConfig();
-    }
 
     public function getFinder(): FinderInterface
     {
@@ -84,7 +79,7 @@ class Config implements GeneralConfigInterface, IssueKeyInjectionAwareGeneralCon
         $this->inlineConfigReader = $inlineConfigReader;
     }
 
-    public function getIssueKeyInjectionConfig(): IssueKeyInjectionConfigInterface
+    public function getIssueKeyInjectionConfig(): ?IssueKeyInjectionConfigInterface
     {
         return $this->issueKeyInjectionConfig;
     }

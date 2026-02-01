@@ -38,14 +38,15 @@ final readonly class TodoBuilderFactory
         $inlineConfigFactory = $config->getInlineConfigFactory() ?? $this->inlineConfigFactory;
         $issueKeyPosition = null;
         $newSeparator = null;
-        $replaceSeparator = IssueKeyInjectionConfig::DEFAULT_REPLACE_SEPARATOR;
+        $replaceSeparator = null;
         if ($config instanceof IssueKeyInjectionAwareGeneralConfigInterface) {
             $injectionConfig = $config->getIssueKeyInjectionConfig();
-            $issueKeyPosition = $injectionConfig->getIssueKeyPosition();
-            $newSeparator = $injectionConfig->getNewSeparator();
-            $replaceSeparator = $injectionConfig->getReplaceSeparator();
+            $issueKeyPosition = $injectionConfig?->getIssueKeyPosition();
+            $newSeparator = $injectionConfig?->getNewSeparator();
+            $replaceSeparator = $injectionConfig?->getReplaceSeparator();
         }
         $issueKeyPosition = IssueKeyPosition::from($issueKeyPosition ?? IssueKeyInjectionConfig::DEFAULT_ISSUE_KEY_POSITION);
+        $replaceSeparator ??= IssueKeyInjectionConfig::DEFAULT_REPLACE_SEPARATOR;
 
         return new TodoBuilder($inlineConfigFactory, $inlineConfigReader, $issueKeyPosition, $newSeparator, $output, $replaceSeparator);
     }
