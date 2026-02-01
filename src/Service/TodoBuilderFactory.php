@@ -41,7 +41,7 @@ final readonly class TodoBuilderFactory
         $replaceSeparator = null;
         if ($config instanceof IssueKeyInjectionAwareGeneralConfigInterface) {
             $injectionConfig = $config->getIssueKeyInjectionConfig();
-            $issueKeyPosition = $injectionConfig?->getIssueKeyPosition();
+            $issueKeyPosition = $injectionConfig?->getPosition();
             $newSeparator = $injectionConfig?->getNewSeparator();
             $replaceSeparator = $injectionConfig?->getReplaceSeparator();
         }

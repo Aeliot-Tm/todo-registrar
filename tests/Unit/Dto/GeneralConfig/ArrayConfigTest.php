@@ -449,19 +449,6 @@ final class ArrayConfigTest extends TestCase
         self::assertCount(0, $violations, $this->formatViolations($violations));
     }
 
-    public function testOldRootLevelIssueKeyFieldsAreRejected(): void
-    {
-        $options = [
-            'registrar' => ['type' => 'github'],
-            'issueKeyPosition' => 'after_separator',
-        ];
-        $config = new ArrayConfig($options);
-
-        $violations = self::$validator->validate($config);
-        self::assertGreaterThan(0, \count($violations));
-        self::assertContainsMessagePart('Unknown configuration options detected', $violations);
-    }
-
     public function testIssueKeyInjectionGetterReturnsConfig(): void
     {
         $options = [
@@ -525,7 +512,7 @@ final class ArrayConfigTest extends TestCase
         $options = [
             'registrar' => ['type' => 'github'],
             'issueKeyInjection' => [
-                'issueKeyPosition' => 'after_separator',
+                'position' => 'after_separator',
                 'newSeparator' => '=',
                 'replaceSeparator' => false,
                 'summarySeparators' => [':'],
@@ -536,25 +523,6 @@ final class ArrayConfigTest extends TestCase
         $injectionConfig = $config->getIssueKeyInjection();
         self::assertNotNull($injectionConfig);
         self::assertSame('after_separator', $injectionConfig->getPosition());
-
-        $violations = self::$validator->validate($config);
-        self::assertCount(0, $violations, $this->formatViolations($violations));
-    }
-
-    public function testIssueKeyInjectionPositionFieldHasPriority(): void
-    {
-        $options = [
-            'registrar' => ['type' => 'github'],
-            'issueKeyInjection' => [
-                'position' => 'before_separator',
-                'issueKeyPosition' => 'after_separator',
-            ],
-        ];
-        $config = new ArrayConfig($options);
-
-        $injectionConfig = $config->getIssueKeyInjection();
-        self::assertNotNull($injectionConfig);
-        self::assertSame('before_separator', $injectionConfig->getPosition(), 'New field "position" should have priority over old "issueKeyPosition"');
 
         $violations = self::$validator->validate($config);
         self::assertCount(0, $violations, $this->formatViolations($violations));
@@ -580,14 +548,14 @@ final class ArrayConfigTest extends TestCase
         $options = [
             'registrar' => ['type' => 'github'],
             'issueKeyInjection' => [
-                'issueKeyPosition' => 'invalid_value',
+                'position' => 'invalid_value',
             ],
         ];
         $config = new ArrayConfig($options);
 
         $violations = self::$validator->validate($config);
         self::assertGreaterThan(0, \count($violations));
-        self::assertContainsMessagePart('Option "issueKeyInjection.issueKeyPosition" must be one of:', $violations);
+        self::assertContainsMessagePart('Option "issueKeyInjection.position" must be one of:', $violations);
     }
 
     private static function assertContainsMessage(string $expected, iterable $violations): void

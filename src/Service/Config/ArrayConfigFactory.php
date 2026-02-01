@@ -51,7 +51,7 @@ final readonly class ArrayConfigFactory
 
             $position = $injectionConfigDto->getPosition();
             if ($position) {
-                $injectionConfig->setIssueKeyPosition($position);
+                $injectionConfig->setPosition($position);
             }
 
             $newSeparator = $injectionConfigDto->getNewSeparator();

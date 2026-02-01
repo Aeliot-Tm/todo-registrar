@@ -25,9 +25,9 @@ final class IssueKeyInjectionConfig implements IssueKeyInjectionConfigInterface
 
     #[Assert\Choice(
         callback: [IssueKeyPosition::class, 'getValues'],
-        message: 'Option "issueKeyPosition" must be one of: {{ choices }}'
+        message: 'Option "position" must be one of: {{ choices }}'
     )]
-    private ?string $issueKeyPosition = null;
+    private ?string $position = null;
 
     #[Assert\Length(exactly: 1, exactMessage: 'Option "issueKeyInjection.newSeparator" must be exactly 1 character')]
     private ?string $newSeparator = null;
@@ -42,14 +42,14 @@ final class IssueKeyInjectionConfig implements IssueKeyInjectionConfigInterface
     ])]
     private array $summarySeparators = self::DEFAULT_SEPARATORS;
 
-    public function getIssueKeyPosition(): ?string
+    public function getPosition(): ?string
     {
-        return $this->issueKeyPosition;
+        return $this->position;
     }
 
-    public function setIssueKeyPosition(IssueKeyPosition|string $position): void
+    public function setPosition(IssueKeyPosition|string $position): void
     {
-        $this->issueKeyPosition = $position instanceof IssueKeyPosition ? $position->value : $position;
+        $this->position = $position instanceof IssueKeyPosition ? $position->value : $position;
     }
 
     public function getNewSeparator(): ?string
