@@ -27,6 +27,36 @@ It may be split to multiple lines. But don't forget about indents of each line.
  */
 ```
 
+### Multi-word Keys and Values
+
+You can use double quotes for multi-word keys and values, following JSON syntax:
+
+```php
+/**
+ * TODO: summary
+ *       {EXTRAS: {
+ *          labels: ["bug fix", "high priority", "needs review"],
+ *          "custom field": "some value"
+ *       }}
+ */
+```
+
+Supported escape sequences (JSON-compliant):
+- `\"` - double quote
+- `\\` - backslash
+- `\/` - forward slash
+- `\n` - newline
+- `\r` - carriage return
+- `\t` - tab
+- `\b` - backspace
+- `\f` - form feed
+
+You can mix quoted and unquoted values:
+
+```php
+{EXTRAS: {labels: [simple-label, "complex label with spaces"]}}
+```
+
 ### Examples
 
 Below are examples of settings supported by the implemented JIRA-registrar.

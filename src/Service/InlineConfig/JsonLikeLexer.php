@@ -37,7 +37,7 @@ final class JsonLikeLexer implements \Iterator, \Countable
     public const T_CURLY_BRACES_OPEN = 1123;
     public const T_CURLY_BRACES_CLOSE = 1125;
 
-    /** @var array<string, self::T*> */
+    /** @var array<string, self::T_*> */
     private const TYPE_MAP = [
         ',' => self::T_COMMA,
         ':' => self::T_COLON,
@@ -156,6 +156,7 @@ final class JsonLikeLexer implements \Iterator, \Countable
     {
         return [
             '[,:\[\]\{\}]',
+            '"(?:[^"\\\\]|\\\\.)*"',
             '[0-9a-z_.-]+',
         ];
     }
@@ -174,9 +175,41 @@ final class JsonLikeLexer implements \Iterator, \Countable
         return self::TYPE_MAP[$value] ?? self::T_STRING;
     }
 
+    private function isQuoted(string $value): bool
+    {
+        return \strlen($value) >= 2
+            && '"' === $value[0]
+            && '"' === $value[\strlen($value) - 1];
+    }
+
+    private function unquote(string $value): string
+    {
+        if (!$this->isQuoted($value)) {
+            throw new InvalidInlineConfigFormatException('Cannot unquote non-quoted string');
+        }
+
+        $value = substr($value, 1, -1);
+
+        $value = str_replace(
+            ['\\\\', '\\"', '\\/', '\\n', '\\r', '\\t', '\\b', '\\f'],
+            ['\\', '"', '/', "\n", "\r", "\t", "\x08", "\f"],
+            $value
+        );
+
+        if (preg_match('/(?<!\\\\)\\\\(?!["\\\\\\/nrtbf])/', $value)) {
+            throw new InvalidInlineConfigFormatException('Invalid escape sequence in quoted string');
+        }
+
+        return $value;
+    }
+
     private function scan(string $input, int $offset): void
     {
         $matches = $this->getMatches($input, $offset);
+
+        if (0 !== substr_count($input, '"') % 2) {
+            throw new InvalidInlineConfigFormatException('Unclosed quote in inline config');
+        }
 
         /** @var Token[] $tokens */
         $tokens = [];
@@ -187,6 +220,10 @@ final class JsonLikeLexer implements \Iterator, \Countable
             $nextMatch = $matches[$index + 1] ?? null;
             if ($nextMatch && self::T_STRING === $type && self::T_COLON === $this->getType($nextMatch[0])) {
                 $type = self::T_KEY;
+            }
+
+            if (\in_array($type, [self::T_STRING, self::T_KEY], true) && $this->isQuoted($value)) {
+                $value = $this->unquote($value);
             }
 
             $tokens[] = $current = new Token($value, $type, $position);
