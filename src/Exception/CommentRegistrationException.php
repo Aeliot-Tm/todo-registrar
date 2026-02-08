@@ -31,8 +31,8 @@ final class CommentRegistrationException extends \RuntimeException implements Re
         return $this->todo->getCommentPart();
     }
 
-    public function getToken(): \PhpToken
+    public function getStartLine(): int
     {
-        return $this->todo->getCommentPart()->getToken();
+        return $this->todo->getCommentPart()->getStartLine();
     }
 }

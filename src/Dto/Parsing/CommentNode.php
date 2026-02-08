@@ -13,15 +13,17 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Dto\Parsing;
 
+use Aeliot\TodoRegistrar\Dto\Token\TokenInterface;
+
 /**
- * Wrapper around PhpToken with context.
+ * Wrapper around token with context.
  *
  * @internal
  */
 final readonly class CommentNode
 {
     public function __construct(
-        private \PhpToken $token,
+        private TokenInterface $token,
         private ContextInterface $context,
     ) {
     }
@@ -31,7 +33,7 @@ final readonly class CommentNode
         return $this->context;
     }
 
-    public function getToken(): \PhpToken
+    public function getToken(): TokenInterface
     {
         return $this->token;
     }

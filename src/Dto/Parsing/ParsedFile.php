@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Dto\Parsing;
 
+use Aeliot\TodoRegistrar\Dto\Token\TokenInterface;
+
 /**
  * Result of file parsing: all tokens and comment nodes with context.
  *
@@ -21,7 +23,7 @@ namespace Aeliot\TodoRegistrar\Dto\Parsing;
 final readonly class ParsedFile
 {
     /**
-     * @param \PhpToken[] $allTokens
+     * @param TokenInterface[] $allTokens
      * @param CommentNode[] $commentNodes
      */
     public function __construct(
@@ -32,7 +34,7 @@ final readonly class ParsedFile
     }
 
     /**
-     * @return \PhpToken[]
+     * @return TokenInterface[]
      */
     public function getAllTokens(): array
     {

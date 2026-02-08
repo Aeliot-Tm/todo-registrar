@@ -16,6 +16,7 @@ namespace Aeliot\TodoRegistrar\Service\Comment;
 use Aeliot\TodoRegistrar\Dto\Comment\CommentPart;
 use Aeliot\TodoRegistrar\Dto\Comment\CommentParts;
 use Aeliot\TodoRegistrar\Dto\Parsing\ContextInterface;
+use Aeliot\TodoRegistrar\Dto\Token\TokenInterface;
 use Aeliot\TodoRegistrar\Service\Tag\Detector as TagDetector;
 
 /**
@@ -27,17 +28,21 @@ final readonly class Extractor
     {
     }
 
-    public function extract(string $comment, \PhpToken $token, ContextInterface $context): CommentParts
+    public function extract(string $comment, TokenInterface $token, ContextInterface $context): CommentParts
     {
         $part = null;
         $parts = new CommentParts();
+        $tokenStartLine = $token->getLine();
+        $currentLineOffset = 0;
+
         foreach ($this->splitLines($comment) as $line) {
             if ($part && !$this->hasEmptyPrefix($line, $part)) {
                 $part = null;
             }
 
             if (null === $part) {
-                $part = new CommentPart($token, $this->tagDetector->getTagMetadata($line), $context);
+                $todoStartLine = $tokenStartLine + $currentLineOffset;
+                $part = new CommentPart($todoStartLine, $this->tagDetector->getTagMetadata($line), $context);
                 $parts->addPart($part);
             }
 
@@ -46,6 +51,8 @@ final readonly class Extractor
             if (null === $part->getTag()) {
                 $part = null;
             }
+
+            ++$currentLineOffset;
         }
 
         return $parts;

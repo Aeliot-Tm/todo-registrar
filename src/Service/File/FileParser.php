@@ -17,6 +17,8 @@ use Aeliot\TodoRegistrar\Dto\Parsing\CommentNode;
 use Aeliot\TodoRegistrar\Dto\Parsing\LazyContextMap;
 use Aeliot\TodoRegistrar\Dto\Parsing\MappedContext;
 use Aeliot\TodoRegistrar\Dto\Parsing\ParsedFile;
+use Aeliot\TodoRegistrar\Dto\Token\PhpTokenAdapter;
+use Aeliot\TodoRegistrar\Dto\Token\TokenInterface;
 use PhpParser\ParserFactory;
 
 /**
@@ -36,13 +38,13 @@ final readonly class FileParser
 
         $parser = (new ParserFactory())->createForHostVersion();
         $ast = $parser->parse($content) ?? [];
-        $tokens = $this->filterEofToken($parser->getTokens());
+        $tokens = $this->wrapTokens($this->filterEofToken($parser->getTokens()));
 
         return new ParsedFile($file, $tokens, $this->buildCommentNodes($tokens, $ast, $pathname));
     }
 
     /**
-     * @param \PhpToken[] $tokens
+     * @param TokenInterface[] $tokens
      * @param array<\PhpParser\Node\Stmt> $ast
      *
      * @return CommentNode[]
@@ -57,7 +59,7 @@ final readonly class FileParser
                 continue;
             }
 
-            $commentNodes[] = new CommentNode($token, new MappedContext($token->line, $lazyContextMap));
+            $commentNodes[] = new CommentNode($token, new MappedContext($token->getLine(), $lazyContextMap));
         }
 
         return $commentNodes;
@@ -75,8 +77,18 @@ final readonly class FileParser
         return array_filter($tokens, static fn (\PhpToken $t): bool => 0 !== $t->id);
     }
 
-    private function isComment(\PhpToken $token): bool
+    private function isComment(TokenInterface $token): bool
     {
-        return \in_array($token->id, [\T_COMMENT, \T_DOC_COMMENT], true);
+        return \in_array($token->getId(), [\T_COMMENT, \T_DOC_COMMENT], true);
+    }
+
+    /**
+     * @param \PhpToken[] $phpTokens
+     *
+     * @return TokenInterface[]
+     */
+    private function wrapTokens(array $phpTokens): array
+    {
+        return array_map(static fn (\PhpToken $t): TokenInterface => new PhpTokenAdapter($t), $phpTokens);
     }
 }
