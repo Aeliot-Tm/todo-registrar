@@ -61,9 +61,6 @@ final readonly class ArrayFromJsonLikeLexerBuilder
         }
     }
 
-    /**
-     * TODO: #126 move it into JsonLikeLexer.
-     */
     private function checkPredecessorType(int $current, ?int $predecessor): void
     {
         if (JsonLikeLexer::T_COLON === $current && JsonLikeLexer::T_KEY !== $predecessor) {

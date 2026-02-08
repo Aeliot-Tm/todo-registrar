@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Test\Unit\Service\InlineConfig;
 
 use Aeliot\TodoRegistrar\Dto\InlineConfig\Token;
+use Aeliot\TodoRegistrar\Exception\InvalidInlineConfigFormatException;
 use Aeliot\TodoRegistrar\Service\InlineConfig\JsonLikeLexer;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -172,6 +173,191 @@ final class JsonLikeLexerTest extends TestCase
             ],
             '{_key:  value-parted }',
         ];
+
+        yield [
+            [
+                [
+                    't' => JsonLikeLexer::T_CURLY_BRACES_OPEN,
+                    'v' => '{',
+                    'p' => 0,
+                ],
+                [
+                    't' => JsonLikeLexer::T_KEY,
+                    'v' => 'key',
+                    'p' => 1,
+                ],
+                [
+                    't' => JsonLikeLexer::T_COLON,
+                    'v' => ':',
+                    'p' => 4,
+                ],
+                [
+                    't' => JsonLikeLexer::T_STRING,
+                    'v' => 'multi word value',
+                    'p' => 6,
+                ],
+                [
+                    't' => JsonLikeLexer::T_CURLY_BRACES_CLOSE,
+                    'v' => '}',
+                    'p' => 24,
+                ],
+            ],
+            '{key: "multi word value"}',
+        ];
+
+        yield [
+            [
+                [
+                    't' => JsonLikeLexer::T_CURLY_BRACES_OPEN,
+                    'v' => '{',
+                    'p' => 0,
+                ],
+                [
+                    't' => JsonLikeLexer::T_KEY,
+                    'v' => 'multi word key',
+                    'p' => 1,
+                ],
+                [
+                    't' => JsonLikeLexer::T_COLON,
+                    'v' => ':',
+                    'p' => 17,
+                ],
+                [
+                    't' => JsonLikeLexer::T_STRING,
+                    'v' => 'value',
+                    'p' => 19,
+                ],
+                [
+                    't' => JsonLikeLexer::T_CURLY_BRACES_CLOSE,
+                    'v' => '}',
+                    'p' => 24,
+                ],
+            ],
+            '{"multi word key": value}',
+        ];
+
+        yield [
+            [
+                [
+                    't' => JsonLikeLexer::T_CURLY_BRACES_OPEN,
+                    'v' => '{',
+                    'p' => 0,
+                ],
+                [
+                    't' => JsonLikeLexer::T_KEY,
+                    'v' => 'key',
+                    'p' => 1,
+                ],
+                [
+                    't' => JsonLikeLexer::T_COLON,
+                    'v' => ':',
+                    'p' => 4,
+                ],
+                [
+                    't' => JsonLikeLexer::T_STRING,
+                    'v' => "Line 1\nLine 2\tTabbed",
+                    'p' => 6,
+                ],
+                [
+                    't' => JsonLikeLexer::T_CURLY_BRACES_CLOSE,
+                    'v' => '}',
+                    'p' => 30,
+                ],
+            ],
+            '{key: "Line 1\nLine 2\tTabbed"}',
+        ];
+
+        yield [
+            [
+                [
+                    't' => JsonLikeLexer::T_CURLY_BRACES_OPEN,
+                    'v' => '{',
+                    'p' => 0,
+                ],
+                [
+                    't' => JsonLikeLexer::T_KEY,
+                    'v' => 'key',
+                    'p' => 1,
+                ],
+                [
+                    't' => JsonLikeLexer::T_COLON,
+                    'v' => ':',
+                    'p' => 4,
+                ],
+                [
+                    't' => JsonLikeLexer::T_STRING,
+                    'v' => 'He said "Hello"',
+                    'p' => 6,
+                ],
+                [
+                    't' => JsonLikeLexer::T_CURLY_BRACES_CLOSE,
+                    'v' => '}',
+                    'p' => 25,
+                ],
+            ],
+            '{key: "He said \"Hello\""}',
+        ];
+
+        yield [
+            [
+                [
+                    't' => JsonLikeLexer::T_CURLY_BRACES_OPEN,
+                    'v' => '{',
+                    'p' => 0,
+                ],
+                [
+                    't' => JsonLikeLexer::T_KEY,
+                    'v' => 'labels',
+                    'p' => 1,
+                ],
+                [
+                    't' => JsonLikeLexer::T_COLON,
+                    'v' => ':',
+                    'p' => 7,
+                ],
+                [
+                    't' => JsonLikeLexer::T_SQUARE_BRACKET_OPEN,
+                    'v' => '[',
+                    'p' => 9,
+                ],
+                [
+                    't' => JsonLikeLexer::T_STRING,
+                    'v' => 'simple',
+                    'p' => 10,
+                ],
+                [
+                    't' => JsonLikeLexer::T_COMMA,
+                    'v' => ',',
+                    'p' => 16,
+                ],
+                [
+                    't' => JsonLikeLexer::T_STRING,
+                    'v' => 'multi word',
+                    'p' => 18,
+                ],
+                [
+                    't' => JsonLikeLexer::T_COMMA,
+                    'v' => ',',
+                    'p' => 30,
+                ],
+                [
+                    't' => JsonLikeLexer::T_STRING,
+                    'v' => 'another-simple',
+                    'p' => 32,
+                ],
+                [
+                    't' => JsonLikeLexer::T_SQUARE_BRACKET_CLOSE,
+                    'v' => ']',
+                    'p' => 46,
+                ],
+                [
+                    't' => JsonLikeLexer::T_CURLY_BRACES_CLOSE,
+                    'v' => '}',
+                    'p' => 47,
+                ],
+            ],
+            '{labels: [simple, "multi word", another-simple]}',
+        ];
     }
 
     /**
@@ -212,5 +398,19 @@ final class JsonLikeLexerTest extends TestCase
         self::assertNotNull($token);
 
         self::assertSame($expectedType, $token->getType());
+    }
+
+    public function testUnclosedQuoteThrowsException(): void
+    {
+        $this->expectException(InvalidInlineConfigFormatException::class);
+        $this->expectExceptionMessage('Unclosed quote');
+        new JsonLikeLexer('{key: "unclosed}');
+    }
+
+    public function testInvalidEscapeThrowsException(): void
+    {
+        $this->expectException(InvalidInlineConfigFormatException::class);
+        $this->expectExceptionMessage('Invalid escape sequence');
+        new JsonLikeLexer('{key: "invalid \\x escape"}');
     }
 }

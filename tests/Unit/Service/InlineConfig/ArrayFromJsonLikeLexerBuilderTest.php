@@ -37,6 +37,10 @@ final class ArrayFromJsonLikeLexerBuilderTest extends TestCase
     {
         yield [['key' => 'value'], '{key: value}'];
         yield [['key' => ['value']], '{key: [value]}'];
+        yield [['labels' => ['bug fix', 'high priority']], '{labels: ["bug fix", "high priority"]}'];
+        yield [['custom field' => 'some value'], '{"custom field": "some value"}'];
+        yield [['description' => "Line 1\nLine 2"], '{description: "Line 1\nLine 2"}'];
+        yield [['labels' => ['simple', 'multi word', 'another']], '{labels: [simple, "multi word", another]}'];
     }
 
     #[DataProvider('getDataForTestPositiveFlow')]
