@@ -19,8 +19,8 @@ This document describes the main algorithm of TODO comment processing — from f
                                       │
                                       ▼
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│  2. TOKENIZE FILE (Tokenizer)                                               │
-│     PhpToken::tokenize($fileContents) → PhpToken[]                          │
+│  2. TOKENIZE FILE (FileParser)                                              │
+│     PhpToken::tokenize($fileContents) → TokenInterface[]                    │
 └─────────────────────────────────────────────────────────────────────────────┘
                                       │
                                       ▼
@@ -100,27 +100,30 @@ Configuration determines:
 
 ### Step 2: File Tokenization
 
-**Class:** `Service\File\Tokenizer`
+**Class:** `Service\File\FileParser`
 
-Each file is tokenized using PHP's built-in tokenizer:
+Each file is tokenized using PHP's built-in tokenizer and wrapped in `TokenInterface`:
 
 ```php
-$tokens = PhpToken::tokenize(file_get_contents($file->getPathname()));
+$phpTokens = PhpToken::tokenize(file_get_contents($file->getPathname()));
+$tokens = array_map(fn($t) => new PhpTokenAdapter($t), $phpTokens);
 ```
 
-Result: array of `PhpToken` objects representing all PHP tokens in the file.
+Result: array of `TokenInterface` objects (specifically `PhpTokenAdapter` instances wrapping `PhpToken`).
 
-**Important:** Tokens are mutable objects. Modifying `$token->text` directly affects the token that will be used when saving the file.
+**Important:** Tokens are mutable objects. The `PhpTokenAdapter` wraps native `\PhpToken` and delegates mutations via `setText()` to the underlying token, which is used when saving the file.
+
+**Abstraction Layer:** Using `TokenInterface` isolates the domain logic from PHP-specific tokens, enabling future support for other file types (YAML, CSS, etc.) without changing the core processing flow.
 
 ### Step 3: Filter Comment Tokens
 
-**Class:** `Service\Comment\Detector`
+**Class:** `Service\File\FileParser`
 
 Filters tokens to keep only comments:
 
 ```php
 $commentTokens = array_filter($tokens, fn($token) =>
-    in_array($token->id, [T_COMMENT, T_DOC_COMMENT])
+    in_array($token->getId(), [T_COMMENT, T_DOC_COMMENT])
 );
 ```
 
@@ -260,10 +263,12 @@ See [Issue Key Injection](../../Feature/IssueKeyInjection.md) for detailed confi
 After key injection, update the original token:
 
 ```php
-$token->text = $commentParts->getContent();
+$token->setText($commentParts->getContent());
 ```
 
 `CommentParts.getContent()` rebuilds the full comment text from all parts (both TODO and non-TODO parts).
+
+**Note:** The `setText()` method is part of `TokenInterface` and ensures the mutation is applied to the underlying token implementation (e.g., `PhpTokenAdapter` modifies the wrapped `\PhpToken`).
 
 ### Step 10: Save File
 
@@ -272,13 +277,15 @@ $token->text = $commentParts->getContent();
 Rebuild and save the file:
 
 ```php
-$content = implode('', array_map(fn($token) => $token->text, $tokens));
+$content = implode('', array_map(fn($token) => $token->getText(), $tokens));
 file_put_contents($file->getPathname(), $content);
 ```
 
 **Important:** File is saved immediately after each TODO registration, not batched. This ensures:
 - Partial progress is preserved if process fails
 - Each TODO gets registered and saved before moving to next
+
+**Abstraction:** Using `getText()` method from `TokenInterface` makes the saver independent of the token implementation.
 
 ## Lazy Processing with Generators
 

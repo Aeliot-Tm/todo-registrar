@@ -17,6 +17,8 @@ use Aeliot\TodoRegistrar\Dto\Comment\CommentPart;
 use Aeliot\TodoRegistrar\Dto\Comment\CommentParts;
 use Aeliot\TodoRegistrar\Dto\Parsing\MappedContext;
 use Aeliot\TodoRegistrar\Dto\Tag\TagMetadata;
+use Aeliot\TodoRegistrar\Dto\Token\PhpTokenAdapter;
+use Aeliot\TodoRegistrar\Dto\Token\TokenInterface;
 use Aeliot\TodoRegistrar\Service\Comment\Extractor;
 use Aeliot\TodoRegistrar\Service\Tag\Detector as TagDetector;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -105,10 +107,10 @@ CONT,
         self::assertCount($expectedTodoCount, $parts->getTodos());
     }
 
-    private function createPhpToken(string $comment): \PhpToken
+    private function createPhpToken(string $comment): TokenInterface
     {
         // Fallback: create a token manually if no comment found
-        return new \PhpToken(\T_COMMENT, $comment, 0, 0);
+        return new PhpTokenAdapter(new \PhpToken(\T_COMMENT, $comment, 0, 0));
     }
 
     private function createLazyContext(): MappedContext

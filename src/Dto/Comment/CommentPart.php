@@ -30,7 +30,7 @@ final class CommentPart
     private array $lines = [];
 
     public function __construct(
-        private \PhpToken $token,
+        private int $startLine,
         private ?TagMetadata $tagMetadata,
         private ContextInterface $context,
     ) {
@@ -107,9 +107,9 @@ final class CommentPart
         return $this->tagMetadata;
     }
 
-    public function getToken(): \PhpToken
+    public function getStartLine(): int
     {
-        return $this->token;
+        return $this->startLine;
     }
 
     public function injectKey(string $key, IssueKeyPosition $position, ?string $newSeparator, bool $replaceSeparator): void

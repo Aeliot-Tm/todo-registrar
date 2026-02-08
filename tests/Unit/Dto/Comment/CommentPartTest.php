@@ -536,16 +536,14 @@ final class CommentPartTest extends TestCase
     public function testGetContentThrowsExceptionWithoutLines(): void
     {
         $this->expectException(NoLineException::class);
-        $token = $this->createPhpToken();
-        $commentPart = new CommentPart($token, null, $this->createLazyContext());
+        $commentPart = new CommentPart(1, null, $this->createLazyContext());
         $commentPart->getContent();
     }
 
     public function testGetFirstLineThrowsExceptionWithoutLines(): void
     {
         $this->expectException(NoLineException::class);
-        $token = $this->createPhpToken();
-        $commentPart = new CommentPart($token, null, $this->createLazyContext());
+        $commentPart = new CommentPart(1, null, $this->createLazyContext());
         $commentPart->getFirstLine();
     }
 
@@ -555,10 +553,9 @@ final class CommentPartTest extends TestCase
     #[DataProvider('getDataForTestGetDescription')]
     public function testGetDescription(string $expected, array $lines, int $prefixLength): void
     {
-        $token = $this->createPhpToken();
         $metadata = $this->createMock(TagMetadata::class);
         $metadata->method('getPrefixLength')->willReturn($prefixLength);
-        $commentPart = new CommentPart($token, $metadata, $this->createLazyContext());
+        $commentPart = new CommentPart(1, $metadata, $this->createLazyContext());
         array_walk($lines, static fn (string $line) => $commentPart->addLine($line));
 
         self::assertEquals($expected, $commentPart->getDescription());
@@ -570,10 +567,9 @@ final class CommentPartTest extends TestCase
     #[DataProvider('getDataForTestGetSummary')]
     public function testGetSummary(string $expected, array $lines, int $prefixLength): void
     {
-        $token = $this->createPhpToken();
         $metadata = $this->createMock(TagMetadata::class);
         $metadata->method('getPrefixLength')->willReturn($prefixLength);
-        $commentPart = new CommentPart($token, $metadata, $this->createLazyContext());
+        $commentPart = new CommentPart(1, $metadata, $this->createLazyContext());
         array_walk($lines, static fn (string $line) => $commentPart->addLine($line));
 
         self::assertEquals($expected, $commentPart->getSummary());
@@ -602,8 +598,7 @@ final class CommentPartTest extends TestCase
     public function testInjectKeyThrowsExceptionWithoutLines(): void
     {
         $this->expectException(NoLineException::class);
-        $token = $this->createPhpToken();
-        $commentPart = new CommentPart($token, null, $this->createLazyContext());
+        $commentPart = new CommentPart(1, null, $this->createLazyContext());
         $commentPart->injectKey('any key', IssueKeyPosition::AFTER_SEPARATOR, null, false);
     }
 
@@ -612,8 +607,7 @@ final class CommentPartTest extends TestCase
     {
         $this->expectException(NoPrefixException::class);
 
-        $token = $this->createPhpToken();
-        $commentPart = new CommentPart($token, new TagMetadata(null, $prefixLength, null, null, null), $this->createLazyContext());
+        $commentPart = new CommentPart(1, new TagMetadata(null, $prefixLength, null, null, null), $this->createLazyContext());
         $commentPart->addLine('any text of line');
         $commentPart->injectKey('any key', IssueKeyPosition::AFTER_SEPARATOR, null, false);
     }
@@ -623,18 +617,12 @@ final class CommentPartTest extends TestCase
      */
     private function createCommentPartWithLines(array $lines, ?TagMetadata $tagMetadata = null): CommentPart
     {
-        $token = $this->createPhpToken();
-        $commentPart = new CommentPart($token, $tagMetadata, $this->createLazyContext());
+        $commentPart = new CommentPart(1, $tagMetadata, $this->createLazyContext());
         foreach ($lines as $line) {
             $commentPart->addLine($line);
         }
 
         return $commentPart;
-    }
-
-    private function createPhpToken(): \PhpToken
-    {
-        return new \PhpToken(\T_COMMENT, '// comment', 0, 0);
     }
 
     private function createLazyContext(): MappedContext

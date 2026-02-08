@@ -13,17 +13,19 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\File;
 
+use Aeliot\TodoRegistrar\Dto\Token\TokenInterface;
+
 /**
  * @internal
  */
 final readonly class Saver
 {
     /**
-     * @param \PhpToken[] $tokens
+     * @param TokenInterface[] $tokens
      */
     public function save(\SplFileInfo $file, array $tokens): void
     {
-        $content = implode('', array_map(static fn (\PhpToken $x): string => $x->text, $tokens));
+        $content = implode('', array_map(static fn (TokenInterface $x): string => $x->getText(), $tokens));
         file_put_contents($file->getPathname(), $content);
     }
 }

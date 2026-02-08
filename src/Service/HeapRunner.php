@@ -61,7 +61,7 @@ final readonly class HeapRunner
             foreach ($fileHeap->getCommentNodes() as $commentNode) {
                 // TODO: #13 implement gluing of simple comments
                 $token = $commentNode->getToken();
-                $commentParts = $this->commentExtractor->extract($token->text, $token, $commentNode->getContext());
+                $commentParts = $this->commentExtractor->extract($token->getText(), $token, $commentNode->getContext());
 
                 foreach ($commentParts->getTodos() as $commentPart) {
                     $ticketKey = $commentPart->getTagMetadata()?->getTicketKey();
@@ -73,7 +73,7 @@ final readonly class HeapRunner
                     yield [
                         $commentPart,
                         static function () use ($commentParts, $token, $fileHeap) {
-                            $token->text = $commentParts->getContent();
+                            $token->setText($commentParts->getContent());
                             $fileHeap->getFileUpdateCallback()();
                         },
                     ];
@@ -157,7 +157,7 @@ final readonly class HeapRunner
             $message .= ". Cannot process file: {$file->getPathname()}";
         }
         if ($exception instanceof CommentRegistrationException) {
-            $message .= " with comment on line {$exception->getToken()->line}";
+            $message .= " with comment on line {$exception->getStartLine()}";
             $message .= " and obtained text: {$exception->getCommentPart()->getContent()}";
         }
         $message .= "\n";
