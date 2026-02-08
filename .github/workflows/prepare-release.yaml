@@ -1,0 +1,218 @@
+name: Prepare Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version number (e.g., 3.2.0 or v3.2.0)'
+        required: true
+        type: string
+
+# See https://stackoverflow.com/a/72408109
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate-and-prepare:
+    name: Validate and Prepare Release
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    outputs:
+      version: ${{ steps.set_version.outputs.version }}
+
+    steps:
+      - name: Check branch
+        run: |
+          if [ "${{ github.ref }}" != "refs/heads/main" ]; then
+            echo "❌ This workflow must be run on the main branch"
+            exit 1
+          fi
+
+      - name: Validate version format
+        id: validate
+        run: |
+          VERSION="${{ github.event.inputs.version }}"
+
+          if ! echo "$VERSION" | grep -qE '^[a-zA-Z0-9][a-zA-Z0-9._-]*[a-zA-Z0-9]$'; then
+            echo "❌ Invalid version format: $VERSION"
+            echo ""
+            echo "Version must:"
+            echo "  - Start with a letter or digit"
+            echo "  - End with a letter or digit"
+            echo "  - Contain only: letters (a-z, A-Z), digits (0-9), dots (.), dashes (-), underscores (_)"
+            echo ""
+            echo "Valid examples: 3.2.0, v3.2.0, 1.0.0-beta, 2024.01.15"
+            exit 1
+          fi
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check if tag exists
+        run: |
+          VERSION="${{ github.event.inputs.version }}"
+          if git ls-remote --tags origin | grep -q "refs/tags/${VERSION}$"; then
+            echo "❌ Tag ${VERSION} already exists!"
+            exit 1
+          fi
+          echo "✅ Tag ${VERSION} does not exist yet"
+
+      - name: Set version output
+        id: set_version
+        run: |
+          VERSION="${{ github.event.inputs.version }}"
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          echo "Version set to: ${VERSION}"
+
+      - name: Update VERSION constant
+        run: |
+          VERSION="${{ github.event.inputs.version }}"
+          sed -i "s/private const VERSION = '[^']*'/private const VERSION = '${VERSION}'/" src/Console/Application.php
+
+          echo "✅ Updated Application.php VERSION constant to: ${VERSION}"
+          grep "private const VERSION" src/Console/Application.php
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Commit and push version bump
+        run: |
+          VERSION="${{ github.event.inputs.version }}"
+          git add src/Console/Application.php
+          git commit -m "chore: bump version to ${VERSION}"
+          git push origin main
+          echo "✅ Committed and pushed version bump"
+
+      - name: Create and push tag
+        run: |
+          VERSION="${{ github.event.inputs.version }}"
+          git tag "${VERSION}"
+          git push origin "${VERSION}"
+          echo "✅ Created and pushed tag: ${VERSION}"
+
+  create-draft-release:
+    name: Create Draft Release
+    needs: validate-and-prepare
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Create draft release
+        uses: softprops/action-gh-release@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag_name: ${{ needs.validate-and-prepare.outputs.version }}
+          name: Release ${{ needs.validate-and-prepare.outputs.version }}
+          draft: true
+          generate_release_notes: true
+
+  build-phar:
+    name: Build and Sign PHAR
+    needs: [validate-and-prepare, create-draft-release]
+    runs-on: ubuntu-latest
+
+    env:
+      TODO_REGISTRAR_PHAR: todo-registrar.phar
+      TODO_REGISTRAR_SIGN: todo-registrar.phar.asc
+
+    permissions:
+      artifact-metadata: write
+      attestations: write
+      contents: write
+      id-token: write
+
+    steps:
+      - name: Checkout tag
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.validate-and-prepare.outputs.version }}
+          fetch-depth: 0
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+          ini-values: phar.readonly=0
+          tools: composer, box
+          coverage: none
+
+      - name: Cache Composer packages
+        id: composer-cache
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: "os-${{ runner.os }}-php-${{ runner.php-version }}-composer-${{ hashFiles('**/composer.lock') }}"
+          restore-keys: "os-${{ runner.os }}-php-${{ runner.php-version }}-composer-"
+
+      - name: Install Composer dependencies
+        uses: ramsey/composer-install@v3
+        with:
+          composer-options: '--no-dev'
+
+      - name: Build PHAR
+        run: composer build
+
+      # Smoke test.
+      # It is recommended ot have some sorts of tests for your PHAR.
+      #- name: Ensure the PHAR works
+      #  run: ${{ env.TODO_REGISTRAR_PHAR }} --version
+
+      # The following section is done only for releases
+      - name: Import GPG key
+        uses: crazy-max/ghaction-import-gpg@v6
+        with:
+          gpg_private_key: ${{ secrets.GPG_KEY_9D0DD6FCB92C84688B777DF59204DEE8CAE9C22C }}
+          passphrase: "${{ secrets.GPG_KEY_9D0DD6FCB92C84688B777DF59204DEE8CAE9C22C_PASSPHRASE }}"
+
+      - name: Sign the PHAR
+        run: |
+          gpg --local-user 9D0DD6FCB92C84688B777DF59204DEE8CAE9C22C \
+              --batch \
+              --yes \
+              --passphrase="${{ secrets.GPG_KEY_9D0DD6FCB92C84688B777DF59204DEE8CAE9C22C_PASSPHRASE }}" \
+              --detach-sign \
+              --output ${{ env.TODO_REGISTRAR_SIGN }} \
+              ${{ env.TODO_REGISTRAR_PHAR }}
+
+      - name: Verify signature
+        run: gpg --verify ${{ env.TODO_REGISTRAR_SIGN }} ${{ env.TODO_REGISTRAR_PHAR }}
+
+      - name: Upload PHAR artifact
+        uses: actions/upload-artifact@v4
+        id: upload_phar
+        with:
+          name: ${{ env.TODO_REGISTRAR_PHAR }}
+          path: ${{ env.TODO_REGISTRAR_PHAR }}
+
+      - name: Upload signature artifact
+        uses: actions/upload-artifact@v4
+        id: upload_sign
+        with:
+          name: ${{ env.TODO_REGISTRAR_SIGN }}
+          path: ${{ env.TODO_REGISTRAR_SIGN }}
+
+      - name: Attest build provenance
+        uses: actions/attest-build-provenance@v3
+        with:
+          subject-name: ${{ env.TODO_REGISTRAR_PHAR }}
+          subject-digest: sha256:${{ steps.upload_phar.outputs.artifact-digest }}
+
+      - name: Attach PHAR and signature to draft release
+        uses: softprops/action-gh-release@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag_name: ${{ needs.validate-and-prepare.outputs.version }}
+          files: |
+            ${{ env.TODO_REGISTRAR_PHAR }}
+            ${{ env.TODO_REGISTRAR_SIGN }}

@@ -1,10 +1,9 @@
-#
 name: Create and publish a Docker image
 
-# Configures this workflow to run every time a change is pushed to the branch called `release`.
+# Configures this workflow to run when a release is published.
 on:
   release:
-    types: [ created ]
+    types: [ published ]
 
 # Defines two custom environment variables for the workflow. These are used for the Container registry domain, and a name for the Docker image that this workflow builds.
 env:
@@ -12,74 +11,9 @@ env:
   IMAGE_NAME: ${{ github.repository }}
   TODO_REGISTRAR_PHAR: todo-registrar.phar
 
-# There is a single job in this workflow. It's configured to run on the latest available version of Ubuntu.
+# PHAR is already built and attached to the release by prepare-release workflow.
 jobs:
-  build-phar:
-    runs-on: ubuntu-latest
-    name: Build PHAR
-
-    env:
-      TODO_REGISTRAR_SIGN: todo-registrar.phar.asc
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: 8.2
-          ini-values: phar.readonly=0
-          tools: composer, box
-          coverage: none
-
-      - name: Cache Composer packages
-        id: composer-cache
-        uses: actions/cache@v4
-        with:
-          path: vendor
-          key: "os-${{ runner.os }}-php-${{ runner.php-version }}-composer-${{ hashFiles('**/composer.lock') }}"
-          restore-keys: "os-${{ runner.os }}-php-${{ runner.php-version }}-composer-"
-
-      - name: Install Composer dependencies
-        uses: ramsey/composer-install@v3
-        with:
-          composer-options: '--no-dev'
-
-      - name: Build PHAR
-        run: composer build
-
-      # The following section is done only for releases
-      - name: Import GPG key
-        uses: crazy-max/ghaction-import-gpg@v6
-        with:
-          gpg_private_key: ${{ secrets.GPG_KEY_9D0DD6FCB92C84688B777DF59204DEE8CAE9C22C }}
-          passphrase: "${{ secrets.GPG_KEY_9D0DD6FCB92C84688B777DF59204DEE8CAE9C22C_PASSPHRASE }}"
-
-      - name: Sign the PHAR
-        #        if: github.event_name == 'release'
-        run: |
-          gpg --local-user 9D0DD6FCB92C84688B777DF59204DEE8CAE9C22C \
-              --batch \
-              --yes \
-              --passphrase="${{ secrets.GPG_KEY_9D0DD6FCB92C84688B777DF59204DEE8CAE9C22C_PASSPHRASE }}" \
-              --detach-sign \
-              --output ${{ env.TODO_REGISTRAR_SIGN }} \
-              ${{ env.TODO_REGISTRAR_PHAR }}
-
-      - name: Verify signature
-        run: gpg --verify ${{ env.TODO_REGISTRAR_SIGN }} ${{ env.TODO_REGISTRAR_PHAR }}
-
-      - name: Upload PHAR artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ env.TODO_REGISTRAR_PHAR }}
-          path: "${{ github.workspace }}/${{ env.TODO_REGISTRAR_PHAR }}"
-
   build-and-push-image:
-    needs: build-phar
     runs-on: ubuntu-latest
     # Sets the permissions granted to the `GITHUB_TOKEN` for the actions in this job.
     permissions:
@@ -93,11 +27,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Download PHAR artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: ${{ env.TODO_REGISTRAR_PHAR }}
-          path: "${{ github.workspace }}"
+      - name: Download PHAR from release assets
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release download ${{ github.event.release.tag_name }} \
+            --pattern '${{ env.TODO_REGISTRAR_PHAR }}' \
+            --dir "${{ github.workspace }}"
+
+          echo "✅ Downloaded PHAR from release ${{ github.event.release.tag_name }}"
 
       - name: Verify PHAR file exists
         run: |
