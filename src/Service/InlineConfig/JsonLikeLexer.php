@@ -108,13 +108,16 @@ final class JsonLikeLexer implements \Iterator, \Countable
         return isset($this->tokens[$this->position]);
     }
 
-    private function checkGap(Token $current, Token $predecessor, string $input): void
+    /**
+     * @param array{0: string, 1: int} $previousMatch
+     */
+    private function checkGap(array $previousMatch, int $currentPosition, string $input): void
     {
-        $nextPosition = $current->getPosition();
-        $endPosition = $predecessor->getPosition() + mb_strlen($predecessor->getValue());
+        [$previousValue, $previousPosition] = $previousMatch;
+        $endPosition = $previousPosition + mb_strlen($previousValue);
 
-        if ($nextPosition > $endPosition) {
-            $gap = substr($input, $endPosition, $nextPosition - $endPosition);
+        if ($currentPosition > $endPosition) {
+            $gap = substr($input, $endPosition, $currentPosition - $endPosition);
             if ('' !== trim($gap)) {
                 throw new InvalidInlineConfigFormatException('Only spaces permitted between tokens');
             }
@@ -122,7 +125,7 @@ final class JsonLikeLexer implements \Iterator, \Countable
     }
 
     /**
-     * @return array<array{0: string, 1: int}>
+     * @return array<int,array{0: string, 1: int}>
      */
     private function getMatches(string $input, int $offset): array
     {
@@ -139,12 +142,11 @@ final class JsonLikeLexer implements \Iterator, \Countable
 
         array_shift($matches);
         $matches = array_shift($matches);
-        if ($matches) {
-            usort($matches, static fn (array $a, array $b): int => $a[1] <=> $b[1]);
-            $matches = array_values($matches);
-        } else {
+        if (!$matches) {
             throw new InvalidInlineConfigFormatException('No one token matched');
         }
+
+        usort($matches, static fn (array $a, array $b): int => $a[1] <=> $b[1]);
 
         return $matches;
     }
@@ -213,9 +215,12 @@ final class JsonLikeLexer implements \Iterator, \Countable
 
         /** @var Token[] $tokens */
         $tokens = [];
-        $predecessor = null;
 
         foreach ($matches as $index => [$value, $position]) {
+            if ($index > 0) {
+                $this->checkGap($matches[$index - 1], $position, $input);
+            }
+
             $type = $this->getType($value);
             $nextMatch = $matches[$index + 1] ?? null;
             if ($nextMatch && self::T_STRING === $type && self::T_COLON === $this->getType($nextMatch[0])) {
@@ -226,15 +231,9 @@ final class JsonLikeLexer implements \Iterator, \Countable
                 $value = $this->unquote($value);
             }
 
-            $tokens[] = $current = new Token($value, $type, $position);
-
-            if ($predecessor) {
-                $this->checkGap($current, $predecessor, $input);
-            }
-
-            $predecessor = $current;
+            $tokens[] = new Token($value, $type, $position);
         }
 
-        $this->tokens = array_values($tokens);
+        $this->tokens = $tokens;
     }
 }

@@ -199,7 +199,7 @@ final class JsonLikeLexerTest extends TestCase
                 [
                     't' => JsonLikeLexer::T_CURLY_BRACES_CLOSE,
                     'v' => '}',
-                    'p' => 25,
+                    'p' => 24,
                 ],
             ],
             '{key: "multi word value"}',
@@ -261,7 +261,7 @@ final class JsonLikeLexerTest extends TestCase
                 [
                     't' => JsonLikeLexer::T_CURLY_BRACES_CLOSE,
                     'v' => '}',
-                    'p' => 33,
+                    'p' => 30,
                 ],
             ],
             '{key: "Line 1\nLine 2\tTabbed"}',
@@ -292,7 +292,7 @@ final class JsonLikeLexerTest extends TestCase
                 [
                     't' => JsonLikeLexer::T_CURLY_BRACES_CLOSE,
                     'v' => '}',
-                    'p' => 28,
+                    'p' => 25,
                 ],
             ],
             '{key: "He said \"Hello\""}',
