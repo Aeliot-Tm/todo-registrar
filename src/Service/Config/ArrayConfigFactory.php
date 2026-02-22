@@ -17,6 +17,7 @@ use Aeliot\TodoRegistrar\Config;
 use Aeliot\TodoRegistrar\Dto\GeneralConfig\ArrayConfig;
 use Aeliot\TodoRegistrar\Dto\GeneralConfig\IssueKeyInjectionConfig;
 use Aeliot\TodoRegistrar\Dto\GeneralConfig\PathsConfig;
+use Aeliot\TodoRegistrar\Dto\GeneralConfig\ProcessConfig;
 use Aeliot\TodoRegistrar\Exception\ConfigValidationException;
 use Aeliot\TodoRegistrar\Service\File\Finder;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -72,6 +73,13 @@ final readonly class ArrayConfigFactory
         $tags = $arrayConfig->getTags();
         if ($tags) {
             $config->setTags($tags);
+        }
+
+        $processDto = $arrayConfig->getProcess();
+        if ($processDto) {
+            $processConfig = new ProcessConfig();
+            $processConfig->setGlueSequentialComments($processDto->isGlueSequentialComments());
+            $config->setProcessConfig($processConfig);
         }
 
         return $config;

@@ -32,18 +32,34 @@ final class PhpTokenAdapter implements TokenInterface
         return $this->phpToken->id;
     }
 
-    public function getText(): string
-    {
-        return $this->phpToken->text;
-    }
-
     public function getLine(): int
     {
         return $this->phpToken->line;
     }
 
+    public function getText(): string
+    {
+        return $this->phpToken->text;
+    }
+
     public function setText(string $text): void
     {
         $this->phpToken->text = $text;
+    }
+
+    public function isComment(): bool
+    {
+        return \in_array($this->phpToken->id, [\T_COMMENT, \T_DOC_COMMENT], true);
+    }
+
+    public function isSingleLineComment(): bool
+    {
+        if (!$this->isComment()) {
+            return false;
+        }
+
+        $text = ltrim($this->phpToken->text);
+
+        return str_starts_with($text, '//') || str_starts_with($text, '#');
     }
 }

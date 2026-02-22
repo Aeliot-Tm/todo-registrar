@@ -16,7 +16,7 @@ namespace Aeliot\TodoRegistrar\Dto\Parsing;
 use Aeliot\TodoRegistrar\Dto\Token\TokenInterface;
 
 /**
- * Result of file parsing: all tokens and comment nodes with context.
+ * Result of file parsing: all tokens and context map.
  *
  * @internal
  */
@@ -24,12 +24,11 @@ final readonly class ParsedFile
 {
     /**
      * @param TokenInterface[] $allTokens
-     * @param CommentNode[] $commentNodes
      */
     public function __construct(
         private \SplFileInfo $file,
         private array $allTokens,
-        private array $commentNodes,
+        private LazyContextMap $contextMap,
     ) {
     }
 
@@ -41,12 +40,9 @@ final readonly class ParsedFile
         return $this->allTokens;
     }
 
-    /**
-     * @return CommentNode[]
-     */
-    public function getCommentNodes(): array
+    public function getContextMap(): LazyContextMap
     {
-        return $this->commentNodes;
+        return $this->contextMap;
     }
 
     public function getFile(): \SplFileInfo

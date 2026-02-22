@@ -109,32 +109,88 @@ $phpTokens = PhpToken::tokenize(file_get_contents($file->getPathname()));
 $tokens = array_map(fn($t) => new PhpTokenAdapter($t), $phpTokens);
 ```
 
-Result: array of `TokenInterface` objects (specifically `PhpTokenAdapter` instances wrapping `PhpToken`).
+Result: `ParsedFile` containing array of `TokenInterface` objects and `LazyContextMap` for AST context.
 
 **Important:** Tokens are mutable objects. The `PhpTokenAdapter` wraps native `\PhpToken` and delegates mutations via `setText()` to the underlying token, which is used when saving the file.
 
 **Abstraction Layer:** Using `TokenInterface` isolates the domain logic from PHP-specific tokens, enabling future support for other file types (YAML, CSS, etc.) without changing the core processing flow.
 
-### Step 3: Filter Comment Tokens
+**Note:** FileParser no longer creates CommentNode objects. It returns a clean DTO (`ParsedFile`) with tokens and context map. CommentNode creation is delegated to `FileHeap`.
 
-**Class:** `Service\File\FileParser`
+### Step 2.5: FileHeap Creation and Comment Filtering
 
-Filters tokens to keep only comments:
+**Class:** `Dto\FileHeap`
+
+FileHeap is responsible for lazy creation of CommentNode objects from tokens:
 
 ```php
-$commentTokens = array_filter($tokens, fn($token) =>
-    in_array($token->getId(), [T_COMMENT, T_DOC_COMMENT])
-);
+$shouldGlue = $config->getProcessConfig()?->isGlueSequentialComments() ?? false;
+$fileHeap = new FileHeap($parsedFile, $shouldGlue, $statistic, $saver);
+$commentNodes = $fileHeap->getCommentNodes(); // Lazy initialization
 ```
+
+**Lazy Initialization:** `FileHeap::getCommentNodes()` creates CommentNode array on first call using **single pass through all tokens**:
+
+1. **For each token in order:**
+   - **Non-comment token:**
+     - If non-empty (`trim($token->getText()) !== ''`) → flush current group (breaks sequence)
+     - If empty (whitespace only) → continue (preserves sequence)
+   - **Multi-line comment** → flush group, create CommentNode immediately
+   - **Single-line comment (gluing enabled):**
+     - No group exists → start new group
+     - Group exists → add to group
+   - **Single-line comment (gluing disabled)** → create CommentNode immediately
+2. **Flush remaining group** (if any) at end of loop
+3. **Result:** Array of `CommentNode[]` with optimal performance (one iteration, no nested loops)
+
+**Sequential Comments Gluing:**
+
+When `process.glueSequentialComments: true` is configured:
+
+```php
+// Source file:
+// TODO: first line
+//       second line
+    
+//       third line
+
+// Becomes ONE CompositeToken representing all three lines
+```
+
+**Gluing Rules:**
+- Only single-line comments (`//` or `#`)
+- Single line break between comments allowed
+- Multiple line breaks (empty line) break the sequence
+- Different indentation allowed
+
+**CompositeToken Behavior:**
+
+`CompositeToken` wraps multiple tokens (comments + whitespace) and presents them as one:
+
+```php
+// Wraps: comment, whitespace, comment, whitespace, comment
+$composite = new CompositeToken([$commentToken1, $whitespaceToken1, $commentToken2, $whitespaceToken2, $commentToken3]);
+
+// getText() concatenates all tokens, preserving original line breaks (\n, \r\n, or mixed)
+$text = $composite->getText(); // "line1\nline2\r\nline3"
+
+// setText() puts ALL text into first token, clears others
+$composite->setText($updatedText);
+// Result: $token1->text = $updatedText, $token2->text = "", $token3->text = ""
+```
+
+**Critical:** This prevents duplication when `Saver` concatenates all tokens.
 
 | Token Type | Description | Example |
 |---|---|---|
 | `T_COMMENT` | Single-line or multi-line comment | `// comment`, `/* comment */` |
 | `T_DOC_COMMENT` | PHPDoc comment | `/** @param ... */` |
 
-### Step 4: Extract TODO Parts
+### Step 3: Extract TODO Parts
 
 **Classes:** `Service\Comment\Extractor`, `Service\Tag\Detector`
+
+**Note:** This step processes CommentNode objects created by FileHeap.
 
 For each comment token:
 

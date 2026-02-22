@@ -48,6 +48,7 @@ final readonly class HeapRunnerFactory
             $registrar,
             $this->saver,
             $todoBuilder,
+            $config,
         );
     }
 }
