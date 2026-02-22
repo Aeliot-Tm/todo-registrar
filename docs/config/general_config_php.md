@@ -80,3 +80,25 @@ You don't need to configure it when you want to use only this tags. Nevertheless
 when you want to use them together with your custom tags.
 
 Don't wary about case of tags. They will be found in case-insensitive mode.
+
+### Setting of Process Config
+
+Configure how TODO comments are processed:
+
+```php
+use Aeliot\TodoRegistrar\Config;
+use Aeliot\TodoRegistrar\Dto\GeneralConfig\ProcessConfig;
+
+$processConfig = new ProcessConfig();
+$processConfig->setGlueSequentialComments(true);
+
+return (new Config())
+    // ...
+    ->setProcessConfig($processConfig);
+```
+
+#### Option glueSequentialComments
+
+Glues consecutive single-line comments (`//` or `#`) into one multi-line comment.
+Default: `false`. Useful for YAML files and multi-line TODO descriptions.
+See [Sequential Comments Gluing](../sequential_comments_gluing.md) for details.

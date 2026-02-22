@@ -41,6 +41,10 @@ issueKeyInjection:                # Optional. Configuration for injecting issue 
   newSeparator: ':'               # Optional. Separator to add if comment has no separator
   replaceSeparator: false         # Optional. Replace existing separator with newSeparator
   summarySeparators: [':', '-']   # Optional. List of recognized separators (default: [':', '-'])
+
+process:                          # Optional. Processing options
+    glueSequentialComments: true  # Optional. Glue consecutive single-line comments (// or #) into one multi-line comment.
+                                  #           Default: false. Useful for YAML files and multi-line TODO descriptions.
 ```
 
 ### Registrar options
@@ -194,3 +198,35 @@ docker run --rm --env-file .env -v "$(pwd):/app" ghcr.io/aeliot-tm/todo-registra
 3. **Prefer env_file over command-line** — passing secrets via `-e` flag may expose them in process listings
 
 4. **Use read-only tokens** — create tokens with minimal required permissions (e.g., `repo` scope for GitHub)
+
+### Process options
+
+The `process` section configures how TODO comments are processed before extraction and registration.
+
+#### Option glueSequentialComments
+
+**Type:** `boolean`
+**Default:** `false`
+
+Glues consecutive single-line comments (`//` or `#`) into one multi-line comment for processing.
+
+**When to use:**
+- Multi-line TODO descriptions written as consecutive `//` or `#` comments
+- Codebases with established patterns of multi-line single-line comments
+
+**Example:**
+
+```php
+// TODO: Implement authentication
+//       - Add login form
+//       - Validate credentials
+```
+- Without gluing: Only the first line is processed.
+- With gluing enabled: All three lines are processed as one TODO comment.
+
+**Rules:**
+- Only single-line comments (`//` or `#`) are glued
+- Empty line (multiple line breaks) breaks the sequence
+- Preserves original line break style (`\n`, `\r\n`, or mixed)
+
+For detailed documentation, see [Sequential Comments Gluing](../sequential_comments_gluing.md).
