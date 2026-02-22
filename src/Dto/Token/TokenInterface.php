@@ -26,14 +26,14 @@ interface TokenInterface
     public function getId(): int;
 
     /**
-     * Get token text content.
-     */
-    public function getText(): string;
-
-    /**
      * Get line number where token appears.
      */
     public function getLine(): int;
+
+    /**
+     * Get token text content.
+     */
+    public function getText(): string;
 
     /**
      * Set token text content (mutable for comment modification after key injection).

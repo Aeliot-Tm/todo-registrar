@@ -32,14 +32,14 @@ final class PhpTokenAdapter implements TokenInterface
         return $this->phpToken->id;
     }
 
-    public function getText(): string
-    {
-        return $this->phpToken->text;
-    }
-
     public function getLine(): int
     {
         return $this->phpToken->line;
+    }
+
+    public function getText(): string
+    {
+        return $this->phpToken->text;
     }
 
     public function setText(string $text): void
