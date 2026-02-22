@@ -58,6 +58,11 @@ final class CompositeToken implements TokenInterface
         return $this->tokens[0]->getText();
     }
 
+    public function getCleanText(): string
+    {
+        return $this->tokens[0]->getCleanText();
+    }
+
     public function getLine(): int
     {
         return $this->tokens[0]->getLine();

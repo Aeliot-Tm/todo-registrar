@@ -15,6 +15,7 @@ namespace Aeliot\TodoRegistrar\Dto\Comment;
 
 use Aeliot\TodoRegistrar\Dto\Parsing\ContextInterface;
 use Aeliot\TodoRegistrar\Dto\Tag\TagMetadata;
+use Aeliot\TodoRegistrar\Dto\Token\TokenInterface;
 use Aeliot\TodoRegistrar\Enum\IssueKeyPosition;
 use Aeliot\TodoRegistrar\Exception\NoLineException;
 use Aeliot\TodoRegistrar\Exception\NoPrefixException;
@@ -29,10 +30,16 @@ final class CommentPart
      */
     private array $lines = [];
 
+    /**
+     * @var string[]|null
+     */
+    private ?array $cleanLines = null;
+
     public function __construct(
         private int $startLine,
         private ?TagMetadata $tagMetadata,
         private ContextInterface $context,
+        private TokenInterface $token,
     ) {
     }
 
@@ -61,12 +68,31 @@ final class CommentPart
             throw new NoLineException('Cannot get description till not added at least one line');
         }
 
-        $prefixLength = (int) $this->tagMetadata?->getPrefixLength();
-        $lines = $this->lines;
-        array_shift($lines);
-        $lines = array_map(static fn (string $line): string => substr($line, $prefixLength), $lines);
+        $cleanLines = $this->getCleanLines();
+        $firstLine = array_shift($cleanLines);
 
-        return implode('', $lines);
+        if (!$cleanLines) {
+            return '';
+        }
+
+        $baseIndent = $this->calculateBaseIndentFromFirstLine($firstLine);
+        $minIndent = $this->calculateMinIndent($cleanLines);
+
+        if (\PHP_INT_MAX === $minIndent) {
+            return implode('', $cleanLines);
+        }
+
+        $indentToRemove = max(0, $minIndent - $baseIndent);
+
+        $processedLines = array_map(static function (string $line) use ($indentToRemove): string {
+            if ('' === trim($line)) {
+                return $line;
+            }
+
+            return substr($line, $indentToRemove);
+        }, $cleanLines);
+
+        return implode('', $processedLines);
     }
 
     public function getFirstLine(): string
@@ -175,6 +201,52 @@ final class CommentPart
         }
 
         return $offset;
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getCleanLines(): array
+    {
+        if (null === $this->cleanLines) {
+            $cleanText = $this->token->getCleanText();
+            $lines = explode("\n", $cleanText);
+            $this->cleanLines = array_map(static fn (string $line): string => $line . "\n", $lines);
+            $lastIndex = \count($this->cleanLines) - 1;
+            $this->cleanLines[$lastIndex] = rtrim($this->cleanLines[$lastIndex], "\n");
+        }
+
+        return $this->cleanLines;
+    }
+
+    private function calculateBaseIndentFromFirstLine(string $firstLine): int
+    {
+        if (preg_match('/^(\s*)/', $firstLine, $matches)) {
+            return \strlen($matches[1]);
+        }
+
+        return 0;
+    }
+
+    /**
+     * @param string[] $lines
+     */
+    private function calculateMinIndent(array $lines): int
+    {
+        $minIndent = \PHP_INT_MAX;
+
+        foreach ($lines as $line) {
+            if ('' === trim($line)) {
+                continue;
+            }
+
+            if (preg_match('/^(\s*)/', $line, $matches)) {
+                $indent = \strlen($matches[1]);
+                $minIndent = min($minIndent, $indent);
+            }
+        }
+
+        return \PHP_INT_MAX === $minIndent ? 0 : $minIndent;
     }
 
     /**

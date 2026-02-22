@@ -28,21 +28,21 @@ final readonly class Extractor
     {
     }
 
-    public function extract(string $comment, TokenInterface $token, ContextInterface $context): CommentParts
+    public function extract(TokenInterface $token, ContextInterface $context): CommentParts
     {
         $part = null;
         $parts = new CommentParts();
         $tokenStartLine = $token->getLine();
         $currentLineOffset = 0;
 
-        foreach ($this->splitLines($comment) as $line) {
+        foreach ($this->splitLines($token->getText()) as $line) {
             if ($part && !$this->hasEmptyPrefix($line, $part)) {
                 $part = null;
             }
 
             if (null === $part) {
                 $todoStartLine = $tokenStartLine + $currentLineOffset;
-                $part = new CommentPart($todoStartLine, $this->tagDetector->getTagMetadata($line), $context);
+                $part = new CommentPart($todoStartLine, $this->tagDetector->getTagMetadata($line), $context, $token);
                 $parts->addPart($part);
             }
 
@@ -64,9 +64,17 @@ final readonly class Extractor
             return false;
         }
 
-        $prefix = substr($line, 0, $part->getPrefixLength());
+        $prefixLength = $part->getPrefixLength();
+        if (null !== $prefixLength && 0 < $prefixLength) {
+            $prefix = substr($line, 0, $prefixLength);
+            $trimmedPrefix = trim($prefix);
 
-        return \in_array(trim($prefix), ['*', '//', '#'], true);
+            if (\in_array($trimmedPrefix, ['*', '//', '#'], true)) {
+                return true;
+            }
+        }
+
+        return 1 === preg_match('/^\s*(?:\/\/|#|\*(?!\/))/', $line);
     }
 
     /**

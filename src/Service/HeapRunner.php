@@ -64,7 +64,7 @@ final readonly class HeapRunner
         foreach ($this->getFileHeaps($statistic) as $fileHeap) {
             foreach ($fileHeap->getCommentNodes() as $commentNode) {
                 $token = $commentNode->getToken();
-                $commentParts = $this->commentExtractor->extract($token->getText(), $token, $commentNode->getContext());
+                $commentParts = $this->commentExtractor->extract($token, $commentNode->getContext());
 
                 foreach ($commentParts->getTodos() as $commentPart) {
                     $ticketKey = $commentPart->getTagMetadata()?->getTicketKey();

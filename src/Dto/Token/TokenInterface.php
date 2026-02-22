@@ -36,6 +36,12 @@ interface TokenInterface
     public function getText(): string;
 
     /**
+     * Get comment text without markers such as single-line (//, #) and multi-line (slash-asterisk, asterisk) markers.
+     * Returns the actual content of the comment with preserved relative indentation.
+     */
+    public function getCleanText(): string;
+
+    /**
      * Set token text content (mutable for comment modification after key injection).
      */
     public function setText(string $text): void;

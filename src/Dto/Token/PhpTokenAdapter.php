@@ -52,6 +52,19 @@ final class PhpTokenAdapter implements TokenInterface
         return \in_array($this->phpToken->id, [\T_COMMENT, \T_DOC_COMMENT], true);
     }
 
+    public function getCleanText(): string
+    {
+        if (!$this->isComment()) {
+            return $this->phpToken->text;
+        }
+
+        if ($this->isSingleLineComment()) {
+            return $this->cleanSingleLineComment();
+        }
+
+        return $this->cleanMultiLineComment();
+    }
+
     public function isSingleLineComment(): bool
     {
         if (!$this->isComment()) {
@@ -61,5 +74,48 @@ final class PhpTokenAdapter implements TokenInterface
         $text = ltrim($this->phpToken->text);
 
         return str_starts_with($text, '//') || str_starts_with($text, '#');
+    }
+
+    private function cleanSingleLineComment(): string
+    {
+        $lines = explode("\n", $this->phpToken->text);
+        $cleanedLines = [];
+
+        foreach ($lines as $line) {
+            if (preg_match('/^(\s*)(\/\/|#)/', $line, $matches)) {
+                $cleanedLines[] = substr($line, \strlen($matches[1]) + \strlen($matches[2]));
+            } else {
+                $cleanedLines[] = $line;
+            }
+        }
+
+        return implode("\n", $cleanedLines);
+    }
+
+    private function cleanMultiLineComment(): string
+    {
+        $lines = explode("\n", $this->phpToken->text);
+        $cleanedLines = [];
+
+        foreach ($lines as $index => $line) {
+            if (0 === $index && preg_match('/^(\s*)(\/\*\*?)/', $line, $matches)) {
+                $cleanedLines[] = substr($line, \strlen($matches[1]) + \strlen($matches[2]));
+                continue;
+            }
+
+            if (preg_match('/^(\s*)(\*\/)/', $line)) {
+                $cleanedLines[] = '';
+                continue;
+            }
+
+            if (preg_match('/^(\s*)(\*)(?!\/)/', $line, $matches)) {
+                $cleanedLines[] = substr($line, \strlen($matches[1]) + \strlen($matches[2]));
+                continue;
+            }
+
+            $cleanedLines[] = $line;
+        }
+
+        return implode("\n", $cleanedLines);
     }
 }
