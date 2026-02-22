@@ -15,9 +15,11 @@ namespace Aeliot\TodoRegistrar\Test\Unit\Dto\GeneralConfig;
 
 use Aeliot\TodoRegistrar\Dto\GeneralConfig\ArrayConfig;
 use Aeliot\TodoRegistrar\Dto\GeneralConfig\PathsConfig;
+use Aeliot\TodoRegistrar\Dto\GeneralConfig\ProcessArrayConfig;
 use Aeliot\TodoRegistrar\Dto\GeneralConfig\RegistrarConfig;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -25,6 +27,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 #[CoversClass(ArrayConfig::class)]
 #[CoversClass(PathsConfig::class)]
 #[CoversClass(RegistrarConfig::class)]
+#[UsesClass(ProcessArrayConfig::class)]
 final class ArrayConfigTest extends TestCase
 {
     private static ValidatorInterface $validator;
@@ -155,6 +158,30 @@ final class ArrayConfigTest extends TestCase
                 'registrar' => ['type' => 'github'],
             ],
         ];
+
+        yield 'config with process - glueSequentialComments true' => [
+            [
+                'registrar' => ['type' => 'github'],
+                'process' => [
+                    'glueSequentialComments' => true,
+                ],
+            ],
+        ];
+
+        yield 'config with process - glueSequentialComments false' => [
+            [
+                'registrar' => ['type' => 'github'],
+                'process' => [
+                    'glueSequentialComments' => false,
+                ],
+            ],
+        ];
+
+        yield 'config without process' => [
+            [
+                'registrar' => ['type' => 'github'],
+            ],
+        ];
     }
 
     public static function getDataForTestMissingRequiredFields(): iterable
@@ -260,6 +287,31 @@ final class ArrayConfigTest extends TestCase
         yield 'issueKeyInjection is int' => [
             ['registrar' => ['type' => 'github'], 'issueKeyInjection' => 123],
             'Option "issueKeyInjection" must be an array',
+        ];
+
+        yield 'process is string' => [
+            ['registrar' => ['type' => 'github'], 'process' => 'invalid'],
+            'Option "process" must be an array',
+        ];
+
+        yield 'process is int' => [
+            ['registrar' => ['type' => 'github'], 'process' => 123],
+            'Option "process" must be an array',
+        ];
+
+        yield 'process.glueSequentialComments is string' => [
+            ['registrar' => ['type' => 'github'], 'process' => ['glueSequentialComments' => 'true']],
+            'Option "process.glueSequentialComments" must be a boolean',
+        ];
+
+        yield 'process.glueSequentialComments is int' => [
+            ['registrar' => ['type' => 'github'], 'process' => ['glueSequentialComments' => 1]],
+            'Option "process.glueSequentialComments" must be a boolean',
+        ];
+
+        yield 'process with unknown key' => [
+            ['registrar' => ['type' => 'github'], 'process' => ['unknownOption' => true]],
+            'Unknown "process" options detected',
         ];
     }
 

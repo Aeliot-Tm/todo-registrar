@@ -15,6 +15,7 @@ Download descriptions from files IF you need to understand the work:
    - [Issue Key Injection](../docs/API/Feature/IssueKeyInjection.md)
    - [JIRA Registrar](../docs/API/Feature/JIRARegistrar.md)
    - [Redmine Registrar](../docs/API/Feature/RedmineRegistrar.md)
+   - [Sequential Comments Gluing](../docs/API/Feature/SequentialCommentsGluing.md)
    - [Yandex Tracker Registrar](../docs/API/Feature/YandexTrackerRegistrar.md)
 
 When updating functionality or when explicitly requested, update the corresponding documentation files.

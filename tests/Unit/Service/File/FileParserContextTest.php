@@ -13,7 +13,12 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Test\Unit\Service\File;
 
+use Aeliot\TodoRegistrar\Dto\FileHeap;
+use Aeliot\TodoRegistrar\Dto\Parsing\CommentNode;
+use Aeliot\TodoRegistrar\Dto\Parsing\ParsedFile;
+use Aeliot\TodoRegistrar\Dto\ProcessStatistic;
 use Aeliot\TodoRegistrar\Service\File\FileParser;
+use Aeliot\TodoRegistrar\Service\File\Saver;
 use Aeliot\TodoRegistrarContracts\ContextNodeInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
@@ -29,7 +34,7 @@ final class FileParserContextTest extends TestCase
         $parser = new FileParser();
 
         $parsedFile = $parser->parse($file);
-        $commentNodes = $parsedFile->getCommentNodes();
+        $commentNodes = $this->getCommentNodes($parsedFile);
 
         self::assertCount(59, $commentNodes, 'Expected 59 TODO comments in fixture');
 
@@ -54,7 +59,7 @@ final class FileParserContextTest extends TestCase
         $parser = new FileParser();
 
         $parsedFile = $parser->parse($file);
-        $commentNodes = $parsedFile->getCommentNodes();
+        $commentNodes = $this->getCommentNodes($parsedFile);
 
         self::assertGreaterThan(0, \count($commentNodes), 'Expected at least one comment');
 
@@ -92,7 +97,7 @@ final class FileParserContextTest extends TestCase
         $parser = new FileParser();
 
         $parsedFile = $parser->parse($file);
-        $commentNodes = $parsedFile->getCommentNodes();
+        $commentNodes = $this->getCommentNodes($parsedFile);
 
         self::assertGreaterThanOrEqual(2, \count($commentNodes), 'Expected at least two comments');
 
@@ -116,7 +121,7 @@ final class FileParserContextTest extends TestCase
         $parser = new FileParser();
 
         $parsedFile = $parser->parse($file);
-        $commentNodes = $parsedFile->getCommentNodes();
+        $commentNodes = $this->getCommentNodes($parsedFile);
 
         self::assertGreaterThan(0, \count($commentNodes), 'Expected at least one comment');
 
@@ -230,6 +235,18 @@ final class FileParserContextTest extends TestCase
         }
 
         return implode(' -> ', $lines);
+    }
+
+    /**
+     * @return CommentNode[]
+     */
+    private function getCommentNodes(ParsedFile $parsedFile): array
+    {
+        $statistic = new ProcessStatistic();
+        $saver = $this->createMock(Saver::class);
+        $fileHeap = new FileHeap($parsedFile, false, $statistic, $saver);
+
+        return $fileHeap->getCommentNodes();
     }
 
     private function getMockSplFileInfo(string $pathname): \SplFileInfo

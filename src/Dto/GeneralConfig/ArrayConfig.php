@@ -54,6 +54,15 @@ final class ArrayConfig
     )]
     private mixed $issueKeyInjection;
 
+    #[Assert\AtLeastOneOf(
+        constraints: [
+            new Assert\IsNull(),
+            new Assert\Type(type: ProcessArrayConfig::class, message: 'Option "process" must be an array'),
+        ],
+        message: 'Option "process" must be an object or not passed at all'
+    )]
+    private mixed $process;
+
     #[Assert\IsNull(message: 'Unknown configuration options detected: {{ value }}')]
     private mixed $invalidKeys = null;
 
@@ -71,11 +80,15 @@ final class ArrayConfig
         $issueKeyInjection = $options['issueKeyInjection'] ?? null;
         $this->issueKeyInjection = \is_array($issueKeyInjection) ? new IssueKeyInjectionArrayConfig($issueKeyInjection) : $issueKeyInjection;
 
+        $process = $options['process'] ?? null;
+        $this->process = \is_array($process) ? new ProcessArrayConfig($process) : $process;
+
         $this->tags = $options['tags'] ?? [];
 
         $knownKeys = [
             'issueKeyInjection',
             'paths',
+            'process',
             'registrar',
             'tags',
         ];
@@ -108,6 +121,11 @@ final class ArrayConfig
         return $this->issueKeyInjection;
     }
 
+    public function getProcess(): ?ProcessArrayConfig
+    {
+        return $this->process;
+    }
+
     public function getInvalidKeys(): ?string
     {
         return $this->invalidKeys;
@@ -135,6 +153,13 @@ final class ArrayConfig
                 ->inContext($context)
                 ->atPath('issueKeyInjection')
                 ->validate($this->issueKeyInjection);
+        }
+
+        if ($this->process instanceof ProcessArrayConfig) {
+            $context->getValidator()
+                ->inContext($context)
+                ->atPath('process')
+                ->validate($this->process);
         }
     }
 }

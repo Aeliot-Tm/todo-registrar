@@ -39,4 +39,14 @@ interface TokenInterface
      * Set token text content (mutable for comment modification after key injection).
      */
     public function setText(string $text): void;
+
+    /**
+     * Check if token is a comment.
+     */
+    public function isComment(): bool;
+
+    /**
+     * Check if token is a single-line comment.
+     */
+    public function isSingleLineComment(): bool;
 }

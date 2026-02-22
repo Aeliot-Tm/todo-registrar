@@ -30,3 +30,7 @@ indent_size = 4
 
 [.phive/trust-gpg-keys.txt]
 insert_final_newline = false
+
+# Preserve trailing whitespace in test fixtures
+[tests/fixtures/comments_gluing/*.php]
+trim_trailing_whitespace = false

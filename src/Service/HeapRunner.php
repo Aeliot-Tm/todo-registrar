@@ -16,6 +16,7 @@ namespace Aeliot\TodoRegistrar\Service;
 use Aeliot\TodoRegistrar\Console\OutputAdapter;
 use Aeliot\TodoRegistrar\Dto\Comment\CommentPart;
 use Aeliot\TodoRegistrar\Dto\FileHeap;
+use Aeliot\TodoRegistrar\Dto\GeneralConfig\ProcessConfig;
 use Aeliot\TodoRegistrar\Dto\ProcessStatistic;
 use Aeliot\TodoRegistrar\Dto\Registrar\Todo;
 use Aeliot\TodoRegistrar\Exception\CommentRegistrationException;
@@ -23,6 +24,8 @@ use Aeliot\TodoRegistrar\Service\Comment\Extractor as CommentExtractor;
 use Aeliot\TodoRegistrar\Service\File\FileParser;
 use Aeliot\TodoRegistrar\Service\File\Saver;
 use Aeliot\TodoRegistrarContracts\FinderInterface;
+use Aeliot\TodoRegistrarContracts\GeneralConfigInterface;
+use Aeliot\TodoRegistrarContracts\ProcessAwareGeneralConfigInterface;
 use Aeliot\TodoRegistrarContracts\RegistrarInterface;
 
 /**
@@ -38,6 +41,7 @@ final readonly class HeapRunner
         private RegistrarInterface $registrar,
         private Saver $saver,
         private TodoBuilder $todoBuilder,
+        private GeneralConfigInterface $config,
     ) {
     }
 
@@ -59,7 +63,6 @@ final readonly class HeapRunner
     {
         foreach ($this->getFileHeaps($statistic) as $fileHeap) {
             foreach ($fileHeap->getCommentNodes() as $commentNode) {
-                // TODO: #13 implement gluing of simple comments
                 $token = $commentNode->getToken();
                 $commentParts = $this->commentExtractor->extract($token->getText(), $token, $commentNode->getContext());
 
@@ -87,21 +90,23 @@ final readonly class HeapRunner
      */
     private function getFileHeaps(ProcessStatistic $statistic): \Generator
     {
+        $glueSequentialComments = $this->getGlueSequentialComments();
+
         foreach ($this->finder as $file) {
             $this->output->writeln("Begin process file: {$file->getPathname()}", OutputAdapter::VERBOSITY_DEBUG);
             try {
-                $parsedFile = $this->fileParser->parse($file);
-                $countCommentNodes = \count($parsedFile->getCommentNodes());
+                $fileHeap = new FileHeap(
+                    $this->fileParser->parse($file),
+                    $glueSequentialComments,
+                    $statistic,
+                    $this->saver,
+                );
 
+                $countCommentNodes = \count($fileHeap->getCommentNodes());
                 if ($this->output->isDebug()) {
                     $this->output->writeln("Detected comment nodes: {$countCommentNodes}");
                 }
 
-                $fileHeap = new FileHeap(
-                    $parsedFile,
-                    $statistic,
-                    $this->saver,
-                );
                 yield $fileHeap;
 
                 if (
@@ -122,6 +127,13 @@ final readonly class HeapRunner
                 throw $exception;
             }
         }
+    }
+
+    private function getGlueSequentialComments(): bool
+    {
+        return ($this->config instanceof ProcessAwareGeneralConfigInterface
+            ? $this->config->getProcessConfig()?->isGlueSequentialComments()
+            : null) ?? ProcessConfig::DEFAULT_GLUE_SEQUENTIAL_COMMENTS;
     }
 
     /**

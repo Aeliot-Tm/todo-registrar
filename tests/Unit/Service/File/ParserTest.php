@@ -13,9 +13,12 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Test\Unit\Service\File;
 
+use Aeliot\TodoRegistrar\Dto\FileHeap;
 use Aeliot\TodoRegistrar\Dto\Parsing\CommentNode;
+use Aeliot\TodoRegistrar\Dto\ProcessStatistic;
 use Aeliot\TodoRegistrar\Dto\Tag\TagMetadata;
 use Aeliot\TodoRegistrar\Service\File\FileParser;
+use Aeliot\TodoRegistrar\Service\File\Saver;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\UsesClass;
@@ -66,8 +69,11 @@ CONT,
     private function getCommentNodes(string $path): array
     {
         $parsedFile = (new FileParser())->parse($this->getMockSplFileInfo($path));
+        $statistic = new ProcessStatistic();
+        $saver = $this->createMock(Saver::class);
+        $fileHeap = new FileHeap($parsedFile, false, $statistic, $saver);
 
-        return $parsedFile->getCommentNodes();
+        return $fileHeap->getCommentNodes();
     }
 
     private function getMockSplFileInfo(string $pathname): \SplFileInfo&MockObject

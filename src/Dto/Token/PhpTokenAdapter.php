@@ -46,4 +46,20 @@ final class PhpTokenAdapter implements TokenInterface
     {
         $this->phpToken->text = $text;
     }
+
+    public function isComment(): bool
+    {
+        return \in_array($this->phpToken->id, [\T_COMMENT, \T_DOC_COMMENT], true);
+    }
+
+    public function isSingleLineComment(): bool
+    {
+        if (!$this->isComment()) {
+            return false;
+        }
+
+        $text = ltrim($this->phpToken->text);
+
+        return str_starts_with($text, '//') || str_starts_with($text, '#');
+    }
 }
