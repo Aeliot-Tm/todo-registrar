@@ -33,3 +33,5 @@ When creating new documentation files:
      Format: `- [Description](../docs/API/Feature/[FileName].md)` (Markdown links format).
    - Use relative paths from this file (starting with `../docs/`).
    - Keep entries in alphabetical order by description for better organization.
+
+IMPORTANT: You MUST NOT create links from user's documents to `.cursor` rules! Keep them totally separated.

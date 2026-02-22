@@ -40,3 +40,5 @@ Follow these rules when developing:
 9. After creating or updating *.php files, at the end of the work run these shell scripts:
    1. PHP CS Fixer: `composer cs-fix -- --show-progress=none`
    2. PHPStan: `composer phpstan`
+
+10. Don't run tests, `cs-fix` and `phpstan` when only documentation is updated.
