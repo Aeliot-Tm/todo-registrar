@@ -16,6 +16,7 @@ namespace Aeliot\TodoRegistrar\Test\Unit\Dto;
 use Aeliot\TodoRegistrar\Dto\FileHeap;
 use Aeliot\TodoRegistrar\Dto\Parsing\CommentNode;
 use Aeliot\TodoRegistrar\Dto\ProcessStatistic;
+use Aeliot\TodoRegistrar\Dto\Token\TokenInterface;
 use Aeliot\TodoRegistrar\Service\File\FileParser;
 use Aeliot\TodoRegistrar\Service\File\Saver;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -107,7 +108,10 @@ final class FileHeapTest extends TestCase
     public function testGluing(array $expectedTexts, string $pathname, bool $glueSequentialComments): void
     {
         self::assertSame($expectedTexts, array_map(
-            static fn (CommentNode $x): string => $x->getToken()->getText(),
+            static fn (CommentNode $x): string => implode('', array_map(
+                static fn (TokenInterface $token): string => $token->getText(),
+                $x->getTokens(),
+            )),
             $this->getCommentNodes($pathname, $glueSequentialComments),
         ));
     }

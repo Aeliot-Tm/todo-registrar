@@ -15,10 +15,15 @@ namespace Aeliot\TodoRegistrar\Test\Unit\Service\Comment;
 
 use Aeliot\TodoRegistrar\Dto\Comment\CommentPart;
 use Aeliot\TodoRegistrar\Dto\Comment\CommentParts;
+use Aeliot\TodoRegistrar\Dto\Parsing\CommentNode;
 use Aeliot\TodoRegistrar\Dto\Parsing\MappedContext;
 use Aeliot\TodoRegistrar\Dto\Tag\TagMetadata;
 use Aeliot\TodoRegistrar\Dto\Token\PhpTokenAdapter;
 use Aeliot\TodoRegistrar\Dto\Token\TokenInterface;
+use Aeliot\TodoRegistrar\Dto\Token\TokenLine;
+use Aeliot\TodoRegistrar\Dto\Token\TokenLinesStack;
+use Aeliot\TodoRegistrar\Service\Comment\Cleaner\PhpCommentCleaner;
+use Aeliot\TodoRegistrar\Service\Comment\CommentCleanerRegistry;
 use Aeliot\TodoRegistrar\Service\Comment\Extractor;
 use Aeliot\TodoRegistrar\Service\Tag\Detector as TagDetector;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -27,40 +32,30 @@ use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(Extractor::class)]
+#[UsesClass(CommentCleanerRegistry::class)]
+#[UsesClass(CommentNode::class)]
 #[UsesClass(CommentPart::class)]
 #[UsesClass(CommentParts::class)]
+#[UsesClass(PhpCommentCleaner::class)]
 #[UsesClass(TagDetector::class)]
 #[UsesClass(TagMetadata::class)]
+#[UsesClass(TokenLine::class)]
+#[UsesClass(TokenLinesStack::class)]
 final class ExtractorTest extends TestCase
 {
-    public static function getDataForTestCatchLineSeparator(): iterable
-    {
-        yield [
-            <<<CONT
-/*
- * TODO: multi line comment
- *       with some extra description.
- */
-CONT,
-        ];
-    }
-
     public static function getDataForTestCountOfParts(): iterable
     {
         yield [
-            1,
             1,
             '// TODO single line comment',
         ];
 
         yield [
             1,
-            1,
             '# TODO single line comment',
         ];
 
         yield [
-            1,
             1,
             <<<CONT
 # TODO single line comment
@@ -69,7 +64,6 @@ CONT,
         ];
 
         yield [
-            3,
             1,
             <<<CONT
 /*
@@ -79,7 +73,6 @@ CONT,
         ];
 
         yield [
-            3,
             1,
             <<<CONT
 /*
@@ -90,21 +83,24 @@ CONT,
         ];
     }
 
-    #[DataProvider('getDataForTestCatchLineSeparator')]
-    public function testCatchLineSeparator(string $comment): void
+    #[DataProvider('getDataForTestCountOfParts')]
+    public function testCountOfParts(int $expectedTodoCount, string $comment): void
     {
-        $token = $this->createPhpToken($comment);
-        $parts = (new Extractor(new TagDetector(['todo', 'fixme'], [':', '-'])))->extract($comment, $token, $this->createLazyContext());
-        self::assertSame($comment, $parts->getContent());
+        $parts = $this->createExtractor()->extract($this->createCommentNode($comment));
+        self::assertCount($expectedTodoCount, $parts->getTodos());
     }
 
-    #[DataProvider('getDataForTestCountOfParts')]
-    public function testCountOfParts(int $expectedTotalCount, int $expectedTodoCount, string $comment): void
+    private function createCommentNode(string $comment): CommentNode
     {
-        $token = $this->createPhpToken($comment);
-        $parts = (new Extractor(new TagDetector(['todo', 'fixme'], [':', '-'])))->extract($comment, $token, $this->createLazyContext());
-        self::assertCount($expectedTotalCount, $parts->getParts());
-        self::assertCount($expectedTodoCount, $parts->getTodos());
+        return new CommentNode([$this->createPhpToken($comment)], $this->createLazyContext());
+    }
+
+    private function createExtractor(): Extractor
+    {
+        return new Extractor(
+            new TagDetector(['todo', 'fixme'], [':', '-']),
+            new CommentCleanerRegistry([new PhpCommentCleaner()]),
+        );
     }
 
     private function createPhpToken(string $comment): TokenInterface

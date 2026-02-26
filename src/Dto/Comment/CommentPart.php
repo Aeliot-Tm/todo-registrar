@@ -15,6 +15,8 @@ namespace Aeliot\TodoRegistrar\Dto\Comment;
 
 use Aeliot\TodoRegistrar\Dto\Parsing\ContextInterface;
 use Aeliot\TodoRegistrar\Dto\Tag\TagMetadata;
+use Aeliot\TodoRegistrar\Dto\Token\TokenLine;
+use Aeliot\TodoRegistrar\Dto\Token\TokenLinesStack;
 use Aeliot\TodoRegistrar\Enum\IssueKeyPosition;
 use Aeliot\TodoRegistrar\Exception\NoLineException;
 use Aeliot\TodoRegistrar\Exception\NoPrefixException;
@@ -25,20 +27,33 @@ use Aeliot\TodoRegistrar\Exception\NoPrefixException;
 final class CommentPart
 {
     /**
-     * @var string[]
+     * @var TokenLine[]
      */
     private array $lines = [];
 
+    /**
+     * @var TokenLinesStack[]
+     */
+    private array $tokenLinesStacks = [];
+
     public function __construct(
-        private int $startLine,
-        private ?TagMetadata $tagMetadata,
-        private ContextInterface $context,
+        private readonly int $startLine,
+        private readonly ?TagMetadata $tagMetadata,
+        private readonly ContextInterface $context,
     ) {
     }
 
-    public function addLine(string $line): void
+    public function addLine(TokenLine $line): void
     {
         $this->lines[] = $line;
+    }
+
+    public function addTokenLinesStack(TokenLinesStack $tokenLinesStack): void
+    {
+        // TODO: consider cleaning outside
+        if (!\in_array($tokenLinesStack, $this->tokenLinesStacks, true)) {
+            $this->tokenLinesStacks[] = $tokenLinesStack;
+        }
     }
 
     public function getContent(): string
@@ -47,7 +62,10 @@ final class CommentPart
             throw new NoLineException('Cannot get content till added one line');
         }
 
-        return implode('', $this->lines);
+        return implode('', array_map(
+            static fn (TokenLine $line): string => $line->reconstruct(),
+            $this->lines,
+        ));
     }
 
     public function getContext(): ContextInterface
@@ -64,37 +82,24 @@ final class CommentPart
         $prefixLength = (int) $this->tagMetadata?->getPrefixLength();
         $lines = $this->lines;
         array_shift($lines);
-        $lines = array_map(static fn (string $line): string => substr($line, $prefixLength), $lines);
+        $lines = array_map(
+            // TODO: consider avoiding unconditional string substruction
+            static fn (TokenLine $line): string => substr($line->getContent(), $prefixLength) . $line->getEol(),
+            $lines,
+        );
 
         return implode('', $lines);
     }
 
-    public function getFirstLine(): string
+    public function getSummary(): string
     {
         if (!$this->lines) {
             throw new NoLineException('Cannot get first line till added one');
         }
 
-        return reset($this->lines);
-    }
+        $prefixLength = (int) $this->tagMetadata?->getPrefixLength();
 
-    /**
-     * @return string[]
-     */
-    public function getLines(): array
-    {
-        return $this->lines;
-    }
-
-    public function getPrefixLength(): ?int
-    {
-        // THINK: throw exception when there is no prefix
-        return $this->tagMetadata?->getPrefixLength();
-    }
-
-    public function getSummary(): string
-    {
-        return trim(substr($this->getFirstLine(), $this->getPrefixLength()));
+        return trim(substr($this->lines[0]->getContent(), $prefixLength));
     }
 
     public function getTag(): ?string
@@ -119,14 +124,14 @@ final class CommentPart
         }
 
         $offset = $this->getSeparatorOffset($position);
-        $line = $this->lines[0];
+        $content = $this->lines[0]->getContent();
         $separatorOffset = $this->tagMetadata?->getSeparatorOffset();
 
         if ($replaceSeparator && null !== $newSeparator && null !== $separatorOffset) {
-            $line[$separatorOffset] = $newSeparator;
+            $content[$separatorOffset] = $newSeparator;
         }
 
-        [$before, $after, $middleSpace] = $this->splitLine($line, $offset);
+        [$before, $after, $middleSpace] = $this->splitLine($content, $offset);
 
         $parts = [$before];
         $parts[] = $middleSpace->getSpace();
@@ -153,7 +158,16 @@ final class CommentPart
         $parts[] = $middleSpace->grabTail();
         $parts[] = $after;
 
-        $this->lines[0] = implode('', $parts);
+        $this->lines[0]->setContent(implode('', $parts));
+
+        $this->flushTokenWriters();
+    }
+
+    private function flushTokenWriters(): void
+    {
+        foreach ($this->tokenLinesStacks as $writer) {
+            $writer->flush();
+        }
     }
 
     private function getSeparatorOffset(IssueKeyPosition $position): int

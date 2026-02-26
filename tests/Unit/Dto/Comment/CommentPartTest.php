@@ -16,6 +16,7 @@ namespace Aeliot\TodoRegistrar\Test\Unit\Dto\Comment;
 use Aeliot\TodoRegistrar\Dto\Comment\CommentPart;
 use Aeliot\TodoRegistrar\Dto\Parsing\MappedContext;
 use Aeliot\TodoRegistrar\Dto\Tag\TagMetadata;
+use Aeliot\TodoRegistrar\Dto\Token\TokenLine;
 use Aeliot\TodoRegistrar\Enum\IssueKeyPosition;
 use Aeliot\TodoRegistrar\Exception\NoLineException;
 use Aeliot\TodoRegistrar\Exception\NoPrefixException;
@@ -27,25 +28,34 @@ use PHPUnit\Framework\TestCase;
 #[CoversClass(CommentPart::class)]
 #[UsesClass(TagMetadata::class)]
 #[UsesClass(IssueKeyPosition::class)]
+#[UsesClass(TokenLine::class)]
 final class CommentPartTest extends TestCase
 {
     /**
-     * @return iterable<array{0: string, 1: array<string> }>
+     * @return iterable<array{0: string, 1: array<TokenLine>}>
      */
     public static function getDataForTestGetContent(): iterable
     {
-        yield ['abc', ['a', 'b', 'c']];
-        yield ['bca', ['b', 'c', 'a']];
-
-        $lines = [
-            " * TODO: first line of description\n",
-            " *       second line of description\n",
+        yield [
+            'abc',
+            [
+                new TokenLine('', 'a', '', ''),
+                new TokenLine('', 'b', '', ''),
+                new TokenLine('', 'c', '', ''),
+            ],
         ];
-        yield [implode('', $lines), $lines];
+
+        yield [
+            " * TODO: first line of description\n *       second line of description\n",
+            [
+                new TokenLine(' * ', 'TODO: first line of description', '', "\n"),
+                new TokenLine(' * ', '      second line of description', '', "\n"),
+            ],
+        ];
     }
 
     /**
-     * @return iterable<array{0: string, 1: array<string>, 2: int}>
+     * @return iterable<array{0: string, 1: array<TokenLine>, 2: int}>
      */
     public static function getDataForTestGetDescription(): iterable
     {
@@ -53,43 +63,43 @@ final class CommentPartTest extends TestCase
             " second line of description\n" .
             " third line of description\n",
             [
-                " * TODO: first line of description\n",
-                " *       second line of description\n",
-                " *       third line of description\n",
+                new TokenLine(' * ', 'TODO: first line of description', '', "\n"),
+                new TokenLine(' * ', '      second line of description', '', "\n"),
+                new TokenLine(' * ', '      third line of description', '', "\n"),
             ],
-            8,
+            5,
         ];
 
         yield [
             '',
             [
-                ' # TODO: one line of description',
+                new TokenLine(' # ', 'TODO: one line of description', '', ''),
             ],
-            8,
+            5,
         ];
     }
 
     /**
-     * @return iterable<array{0: string, 1: array<string>, 2: int}>
+     * @return iterable<array{0: string, 1: array<TokenLine>, 2: int}>
      */
     public static function getDataForTestGetSummary(): iterable
     {
         yield [
             'first line of description',
             [
-                " * TODO: first line of description\n",
-                " *       second line of description\n",
-                " *       third line of description\n",
+                new TokenLine(' * ', 'TODO: first line of description', '', "\n"),
+                new TokenLine(' * ', '      second line of description', '', "\n"),
+                new TokenLine(' * ', '      third line of description', '', "\n"),
             ],
-            8,
+            5,
         ];
 
         yield [
             'one line of description',
             [
-                ' # TODO: one line of description',
+                new TokenLine(' # ', 'TODO: one line of description', '', ''),
             ],
-            8,
+            5,
         ];
     }
 
@@ -100,7 +110,7 @@ final class CommentPartTest extends TestCase
      *     2: IssueKeyPosition,
      *     3: int,
      *     4: int|null,
-     *     5: array<string>,
+     *     5: array<TokenLine>,
      *     6: string|null,
      *     7: bool
      * }>
@@ -114,7 +124,7 @@ final class CommentPartTest extends TestCase
             IssueKeyPosition::BEFORE_SEPARATOR,
             4,
             null,
-            ['TODO description'],
+            [new TokenLine('', 'TODO description', '', '')],
             null,
             false,
         ];
@@ -124,7 +134,7 @@ final class CommentPartTest extends TestCase
             IssueKeyPosition::AFTER_SEPARATOR,
             4,
             null,
-            ['TODO description'],
+            [new TokenLine('', 'TODO description', '', '')],
             null,
             false,
         ];
@@ -134,7 +144,7 @@ final class CommentPartTest extends TestCase
             IssueKeyPosition::BEFORE_SEPARATOR,
             4,
             null,
-            ['TODO  description'],
+            [new TokenLine('', 'TODO  description', '', '')],
             null,
             false,
         ];
@@ -146,7 +156,7 @@ final class CommentPartTest extends TestCase
             IssueKeyPosition::BEFORE_SEPARATOR,
             4,
             4,
-            ['TODO: description'],
+            [new TokenLine('', 'TODO: description', '', '')],
             null,
             false,
         ];
@@ -156,7 +166,7 @@ final class CommentPartTest extends TestCase
             IssueKeyPosition::BEFORE_SEPARATOR,
             4,
             5,
-            ['TODO : description'],
+            [new TokenLine('', 'TODO : description', '', '')],
             null,
             false,
         ];
@@ -166,7 +176,7 @@ final class CommentPartTest extends TestCase
             IssueKeyPosition::BEFORE_SEPARATOR,
             4,
             6,
-            ['TODO  : description'],
+            [new TokenLine('', 'TODO  : description', '', '')],
             null,
             false,
         ];
@@ -176,7 +186,7 @@ final class CommentPartTest extends TestCase
             IssueKeyPosition::BEFORE_SEPARATOR,
             4,
             7,
-            ['TODO   : description'],
+            [new TokenLine('', 'TODO   : description', '', '')],
             null,
             false,
         ];
@@ -186,7 +196,7 @@ final class CommentPartTest extends TestCase
             IssueKeyPosition::BEFORE_SEPARATOR,
             4,
             4,
-            ['TODO- description'],
+            [new TokenLine('', 'TODO- description', '', '')],
             null,
             false,
         ];
@@ -198,7 +208,7 @@ final class CommentPartTest extends TestCase
             IssueKeyPosition::AFTER_SEPARATOR,
             4,
             4,
-            ['TODO: description'],
+            [new TokenLine('', 'TODO: description', '', '')],
             null,
             false,
         ];
@@ -208,7 +218,7 @@ final class CommentPartTest extends TestCase
             IssueKeyPosition::AFTER_SEPARATOR,
             4,
             4,
-            ['TODO:  description'],
+            [new TokenLine('', 'TODO:  description', '', '')],
             null,
             false,
         ];
@@ -218,7 +228,7 @@ final class CommentPartTest extends TestCase
             IssueKeyPosition::AFTER_SEPARATOR,
             4,
             5,
-            ['TODO : description'],
+            [new TokenLine('', 'TODO : description', '', '')],
             null,
             false,
         ];
@@ -228,7 +238,7 @@ final class CommentPartTest extends TestCase
             IssueKeyPosition::AFTER_SEPARATOR,
             4,
             5,
-            ['TODO :  description'],
+            [new TokenLine('', 'TODO :  description', '', '')],
             null,
             false,
         ];
@@ -238,7 +248,7 @@ final class CommentPartTest extends TestCase
             IssueKeyPosition::AFTER_SEPARATOR,
             4,
             5,
-            ['TODO :   description'],
+            [new TokenLine('', 'TODO :   description', '', '')],
             null,
             false,
         ];
@@ -248,7 +258,7 @@ final class CommentPartTest extends TestCase
             IssueKeyPosition::AFTER_SEPARATOR,
             4,
             4,
-            ['TODO- description'],
+            [new TokenLine('', 'TODO- description', '', '')],
             null,
             false,
         ];
@@ -258,11 +268,11 @@ final class CommentPartTest extends TestCase
             " * TODO: KEY-123 first line of description\n *       second line of description\n",
             'KEY-123',
             IssueKeyPosition::AFTER_SEPARATOR,
-            8,
-            8,
+            5,
+            4,
             [
-                " * TODO: first line of description\n",
-                " *       second line of description\n",
+                new TokenLine(' * ', 'TODO: first line of description', '', "\n"),
+                new TokenLine(' * ', '      second line of description', '', "\n"),
             ],
             null,
             false,
@@ -270,14 +280,14 @@ final class CommentPartTest extends TestCase
 
         // Multi-line comments with BEFORE_SEPARATOR
         yield [
-            " * TODO: KEY-123 first line of description\n *       second line of description\n",
+            " * TODO KEY-123 : first line of description\n *       second line of description\n",
             'KEY-123',
             IssueKeyPosition::BEFORE_SEPARATOR,
-            8,
-            8,
+            5,
+            4,
             [
-                " * TODO: first line of description\n",
-                " *       second line of description\n",
+                new TokenLine(' * ', 'TODO: first line of description', '', "\n"),
+                new TokenLine(' * ', '      second line of description', '', "\n"),
             ],
             null,
             false,
@@ -290,7 +300,7 @@ final class CommentPartTest extends TestCase
             IssueKeyPosition::BEFORE_SEPARATOR,
             4,
             4,
-            ['TODO:description'],
+            [new TokenLine('', 'TODO:description', '', '')],
             null,
             false,
         ];
@@ -300,7 +310,7 @@ final class CommentPartTest extends TestCase
             IssueKeyPosition::AFTER_SEPARATOR,
             4,
             4,
-            ['TODO:description'],
+            [new TokenLine('', 'TODO:description', '', '')],
             null,
             false,
         ];
@@ -310,7 +320,7 @@ final class CommentPartTest extends TestCase
             IssueKeyPosition::BEFORE_SEPARATOR,
             4,
             null,
-            ['TODOdescription'],
+            [new TokenLine('', 'TODOdescription', '', '')],
             null,
             false,
         ];
@@ -322,7 +332,7 @@ final class CommentPartTest extends TestCase
             IssueKeyPosition::BEFORE_SEPARATOR_STICKY,
             4,
             4,
-            ['TODO: description'],
+            [new TokenLine('', 'TODO: description', '', '')],
             null,
             false,
         ];
@@ -332,7 +342,7 @@ final class CommentPartTest extends TestCase
             IssueKeyPosition::BEFORE_SEPARATOR_STICKY,
             4,
             5,
-            ['TODO : description'],
+            [new TokenLine('', 'TODO : description', '', '')],
             null,
             false,
         ];
@@ -342,7 +352,7 @@ final class CommentPartTest extends TestCase
             IssueKeyPosition::BEFORE_SEPARATOR_STICKY,
             4,
             6,
-            ['TODO  : description'],
+            [new TokenLine('', 'TODO  : description', '', '')],
             null,
             false,
         ];
@@ -352,7 +362,7 @@ final class CommentPartTest extends TestCase
             IssueKeyPosition::BEFORE_SEPARATOR_STICKY,
             4,
             8,
-            ['TODO    : description'],
+            [new TokenLine('', 'TODO    : description', '', '')],
             null,
             false,
         ];
@@ -362,7 +372,7 @@ final class CommentPartTest extends TestCase
             IssueKeyPosition::BEFORE_SEPARATOR_STICKY,
             4,
             4,
-            ['TODO- description'],
+            [new TokenLine('', 'TODO- description', '', '')],
             null,
             false,
         ];
@@ -372,7 +382,7 @@ final class CommentPartTest extends TestCase
             IssueKeyPosition::BEFORE_SEPARATOR_STICKY,
             4,
             7,
-            ['TODO   - description'],
+            [new TokenLine('', 'TODO   - description', '', '')],
             null,
             false,
         ];
@@ -382,7 +392,7 @@ final class CommentPartTest extends TestCase
             IssueKeyPosition::BEFORE_SEPARATOR_STICKY,
             4,
             4,
-            ['TODO: description'],
+            [new TokenLine('', 'TODO: description', '', '')],
             null,
             false,
         ];
@@ -390,11 +400,11 @@ final class CommentPartTest extends TestCase
             " * TODO KEY-123: first line of description\n *       second line of description\n",
             'KEY-123',
             IssueKeyPosition::BEFORE_SEPARATOR_STICKY,
-            8,
-            7,
+            5,
+            4,
             [
-                " * TODO: first line of description\n",
-                " *       second line of description\n",
+                new TokenLine(' * ', 'TODO: first line of description', '', "\n"),
+                new TokenLine(' * ', '      second line of description', '', "\n"),
             ],
             null,
             false,
@@ -403,25 +413,24 @@ final class CommentPartTest extends TestCase
             " * TODO    KEY-123: first line of description\n *       second line of description\n",
             'KEY-123',
             IssueKeyPosition::BEFORE_SEPARATOR_STICKY,
+            5,
             8,
-            11,
             [
-                " * TODO    : first line of description\n",
-                " *       second line of description\n",
+                new TokenLine(' * ', 'TODO    : first line of description', '', "\n"),
+                new TokenLine(' * ', '      second line of description', '', "\n"),
             ],
             null,
             false,
         ];
 
         // NewSeparator tests
-        // Case 1: NewSeparator=null (ignore ReplaceSeparator)
         yield [
             'TODO: KEY-123 text',
             'KEY-123',
             IssueKeyPosition::AFTER_SEPARATOR,
             4,
             4,
-            ['TODO: text'],
+            [new TokenLine('', 'TODO: text', '', '')],
             null,
             true,
         ];
@@ -431,7 +440,7 @@ final class CommentPartTest extends TestCase
             IssueKeyPosition::AFTER_SEPARATOR,
             4,
             4,
-            ['TODO: text'],
+            [new TokenLine('', 'TODO: text', '', '')],
             null,
             false,
         ];
@@ -443,7 +452,7 @@ final class CommentPartTest extends TestCase
             IssueKeyPosition::AFTER_SEPARATOR,
             4,
             4,
-            ['TODO: text'],
+            [new TokenLine('', 'TODO: text', '', '')],
             '-',
             true,
         ];
@@ -453,7 +462,7 @@ final class CommentPartTest extends TestCase
             IssueKeyPosition::AFTER_SEPARATOR,
             4,
             5,
-            ['TODO : text'],
+            [new TokenLine('', 'TODO : text', '', '')],
             '|',
             true,
         ];
@@ -465,7 +474,7 @@ final class CommentPartTest extends TestCase
             IssueKeyPosition::AFTER_SEPARATOR,
             4,
             4,
-            ['TODO: text'],
+            [new TokenLine('', 'TODO: text', '', '')],
             '-',
             false,
         ];
@@ -475,19 +484,19 @@ final class CommentPartTest extends TestCase
             IssueKeyPosition::AFTER_SEPARATOR,
             4,
             4,
-            ['TODO- text'],
+            [new TokenLine('', 'TODO- text', '', '')],
             ':',
             false,
         ];
 
-        // Case 4: Separator is found and NewSeparator is defined
+        // Case 4: Separator not found and NewSeparator is defined
         yield [
             'TODO KEY-123 - text',
             'KEY-123',
             IssueKeyPosition::BEFORE_SEPARATOR,
             4,
             null,
-            ['TODO text'],
+            [new TokenLine('', 'TODO text', '', '')],
             '-',
             false,
         ];
@@ -497,7 +506,7 @@ final class CommentPartTest extends TestCase
             IssueKeyPosition::BEFORE_SEPARATOR,
             4,
             null,
-            ['TODO text'],
+            [new TokenLine('', 'TODO text', '', '')],
             '-',
             true,
         ];
@@ -507,7 +516,7 @@ final class CommentPartTest extends TestCase
             IssueKeyPosition::BEFORE_SEPARATOR,
             4,
             null,
-            ['TODO  text'],
+            [new TokenLine('', 'TODO  text', '', '')],
             ':',
             false,
         ];
@@ -524,7 +533,7 @@ final class CommentPartTest extends TestCase
     }
 
     /**
-     * @param string[] $lines
+     * @param TokenLine[] $lines
      */
     #[DataProvider('getDataForTestGetContent')]
     public function testGetContent(string $expectedContent, array $lines): void
@@ -540,15 +549,8 @@ final class CommentPartTest extends TestCase
         $commentPart->getContent();
     }
 
-    public function testGetFirstLineThrowsExceptionWithoutLines(): void
-    {
-        $this->expectException(NoLineException::class);
-        $commentPart = new CommentPart(1, null, $this->createLazyContext());
-        $commentPart->getFirstLine();
-    }
-
     /**
-     * @param string[] $lines
+     * @param TokenLine[] $lines
      */
     #[DataProvider('getDataForTestGetDescription')]
     public function testGetDescription(string $expected, array $lines, int $prefixLength): void
@@ -556,13 +558,13 @@ final class CommentPartTest extends TestCase
         $metadata = $this->createMock(TagMetadata::class);
         $metadata->method('getPrefixLength')->willReturn($prefixLength);
         $commentPart = new CommentPart(1, $metadata, $this->createLazyContext());
-        array_walk($lines, static fn (string $line) => $commentPart->addLine($line));
+        array_walk($lines, static fn (TokenLine $line) => $commentPart->addLine($line));
 
         self::assertEquals($expected, $commentPart->getDescription());
     }
 
     /**
-     * @param string[] $lines
+     * @param TokenLine[] $lines
      */
     #[DataProvider('getDataForTestGetSummary')]
     public function testGetSummary(string $expected, array $lines, int $prefixLength): void
@@ -570,13 +572,13 @@ final class CommentPartTest extends TestCase
         $metadata = $this->createMock(TagMetadata::class);
         $metadata->method('getPrefixLength')->willReturn($prefixLength);
         $commentPart = new CommentPart(1, $metadata, $this->createLazyContext());
-        array_walk($lines, static fn (string $line) => $commentPart->addLine($line));
+        array_walk($lines, static fn (TokenLine $line) => $commentPart->addLine($line));
 
         self::assertEquals($expected, $commentPart->getSummary());
     }
 
     /**
-     * @param string[] $lines
+     * @param TokenLine[] $lines
      */
     #[DataProvider('getDataForTestInjectKey')]
     public function testInjectKey(
@@ -587,7 +589,7 @@ final class CommentPartTest extends TestCase
         ?int $separatorOffset,
         array $lines,
         ?string $newSeparator,
-        bool $replaceSeparator
+        bool $replaceSeparator,
     ): void {
         $tagMetadata = new TagMetadata(null, $prefixLength, null, $separatorOffset, null);
         $commentPart = $this->createCommentPartWithLines($lines, $tagMetadata);
@@ -608,12 +610,12 @@ final class CommentPartTest extends TestCase
         $this->expectException(NoPrefixException::class);
 
         $commentPart = new CommentPart(1, new TagMetadata(null, $prefixLength, null, null, null), $this->createLazyContext());
-        $commentPart->addLine('any text of line');
+        $commentPart->addLine(new TokenLine('', 'any text of line', '', ''));
         $commentPart->injectKey('any key', IssueKeyPosition::AFTER_SEPARATOR, null, false);
     }
 
     /**
-     * @param string[] $lines
+     * @param TokenLine[] $lines
      */
     private function createCommentPartWithLines(array $lines, ?TagMetadata $tagMetadata = null): CommentPart
     {

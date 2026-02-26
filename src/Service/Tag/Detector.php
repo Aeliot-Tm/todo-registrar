@@ -33,7 +33,7 @@ final readonly class Detector
         $sepRegex = implode('|', $this->getSeparatorExpressions($separators));
         $this->pattern = implode('', [
             '~^(?P<prefix>',
-            "[\s\#*/]*@?(?P<tag>$tagsPart)",
+            "\s*@?(?P<tag>$tagsPart)",
             "(?:@(?P<assignee>[a-z0-9._-]+\b))?",
             "(?:\s*(?P<sepBefore>$sepRegex))?",
             "\s*(?P<ticketKey>$keyRegex)?",

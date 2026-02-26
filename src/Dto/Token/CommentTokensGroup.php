@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Dto\Token;
 
 /**
- * Helper class for building composite tokens from consecutive single-line comments.
+ * Helper class for grouping consecutive single-line comment tokens.
  *
  * @internal
  */
@@ -51,22 +51,20 @@ final class CommentTokensGroup
         return !empty($this->pendingWhitespace);
     }
 
-    public function clearPendingWhitespace(): void
-    {
-        $this->pendingWhitespace = [];
-    }
-
     public function isEmpty(): bool
     {
         return empty($this->tokens);
     }
 
-    public function grabToken(): TokenInterface
+    /**
+     * @return TokenInterface[]
+     */
+    public function grabTokens(): array
     {
-        $token = 1 === \count($this->tokens) ? $this->tokens[0] : new CompositeToken($this->tokens);
+        $tokens = $this->tokens;
         $this->tokens = [];
         $this->pendingWhitespace = [];
 
-        return $token;
+        return $tokens;
     }
 }

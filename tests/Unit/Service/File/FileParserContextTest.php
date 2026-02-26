@@ -48,7 +48,7 @@ final class FileParserContextTest extends TestCase
             self::assertSame(
                 $expectedContexts[$index],
                 $actualPath,
-                "Context mismatch for comment #{$index}: {$commentNode->getToken()->text}"
+                "Context mismatch for comment #{$index}: {$commentNode->getTokens()[0]->getText()}"
             );
         }
     }
