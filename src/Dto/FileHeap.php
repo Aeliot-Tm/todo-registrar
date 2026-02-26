@@ -121,6 +121,6 @@ final class FileHeap
 
     private function hasMultipleLineBreaks(string $text): bool
     {
-        return substr_count($text, "\n") > 1 || substr_count($text, "\r\n") > 1;
+        return substr_count($text, "\n") > 1 || substr_count($text, "\r") > 1;
     }
 }
