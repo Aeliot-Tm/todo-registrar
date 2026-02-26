@@ -112,10 +112,10 @@ final readonly class HeapRunner
                 if (
                     $this->output->isDebug()
                     || ($this->output->isVeryVerbose() && $countCommentNodes)
-                    || ($this->output->isVerbose() && $fileHeap->getRegistrationCounter())
+                    || ($this->output->isVerbose() && $fileHeap->getRegistrationCount())
                 ) {
                     $this->output->writeln(
-                        "Registered {$fileHeap->getRegistrationCounter()} for file: {$file->getPathname()}"
+                        "Registered {$fileHeap->getRegistrationCount()} for file: {$file->getPathname()}"
                     );
                 }
             } catch (\Throwable $exception) {

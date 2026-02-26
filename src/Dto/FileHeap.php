@@ -25,8 +25,8 @@ use Aeliot\TodoRegistrar\Service\File\Saver;
  */
 final class FileHeap
 {
+    private FileStatistic $fileStatistic;
     private \Closure $fileUpdateCallback;
-    private int $registrationCounter = 0;
 
     /**
      * @var CommentNode[]|null
@@ -40,10 +40,9 @@ final class FileHeap
         Saver $saver,
     ) {
         $file = $parsedFile->getFile();
-        $statistic->setFileRegistrationCount($file->getPathname(), $this->registrationCounter);
-        $this->fileUpdateCallback = function () use ($file, $statistic, $saver): void {
-            ++$this->registrationCounter;
-            $statistic->setFileRegistrationCount($file->getPathname(), $this->registrationCounter);
+        $this->fileStatistic = new FileStatistic($file->getPathname(), $statistic);
+        $this->fileUpdateCallback = function () use ($file, $saver): void {
+            $this->fileStatistic->tickRegistration();
             $saver->save($file, $this->parsedFile->getAllTokens());
         };
     }
@@ -61,9 +60,9 @@ final class FileHeap
         return $this->fileUpdateCallback;
     }
 
-    public function getRegistrationCounter(): int
+    public function getRegistrationCount(): int
     {
-        return $this->registrationCounter;
+        return $this->fileStatistic->getRegistrationCount();
     }
 
     /**
