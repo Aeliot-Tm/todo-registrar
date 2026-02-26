@@ -94,10 +94,8 @@ final class FileHeap
 
             // Break group on non-empty, non-comment token
             if (!$token->isComment()) {
-                if ('' !== trim($token->getText())) {
-                    if (!$group->isEmpty()) {
-                        $commentNodes[] = $this->createCommentNode($group->grabToken());
-                    }
+                if (!$group->isEmpty() && ('' !== trim($token->getText()))) {
+                    $commentNodes[] = $this->createCommentNode($group->grabToken());
                 }
                 continue;
             }
