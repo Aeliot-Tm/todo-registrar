@@ -18,12 +18,12 @@ use Aeliot\TodoRegistrarContracts\RegistrarInterface;
 
 /**
  * Stub registrar factory for testing purposes.
- * Creates StubRegistrar instances without making any API calls.
+ * Creates StaticKeyRegistrar instances without making any API calls.
  */
-final class StubRegistrarFactory implements RegistrarFactoryInterface
+final class StaticRegistrarFactory implements RegistrarFactoryInterface
 {
     public function create(array $config): RegistrarInterface
     {
-        return new StubRegistrar($config['ticket_key']);
+        return new StaticKeyRegistrar($config['ticket_key']);
     }
 }

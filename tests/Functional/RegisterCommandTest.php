@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Test\Functional;
 
-use Aeliot\TodoRegistrar\Test\Stub\StubRegistrarFactory;
+use Aeliot\TodoRegistrar\Test\Stub\StaticRegistrarFactory;
 use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Large;
@@ -167,7 +167,7 @@ final class RegisterCommandTest extends TestCase
     private function createPhpConfig(string $ticketKey): string
     {
         $configFile = $this->tempDir . '/.todo-registrar.php';
-        $stubFactoryClass = StubRegistrarFactory::class;
+        $stubFactoryClass = StaticRegistrarFactory::class;
         $configContent = <<<PHP
 <?php
 
@@ -199,7 +199,7 @@ PHP;
 
     private function buildYamlConfigContent(): string
     {
-        $stubFactoryClass = StubRegistrarFactory::class;
+        $stubFactoryClass = StaticRegistrarFactory::class;
         $ticketKeyEnvVar = self::TICKET_KEY_ENV_VAR_NAME;
 
         return <<<YAML
