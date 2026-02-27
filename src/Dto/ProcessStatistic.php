@@ -27,11 +27,6 @@ final class ProcessStatistic
      */
     private array $files = [];
 
-    public function getFileRegistrationCount(string $path): int
-    {
-        return $this->files[$path];
-    }
-
     public function getCountAnalyzedFiles(): int
     {
         return \count($this->files);
@@ -60,6 +55,11 @@ final class ProcessStatistic
     public function getCountRegisteredTODOs(): int
     {
         return (int) array_sum($this->files);
+    }
+
+    public function getFileRegistrationCount(string $path): int
+    {
+        return $this->files[$path];
     }
 
     public function getTodosTotal(): int
