@@ -18,33 +18,85 @@ namespace Aeliot\TodoRegistrar\Dto;
  */
 final class ProcessStatistic
 {
+    private int $countCommentTokens = 0;
+    private int $countGluedTodos = 0;
+    private int $countIgnoredTodos = 0;
+
     /**
      * @var array<string,int>
      */
-    private array $updatedFiles = [];
+    private array $files = [];
 
-    public function getFileRegistrationCount(string $path): int
+    public function getCountAnalyzedFiles(): int
     {
-        return $this->updatedFiles[$path];
+        return \count($this->files);
+    }
+
+    public function getCountCommentTokens(): int
+    {
+        return $this->countCommentTokens;
+    }
+
+    public function getCountGluedTodos(): int
+    {
+        return $this->countGluedTodos;
+    }
+
+    public function getCountIgnoredTodos(): int
+    {
+        return $this->countIgnoredTodos;
     }
 
     public function getCountUpdatedFiles(): int
     {
-        return \count(array_filter($this->updatedFiles));
+        return \count(array_filter($this->files));
     }
 
     public function getCountRegisteredTODOs(): int
     {
-        return (int) array_sum($this->updatedFiles);
+        return (int) array_sum($this->files);
+    }
+
+    /**
+     * @return array<string, int>
+     */
+    public function getFiles(): array
+    {
+        return $this->files;
+    }
+
+    public function getFileRegistrationCount(string $path): int
+    {
+        return $this->files[$path];
+    }
+
+    public function getTodosTotal(): int
+    {
+        return $this->getCountRegisteredTODOs() + $this->countGluedTodos + $this->countIgnoredTodos;
     }
 
     public function markFileVisit(string $path): void
     {
-        $this->updatedFiles[$path] ??= 0;
+        $this->files[$path] ??= 0;
+    }
+
+    public function tickCommentToken(): void
+    {
+        ++$this->countCommentTokens;
+    }
+
+    public function tickGluedTodo(): void
+    {
+        ++$this->countGluedTodos;
+    }
+
+    public function tickIgnoredTodo(): void
+    {
+        ++$this->countIgnoredTodos;
     }
 
     public function tickRegistration(string $path): void
     {
-        ++$this->updatedFiles[$path];
+        ++$this->files[$path];
     }
 }

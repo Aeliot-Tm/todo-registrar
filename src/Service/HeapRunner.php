@@ -53,7 +53,7 @@ final readonly class HeapRunner
         $glueSameTickets = $this->getGlueSameTickets();
 
         foreach ($this->getTodos($statistic) as [$todo, $fileUpdateCallback]) {
-            $this->register($todo, $glueSameTickets, $hashToKey);
+            $this->register($todo, $glueSameTickets, $hashToKey, $statistic);
             $fileUpdateCallback();
         }
 
@@ -72,6 +72,7 @@ final readonly class HeapRunner
                 foreach ($todos as $commentPart) {
                     $ticketKey = $commentPart->getTagMetadata()?->getTicketKey();
                     if ($ticketKey) {
+                        $statistic->tickIgnoredTodo();
                         $this->output->writeln("Skip TODO with Key: {$ticketKey}", OutputAdapter::VERBOSITY_DEBUG);
                         continue;
                     }
@@ -160,13 +161,14 @@ final readonly class HeapRunner
     /**
      * @param array<string,string> $hashToKey
      */
-    private function register(Todo $todo, bool $glueSameTickets, array &$hashToKey): void
+    private function register(Todo $todo, bool $glueSameTickets, array &$hashToKey, ProcessStatistic $statistic): void
     {
         try {
             $hash = $todo->getHash();
             if ($glueSameTickets && isset($hashToKey[$hash])) {
                 $key = $hashToKey[$hash];
                 $this->output->writeln("Injected existing key: {$hashToKey[$hash]}", OutputAdapter::VERBOSITY_VERBOSE);
+                $statistic->tickGluedTodo();
             } else {
                 $hashToKey[$hash] = $key = $this->registrar->register($todo);
                 $this->output->writeln("Registered new key: $key", OutputAdapter::VERBOSITY_VERBOSE);

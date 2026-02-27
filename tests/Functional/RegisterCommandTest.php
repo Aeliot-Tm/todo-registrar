@@ -27,11 +27,13 @@ final class RegisterCommandTest extends TestCase
     private const TICKET_KEY_ENV_VAR_NAME = 'REGISTER_COMMAND_TEST_TICKET_KEY';
 
     private ?string $originalTicketKeyEnvValue = null;
+    private string $projectRoot;
     private string $tempDir;
     private string $testFile;
 
     protected function setUp(): void
     {
+        $this->projectRoot = \dirname(__DIR__, 2);
         $this->tempDir = sys_get_temp_dir() . '/todo-registrar-test-' . uniqid('', true);
         mkdir($this->tempDir, 0777, true);
 
@@ -54,6 +56,13 @@ final class RegisterCommandTest extends TestCase
 
         if (is_dir($this->tempDir)) {
             $this->removeDirectory($this->tempDir);
+        }
+
+        foreach (['json', 'yaml'] as $ext) {
+            $reportFile = $this->projectRoot . '/todo-registrar-report.' . $ext;
+            if (file_exists($reportFile)) {
+                unlink($reportFile);
+            }
         }
     }
 
@@ -155,6 +164,61 @@ final class RegisterCommandTest extends TestCase
         );
     }
 
+    public function testRegisterWithJsonFormatDefaultPath(): void
+    {
+        $configFile = $this->createPhpConfig('TEST-JSON');
+        file_put_contents($this->testFile, self::ORIGINAL_CONTENT);
+
+        $exitCode = $this->runTodoRegistrar($configFile, ['--report-format=json']);
+
+        self::assertSame(0, $exitCode, 'Script should exit with code 0');
+
+        $reportPath = $this->projectRoot . '/todo-registrar-report.json';
+        self::assertFileExists($reportPath, 'Report file should be created with default path');
+
+        $report = json_decode(file_get_contents($reportPath), true);
+        self::assertIsArray($report);
+        self::assertArrayHasKey('summary', $report);
+        self::assertArrayHasKey('files', $report);
+        self::assertArrayHasKey('files', $report['summary']);
+        self::assertArrayHasKey('todos', $report['summary']);
+        self::assertArrayHasKey('comments', $report['summary']);
+    }
+
+    public function testRegisterWithJsonFormatCustomPath(): void
+    {
+        $configFile = $this->createPhpConfig('TEST-JSON-PATH');
+        file_put_contents($this->testFile, self::ORIGINAL_CONTENT);
+        $customReportPath = $this->tempDir . '/custom-report.json';
+
+        $exitCode = $this->runTodoRegistrar($configFile, [
+            '--report-format=json',
+            '--report-path=' . $customReportPath,
+        ]);
+
+        self::assertSame(0, $exitCode, 'Script should exit with code 0');
+        self::assertFileExists($customReportPath, 'Report file should be created at custom path');
+
+        $report = json_decode(file_get_contents($customReportPath), true);
+        self::assertIsArray($report);
+        self::assertArrayHasKey('summary', $report);
+        self::assertArrayHasKey('files', $report);
+    }
+
+    public function testRegisterWithoutReportOptions(): void
+    {
+        $configFile = $this->createPhpConfig('TEST-NO-REPORT');
+        file_put_contents($this->testFile, self::ORIGINAL_CONTENT);
+
+        $exitCode = $this->runTodoRegistrar($configFile);
+
+        self::assertSame(0, $exitCode, 'Script should exit with code 0');
+        self::assertFileDoesNotExist(
+            $this->projectRoot . '/todo-registrar-report.json',
+            'Report file should not be created without report options',
+        );
+    }
+
     private function createConfigFile(string $type, string $ticketKey): string
     {
         if ('php' === $type) {
@@ -231,22 +295,27 @@ YAML;
         putenv(self::TICKET_KEY_ENV_VAR_NAME);
     }
 
-    private function runTodoRegistrar(string $configFile): int
+    /**
+     * @param string[] $extraArgs
+     */
+    private function runTodoRegistrar(string $configFile, array $extraArgs = []): int
     {
-        $projectRoot = \dirname(__DIR__, 2);
-        $scriptPath = $projectRoot . '/bin/todo-registrar';
-        $command = \sprintf(
-            '%s %s --config=%s 2>&1',
+        $scriptPath = $this->projectRoot . '/bin/todo-registrar';
+        $parts = [
             escapeshellarg(\PHP_BINARY),
             escapeshellarg($scriptPath),
-            escapeshellarg($configFile)
-        );
+            '--config=' . escapeshellarg($configFile),
+        ];
+        foreach ($extraArgs as $arg) {
+            $parts[] = escapeshellarg($arg);
+        }
+        $command = implode(' ', $parts) . ' 2>&1';
 
         $output = [];
         $exitCode = 0;
         $originalCwd = getcwd();
         try {
-            chdir($projectRoot);
+            chdir($this->projectRoot);
             exec($command, $output, $exitCode);
         } finally {
             chdir($originalCwd);
