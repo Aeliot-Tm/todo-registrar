@@ -34,6 +34,8 @@ into comment in code. This prevents creating of issues twice and injected marks 
 
 ![detect_register_inject.png](docs/detect_register_inject.png)
 
+> See latest **benchmark [here](https://github.com/Aeliot-Tm/todo-registrar-benchmark/blob/main/benchmark.md)**.
+
 ## Using
 
 **Basic using:**
