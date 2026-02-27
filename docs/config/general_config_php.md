@@ -90,6 +90,7 @@ use Aeliot\TodoRegistrar\Config;
 use Aeliot\TodoRegistrar\Dto\GeneralConfig\ProcessConfig;
 
 $processConfig = new ProcessConfig();
+$processConfig->setGlueSameTickets(true);
 $processConfig->setGlueSequentialComments(true);
 
 return (new Config())

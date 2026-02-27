@@ -78,6 +78,7 @@ final readonly class ArrayConfigFactory
         $processDto = $arrayConfig->getProcess();
         if ($processDto) {
             $processConfig = new ProcessConfig();
+            $processConfig->setGlueSameTickets($processDto->isGlueSameTickets());
             $processConfig->setGlueSequentialComments($processDto->isGlueSequentialComments());
             $config->setProcessConfig($processConfig);
         }

@@ -26,6 +26,7 @@ use Aeliot\TodoRegistrar\Service\File\Saver;
 use Aeliot\TodoRegistrarContracts\FinderInterface;
 use Aeliot\TodoRegistrarContracts\GeneralConfigInterface;
 use Aeliot\TodoRegistrarContracts\ProcessAwareGeneralConfigInterface;
+use Aeliot\TodoRegistrarContracts\ProcessSameTicketConfigInterface;
 use Aeliot\TodoRegistrarContracts\RegistrarInterface;
 
 /**
@@ -48,8 +49,11 @@ final readonly class HeapRunner
     public function run(): ProcessStatistic
     {
         $statistic = new ProcessStatistic();
+        $hashToKey = [];
+        $glueSameTickets = $this->getGlueSameTickets();
+
         foreach ($this->getTodos($statistic) as [$todo, $fileUpdateCallback]) {
-            $this->register($todo);
+            $this->register($todo, $glueSameTickets, $hashToKey);
             $fileUpdateCallback();
         }
 
@@ -125,6 +129,17 @@ final readonly class HeapRunner
         }
     }
 
+    private function getGlueSameTickets(): bool
+    {
+        $processConfig = $this->config instanceof ProcessAwareGeneralConfigInterface
+            ? $this->config->getProcessConfig()
+            : null;
+
+        return ($processConfig instanceof ProcessSameTicketConfigInterface
+            ? $processConfig->isGlueSameTicket()
+            : null) ?? ProcessConfig::DEFAULT_GLUE_SAME_TICKETS;
+    }
+
     private function getGlueSequentialComments(): bool
     {
         return ($this->config instanceof ProcessAwareGeneralConfigInterface
@@ -142,12 +157,18 @@ final readonly class HeapRunner
         }
     }
 
-    private function register(Todo $todo): void
+    private function register(Todo $todo, bool $glueSameTickets, array &$hashToKey): void
     {
         try {
-            $key = $this->registrar->register($todo);
+            $hash = $todo->getHash();
+            if ($glueSameTickets && isset($hashToKey[$hash])) {
+                $key = $hashToKey[$hash];
+                $this->output->writeln("Injected existing key: {$hashToKey[$hash]}", OutputAdapter::VERBOSITY_VERBOSE);
+            } else {
+                $hashToKey[$hash] = $key = $this->registrar->register($todo);
+                $this->output->writeln("Registered new key: $key", OutputAdapter::VERBOSITY_VERBOSE);
+            }
             $todo->injectKey($key);
-            $this->output->writeln("Registered new key: $key", OutputAdapter::VERBOSITY_VERBOSE);
         } catch (\Throwable $exception) {
             throw new CommentRegistrationException($todo, $exception);
         }
