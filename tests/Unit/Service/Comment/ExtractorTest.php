@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Test\Unit\Service\Comment;
 
 use Aeliot\TodoRegistrar\Dto\Comment\CommentPart;
-use Aeliot\TodoRegistrar\Dto\Comment\CommentParts;
 use Aeliot\TodoRegistrar\Dto\Parsing\CommentNode;
 use Aeliot\TodoRegistrar\Dto\Parsing\MappedContext;
 use Aeliot\TodoRegistrar\Dto\Tag\TagMetadata;
@@ -35,7 +34,6 @@ use PHPUnit\Framework\TestCase;
 #[UsesClass(CommentCleanerRegistry::class)]
 #[UsesClass(CommentNode::class)]
 #[UsesClass(CommentPart::class)]
-#[UsesClass(CommentParts::class)]
 #[UsesClass(PhpCommentCleaner::class)]
 #[UsesClass(TagDetector::class)]
 #[UsesClass(TagMetadata::class)]
@@ -87,7 +85,7 @@ CONT,
     public function testCountOfParts(int $expectedTodoCount, string $comment): void
     {
         $parts = $this->createExtractor()->extract($this->createCommentNode($comment));
-        self::assertCount($expectedTodoCount, $parts->getTodos());
+        self::assertCount($expectedTodoCount, $parts);
     }
 
     private function createCommentNode(string $comment): CommentNode

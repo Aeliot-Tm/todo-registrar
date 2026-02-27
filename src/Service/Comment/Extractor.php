@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Service\Comment;
 
 use Aeliot\TodoRegistrar\Dto\Comment\CommentPart;
-use Aeliot\TodoRegistrar\Dto\Comment\CommentParts;
 use Aeliot\TodoRegistrar\Dto\Parsing\CommentNode;
 use Aeliot\TodoRegistrar\Dto\Token\TokenLine;
 use Aeliot\TodoRegistrar\Dto\Token\TokenLinesStack;
@@ -31,10 +30,13 @@ final readonly class Extractor
     ) {
     }
 
-    public function extract(CommentNode $commentNode): CommentParts
+    /**
+     * @return CommentPart[]
+     */
+    public function extract(CommentNode $commentNode): array
     {
         $part = null;
-        $parts = new CommentParts();
+        $todos = [];
         $context = $commentNode->getContext();
         $currentLine = $commentNode->getTokens()[0]->getLine();
 
@@ -46,21 +48,21 @@ final readonly class Extractor
             }
 
             if (null === $part) {
-                $part = new CommentPart($currentLine, $this->tagDetector->getTagMetadata($content), $context);
-                $parts->addPart($part);
+                $tagMetadata = $this->tagDetector->getTagMetadata($content);
+                if (!$tagMetadata?->getTag()) {
+                    ++$currentLine;
+                    continue;
+                }
+                $todos[] = $part = new CommentPart($currentLine, $tagMetadata, $context);
             }
 
             $part->addLine($tokenLine);
             $part->addTokenLinesStack($tokenLinesStack);
 
-            if (null === $part->getTag()) {
-                $part = null;
-            }
-
             ++$currentLine;
         }
 
-        return $parts;
+        return $todos;
     }
 
     private function hasEmptyPrefix(string $content, CommentPart $part): bool

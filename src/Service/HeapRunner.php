@@ -63,9 +63,9 @@ final readonly class HeapRunner
     {
         foreach ($this->getFileHeaps($statistic) as $fileHeap) {
             foreach ($fileHeap->getCommentNodes() as $commentNode) {
-                $commentParts = $this->commentExtractor->extract($commentNode);
+                $todos = $this->commentExtractor->extract($commentNode);
 
-                foreach ($commentParts->getTodos() as $commentPart) {
+                foreach ($todos as $commentPart) {
                     $ticketKey = $commentPart->getTagMetadata()?->getTicketKey();
                     if ($ticketKey) {
                         $this->output->writeln("Skip TODO with Key: {$ticketKey}", OutputAdapter::VERBOSITY_DEBUG);
