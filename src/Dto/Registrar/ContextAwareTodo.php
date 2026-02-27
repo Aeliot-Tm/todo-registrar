@@ -13,12 +13,11 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Dto\Registrar;
 
-use Aeliot\TodoRegistrarContracts\ContextAwareTodoInterface;
-
-class ContextAwareTodo extends Todo implements ContextAwareTodoInterface
+/**
+ * @deprecated use {@see Todo }
+ *
+ * @internal
+ */
+class ContextAwareTodo extends Todo
 {
-    public function getContext(): array
-    {
-        return $this->commentPart->getContext()->getContextNodes();
-    }
 }
