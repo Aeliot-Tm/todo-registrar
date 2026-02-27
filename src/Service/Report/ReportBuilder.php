@@ -25,7 +25,7 @@ final readonly class ReportBuilder
     public function format(ReportFormat $format, ProcessStatistic $statistic): string
     {
         if ($format->isNone()) {
-            throw new \InvalidArgumentException('Report format NONE cannot be used for formatting');
+            throw new \InvalidArgumentException('Report format "none" cannot be used for formatting');
         }
 
         $data = $this->buildData($statistic);
