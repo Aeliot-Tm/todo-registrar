@@ -36,7 +36,7 @@ final class FileHeap
     public function __construct(
         private readonly ParsedFile $parsedFile,
         private readonly bool $glueSequentialComments,
-        ProcessStatistic $statistic,
+        private readonly ProcessStatistic $statistic,
         Saver $saver,
     ) {
         $file = $parsedFile->getFile();
@@ -74,6 +74,10 @@ final class FileHeap
         $group = new CommentTokensGroup();
 
         foreach ($this->parsedFile->getAllTokens() as $token) {
+            if ($token->isComment()) {
+                $this->statistic->tickCommentToken();
+            }
+
             if ($this->glueSequentialComments && $token->isSingleLineComment()) {
                 $group->addToken($token);
                 continue;

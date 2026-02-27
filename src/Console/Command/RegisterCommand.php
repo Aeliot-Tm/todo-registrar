@@ -57,7 +57,15 @@ final class RegisterCommand extends Command
         }
 
         $outputAdapter->writeln(
-            "Registered {$statistic->getCountRegisteredTODOs()} for {$statistic->getCountUpdatedFiles()} files",
+            \sprintf(
+                'Registered %d of %d TODOs for %d of %d files. Ignored: %d. Glued: %d.',
+                $statistic->getCountRegisteredTODOs(),
+                $statistic->getTodosTotal(),
+                $statistic->getCountUpdatedFiles(),
+                $statistic->getCountAnalyzedFiles(),
+                $statistic->getCountIgnoredTodos(),
+                $statistic->getCountGluedTodos(),
+            ),
             OutputAdapter::VERBOSITY_NORMAL
         );
 
