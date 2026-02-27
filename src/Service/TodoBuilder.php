@@ -47,11 +47,24 @@ final readonly class TodoBuilder
             $description,
             $commentPart->getTagMetadata()?->getAssignee(),
             $commentPart,
+            $this->calculateHash($commentPart),
             $this->getInlineConfig($description),
             $this->issueKeyPosition,
             $this->newSeparator,
             $this->replaceSeparator,
         );
+    }
+
+    private function calculateHash(CommentPart $commentPart): string
+    {
+        $raw = implode(' ', [
+            $commentPart->getTagMetadata()?->getTag() ?? '',
+            $commentPart->getTagMetadata()?->getAssignee() ?? '',
+            $commentPart->getSummary(),
+            $commentPart->getDescription(),
+        ]);
+
+        return (string) crc32(trim(preg_replace('/\s+/u', ' ', $raw)));
     }
 
     private function getInlineConfig(string $description): InlineConfigInterface

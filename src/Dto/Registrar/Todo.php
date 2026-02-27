@@ -16,12 +16,13 @@ namespace Aeliot\TodoRegistrar\Dto\Registrar;
 use Aeliot\TodoRegistrar\Dto\Comment\CommentPart;
 use Aeliot\TodoRegistrar\Enum\IssueKeyPosition;
 use Aeliot\TodoRegistrarContracts\ContextAwareTodoInterface;
+use Aeliot\TodoRegistrarContracts\HashAwareInterface;
 use Aeliot\TodoRegistrarContracts\InlineConfigInterface;
 
 /**
  * @internal
  */
-class Todo implements ContextAwareTodoInterface
+class Todo implements ContextAwareTodoInterface, HashAwareInterface
 {
     public function __construct(
         protected string $tag,
@@ -29,6 +30,7 @@ class Todo implements ContextAwareTodoInterface
         protected string $description,
         protected ?string $assignee,
         protected CommentPart $commentPart,
+        protected string $hash,
         protected InlineConfigInterface $inlineConfig,
         protected IssueKeyPosition $issueKeyPosition,
         protected ?string $newSeparator,
@@ -57,6 +59,11 @@ class Todo implements ContextAwareTodoInterface
     public function getDescription(): string
     {
         return $this->description;
+    }
+
+    public function getHash(): string
+    {
+        return $this->hash;
     }
 
     public function getInlineConfig(): InlineConfigInterface

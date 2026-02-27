@@ -43,6 +43,9 @@ issueKeyInjection:                # Optional. Configuration for injecting issue 
   summarySeparators: [':', '-']   # Optional. List of recognized separators (default: [':', '-'])
 
 process:                          # Optional. Processing options
+    glueSameTickets: false        # Optional. When enabled, TODOs with identical content (tag, assignee, summary,
+                                  #           description) are linked to the same ticket instead of creating duplicates.
+                                  #           Default: false.
     glueSequentialComments: true  # Optional. Glue consecutive single-line comments (// or #) into one multi-line comment.
                                   #           Default: false. Useful for YAML files and multi-line TODO descriptions.
 ```
@@ -202,6 +205,26 @@ docker run --rm --env-file .env -v "$(pwd):/app" ghcr.io/aeliot-tm/todo-registra
 ### Process options
 
 The `process` section configures how TODO comments are processed before extraction and registration.
+
+#### Option glueSameTickets
+
+**Type:** `boolean`
+**Default:** `false`
+
+When enabled, TODOs with identical content are linked to the same ticket instead of creating duplicate tickets.
+If comment appears in several files with identical content, only one ticket is created and the same key is
+injected into all occurrences.
+
+**When to use:**
+- The same issue is noted in multiple places in the codebase with the same TODO text
+- You want to avoid creating duplicate tickets for repeated identical TODOs
+
+**How it works:**
+Two TODOs are considered identical when their tag, assignee, summary, and description (including inline config)
+produce the same normalized hash. Normalization strips redundant whitespace (including line breaks) before comparison.
+
+**Note:** Comparison is done within a single run. TODOs that already have an injected key are skipped regardless
+of this setting.
 
 #### Option glueSequentialComments
 

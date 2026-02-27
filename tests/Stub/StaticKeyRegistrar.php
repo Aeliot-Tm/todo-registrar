@@ -20,7 +20,7 @@ use Aeliot\TodoRegistrarContracts\TodoInterface;
  * Stub registrar for testing purposes.
  * Does not make any API calls, returns ticket key from config.
  */
-final class StubRegistrar implements RegistrarInterface
+final class StaticKeyRegistrar implements RegistrarInterface
 {
     public function __construct(
         private string $ticketKey,

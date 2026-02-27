@@ -20,6 +20,9 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 final class ProcessArrayConfig
 {
+    #[Assert\Type(type: 'bool', message: 'Option "process.glueSameTickets" must be a boolean')]
+    private mixed $glueSameTickets;
+
     #[Assert\Type(type: 'bool', message: 'Option "process.glueSequentialComments" must be a boolean')]
     private mixed $glueSequentialComments;
 
@@ -31,13 +34,19 @@ final class ProcessArrayConfig
      */
     public function __construct(array $options)
     {
+        $this->glueSameTickets = $options['glueSameTickets'] ?? false;
         $this->glueSequentialComments = $options['glueSequentialComments'] ?? false;
 
-        $knownKeys = ['glueSequentialComments'];
+        $knownKeys = ['glueSameTickets', 'glueSequentialComments'];
         $unknownKeys = array_diff(array_keys($options), $knownKeys);
         if ($unknownKeys) {
             $this->invalidKeys = implode(', ', $unknownKeys);
         }
+    }
+
+    public function isGlueSameTickets(): bool
+    {
+        return (bool) $this->glueSameTickets;
     }
 
     public function isGlueSequentialComments(): bool

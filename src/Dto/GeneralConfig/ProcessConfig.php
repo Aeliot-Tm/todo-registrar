@@ -14,12 +14,25 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Dto\GeneralConfig;
 
 use Aeliot\TodoRegistrarContracts\ProcessConfigInterface;
+use Aeliot\TodoRegistrarContracts\ProcessSameTicketConfigInterface;
 
-final class ProcessConfig implements ProcessConfigInterface
+final class ProcessConfig implements ProcessConfigInterface, ProcessSameTicketConfigInterface
 {
+    public const DEFAULT_GLUE_SAME_TICKETS = false;
     public const DEFAULT_GLUE_SEQUENTIAL_COMMENTS = false;
 
+    private bool $glueSameTickets = self::DEFAULT_GLUE_SAME_TICKETS;
     private bool $glueSequentialComments = self::DEFAULT_GLUE_SEQUENTIAL_COMMENTS;
+
+    public function isGlueSameTicket(): bool
+    {
+        return $this->glueSameTickets;
+    }
+
+    public function setGlueSameTickets(bool $glueSameTickets): void
+    {
+        $this->glueSameTickets = $glueSameTickets;
+    }
 
     public function isGlueSequentialComments(): bool
     {
