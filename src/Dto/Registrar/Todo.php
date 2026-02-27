@@ -15,10 +15,13 @@ namespace Aeliot\TodoRegistrar\Dto\Registrar;
 
 use Aeliot\TodoRegistrar\Dto\Comment\CommentPart;
 use Aeliot\TodoRegistrar\Enum\IssueKeyPosition;
+use Aeliot\TodoRegistrarContracts\ContextAwareTodoInterface;
 use Aeliot\TodoRegistrarContracts\InlineConfigInterface;
-use Aeliot\TodoRegistrarContracts\TodoInterface;
 
-class Todo implements TodoInterface
+/**
+ * @internal
+ */
+class Todo implements ContextAwareTodoInterface
 {
     public function __construct(
         protected string $tag,
@@ -44,6 +47,11 @@ class Todo implements TodoInterface
     public function getCommentPart(): CommentPart
     {
         return $this->commentPart;
+    }
+
+    public function getContext(): array
+    {
+        return $this->commentPart->getContext()->getContextNodes();
     }
 
     public function getDescription(): string
