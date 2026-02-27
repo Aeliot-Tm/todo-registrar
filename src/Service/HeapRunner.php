@@ -157,6 +157,9 @@ final readonly class HeapRunner
         }
     }
 
+    /**
+     * @param array<string,string> $hashToKey
+     */
     private function register(Todo $todo, bool $glueSameTickets, array &$hashToKey): void
     {
         try {
