@@ -57,6 +57,14 @@ final class ProcessStatistic
         return (int) array_sum($this->files);
     }
 
+    /**
+     * @return array<string, int>
+     */
+    public function getFiles(): array
+    {
+        return $this->files;
+    }
+
     public function getFileRegistrationCount(string $path): int
     {
         return $this->files[$path];
