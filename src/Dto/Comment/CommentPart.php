@@ -81,7 +81,6 @@ final class CommentPart
         $lines = $this->lines;
         array_shift($lines);
         $lines = array_map(
-            // TODO: consider avoiding unconditional string substruction
             static fn (TokenLine $line): string => substr($line->getContent(), $prefixLength) . $line->getEol(),
             $lines,
         );
