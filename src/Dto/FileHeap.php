@@ -25,8 +25,8 @@ use Aeliot\TodoRegistrar\Service\File\Saver;
  */
 final class FileHeap
 {
+    private FileStatistic $fileStatistic;
     private \Closure $fileUpdateCallback;
-    private int $registrationCounter = 0;
 
     /**
      * @var CommentNode[]|null
@@ -40,10 +40,9 @@ final class FileHeap
         Saver $saver,
     ) {
         $file = $parsedFile->getFile();
-        $statistic->setFileRegistrationCount($file->getPathname(), $this->registrationCounter);
-        $this->fileUpdateCallback = function () use ($file, $statistic, $saver): void {
-            ++$this->registrationCounter;
-            $statistic->setFileRegistrationCount($file->getPathname(), $this->registrationCounter);
+        $this->fileStatistic = new FileStatistic($file->getPathname(), $statistic);
+        $this->fileUpdateCallback = function () use ($file, $saver): void {
+            $this->fileStatistic->tickRegistration();
             $saver->save($file, $this->parsedFile->getAllTokens());
         };
     }
@@ -61,9 +60,9 @@ final class FileHeap
         return $this->fileUpdateCallback;
     }
 
-    public function getRegistrationCounter(): int
+    public function getRegistrationCount(): int
     {
-        return $this->registrationCounter;
+        return $this->fileStatistic->getRegistrationCount();
     }
 
     /**
@@ -84,7 +83,7 @@ final class FileHeap
             if ($this->glueSequentialComments && !$group->isEmpty() && !$token->isComment() && '' === trim($token->getText())) {
                 // Empty line (multiple line breaks) breaks the group
                 if ($group->hasPendingWhitespace() || $this->hasMultipleLineBreaks($token->getText())) {
-                    $commentNodes[] = $this->createCommentNode($group->grabToken());
+                    $commentNodes[] = $this->createCommentNode($group->grabTokens());
                     continue;
                 }
                 // Single line break - store as pending
@@ -94,35 +93,36 @@ final class FileHeap
 
             // Break group on non-empty, non-comment token
             if (!$token->isComment()) {
-                if ('' !== trim($token->getText())) {
-                    if (!$group->isEmpty()) {
-                        $commentNodes[] = $this->createCommentNode($group->grabToken());
-                    }
+                if (!$group->isEmpty() && ('' !== trim($token->getText()))) {
+                    $commentNodes[] = $this->createCommentNode($group->grabTokens());
                 }
                 continue;
             }
 
             // Multi-line comment - flush group and add comment
             if (!$group->isEmpty()) {
-                $commentNodes[] = $this->createCommentNode($group->grabToken());
+                $commentNodes[] = $this->createCommentNode($group->grabTokens());
             }
-            $commentNodes[] = $this->createCommentNode($token);
+            $commentNodes[] = $this->createCommentNode([$token]);
         }
 
         if (!$group->isEmpty()) {
-            $commentNodes[] = $this->createCommentNode($group->grabToken());
+            $commentNodes[] = $this->createCommentNode($group->grabTokens());
         }
 
         return $commentNodes;
     }
 
-    private function createCommentNode(TokenInterface $token): CommentNode
+    /**
+     * @param TokenInterface[] $tokens
+     */
+    private function createCommentNode(array $tokens): CommentNode
     {
-        return new CommentNode($token, new MappedContext($token->getLine(), $this->parsedFile->getContextMap()));
+        return new CommentNode($tokens, new MappedContext($tokens[0]->getLine(), $this->parsedFile->getContextMap()));
     }
 
     private function hasMultipleLineBreaks(string $text): bool
     {
-        return substr_count($text, "\n") > 1 || substr_count($text, "\r\n") > 1;
+        return substr_count($text, "\n") > 1 || substr_count($text, "\r") > 1;
     }
 }

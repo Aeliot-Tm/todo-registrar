@@ -23,11 +23,6 @@ final class ProcessStatistic
      */
     private array $updatedFiles = [];
 
-    public function setFileRegistrationCount(string $path, int $countNewTodos): void
-    {
-        $this->updatedFiles[$path] = $countNewTodos;
-    }
-
     public function getFileRegistrationCount(string $path): int
     {
         return $this->updatedFiles[$path];
@@ -41,5 +36,15 @@ final class ProcessStatistic
     public function getCountRegisteredTODOs(): int
     {
         return (int) array_sum($this->updatedFiles);
+    }
+
+    public function markFileVisit(string $path): void
+    {
+        $this->updatedFiles[$path] ??= 0;
+    }
+
+    public function tickRegistration(string $path): void
+    {
+        ++$this->updatedFiles[$path];
     }
 }

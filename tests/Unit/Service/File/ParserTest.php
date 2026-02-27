@@ -60,7 +60,7 @@ CONT,
     {
         $commentNodes = $this->getCommentNodes($path);
         self::assertCount(1, $commentNodes);
-        self::assertSame($expectedText, $commentNodes[0]->getToken()->getText());
+        self::assertSame($expectedText, $commentNodes[0]->getTokens()[0]->getText());
     }
 
     /**

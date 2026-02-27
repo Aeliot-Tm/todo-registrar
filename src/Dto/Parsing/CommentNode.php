@@ -16,14 +16,17 @@ namespace Aeliot\TodoRegistrar\Dto\Parsing;
 use Aeliot\TodoRegistrar\Dto\Token\TokenInterface;
 
 /**
- * Wrapper around token with context.
+ * Wrapper around one or more comment tokens with context.
  *
  * @internal
  */
 final readonly class CommentNode
 {
+    /**
+     * @param TokenInterface[] $tokens
+     */
     public function __construct(
-        private TokenInterface $token,
+        private array $tokens,
         private ContextInterface $context,
     ) {
     }
@@ -33,8 +36,11 @@ final readonly class CommentNode
         return $this->context;
     }
 
-    public function getToken(): TokenInterface
+    /**
+     * @return TokenInterface[]
+     */
+    public function getTokens(): array
     {
-        return $this->token;
+        return $this->tokens;
     }
 }

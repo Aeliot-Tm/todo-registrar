@@ -14,9 +14,9 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Service\Comment;
 
 use Aeliot\TodoRegistrar\Dto\Comment\CommentPart;
-use Aeliot\TodoRegistrar\Dto\Comment\CommentParts;
-use Aeliot\TodoRegistrar\Dto\Parsing\ContextInterface;
-use Aeliot\TodoRegistrar\Dto\Token\TokenInterface;
+use Aeliot\TodoRegistrar\Dto\Parsing\CommentNode;
+use Aeliot\TodoRegistrar\Dto\Token\TokenLine;
+use Aeliot\TodoRegistrar\Dto\Token\TokenLinesStack;
 use Aeliot\TodoRegistrar\Service\Tag\Detector as TagDetector;
 
 /**
@@ -24,81 +24,75 @@ use Aeliot\TodoRegistrar\Service\Tag\Detector as TagDetector;
  */
 final readonly class Extractor
 {
-    public function __construct(private TagDetector $tagDetector)
-    {
+    public function __construct(
+        private TagDetector $tagDetector,
+        private CommentCleanerRegistry $cleanerRegistry,
+    ) {
     }
 
-    public function extract(string $comment, TokenInterface $token, ContextInterface $context): CommentParts
+    /**
+     * @return CommentPart[]
+     */
+    public function extract(CommentNode $commentNode): array
     {
         $part = null;
-        $parts = new CommentParts();
-        $tokenStartLine = $token->getLine();
-        $currentLineOffset = 0;
+        $todos = [];
+        $context = $commentNode->getContext();
+        $currentLine = $commentNode->getTokens()[0]->getLine();
 
-        foreach ($this->splitLines($comment) as $line) {
-            if ($part && !$this->hasEmptyPrefix($line, $part)) {
+        foreach ($this->getLines($commentNode) as [$tokenLine, $tokenLinesStack]) {
+            /** @var TokenLine $tokenLine */
+            $content = $tokenLine->getContent();
+            if ($part && !$this->hasEmptyPrefix($content, $part)) {
                 $part = null;
             }
 
             if (null === $part) {
-                $todoStartLine = $tokenStartLine + $currentLineOffset;
-                $part = new CommentPart($todoStartLine, $this->tagDetector->getTagMetadata($line), $context);
-                $parts->addPart($part);
+                $tagMetadata = $this->tagDetector->getTagMetadata($content);
+                if (!$tagMetadata?->getTag()) {
+                    ++$currentLine;
+                    continue;
+                }
+                $todos[] = $part = new CommentPart($currentLine, $tagMetadata, $context);
             }
 
-            $part->addLine($line);
+            $part->addLine($tokenLine);
+            $part->attachTokenLinesStack($tokenLinesStack);
 
-            if (null === $part->getTag()) {
-                $part = null;
-            }
-
-            ++$currentLineOffset;
+            ++$currentLine;
         }
 
-        return $parts;
+        return $todos;
     }
 
-    private function hasEmptyPrefix(string $line, CommentPart $part): bool
+    private function hasEmptyPrefix(string $content, CommentPart $part): bool
     {
         if (null === $part->getTag()) {
             return false;
         }
 
-        $prefix = substr($line, 0, $part->getPrefixLength());
+        $prefix = substr($content, 0, (int) $part->getTagMetadata()?->getPrefixLength());
 
-        return \in_array(trim($prefix), ['*', '//', '#'], true);
+        return '' === trim($prefix);
     }
 
     /**
-     * Method returns lines with EOL.
-     *
-     * So, it is no matter for comment rebuild process which one was used for each line.
-     * And it will not be the case of their changing.
-     *
-     * @return string[]
+     * @return \Generator<array{0: TokenLine, 1: TokenLinesStack}>
      */
-    private function splitLines(string $comment): array
+    private function getLines(CommentNode $commentNode): \Generator
     {
-        /** @var list<string> $lines */
-        $lines = preg_split("/([\r\n]+)/", $comment, -1, \PREG_SPLIT_DELIM_CAPTURE);
-        $count = \count($lines);
-        $currentLineIndex = 0;
-        for ($i = 0; $i < $count;) {
-            $nextLineIndex = $i + 1;
-            if (!\array_key_exists($nextLineIndex, $lines)) {
-                break;
+        foreach ($commentNode->getTokens() as $token) {
+            if (!$token->isComment()) {
+                continue;
             }
-            $nextLine = $lines[$nextLineIndex];
-            if (preg_match("/^[\r\n]+$/", $nextLine)) {
-                $lines[$currentLineIndex] .= $nextLine;
-                // skip next line
-                unset($lines[$nextLineIndex]);
-                ++$i;
-            } else {
-                $currentLineIndex = $i = $nextLineIndex;
+
+            $tokenLines = $this->cleanerRegistry->getCleaner($token)->clean($token->getText());
+            $tokenLinesStack = new TokenLinesStack($token);
+
+            foreach ($tokenLines as $line) {
+                $tokenLinesStack->addLine($line);
+                yield [$line, $tokenLinesStack];
             }
         }
-
-        return array_values($lines);
     }
 }

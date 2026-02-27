@@ -63,10 +63,9 @@ final readonly class HeapRunner
     {
         foreach ($this->getFileHeaps($statistic) as $fileHeap) {
             foreach ($fileHeap->getCommentNodes() as $commentNode) {
-                $token = $commentNode->getToken();
-                $commentParts = $this->commentExtractor->extract($token->getText(), $token, $commentNode->getContext());
+                $todos = $this->commentExtractor->extract($commentNode);
 
-                foreach ($commentParts->getTodos() as $commentPart) {
+                foreach ($todos as $commentPart) {
                     $ticketKey = $commentPart->getTagMetadata()?->getTicketKey();
                     if ($ticketKey) {
                         $this->output->writeln("Skip TODO with Key: {$ticketKey}", OutputAdapter::VERBOSITY_DEBUG);
@@ -75,10 +74,7 @@ final readonly class HeapRunner
 
                     yield [
                         $commentPart,
-                        static function () use ($commentParts, $token, $fileHeap) {
-                            $token->setText($commentParts->getContent());
-                            $fileHeap->getFileUpdateCallback()();
-                        },
+                        $fileHeap->getFileUpdateCallback(),
                     ];
                 }
             }
@@ -112,10 +108,10 @@ final readonly class HeapRunner
                 if (
                     $this->output->isDebug()
                     || ($this->output->isVeryVerbose() && $countCommentNodes)
-                    || ($this->output->isVerbose() && $fileHeap->getRegistrationCounter())
+                    || ($this->output->isVerbose() && $fileHeap->getRegistrationCount())
                 ) {
                     $this->output->writeln(
-                        "Registered {$fileHeap->getRegistrationCounter()} for file: {$file->getPathname()}"
+                        "Registered {$fileHeap->getRegistrationCount()} for file: {$file->getPathname()}"
                     );
                 }
             } catch (\Throwable $exception) {
