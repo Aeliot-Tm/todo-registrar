@@ -25,16 +25,16 @@ final class ProcessStatistic
     /**
      * @var array<string,int>
      */
-    private array $updatedFiles = [];
+    private array $files = [];
 
     public function getFileRegistrationCount(string $path): int
     {
-        return $this->updatedFiles[$path];
+        return $this->files[$path];
     }
 
     public function getCountAnalyzedFiles(): int
     {
-        return \count($this->updatedFiles);
+        return \count($this->files);
     }
 
     public function getCountCommentTokens(): int
@@ -54,12 +54,12 @@ final class ProcessStatistic
 
     public function getCountUpdatedFiles(): int
     {
-        return \count(array_filter($this->updatedFiles));
+        return \count(array_filter($this->files));
     }
 
     public function getCountRegisteredTODOs(): int
     {
-        return (int) array_sum($this->updatedFiles);
+        return (int) array_sum($this->files);
     }
 
     public function getTodosTotal(): int
@@ -69,7 +69,7 @@ final class ProcessStatistic
 
     public function markFileVisit(string $path): void
     {
-        $this->updatedFiles[$path] ??= 0;
+        $this->files[$path] ??= 0;
     }
 
     public function tickCommentToken(): void
@@ -89,6 +89,6 @@ final class ProcessStatistic
 
     public function tickRegistration(string $path): void
     {
-        ++$this->updatedFiles[$path];
+        ++$this->files[$path];
     }
 }
