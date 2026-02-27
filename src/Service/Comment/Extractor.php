@@ -57,7 +57,7 @@ final readonly class Extractor
             }
 
             $part->addLine($tokenLine);
-            $part->addTokenLinesStack($tokenLinesStack);
+            $part->attachTokenLinesStack($tokenLinesStack);
 
             ++$currentLine;
         }

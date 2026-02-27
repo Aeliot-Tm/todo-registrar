@@ -32,15 +32,16 @@ final class CommentPart
     private array $lines = [];
 
     /**
-     * @var TokenLinesStack[]
+     * @var \SplObjectStorage<TokenLinesStack, null>
      */
-    private array $tokenLinesStacks = [];
+    private \SplObjectStorage $tokenLinesStacks;
 
     public function __construct(
         private readonly int $startLine,
         private readonly ?TagMetadata $tagMetadata,
         private readonly ContextInterface $context,
     ) {
+        $this->tokenLinesStacks = new \SplObjectStorage();
     }
 
     public function addLine(TokenLine $line): void
@@ -48,12 +49,9 @@ final class CommentPart
         $this->lines[] = $line;
     }
 
-    public function addTokenLinesStack(TokenLinesStack $tokenLinesStack): void
+    public function attachTokenLinesStack(TokenLinesStack $tokenLinesStack): void
     {
-        // TODO: consider cleaning outside
-        if (!\in_array($tokenLinesStack, $this->tokenLinesStacks, true)) {
-            $this->tokenLinesStacks[] = $tokenLinesStack;
-        }
+        $this->tokenLinesStacks->attach($tokenLinesStack);
     }
 
     public function getContent(): string
