@@ -88,9 +88,13 @@ jobs:
         run: |
           VERSION="${{ github.event.inputs.version }}"
           git add src/Console/Application.php
-          git commit -m "chore: bump version to ${VERSION}"
-          git push origin main
-          echo "✅ Committed and pushed version bump"
+          if ! git diff --staged --quiet; then
+            git commit -m "chore: bump version to ${VERSION}"
+            git push origin main
+            echo "✅ Committed and pushed version bump"
+          else
+            echo "✅ Version already set in Application.php, no commit needed"
+          fi
 
       - name: Create and push tag
         run: |
