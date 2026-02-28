@@ -111,17 +111,17 @@ final class JiraRegistrarFactoryTest extends TestCase
         $factory->createGeneralIssueConfig($issueConfig, self::$validator);
     }
 
-    public function testCreateGeneralIssueConfigThrowsOnOutdatedTypeProperty(): void
+    public function testCreateGeneralIssueConfigAcceptsOutdatedTypePropertyMigratedToIssueType(): void
     {
         $factory = new JiraRegistrarFactory($this->createIssueSupporter());
         $issueConfig = [
             'projectKey' => 'PROJ',
-            'type' => 'Task', // Outdated property
+            'type' => 'Task',
         ];
 
-        $this->expectException(ConfigValidationException::class);
+        $config = $factory->createGeneralIssueConfig($issueConfig, self::$validator);
 
-        $factory->createGeneralIssueConfig($issueConfig, self::$validator);
+        self::assertSame('Task', $config->getIssueType());
     }
 
     public function testCreateGeneralIssueConfigThrowsOnUnknownOptions(): void
