@@ -80,15 +80,20 @@ final class ReportBuilderTest extends TestCase
         self::assertStringContainsString('path: a.php', $result);
     }
 
-    public function testFormatFiltersFilesWithZeroRegistrations(): void
+    public function testFormatIncludesAllFilesIncludingWithZeroRegistrations(): void
     {
         $statistic = $this->createStatistic(['updated.php' => 2, 'empty.php' => 0], 0, 0, 0);
 
         $result = $this->reportBuilder->format(ReportFormat::JSON, $statistic);
 
         $decoded = json_decode($result, true);
-        self::assertCount(1, $decoded['files']);
-        self::assertSame('updated.php', $decoded['files'][0]['path']);
+        self::assertCount(2, $decoded['files']);
+        $paths = array_column($decoded['files'], 'path');
+        self::assertContains('updated.php', $paths);
+        self::assertContains('empty.php', $paths);
+        $filesByPath = array_column($decoded['files'], null, 'path');
+        self::assertSame(2, $filesByPath['updated.php']['summary']['todos']['registered']);
+        self::assertSame(0, $filesByPath['empty.php']['summary']['todos']['registered']);
     }
 
     /**
