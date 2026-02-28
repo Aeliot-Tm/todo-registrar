@@ -41,7 +41,7 @@ The report contains summary statistics and per-file details.
 - `todos.registered` — newly registered TODOs
 - `todos.total` — total TODOs (registered + glued + ignored)
 
-**Files:** list of files with at least one registered TODO, each with path and `todos.registered` count.
+**Files:** list of all analyzed files, each with path and `todos.registered` count (zero for files with no new registrations).
 
 ## JSON example
 
@@ -70,6 +70,14 @@ The report contains summary statistics and per-file details.
           "registered": 3
         }
       }
+    },
+    {
+      "path": "src/Service/Bar.php",
+      "summary": {
+        "todos": {
+          "registered": 0
+        }
+      }
     }
   ]
 }
@@ -94,4 +102,8 @@ files:
     summary:
       todos:
         registered: 3
+  - path: src/Service/Bar.php
+    summary:
+      todos:
+        registered: 0
 ```
