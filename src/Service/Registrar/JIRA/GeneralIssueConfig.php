@@ -107,12 +107,13 @@ final class GeneralIssueConfig extends AbstractGeneralIssueConfig
 
         $config['components'] = (array) $config['components'];
 
-        if (\array_key_exists('issueType', $config) && \array_key_exists('type', $config)) {
-            $config['conflictingTypeKeys'] = '"issueType" and "type"';
-        }
-
         if (\array_key_exists('type', $config) && !\array_key_exists('issueType', $config)) {
             $config['issueType'] = $config['type'];
+            unset($config['type']);
+        }
+
+        if (\array_key_exists('issueType', $config) && \array_key_exists('type', $config)) {
+            $config['conflictingTypeKeys'] = '"issueType" and "type"';
         }
 
         return $config;

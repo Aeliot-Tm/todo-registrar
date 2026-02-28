@@ -137,7 +137,7 @@ final class GeneralIssueConfigTest extends TestCase
         );
     }
 
-    public function testOutdatedTypeProperty(): void
+    public function testOutdatedTypePropertyMigratedToIssueType(): void
     {
         $config = new GeneralIssueConfig([
             'projectKey' => 'PROJ',
@@ -145,11 +145,8 @@ final class GeneralIssueConfigTest extends TestCase
         ]);
         $violations = self::$validator->validate($config);
 
-        self::assertGreaterThan(0, \count($violations));
-        self::assertContainsMessage(
-            'Used outdated property "type", but "issueType" must be used',
-            $violations
-        );
+        self::assertCount(0, $violations, $this->formatViolations($violations));
+        self::assertSame('Task', $config->getIssueType());
     }
 
     public function testUnknownOptionsDetected(): void

@@ -24,7 +24,7 @@ return (new Config())
             'components' => ['Component-1', 'Component-2'],
             'labels' => ['Label-1', 'Label-2'],
             'tagPrefix' => 'tag-',
-            'type' => 'Bug',
+            'issueType' => 'Bug',
         ],
         'service' => [
             'host' => $_ENV['JIRA_HOST'],
