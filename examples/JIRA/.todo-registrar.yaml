@@ -12,6 +12,7 @@ registrar:
   type: JIRA
   options:
     issue:
+      issueType: Bug
       projectKey: TODO
       addTagToLabels: true
       components:
@@ -21,7 +22,6 @@ registrar:
         - Label-1
         - Label-2
       tagPrefix: tag-
-      type: Bug
     service:
       host: localhost  # (or set JIRA_HOST environment variable, default: localhost)
       # Replace with your actual token (or set JIRA_PERSONAL_ACCESS_TOKEN environment variable)

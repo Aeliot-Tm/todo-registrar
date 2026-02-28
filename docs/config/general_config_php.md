@@ -19,7 +19,7 @@ return (new Config())
     ->setRegistrar('JIRA', [
         'issue' => [
             'projectKey' => 'TODO',
-            'type' => 'Bug',
+            'issueType' => 'Bug',
             // add optional configs
         ],
         'service' => [

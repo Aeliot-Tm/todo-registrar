@@ -13,7 +13,7 @@ registrar:
   type: JIRA
   issue:
       projectKey: 'string'                    # required: key-name of project
-      type: 'Bug'                             # required: type of issue
+      issueType: 'Bug'                        # required: type of issue (e.g., Task, Bug, Story)
       priority: 'string'                      # optional: priority of issue
       assignee: 'string'                      # optional: identifier of JIRA-user, which will be assigned to ticket
                                               #           when "assignee-suffix" was not used with tag.
@@ -60,10 +60,14 @@ $config->setRegistrar('JIRA', [
 ]);
 ```
 
-### Option 'projectKey'
+### Option 'projectKey' (required)
 
 It is expected that `projectKey` is in `issue` array, but script tries to get it from root too.
 And it can be overridden by inline config.
+
+### Option 'issueType' (required)
+
+Use `issueType` for the type of issue (e.g., Task, Bug, Story).
 
 ### Option allowedLabels
 
