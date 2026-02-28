@@ -5,27 +5,29 @@ stages:
 
 'TODO registrar':
     stage: tests
-    image:
-        name: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
     interruptible: false
     allow_failure: true
+    before_script:
+        - curl -sL "https://gitlab.com/aeliot-tm/gitlab-control/-/raw/main/controller.sh" -o ./gitlab-control
+        - chmod +x ./gitlab-control
     script:
+        - export NEW_BRANCH=$(./gitlab-control generate_name 'todo-registrar-{random:8}')
+        - "[ 1 -eq $(./gitlab-control branch_exists \"$NEW_BRANCH\") ] && echo 'Skipping: branch already exists' && exit 0"
+        - "[ 1 -eq $(./gitlab-control check_opened \"$NEW_BRANCH\" \"development\" --like 'todo-registrar-*') ] && echo 'Skipping: opened MR exists' && exit 0"
+        - echo "NO opened MR exists! Looking for new TODOs..."
+        - ./gitlab-control checkout "$NEW_BRANCH"
         - |
-            export MR_TARGET_BRANCH=development
-            export TR_NEW_BRANCH=todo-registrar-$(echo "$RANDOM$RANDOM$RANDOM" | base64 | head -c 8; echo)
-            export TR_MR_EXISTS=$(bash .gitlab/scripts/mr_check_existing.sh $MR_TARGET_BRANCH "todo-registrar-[[:alnum:]]{8}")
-            if [[ "0" == "$TR_MR_EXISTS" ]]; then
-                echo "NO opened MR exists! Looking for new TODOs..."
-                vendor/bin/todo-registrar --config=.scripts/todo-registrar/config.php
-                export TR_TITLE="TODO-REGISTRAR: automated registering of new TODOs "
-                export TR_PUSHED=$(bash .gitlab/scripts/commit_and_push.sh $TR_NEW_BRANCH "$TR_TITLE")
-                if [[ "1" == "$TR_PUSHED" ]]; then
-                    bash .gitlab/scripts/mr_create.sh $MR_TARGET_BRANCH $TR_NEW_BRANCH "$TR_TITLE"
-                else
-                    echo "No changes, nothing to commit & push!"
-                fi
+            docker run --rm \
+                -v "$(pwd):/code" \
+                -e GITLAB_PERSONAL_ACCESS_TOKEN \
+                -e GITLAB_PROJECT_IDENTIFIER \
+                ghcr.io/aeliot-tm/todo-registrar:latest --config=.todo-registrar.yaml
+        - |
+            if ./gitlab-control commit "TODO-REGISTRAR: automated registering of new TODOs"; then
+                ./gitlab-control push "$NEW_BRANCH"
+                ./gitlab-control create_mr --target "development" --title "TODO-REGISTRAR: automated registering of new TODOs"
             else
-                echo "Registering of TODOs is skip case opened MR exists!"
+                echo "No changes, nothing to commit & push!"
             fi
-    only:
-        - development
+    rules:
+        - if: $CI_COMMIT_BRANCH == "development"
