@@ -42,8 +42,6 @@ final readonly class ReportBuilder
      */
     private function buildData(ProcessStatistic $statistic): array
     {
-        $files = array_filter($statistic->getFiles());
-
         return [
             'summary' => [
                 'files' => [
