@@ -35,7 +35,7 @@ final readonly class JiraRegistrarFactory implements RegistrarFactoryInterface
     {
         /** @var ValidatorInterface $validator */
         $validator = func_get_arg(1);
-        $issueConfig = ($config['issue'] ?? []) + ['projectKey' => $config['projectKey']];
+        $issueConfig = ($config['issue'] ?? []) + ['projectKey' => $config['projectKey'] ?? null];
         $generalIssueConfig = $this->createGeneralIssueConfig($issueConfig, $validator);
 
         $defaultIssueLinkType = $config['issueLinkType'] ?? 'Relates';
