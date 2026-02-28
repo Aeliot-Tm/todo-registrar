@@ -2,30 +2,24 @@
 
 ### Preconditions
 
-Config env-variables:
-- `MR_PRIVATE_TOKEN` - token for connection to GitLab API with permission to create merge request.
+Config CI/CD variables:
+- `CI_JOB_TOKEN` (set by GitLab CI) or `GITLAB_CONTROL_TOKEN` — token for Git operations and GitLab API (create MR).
+  In Settings → General → Visibility, enable "Allow CI job token to create merge requests" if using `CI_JOB_TOKEN`.
+- `GITLAB_PERSONAL_ACCESS_TOKEN` and `GITLAB_PROJECT_IDENTIFIER` — for todo-registrar to create issues in GitLab
+  or others according to used issue tracker in TODO Registrar config.
 
 ### Configuration of GitLab CI pipeline
 
-You have to describe pipeline in `.gitlab-ci.yml`. See [example](../../examples/GitLab/.gitlab-ci.yml)
-The example based on Docker container which contains all necessary dependencies. So installation of them is skipped in it.
+You have to describe pipeline in `.gitlab-ci.yml`. See [example](../../examples/GitLab/.gitlab-ci.yml).
+The example uses [gitlab-control](https://gitlab.com/aeliot-tm/gitlab-control) and runs todo-registrar via `docker run` with project directory mounted to `/code`.
+The runner must have Docker, git and curl.
 
-For the duties of example it added into stages `tasts`. Usually it is quite good place.
+> For the duties of example it added into stage `tests`. Usually it is quite good place.
 
 **Algorithm of script:**
-1. Create name for new branch which will hold commited IDs on new issues.
-   The branch name fits pattern "todo-registrar-<suffix-with-8-random-symbols>".
+1. Download gitlab-control script and generate name for new branch (`todo-registrar-{random:8}`).
 2. Check if previous MR is opened yet. Stop working when "yes".
-3. Run detection of not managed TODOs and creation of issues.
-4. Create new branch.
-5. Try to commit injected IDs of created issues.
-6. Push when something is commited.
-7. Create Merge Request.
-
-The script presented in the example depends on additional bash-scripts:
-
-1. [mr_check_existing.sh](../../examples/GitLab/scripts/mr_check_existing.sh) - check if opened MR exists
-   from source depending on some patter to target branch.
-2. [commit_and_push.sh](../../examples/GitLab/scripts/commit_and_push.sh) - responsible for creating of new branch,
-   configuring of author of commit, commiting and pushing of IDs of created issues.
-3. [mr_create.sh](../../examples/GitLab/scripts/mr_create.sh) - creates merge request.
+3. Checkout new branch.
+4. Run detection of not managed TODOs and creation of issues via todo-registrar.
+5. Commit injected IDs of created issues.
+6. Push changes and create Merge Request when something is committed.
