@@ -11,7 +11,7 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-// TODO: Test workflow configuration with YAML config passed via stdin
+// TODO: #289 Test workflow configuration with YAML config passed via stdin
 // This is a test TODO to verify that the new workflow configuration works correctly.
 // After successful verification, this file can be removed.
 
