@@ -30,6 +30,7 @@ jobs:
         uses: Aeliot-Tm/todo-registrar-action@1.5.0
         env:
           GH_PERSONAL_ACCESS_TOKEN: ${{ secrets.GH_TODO_REGISTRAR_ACCESS_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
         with:
           config: |
             paths:
@@ -51,11 +52,12 @@ jobs:
                   contextTitle: "## Added in position:"
                 service:
                   personalAccessToken: "%env(GH_PERSONAL_ACCESS_TOKEN)%"
-                  repository: ${{ github.repository }}
+                  repository: "%env(GITHUB_REPOSITORY)%"
 
             tags:
               - todo
               - fixme
           env_vars: |
             GH_PERSONAL_ACCESS_TOKEN
+            GITHUB_REPOSITORY
           new_branch_name: 'todo-registrar'
