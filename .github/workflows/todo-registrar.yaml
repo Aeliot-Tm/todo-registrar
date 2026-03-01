@@ -39,6 +39,9 @@ jobs:
                 - tests/fixtures
                 - var
                 - vendor
+            process:
+              glueSameTickets: true
+              glueSequentialComments: true
             registrar:
               type: GitHub
               options:
