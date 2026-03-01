@@ -48,6 +48,7 @@ jobs:
                 issue:
                   addTagToLabels: true
                   labels:
+                    - needs-review
                     - tech-debt
                   tagPrefix: tag-
                   showContext: numbered
