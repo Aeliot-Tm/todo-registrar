@@ -33,21 +33,21 @@ jobs:
         with:
           config: |
             paths:
-              in: .
-              append: bin/todo-registrar
+              in: "."
+              append: "bin/todo-registrar"
               exclude:
-                - tests/fixtures
-                - var
-                - vendor
+                - "tests/fixtures"
+                - "var"
+                - "vendor"
             registrar:
               type: GitHub
               options:
                 issue:
                   addTagToLabels: true
                   labels:
-                    - tech-debt
-                  tagPrefix: tag-
-                  showContext: numbered
+                    - "tech-debt"
+                  tagPrefix: "tag-"
+                  showContext: "numbered"
                   contextTitle: "## Added in position:"
                 service:
                   personalAccessToken: "%env(GH_PERSONAL_ACCESS_TOKEN)%"
