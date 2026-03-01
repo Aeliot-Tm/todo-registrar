@@ -1,0 +1,32 @@
+# This file is part of the TODO Registrar project.
+#
+# (c) Anatoliy Melnikov <5785276@gmail.com>
+#
+# This source file is subject to the MIT license that is bundled
+# with this source code in the file LICENSE.
+
+paths:
+  in: .
+  append: bin/todo-registrar
+  exclude:
+    - tests/fixtures
+    - var
+    - vendor
+
+registrar:
+  type: GitHub
+  options:
+    issue:
+      addTagToLabels: true
+      labels:
+        - tech-debt
+      tagPrefix: tag-
+      showContext: numbered
+      contextTitle: "## Added in position:"
+    service:
+      personalAccessToken: "%env(GH_PERSONAL_ACCESS_TOKEN)%"
+      repository: "%env(GITHUB_REPOSITORY)%"
+
+tags:
+  - todo
+  - fixme
