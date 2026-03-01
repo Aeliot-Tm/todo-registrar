@@ -51,7 +51,6 @@ jobs:
                   contextTitle: '## Added in position:'
                 service:
                   personalAccessToken: '%env(GH_PERSONAL_ACCESS_TOKEN)%'
-                  owner: '${{ github.repository_owner }}'
                   repository: '${{ github.repository }}'
             tags:
               - todo
