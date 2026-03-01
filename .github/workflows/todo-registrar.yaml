@@ -30,12 +30,32 @@ jobs:
         uses: Aeliot-Tm/todo-registrar-action@1.5.0
         env:
           GH_PERSONAL_ACCESS_TOKEN: ${{ secrets.GH_TODO_REGISTRAR_ACCESS_TOKEN }}
-          GITHUB_REPOSITORY: ${{ github.repository }}
-          GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}
         with:
-          config_path: .scripts/todo-registrar/config.php
+          config: |
+            paths:
+              in: .
+              append: bin/todo-registrar
+              exclude:
+                - tests/fixtures
+                - var
+                - vendor
+            registrar:
+              type: GitHub
+              options:
+                issue:
+                  addTagToLabels: true
+                  labels:
+                    - tech-debt
+                  tagPrefix: tag-
+                  showContext: numbered
+                  contextTitle: '## Added in position:'
+                service:
+                  personalAccessToken: '%env(GH_PERSONAL_ACCESS_TOKEN)%'
+                  owner: '${{ github.repository_owner }}'
+                  repository: '${{ github.repository }}'
+            tags:
+              - todo
+              - fixme
           env_vars: |
             GH_PERSONAL_ACCESS_TOKEN
-            GITHUB_REPOSITORY
-            GITHUB_REPOSITORY_OWNER
           new_branch_name: 'todo-registrar'
