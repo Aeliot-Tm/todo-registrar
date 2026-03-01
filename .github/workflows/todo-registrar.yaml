@@ -32,7 +32,32 @@ jobs:
           GH_PERSONAL_ACCESS_TOKEN: ${{ secrets.GH_TODO_REGISTRAR_ACCESS_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
         with:
-          config_path: .scripts/todo-registrar.yaml
+          config: |
+            paths:
+              in: .
+              append: bin/todo-registrar
+              exclude:
+                - tests/fixtures
+                - var
+                - vendor
+
+            registrar:
+              type: GitHub
+              options:
+                issue:
+                  addTagToLabels: true
+                  labels:
+                    - tech-debt
+                  tagPrefix: tag-
+                  showContext: numbered
+                  contextTitle: "## Added in position:"
+                service:
+                  personalAccessToken: "%env(GH_PERSONAL_ACCESS_TOKEN)%"
+                  repository: "%env(GITHUB_REPOSITORY)%"
+
+            tags:
+              - todo
+              - fixme
           env_vars: |
             GH_PERSONAL_ACCESS_TOKEN
             GITHUB_REPOSITORY
