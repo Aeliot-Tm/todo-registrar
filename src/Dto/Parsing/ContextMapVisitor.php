@@ -84,7 +84,7 @@ final class ContextMapVisitor extends NodeVisitorAbstract
     /**
      * Collect all comments before traversal (called once).
      *
-     * @param Node[] $nodes
+     * @param array<Node|null> $nodes
      */
     public function beforeTraverse(array $nodes): ?array
     {
@@ -129,11 +129,15 @@ final class ContextMapVisitor extends NodeVisitorAbstract
     /**
      * Recursively collect all comments from AST.
      *
-     * @param Node[] $nodes
+     * @param array<Node|null> $nodes
      */
     private function collectAllCommentsPositions(array $nodes): void
     {
         foreach ($nodes as $node) {
+            if (!$node instanceof Node) {
+                continue;
+            }
+
             $this->collectNodeCommentsPositions($node);
             // Recursively collect from child nodes
             foreach ($node->getSubNodeNames() as $name) {
