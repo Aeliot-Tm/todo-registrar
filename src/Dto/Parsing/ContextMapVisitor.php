@@ -141,11 +141,14 @@ final class ContextMapVisitor extends NodeVisitorAbstract
             $this->collectNodeCommentsPositions($node);
             // Recursively collect from child nodes
             foreach ($node->getSubNodeNames() as $name) {
-                $subNode = $node->$name;
-                if (\is_array($subNode)) {
-                    $this->collectAllCommentsPositions($subNode);
-                } elseif ($subNode instanceof Node) {
-                    $this->collectAllCommentsPositions([$subNode]);
+                $subNodes = $node->$name;
+
+                if ($subNodes instanceof Node) {
+                    $subNodes = [$subNodes];
+                }
+
+                if (\is_array($subNodes)) {
+                    $this->collectAllCommentsPositions($subNodes);
                 }
             }
         }
