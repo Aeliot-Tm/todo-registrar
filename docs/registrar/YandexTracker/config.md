@@ -91,7 +91,8 @@ Supported keys of [inline config](../../inline_config.md):
 | Key | Description |
 |---|---|
 | assignee | Login of Yandex Tracker user as string, which will be assigned to the issue. This one will be used when it is defined. |
-| issue_type | Type of issue (task, bug, story, epic, etc.). |
+| issue_type | Type of issue. Deprecated. Alias of 'issueType' |
+| issueType | Type of issue (task, bug, story, epic, etc.). |
 | labels | List of tags which will be assigned to the issue. |
 | priority | Priority of issue as string (blocker, critical, normal, minor, trivial). |
 
@@ -99,7 +100,7 @@ Supported keys of [inline config](../../inline_config.md):
 
 ```php
 // TODO: Fix authentication bug
-//       {EXTRAS: {issue_type: bug, priority: critical, labels: [security, urgent]}}
+//       {EXTRAS: {issueType: bug, priority: critical, labels: [security, urgent]}}
 ```
 
 ## Authentication
