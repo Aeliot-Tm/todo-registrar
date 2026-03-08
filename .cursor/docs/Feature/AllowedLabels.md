@@ -21,7 +21,7 @@ Redmine does not support labels, so this option is ignored for Redmine.
 
 Configured via `allowedLabels` option in the registrar's `issue` section.
 
-See [user documentation](../../../../docs/allowed_labels.md) for filtering rules and usage examples.
+See [user documentation](../../../docs/allowed_labels.md) for filtering rules and usage examples.
 
 ## Key Source Paths
 

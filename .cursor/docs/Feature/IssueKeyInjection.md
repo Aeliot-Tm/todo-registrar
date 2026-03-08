@@ -2,7 +2,7 @@
 
 Controls how issue keys returned by registrars (e.g. `PROJ-123`, `#42`) are injected back into TODO comments in source code after issue creation.
 
-See [user documentation](../../../../docs/issue_key_injection.md) for configuration examples and edge cases.
+See [user documentation](../../../docs/issue_key_injection.md) for configuration examples and edge cases.
 
 ## Configuration Options
 

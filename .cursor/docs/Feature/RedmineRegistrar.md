@@ -39,7 +39,7 @@ Redmine does not support labels. Options `labels`, `addTagToLabels`, `tagPrefix`
 
 ## Configuration
 
-See [user documentation](../../../../docs/registrar/Redmine/config.md) for full configuration reference (YAML/PHP, authentication, entity resolution, inline config keys).
+See [user documentation](../../../docs/registrar/Redmine/config.md) for full configuration reference (YAML/PHP, authentication, entity resolution, inline config keys).
 
 ### Registrar type
 

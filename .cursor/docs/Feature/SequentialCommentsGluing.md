@@ -2,7 +2,7 @@
 
 Merges consecutive single-line comments (`//` or `#`) into a single multi-line comment block for TODO processing.
 
-See [user documentation](../../../../docs/sequential_comments_gluing.md) for configuration, rules, and examples.
+See [user documentation](../../../docs/sequential_comments_gluing.md) for configuration, rules, and examples.
 
 ## Configuration
 

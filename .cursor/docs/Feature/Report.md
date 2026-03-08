@@ -20,7 +20,7 @@ Exports processing results to a report file for integration with CI pipelines, d
 - **Summary**: files analyzed/updated, comments detected, TODOs registered/ignored/glued
 - **Files**: per-file breakdown with registration counts
 
-See [user documentation](../../../../docs/report.md) for full structure, JSON/YAML examples, and usage commands.
+See [user documentation](../../../docs/report.md) for full structure, JSON/YAML examples, and usage commands.
 
 ## Key Source Paths
 

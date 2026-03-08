@@ -141,7 +141,7 @@ Located in `Dto/`:
 - `tags` — TODO tags to detect (default: `['todo', 'fixme']`)
 - `inline_config` — Inline configuration options
 - `issueKeyInjection` — Issue key injection configuration (position, separators)
-  - See [Issue Key Injection](../../Feature/IssueKeyInjection.md) for details
+  - See [Issue Key Injection](../Feature/IssueKeyInjection.md) for details
 
 ### STDIN Configuration
 

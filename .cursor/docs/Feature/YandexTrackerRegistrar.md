@@ -29,7 +29,7 @@ Yandex Tracker Registrar creates issues in Yandex Tracker from TODO/FIXME commen
 
 ## Configuration
 
-See [user documentation](../../../../docs/registrar/YandexTracker/config.md) for full configuration reference (YAML/PHP, authentication, environment variables, inline config keys).
+See [user documentation](../../../docs/registrar/YandexTracker/config.md) for full configuration reference (YAML/PHP, authentication, environment variables, inline config keys).
 
 ### Registrar type
 
@@ -106,7 +106,7 @@ Or via API: `GET https://api.tracker.yandex.net/v2/myself`
 
 If `isCloud: true` (default), `X-Cloud-Org-ID` header is used instead of `X-Org-ID`.
 
-![UI for Organization ID](../../../../docs/registrar/YandexTracker/ui_org_id.png)
+![UI for Organization ID](../../../docs/registrar/YandexTracker/ui_org_id.png)
 
 ## Technical Details
 

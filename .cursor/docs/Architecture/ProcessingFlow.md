@@ -312,7 +312,7 @@ The injection position is configurable via `issueKeyInjection.position` setting.
 4. Add or replace separator if configured via `newSeparator` and `replaceSeparator`
 5. Update first line of CommentPart
 
-See [Issue Key Injection](../../Feature/IssueKeyInjection.md) for detailed configuration options.
+See [Issue Key Injection](../Feature/IssueKeyInjection.md) for detailed configuration options.
 
 ### Step 9: Update Token Text
 

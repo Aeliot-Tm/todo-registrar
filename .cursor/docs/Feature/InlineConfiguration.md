@@ -30,7 +30,7 @@ Each registrar also supports tracker-specific keys (e.g. `linkedIssues` for JIRA
 2. Inline config (`{EXTRAS: ...}`)
 3. General config — lowest
 
-See [user documentation](../../../../docs/inline_config.md) for syntax details, examples, and registrar-specific keys.
+See [user documentation](../../../docs/inline_config.md) for syntax details, examples, and registrar-specific keys.
 
 ## Key Source Paths
 

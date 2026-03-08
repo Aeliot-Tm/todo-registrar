@@ -22,7 +22,7 @@ Placeholders are case-insensitive. Multiple placeholders can be combined.
 
 Configured via `summaryPrefix` option in the registrar's `issue` section.
 
-See [user documentation](../../../../docs/dynamic_summary_prefix.md) for examples and details.
+See [user documentation](../../../docs/dynamic_summary_prefix.md) for examples and details.
 
 ## Key Source Paths
 

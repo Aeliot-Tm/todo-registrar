@@ -27,7 +27,7 @@ GitHub Registrar creates issues in GitHub Issues from TODO/FIXME comments found 
 
 ## Configuration
 
-See [user documentation](../../../../docs/registrar/GitHub/config.md) for full configuration reference (YAML/PHP, authentication, inline config keys).
+See [user documentation](../../../docs/registrar/GitHub/config.md) for full configuration reference (YAML/PHP, authentication, inline config keys).
 
 ### Registrar type
 

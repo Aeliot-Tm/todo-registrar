@@ -25,7 +25,7 @@ Configured via `showContext` option in the registrar's `issue` section.
 Can be overridden per-TODO via inline config.
 Optional `contextTitle` adds a title above the context block.
 
-See [user documentation](../../../../docs/context_display.md) for format examples, context types, and configuration details.
+See [user documentation](../../../docs/context_display.md) for format examples, context types, and configuration details.
 
 ## Key Source Paths
 

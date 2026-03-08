@@ -32,7 +32,7 @@ GitLab Registrar creates issues in GitLab Issues from TODO/FIXME comments found 
 
 ## Configuration
 
-See [user documentation](../../../../docs/registrar/GitLab/config.md) for full configuration reference (YAML/PHP, authentication, project identification, inline config keys).
+See [user documentation](../../../docs/registrar/GitLab/config.md) for full configuration reference (YAML/PHP, authentication, project identification, inline config keys).
 
 ### Registrar type
 

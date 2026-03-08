@@ -16,7 +16,7 @@ Link types are matched against JIRA's configured link types by name, inward, or 
 
 Falls back to `issueLinkType` from the `issue` config section, then to `Relates`.
 
-See [user documentation](../../../../docs/registrar/JIRA/linked_issues.md) for usage formats, link type resolution details, and examples.
+See [user documentation](../../../docs/registrar/JIRA/linked_issues.md) for usage formats, link type resolution details, and examples.
 
 ## Key Source Paths
 

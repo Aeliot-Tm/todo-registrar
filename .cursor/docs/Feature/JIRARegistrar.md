@@ -33,7 +33,7 @@ JIRA Registrar creates issues in Atlassian JIRA from TODO/FIXME comments found i
 
 ## Configuration
 
-See [user documentation](../../../../docs/registrar/JIRA/config.md) for full configuration reference (YAML/PHP, authentication, inline config keys).
+See [user documentation](../../../docs/registrar/JIRA/config.md) for full configuration reference (YAML/PHP, authentication, inline config keys).
 
 ### Registrar type
 
