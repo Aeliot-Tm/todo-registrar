@@ -10,11 +10,18 @@ Download descriptions from files IF you need to understand the work:
    - [Processing Flow](../docs/API/Architecture/ProcessingFlow.md)
 
 2. Features:
+   - [Allowed Labels](../docs/API/Feature/AllowedLabels.md)
+   - [Context Display](../docs/API/Feature/ContextDisplay.md)
+   - [Dynamic Summary Prefix](../docs/API/Feature/DynamicSummaryPrefix.md)
    - [GitHub Registrar](../docs/API/Feature/GitHubRegistrar.md)
    - [GitLab Registrar](../docs/API/Feature/GitLabRegistrar.md)
+   - [Inline Configuration](../docs/API/Feature/InlineConfiguration.md)
    - [Issue Key Injection](../docs/API/Feature/IssueKeyInjection.md)
+   - [JIRA Linked Issues](../docs/API/Feature/JIRALinkedIssues.md)
    - [JIRA Registrar](../docs/API/Feature/JIRARegistrar.md)
    - [Redmine Registrar](../docs/API/Feature/RedmineRegistrar.md)
+   - [Report](../docs/API/Feature/Report.md)
+   - [Same-Ticket Gluing](../docs/API/Feature/SameTicketGluing.md)
    - [Sequential Comments Gluing](../docs/API/Feature/SequentialCommentsGluing.md)
    - [Yandex Tracker Registrar](../docs/API/Feature/YandexTrackerRegistrar.md)
 
