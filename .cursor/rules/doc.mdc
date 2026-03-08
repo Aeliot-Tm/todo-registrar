@@ -35,3 +35,5 @@ When creating new documentation files:
    - Keep entries in alphabetical order by description for better organization.
 
 IMPORTANT: You MUST NOT create links from user's documents to `.cursor` rules! Keep them totally separated.
+           But you can use vice versa (link from your documentation to user's documentation)
+           where it makes sense and does not lead to excessive use of context.
