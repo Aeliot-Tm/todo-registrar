@@ -79,6 +79,8 @@ Use `issueType` for the type of issue (e.g., Task, Bug, Story).
 Default link type used when linking issues via `linkedIssues` in inline config.
 If not set, `Relates` is used.
 
+It is expected that `issueLinkType` is in `issue` array, but script tries to get it from root too.
+
 ### Option allowedLabels
 
 See [allowed labels documentation](../../allowed_labels.md)
