@@ -11,28 +11,29 @@ or php-config-file `.todo-registrar.php` ([example](../../../examples/Redmine/.t
 #...
 registrar:
   type: Redmine
-  issue:
-    project: 'testing-project'          # required: project identifier or ID
-    tracker: 'Bugs'                     # required: tracker name or ID
-    priority: 'Low'                     # optional: priority name or ID
-    assignee: null                      # optional: username, login, email, or user ID
-    category: null                      # optional: category name or ID
-    fixed_version: null                 # optional: version name or ID
-    start_date: null                    # optional: start date in format YYYY-MM-DD
-    due_date: null                      # optional: due date in format YYYY-MM-DD
-    estimated_hours: null               # optional: estimated hours as float
-    summaryPrefix: '[TODO] '            # optional: prefix which will be added to issue subject
-                                        #           supports dynamic placeholders: {tag}, {tag_caps}, {assignee}
-    showContext: 'numbered'             # optional: include code context in issue description
-                                        #           values: null (default), 'arrow_chained', 'asterisk', 'code_block',
-                                        #                   'number_sign', 'numbered'
-    contextTitle: null                  # optional: title of context path
-  service:
-    url: 'https://redmine.example.com',             # required: Redmine URL
-    apikeyOrUsername: '%env(REDMINE_USERNAME)%',    # required: API key (recommended) or username
-    password: '%env(REDMINE_PASSWORD)%',            # optional: password for Basic Auth
-                                                    #           If password is provided, Basic Auth will be used (username:password)
-                                                    #           Otherwise, apikeyOrUsername will be treated as API key
+  options:
+    issue:
+      project: 'testing-project'          # required: project identifier or ID
+      tracker: 'Bugs'                     # required: tracker name or ID
+      priority: 'Low'                     # optional: priority name or ID
+      assignee: null                      # optional: username, login, email, or user ID
+      category: null                      # optional: category name or ID
+      fixed_version: null                 # optional: version name or ID
+      start_date: null                    # optional: start date in format YYYY-MM-DD
+      due_date: null                      # optional: due date in format YYYY-MM-DD
+      estimated_hours: null               # optional: estimated hours as float
+      summaryPrefix: '[TODO] '            # optional: prefix which will be added to issue subject
+                                          #           supports dynamic placeholders: {tag}, {tag_caps}, {assignee}
+      showContext: 'numbered'             # optional: include code context in issue description
+                                          #           values: null (default), 'arrow_chained', 'asterisk', 'code_block',
+                                          #                   'number_sign', 'numbered'
+      contextTitle: null                  # optional: title of context path
+    service:
+      url: 'https://redmine.example.com',             # required: Redmine URL
+      apikeyOrUsername: '%env(REDMINE_USERNAME)%',    # required: API key (recommended) or username
+      password: '%env(REDMINE_PASSWORD)%',            # optional: password for Basic Auth
+                                                      #           If password is provided, Basic Auth will be used (username:password)
+                                                      #           Otherwise, apikeyOrUsername will be treated as API key
 ```
 
 ### PHP configuration
