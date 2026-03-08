@@ -24,13 +24,15 @@ The created issue will be linked to `PROJ-100` with the default link type.
 ## Default link type
 
 If you don't specify a link type, the value from the `issueLinkType` option
-in the [general config](config.md) is used. If that option is not set either,
-the default is `Relates`.
+in the `issue` section of the [general config](config.md) is used.
+If that option is not set either, the script falls back to `issueLinkType`
+at the root of registrar options (for backward compatibility). If neither is defined, the default is `Relates`.
 
 ```yaml
 registrar:
-  issue:
-    issueLinkType: 'Blocks'   # change the default link type
+  options:
+    issue:
+      issueLinkType: 'Blocks'   # change the default link type
 ```
 
 ## Usage formats
