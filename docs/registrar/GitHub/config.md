@@ -77,7 +77,10 @@ Supported keys of inline config:
 
 | Key | Description |
 |---|---|
+| assignee | Identifier of GitHub user as string, which will be assigned to the issue |
 | assignees | List of identifiers of GitHub users, which will be assigned to the issue |
+| contextTitle | Title of context path. Overrides `contextTitle` from general config |
 | labels | List of labels which will be assigned to the issue |
 | owner | username on GitHub |
 | repository | the name of repository (part URL to repository) |
+| showContext | Include code context in issue description. Overrides `showContext` from general config |

@@ -78,6 +78,18 @@ Below are examples of settings supported by the implemented JIRA-registrar.
    {EXTRAS: {labels: [label-a, label-b], components: [component-a, component-b]}}
    ```
 
+### Common keys supported by all registrars
+
+The following inline config keys are supported by all registrars:
+
+| Key | Description |
+|---|---|
+| assignee | Identifier of user to assign to the issue (string or array) |
+| assignees | Same as `assignee`. Both keys are supported |
+| contextTitle | Title of context path. Overrides `contextTitle` from general config |
+| labels | List of labels/tags which will be assigned to the issue |
+| showContext | Include code context in issue description. Overrides `showContext` from general config |
+
 ### Inline configs specific for issue trackers
 
 1. [GitHub](registrar/GitHub/config.md#inline-config)
@@ -88,6 +100,10 @@ Below are examples of settings supported by the implemented JIRA-registrar.
 
 
 ## The order of applying of configs
-1. `@assignee` joined to TODO-tag.
-2. `EXTRAS`
-3. Then the [general config](config/general_config_php.md) of the JIRA registrar.
+
+When the same field can be set from multiple sources, values are applied with the following priority
+(highest to lowest). This order applies to all registrars:
+
+1. **Tag assignee** — `@assignee` joined to TODO-tag (e.g. `TODO@john`)
+2. **Inline config** — values from `{EXTRAS: {...}}`
+3. **General config** — values from the [general config file](config/general_config.md)

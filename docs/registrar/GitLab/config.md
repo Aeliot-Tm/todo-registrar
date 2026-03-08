@@ -141,9 +141,13 @@ Supported keys of inline config:
 | Key | Description |
 |---|---|
 | assignee | Identifier(s) of GitLab user(s) (username or email). Can be a string (single user) or array of strings (multiple users) |
+| assignees | Same as `assignee`. Both keys are supported |
+| contextTitle | Title of context path. Overrides `contextTitle` from general config |
+| due_date | Due date in format YYYY-MM-DD |
 | labels | List of labels which will be assigned to the issue |
 | milestone | either ID (integer: 123) or title (string) of milestone (optional) |
-| due_date | Due date in format YYYY-MM-DD |
+| project | Project ID (integer) or project path (string). Overrides `project` from general config |
+| showContext | Include code context in issue description. Overrides `showContext` from general config |
 
 ### Examples
 

@@ -74,6 +74,11 @@ Use `issueType` for the type of issue (e.g., Task, Bug, Story).
 > **Deprecated:** `type` is accepted as an alias of `issueType` in general config for backward compatibility.
 > If both `type` and `issueType` are specified, a validation error is raised. Use only `issueType`.
 
+### Option 'issueLinkType'
+
+Default link type used when linking issues via `linkedIssues` in inline config.
+If not set, `Relates` is used.
+
 ### Option allowedLabels
 
 See [allowed labels documentation](../../allowed_labels.md)
@@ -92,11 +97,14 @@ Supported keys of inline config:
 
 | Key | Description |
 |---|---|
-| assignees | One identifier of JIRA-users as string, which will be assigned to the issue. This one will be used when it is defined. |
-| components | List of components which will be set to issue. |
-| issue_type | Type of issue. Deprecated. Alias of 'issueType' |
-| issueType | Type of issue (task, bug, story, epic, etc.). |
+| assignee | Identifier of JIRA user as string, which will be assigned to the issue |
+| assignees | Same as `assignee`. Both keys are supported |
+| components | List of components which will be set to issue |
+| contextTitle | Title of context path. Overrides `contextTitle` from general config |
+| issue_type | Type of issue. Deprecated. Alias of `issueType` |
+| issueType | Type of issue (task, bug, story, epic, etc.) |
+| labels | List of labels which will be assigned to the issue |
 | linkedIssues | List of [linked issues](linked_issues.md) |
-| labels | List of labels which will be assigned to the issue. |
-| priority | Priority of issue as string. |
-| projectKey | Allow override project key to create issue in another related project. |
+| priority | Priority of issue as string |
+| projectKey | Allow override project key to create issue in another related project |
+| showContext | Include code context in issue description. Overrides `showContext` from general config |

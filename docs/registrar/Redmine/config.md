@@ -61,7 +61,9 @@ And it can be overridden by inline config.
 
 ### Labels
 
-Redmine doesn't support labels.
+Redmine doesn't support labels. The options `labels`, `addTagToLabels`, `tagPrefix`, and `allowedLabels`
+are accepted in the general config for compatibility with the base configuration,
+but they are ignored and have no effect on the created Redmine issues.
 
 ### Option showContext
 
@@ -176,13 +178,17 @@ Supported keys of inline config:
 | Key | Type | Description |
 |---|---|---|
 | assignee | `string` or `int` | Username/login/email or user ID to assign to the issue |
-| tracker | `int` or `string` | Tracker ID or name (Bug, Feature, Support, etc.) |
-| priority | `int` or `string` | Priority ID or name (High, Normal, Low, etc.) |
+| assignees | `string` or `int` | Same as `assignee`. Both keys are supported |
 | category | `int` or `string` | Category ID or name |
-| fixed_version | `int` or `string` | Version ID or name |
-| start_date | `string` | Start date in format YYYY-MM-DD |
+| contextTitle | `string` | Title of context path. Overrides `contextTitle` from general config |
 | due_date | `string` | Due date in format YYYY-MM-DD |
 | estimated_hours| `float` | Estimated hours |
+| fixed_version | `int` or `string` | Version ID or name |
+| priority | `int` or `string` | Priority ID or name (High, Normal, Low, etc.) |
+| project | `int` or `string` | Project identifier or ID. Overrides `project` from general config |
+| showContext | `string` | Include code context in issue description. Overrides `showContext` from general config |
+| start_date | `string` | Start date in format YYYY-MM-DD |
+| tracker | `int` or `string` | Tracker ID or name (Bug, Feature, Support, etc.) |
 
 ### Examples
 
@@ -210,8 +216,8 @@ Supported keys of inline config:
 
 When the same field can be set from multiple sources, priority is (highest to lowest):
 
-1. **Inline config** — `{EXTRAS: {assignee: user1}}`
-2. **Tag assignee** — `TODO@username`
+1. **Tag assignee** — `TODO@username`
+2. **Inline config** — `{EXTRAS: {assignee: user1}}`
 3. **Global config** — `issue.assignee` in config file
 
 ### Assignee examples

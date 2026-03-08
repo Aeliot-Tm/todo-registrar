@@ -91,11 +91,15 @@ Supported keys of [inline config](../../inline_config.md):
 
 | Key | Description |
 |---|---|
-| assignee | Login of Yandex Tracker user as string, which will be assigned to the issue. This one will be used when it is defined. |
-| issue_type | Type of issue. Deprecated. Alias of 'issueType' |
-| issueType | Type of issue (task, bug, story, epic, etc.). |
-| labels | List of tags which will be assigned to the issue. |
-| priority | Priority of issue as string (blocker, critical, normal, minor, trivial). |
+| assignee | Login of Yandex Tracker user as string, which will be assigned to the issue |
+| assignees | Same as `assignee`. Both keys are supported |
+| contextTitle | Title of context path. Overrides `contextTitle` from general config |
+| issue_type | Type of issue. Deprecated. Alias of `issueType` |
+| issueType | Type of issue (task, bug, story, epic, etc.) |
+| labels | List of tags which will be assigned to the issue |
+| priority | Priority of issue as string (blocker, critical, normal, minor, trivial) |
+| queue | Key of Yandex Tracker queue. Overrides `queue` from general config |
+| showContext | Include code context in issue description. Overrides `showContext` from general config |
 
 ### Example of inline config
 
