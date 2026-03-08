@@ -71,6 +71,9 @@ And it can be overridden by inline config.
 
 Use `issueType` for the type of issue (e.g., Task, Bug, Story).
 
+> **Deprecated:** `type` is accepted as an alias of `issueType` in general config for backward compatibility.
+> If both `type` and `issueType` are specified, a validation error is raised. Use only `issueType`.
+
 ### Option allowedLabels
 
 See [allowed labels documentation](../../allowed_labels.md)
