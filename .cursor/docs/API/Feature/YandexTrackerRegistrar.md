@@ -24,7 +24,7 @@ Yandex Tracker Registrar creates issues in Yandex Tracker from TODO/FIXME commen
 | Tag name (if `addTagToLabels=true`) | `tags[]` |
 | Inline config `priority` | `priority` |
 | Config `issue.priority` | `priority` |
-| Inline config `issue_type` | `type` |
+| Inline config `issueType` | `type` |
 | Config `issue.type` | `type` |
 
 ## Configuration
@@ -64,7 +64,7 @@ Specify per-comment settings using `{EXTRAS: {...}}` syntax:
 
 ```php
 // TODO: Fix this bug
-//       {EXTRAS: {issue_type: bug, priority: critical, labels: [urgent]}}
+//       {EXTRAS: {issueType: bug, priority: critical, labels: [urgent]}}
 ```
 
 ### Supported Inline Config Keys
@@ -72,7 +72,7 @@ Specify per-comment settings using `{EXTRAS: {...}}` syntax:
 | Key | Type | Description |
 |---|---|---|
 | `assignee` | `string` | User login to assign |
-| `issue_type` | `string` | Issue type (task, bug, story, epic, etc.) |
+| `issueType` | `string` | Issue type (task, bug, story, epic, etc.) |
 | `priority` | `string` | Priority name (blocker, critical, normal, minor, trivial) |
 | `labels` | `string[]` | List of tags to add |
 
@@ -92,7 +92,7 @@ When the same field can be set from multiple sources, priority is (highest to lo
 /**
  * TODO@john: Refactor authentication module
  *            Current implementation has security issues
- *            {EXTRAS: {issue_type: bug, priority: critical}}
+ *            {EXTRAS: {issueType: bug, priority: critical}}
  */
 function authenticate() {
     // ...
@@ -115,7 +115,7 @@ function authenticate() {
 /**
  * TODO: QUEUE-42 Refactor authentication module
  *       Current implementation has security issues
- *       {EXTRAS: {issue_type: bug, priority: critical}}
+ *       {EXTRAS: {issueType: bug, priority: critical}}
  */
 ```
 

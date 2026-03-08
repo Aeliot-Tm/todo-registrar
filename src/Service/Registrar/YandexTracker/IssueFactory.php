@@ -72,6 +72,8 @@ final readonly class IssueFactory
     {
         $inlineConfig = $todo->getInlineConfig();
 
-        return $inlineConfig['issue_type'] ?? $this->generalIssueConfig->getType();
+        return $inlineConfig['issueType']
+            ?? $inlineConfig['issue_type']
+            ?? $this->generalIssueConfig->getType();
     }
 }

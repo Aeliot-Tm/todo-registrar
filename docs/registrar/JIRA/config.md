@@ -89,7 +89,8 @@ Supported keys of inline config:
 |---|---|
 | assignees | One identifier of JIRA-users as string, which will be assigned to the issue. This one will be used when it is defined. |
 | components | List of components which will be set to issue. |
-| issue_type | Type of issue. |
+| issue_type | Type of issue. Deprecated. Alias of 'issueType' |
+| issueType | Type of issue (task, bug, story, epic, etc.). |
 | labels | List of labels which will be assigned to the issue. |
 | priority | Priority of issue as string. |
 | projectKey | Allow override project key to create issue in another related project. |

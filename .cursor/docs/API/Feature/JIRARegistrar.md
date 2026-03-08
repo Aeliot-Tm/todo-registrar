@@ -27,7 +27,7 @@ JIRA Registrar creates issues in Atlassian JIRA from TODO/FIXME comments found i
 | Config `issue.components` | `components[]` |
 | Inline config `priority` | `priority` |
 | Config `issue.priority` | `priority` |
-| Inline config `issue_type` | `issuetype` |
+| Inline config `issueType` | `issuetype` |
 | Config `issue.type` | `issuetype` |
 | Inline config `linkedIssues` | Issue links |
 
@@ -75,7 +75,7 @@ Specify per-comment settings using `{EXTRAS: {...}}` syntax:
 
 ```php
 // TODO: Fix this bug
-//       {EXTRAS: {issue_type: Bug, priority: High, components: [Frontend], labels: [urgent]}}
+//       {EXTRAS: {issueType: Bug, priority: High, components: [Frontend], labels: [urgent]}}
 ```
 
 ### Supported Inline Config Keys
@@ -83,7 +83,7 @@ Specify per-comment settings using `{EXTRAS: {...}}` syntax:
 | Key | Type | Description |
 |---|---|---|
 | `assignee` | `string` | JIRA username to assign |
-| `issue_type` | `string` | Issue type (Bug, Task, Story, etc.) |
+| `issueType` | `string` | Issue type (Bug, Task, Story, etc.) |
 | `priority` | `string` | Priority name (Highest, High, Medium, Low, Lowest) |
 | `labels` | `string[]` | List of labels to add |
 | `components` | `string[]` | List of JIRA components |
@@ -134,7 +134,7 @@ When the same field can be set from multiple sources, priority is (highest to lo
 /**
  * TODO@john: Refactor authentication module
  *            Current implementation has security issues
- *            {EXTRAS: {issue_type: Bug, priority: High, components: [Security], linkedIssues: [PROJ-500]}}
+ *            {EXTRAS: {issueType: Bug, priority: High, components: [Security], linkedIssues: [PROJ-500]}}
  */
 function authenticate() {
     // ...
@@ -159,7 +159,7 @@ function authenticate() {
 /**
  * TODO: PROJ-42 Refactor authentication module
  *       Current implementation has security issues
- *       {EXTRAS: {issue_type: Bug, priority: High, components: [Security], linkedIssues: [PROJ-500]}}
+ *       {EXTRAS: {issueType: Bug, priority: High, components: [Security], linkedIssues: [PROJ-500]}}
  */
 ```
 
