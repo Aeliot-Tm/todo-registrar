@@ -31,6 +31,7 @@ registrar:
                                               #           values: null (default), 'arrow_chained', 'asterisk', 'code_block',
                                               #                   'number_sign', 'numbered'
       contextTitle: null                      # optional: title of context path
+      issueLinkType: null                     # optional: Default linked issue type. If undefined then 'Relates' is used.
   service:
       host: '%env(JIRA_HOST)%'                                  # required: host of JIRA-server
       personalAccessToken: '%env(JIRA_PERSONAL_ACCESS_TOKEN)%'  # optional: personal access-token
@@ -91,6 +92,7 @@ Supported keys of inline config:
 | components | List of components which will be set to issue. |
 | issue_type | Type of issue. Deprecated. Alias of 'issueType' |
 | issueType | Type of issue (task, bug, story, epic, etc.). |
+| linkedIssues | List of [linked issues](linked_issues.md) |
 | labels | List of labels which will be assigned to the issue. |
 | priority | Priority of issue as string. |
 | projectKey | Allow override project key to create issue in another related project. |
