@@ -28,163 +28,84 @@ JIRA Registrar creates issues in Atlassian JIRA from TODO/FIXME comments found i
 | Inline config `priority` | `priority` |
 | Config `issue.priority` | `priority` |
 | Inline config `issueType` | `issuetype` |
-| Config `issue.type` | `issuetype` |
+| Config `issue.issueType` | `issuetype` |
 | Inline config `linkedIssues` | Issue links |
 
 ## Configuration
+
+See [user documentation](../../../../docs/registrar/JIRA/config.md) for full configuration reference (YAML/PHP, authentication, inline config keys).
+
+### Registrar type
+
+```yaml
+registrar:
+  type: JIRA
+```
 
 ### Service Configuration
 
 ```yaml
 registrar:
   type: JIRA
-  projectKey: 'PROJ'                       # JIRA project key
-  issueLinkType: 'Relates'                 # Default link type (optional)
-  service:
-    host: 'https://company.atlassian.net'  # JIRA host
-    personalAccessToken: 'token'           # Personal Access Token
-    tokenBasedAuth: true                   # Use token authentication
-
-    # Alternative: username/password auth (tokenBasedAuth: false)
-    # jiraUser: 'username'
-    # jiraPassword: 'password'
+  options:
+    service:
+      host: '%env(JIRA_HOST)%'
+      personalAccessToken: '%env(JIRA_PERSONAL_ACCESS_TOKEN)%'
+      tokenBasedAuth: true
+      ## Alternative: username/password auth (tokenBasedAuth: false)
+      # jiraUser: 'username'
+      # jiraPassword: 'password'
 ```
 
 ### Issue Configuration
 
 ```yaml
 registrar:
-  issue:
-    type: 'Task'                 # Default issue type (Bug, Task, Story, etc.)
-    addTagToLabels: true         # Add TODO/FIXME tag as label
-    tagPrefix: 'tag-'            # Prefix for tag label (e.g., "tag-todo")
-    labels:                      # Default labels for all issues
-      - tech-debt
-      - from-code
-    components:                  # Default components
-      - Backend
-      - API
-    assignee: 'developer1'       # Default assignee
-    priority: 'Medium'           # Default priority
-    summaryPrefix: '[TODO] '     # Prefix for issue summary
+  options:
+    issue:
+      projectKey: 'PROJ'                  # Required: JIRA project key
+      issueType: 'Task'                   # Required: issue type (Task, Bug, Story, etc.)
+      priority: 'Medium'                  # Optional: default priority
+      assignee: 'developer1'              # Optional: default assignee
+      labels: ['tech-debt']               # Optional: default labels
+      addTagToLabels: true                # Optional: add tag as label
+      tagPrefix: 'tag-'                   # Optional: prefix for tag label
+      allowedLabels: ['bug', 'feature']   # Optional: restrict allowed labels
+      components: ['Backend']             # Optional: default components
+      summaryPrefix: '[TODO] '            # Optional: prefix for issue summary
+      showContext: 'numbered'             # Optional: include code context
+      contextTitle: null                  # Optional: title of context path
+      issueLinkType: null                 # Optional: default link type (default: 'Relates')
 ```
+
+> **Note:** `issueType` replaces the deprecated `type` key. If both are specified, a validation error is raised.
 
 ## Inline Configuration
 
-Specify per-comment settings using `{EXTRAS: {...}}` syntax:
-
-```php
-// TODO: Fix this bug
-//       {EXTRAS: {issueType: Bug, priority: High, components: [Frontend], labels: [urgent]}}
-```
+Specify per-comment settings using `{EXTRAS: {...}}` syntax.
 
 ### Supported Inline Config Keys
 
 | Key | Type | Description |
 |---|---|---|
 | `assignee` | `string` | JIRA username to assign |
-| `issueType` | `string` | Issue type (Bug, Task, Story, etc.) |
-| `priority` | `string` | Priority name (Highest, High, Medium, Low, Lowest) |
-| `labels` | `string[]` | List of labels to add |
+| `assignees` | `string` | Same as `assignee` |
 | `components` | `string[]` | List of JIRA components |
-| `linkedIssues` | `array` | Issue links (see below) |
-
-## Issue Linking
-
-JIRA Registrar supports creating issue links to relate the new issue to existing issues.
-
-### Simple Format (Default Link Type)
-
-```php
-// TODO: Implement feature
-//       {EXTRAS: {linkedIssues: [PROJ-100, PROJ-101]}}
-```
-
-Uses the default link type configured in `issueLinkType` (default: "Relates").
-
-### Explicit Link Type Format
-
-```php
-// TODO: Fix this bug
-//       {EXTRAS: {linkedIssues: {Blocks: [PROJ-100], "Is Blocked By": [PROJ-101]}}}
-```
-
-### Common JIRA Link Types
-
-| Link Type | Inward Description | Outward Description |
-|---|---|---|
-| `Blocks` | is blocked by | blocks |
-| `Cloners` | is cloned by | clones |
-| `Duplicate` | is duplicated by | duplicates |
-| `Relates` | relates to | relates to |
+| `contextTitle` | `string` | Title of context path |
+| `issueType` | `string` | Issue type (Bug, Task, Story, etc.) |
+| `labels` | `string[]` | List of labels to add |
+| `linkedIssues` | `array` | Issue links (see [JIRA Linked Issues](JIRALinkedIssues.md)) |
+| `priority` | `string` | Priority name |
+| `projectKey` | `string` | Override project key |
+| `showContext` | `string` | Override context display format |
 
 ## Priority of Values
 
 When the same field can be set from multiple sources, priority is (highest to lowest):
 
-1. **Inline config** — `{EXTRAS: {assignee: user1}}`
-2. **Tag assignee** — `TODO@username`
-3. **Global config** — `issue.assignee` in config file
-
-## Example
-
-### Comment in Code
-
-```php
-/**
- * TODO@john: Refactor authentication module
- *            Current implementation has security issues
- *            {EXTRAS: {issueType: Bug, priority: High, components: [Security], linkedIssues: [PROJ-500]}}
- */
-function authenticate() {
-    // ...
-}
-```
-
-### Created JIRA Issue
-
-- **Project**: PROJ
-- **Type**: Bug
-- **Summary**: `Refactor authentication module`
-- **Description**: `Current implementation has security issues`
-- **Assignee**: john
-- **Priority**: High
-- **Components**: Security
-- **Labels**: `todo` (if `addTagToLabels=true`)
-- **Links**: Relates to PROJ-500
-
-### Result in Code
-
-```php
-/**
- * TODO: PROJ-42 Refactor authentication module
- *       Current implementation has security issues
- *       {EXTRAS: {issueType: Bug, priority: High, components: [Security], linkedIssues: [PROJ-500]}}
- */
-```
-
-**Note:** The position where the issue key is injected can be configured globally. See [Issue Key Injection](IssueKeyInjection.md) for details.
-
-## Authentication Methods
-
-### Personal Access Token (Recommended)
-
-```yaml
-service:
-  host: 'https://company.atlassian.net'
-  personalAccessToken: 'your-token'
-  tokenBasedAuth: true
-```
-
-### Username/Password (Legacy)
-
-```yaml
-service:
-  host: 'https://jira.company.com'
-  jiraUser: 'username'
-  jiraPassword: 'password'
-  tokenBasedAuth: false
-```
+1. **Tag assignee** — `TODO@username`
+2. **Inline config** — `{EXTRAS: {assignee: user1}}`
+3. **General config** — `issue.assignee` in config file
 
 ## Technical Details
 
@@ -195,29 +116,26 @@ service:
 | `JiraRegistrar` | Main registrar, orchestrates issue creation |
 | `JiraRegistrarFactory` | Creates registrar from config |
 | `IssueFieldFactory` | Builds IssueField from Todo |
-| `IssueConfig` | Holds parsed issue configuration |
+| `GeneralIssueConfig` | Holds parsed issue configuration |
 | `ServiceFactory` | Creates JIRA API service clients |
+| `IssueServiceArrayConfigPreparer` | Prepares service config array |
 | `IssueLinkRegistrar` | Creates issue links after issue creation |
 | `LinkedIssueNormalizer` | Normalizes linked issues format |
 | `IssueLinkTypeProvider` | Provides available link types from JIRA |
+| `NotSupportedLinkTypeException` | Exception for unsupported link types |
+
+### Source Path
+
+`src/Service/Registrar/JIRA/`
 
 ### API Library
 
 Uses `lesstif/php-jira-rest-client` library for JIRA API communication.
 
-### IssueField Building
+## Related Features
 
-The `IssueFieldFactory` uses `JiraRestApi\Issue\IssueField` to build issue data:
-
-```php
-$issueField = new IssueField();
-$issueField
-    ->setProjectKey('PROJ')
-    ->setSummary('Issue summary')
-    ->setDescription('Issue description')
-    ->setIssueTypeAsString('Task')
-    ->setAssigneeNameAsString('username')
-    ->setPriorityNameAsString('High')
-    ->addComponentsAsArray(['Component1'])
-    ->addLabelAsString('label1');
-```
+- [Allowed Labels](AllowedLabels.md) — filter labels applied to issues
+- [Context Display](ContextDisplay.md) — show code context in issue description
+- [Dynamic Summary Prefix](DynamicSummaryPrefix.md) — add prefixes to issue titles
+- [Inline Configuration](InlineConfiguration.md) — per-comment overrides
+- [JIRA Linked Issues](JIRALinkedIssues.md) — link new issues to existing ones

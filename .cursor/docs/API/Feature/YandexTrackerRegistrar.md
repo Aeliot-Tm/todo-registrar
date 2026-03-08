@@ -29,125 +29,84 @@ Yandex Tracker Registrar creates issues in Yandex Tracker from TODO/FIXME commen
 
 ## Configuration
 
+See [user documentation](../../../../docs/registrar/YandexTracker/config.md) for full configuration reference (YAML/PHP, authentication, environment variables, inline config keys).
+
+### Registrar type
+
+```yaml
+registrar:
+  type: YandexTracker
+```
+
 ### Service Configuration
 
 ```yaml
 registrar:
   type: YandexTracker
-  queue: 'QUEUE'                            # Yandex Tracker queue key (required)
-  service:
-    isCloud: true                           # Is Cloud Organization (default: true)
-                                            # If true, X-Cloud-Org-ID header is used instead of X-Org-ID
-    orgId: 'organization-id'                # Organization ID (required)
-    token: 'OAuth-token'                    # OAuth token for API access (required)
+  options:
+    service:
+      orgId: '%env(YANDEX_TRACKER_ORG_ID)%'     # Required
+      token: '%env(YANDEX_TRACKER_TOKEN)%'      # Required
+      isCloud: true                             # Optional: Cloud vs on-premise
 ```
 
 ### Issue Configuration
 
 ```yaml
 registrar:
-  issue:
-    type: 'task'                 # Default issue type (task, bug, story, epic)
-    addTagToLabels: true         # Add TODO/FIXME tag as label
-    tagPrefix: 'tag-'            # Prefix for tag label (e.g., "tag-todo")
-    labels:                      # Default labels (tags) for all issues
-      - tech-debt
-      - from-code
-    assignee: 'developer1'       # Default assignee (login)
-    priority: 'normal'           # Default priority (blocker, critical, normal, minor, trivial)
-    summaryPrefix: '[TODO] '     # Prefix for issue summary
+    issue:
+      queue: MYQUEUE                              # Required: queue key
+      type: task                                  # Required: issue type
+      priority: normal                            # Optional: priority
+      assignee: developer.login                   # Optional: default assignee
+      labels: [tech-debt]                         # Optional: default labels
+      addTagToLabels: true                        # Optional: add tag as label
+      tagPrefix: 'tag-'                           # Optional: prefix for tag label
+      allowedLabels: [tech-debt, another-label]   # Optional: restrict allowed labels
+      summaryPrefix: '[TODO] '                    # Optional: prefix for issue summary
+      showContext: 'numbered'                     # Optional: include code context
+      contextTitle: null                          # Optional: title of context path
 ```
 
 ## Inline Configuration
-
-Specify per-comment settings using `{EXTRAS: {...}}` syntax:
-
-```php
-// TODO: Fix this bug
-//       {EXTRAS: {issueType: bug, priority: critical, labels: [urgent]}}
-```
 
 ### Supported Inline Config Keys
 
 | Key | Type | Description |
 |---|---|---|
 | `assignee` | `string` | User login to assign |
+| `assignees` | `string` | Same as `assignee` |
+| `contextTitle` | `string` | Title of context path |
 | `issueType` | `string` | Issue type (task, bug, story, epic, etc.) |
-| `priority` | `string` | Priority name (blocker, critical, normal, minor, trivial) |
 | `labels` | `string[]` | List of tags to add |
+| `priority` | `string` | Priority name (blocker, critical, normal, minor, trivial) |
+| `queue` | `string` | Queue key |
+| `showContext` | `string` | Override context display format |
 
 ## Priority of Values
 
 When the same field can be set from multiple sources, priority is (highest to lowest):
 
-1. **Inline config** — `{EXTRAS: {assignee: user1}}`
-2. **Tag assignee** — `TODO@username`
-3. **Global config** — `issue.assignee` in config file
-
-## Example
-
-### Comment in Code
-
-```php
-/**
- * TODO@john: Refactor authentication module
- *            Current implementation has security issues
- *            {EXTRAS: {issueType: bug, priority: critical}}
- */
-function authenticate() {
-    // ...
-}
-```
-
-### Created Yandex Tracker Issue
-
-- **Queue**: QUEUE
-- **Type**: bug
-- **Summary**: `Refactor authentication module`
-- **Description**: `Current implementation has security issues`
-- **Assignee**: john
-- **Priority**: critical
-- **Tags**: `todo` (if `addTagToLabels=true`)
-
-### Result in Code
-
-```php
-/**
- * TODO: QUEUE-42 Refactor authentication module
- *       Current implementation has security issues
- *       {EXTRAS: {issueType: bug, priority: critical}}
- */
-```
-
-**Note:** The position where the issue key is injected can be configured globally. See [Issue Key Injection](IssueKeyInjection.md) for details.
+1. **Tag assignee** — `TODO@username`
+2. **Inline config** — `{EXTRAS: {assignee: user1}}`
+3. **General config** — `issue.assignee` in config file
 
 ## Authentication
 
 ### OAuth Token
 
-To get an OAuth token for Yandex Tracker API:
-
-1. Go to [Yandex OAuth](https://oauth.yandex.com/authorize?response_type=token&client_id=...)
-2. Authorize the application
-3. Copy the token
-
-For more details, see [Yandex Tracker API Access](https://yandex.com/support/tracker/concepts/access.html).
+Uses OAuth token with `tracker:write` scope.
 
 ### Organization ID
 
-The organization ID (`orgId`) can be found in:
-- Yandex Tracker settings page: https://tracker.yandex.com/admin/orgs
-- Or via API call: `GET https://api.tracker.yandex.net/v2/myself`
+Found in Yandex Tracker settings: https://tracker.yandex.com/admin/orgs
+Or via API: `GET https://api.tracker.yandex.net/v2/myself`
 
 ### Cloud Organization
 
-If you are using Yandex Tracker Cloud organization, set `isCloud: true` in the service configuration.
-When `isCloud` is `true`, the `X-Cloud-Org-ID` header is used instead of `X-Org-ID`.
-By default, `isCloud` is `true`.
+If `isCloud: true` (default), `X-Cloud-Org-ID` header is used instead of `X-Org-ID`.
 
-For on-premise installations, set `isCloud: false`.
-
-![img.png](../../../../docs/registrar/YandexTracker/img.png)
+![UI for Organization ID](../../../../docs/registrar/YandexTracker/ui_org_id.png)
 
 ## Technical Details
 
@@ -162,32 +121,17 @@ For on-premise installations, set `isCloud: false`.
 | `ApiClientFactory` | Creates Yandex Tracker API client |
 | `ExtendedIssueCreateRequest` | Extended SDK request with tags support |
 
+### Source Path
+
+`src/Service/Registrar/YandexTracker/`
+
 ### API Library
 
-Uses `bugrov/yandex-tracker` (from GitHub `intensa/yandex-tracker`) library for Yandex Tracker API communication.
+Uses `bugrov/yandex-tracker` (from GitHub `Aeliot-Tm/yandex-tracker`) library for Yandex Tracker API communication.
 
-### Issue Creation
+## Related Features
 
-The `IssueFactory` builds an `ExtendedIssueCreateRequest` using fluent API:
-
-```php
-$request = new ExtendedIssueCreateRequest();
-$request
-    ->queue('QUEUE')
-    ->summary('Issue summary')
-    ->description('Issue description')
-    ->type('task')
-    ->assignee('username')
-    ->priority('normal')
-    ->tags(['label1', 'label2']);
-
-$response = $request->send();
-$issueKey = $response->getField('key'); // e.g., "QUEUE-123"
-```
-
-## Limitations
-
-- The SDK `bugrov/yandex-tracker` is published on Packagist but have only `master` branch.
-  So, require version `dev-master` explicitly.
-- Issue linking is not yet implemented (can be added in future versions)
-- Components and sprints are not yet supported
+- [Allowed Labels](AllowedLabels.md) — filter labels applied to issues
+- [Context Display](ContextDisplay.md) — show code context in issue description
+- [Dynamic Summary Prefix](DynamicSummaryPrefix.md) — add prefixes to issue titles
+- [Inline Configuration](InlineConfiguration.md) — per-comment overrides
