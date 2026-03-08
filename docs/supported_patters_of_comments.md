@@ -38,6 +38,20 @@ and multiple-line comments `/* ... */` and phpDoc `/** ... **/`.
    ```
 
 
+### Sequential Comments Gluing
+
+Consecutive single-line comments (`//` or `#`) can be glued into one multi-line comment
+when [sequential comments gluing](sequential_comments_gluing.md) is enabled in configuration.
+
+```php
+// TODO: Implement authentication
+//       - Add login form
+//       - Validate credentials
+```
+
+Without gluing (default) only the first line is processed as TODO.
+With gluing enabled all three lines are processed as one TODO comment.
+
 ### Assignee-part
 
 It is some "username" which separated of tag by symbol "@". It sticks to pattern `/[a-z0-9._-]+/i`.

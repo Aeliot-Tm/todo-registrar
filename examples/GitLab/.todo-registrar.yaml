@@ -16,7 +16,7 @@ registrar:
       # Replace with your actual project identifier (or set GITLAB_PROJECT_IDENTIFIER environment variable)
       project: '%env(GITLAB_PROJECT_IDENTIFIER)%'
       addTagToLabels: true
-      assignees:
+      assignee:
         - username1
         - username2
       labels:

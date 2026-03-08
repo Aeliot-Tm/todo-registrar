@@ -12,26 +12,27 @@ directory.
 #...
 registrar:
   type: GitHub
-  issue:
-      repository: 'string'                    # required: the name of repository (part URL to repository)
-      owner: 'string'                         # optional: username on GitHub
-      assignees: ['an.assignee_1']            # optional: identifiers of GitHub users, which will be assigned to ticket
-                                              #           when "assignee-suffix" was not used with tag.
-      labels: ['a-label']                     # optional: list of labels which will be set to issue
-      addTagToLabels: true                    # optional: add detected tag into list of issue labels or not
-      tagPrefix: 'tag-'                       # optional: prefix which will be added to tag when "addTagToLabels=true"
-      allowedLabels: ['label-1', 'label-2']   # optional: list of allowed labels. If set, only labels from this
-                                              #           list will be applied to issues. Labels from inline
-                                              #           config, general config, and tag-based labels (if addTagToLabels=true)
-                                              #           will be filtered to match this list.
-      summaryPrefix: '[TODO] '                # optional: prefix which will be added to issue subject
-                                              #           supports dynamic placeholders: {tag}, {tag_caps}, {assignee}
-      showContext: 'numbered'                 # optional: include code context in issue description
-                                              #           values: null (default), 'arrow_chained', 'asterisk', 'code_block',
-                                              #                   'number_sign', 'numbered'
-      contextTitle: null                      # optional: title of context path
-  service:
-      personalAccessToken: '%env(GITHUB_PERSONAL_ACCESS_TOKEN)%',   # required: personal access-token
+  options:
+    issue:
+        repository: 'string'                    # required: the name of repository (part URL to repository)
+        owner: 'string'                         # optional: username on GitHub
+        assignees: ['an.assignee_1']            # optional: identifiers of GitHub users, which will be assigned to ticket
+                                                #           when "assignee-suffix" was not used with tag.
+        labels: ['a-label']                     # optional: list of labels which will be set to issue
+        addTagToLabels: true                    # optional: add detected tag into list of issue labels or not
+        tagPrefix: 'tag-'                       # optional: prefix which will be added to tag when "addTagToLabels=true"
+        allowedLabels: ['label-1', 'label-2']   # optional: list of allowed labels. If set, only labels from this
+                                                #           list will be applied to issues. Labels from inline
+                                                #           config, general config, and tag-based labels (if addTagToLabels=true)
+                                                #           will be filtered to match this list.
+        summaryPrefix: '[TODO] '                # optional: prefix which will be added to issue subject
+                                                #           supports dynamic placeholders: {tag}, {tag_caps}, {assignee}
+        showContext: 'numbered'                 # optional: include code context in issue description
+                                                #           values: null (default), 'arrow_chained', 'asterisk', 'code_block',
+                                                #                   'number_sign', 'numbered'
+        contextTitle: null                      # optional: title of context path
+    service:
+        personalAccessToken: '%env(GITHUB_PERSONAL_ACCESS_TOKEN)%',   # required: personal access-token
 ```
 
 ### PHP configuration
@@ -76,7 +77,10 @@ Supported keys of inline config:
 
 | Key | Description |
 |---|---|
+| assignee | Identifier of GitHub user as string, which will be assigned to the issue |
 | assignees | List of identifiers of GitHub users, which will be assigned to the issue |
+| contextTitle | Title of context path. Overrides `contextTitle` from general config |
 | labels | List of labels which will be assigned to the issue |
 | owner | username on GitHub |
 | repository | the name of repository (part URL to repository) |
+| showContext | Include code context in issue description. Overrides `showContext` from general config |
