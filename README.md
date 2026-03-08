@@ -155,6 +155,9 @@ Additionally, script supports [inline configuration](docs/inline_config.md) - ni
 of each created issue. It helps flexibly configure different aspects of created issues
 like labels, components, relations to other issues and so on. So, it becomes mighty tool. 😊
 
+Also, you can enable [sequential comments gluing](docs/sequential_comments_gluing.md) to treat
+consecutive single-line comments as a single multi-line comment for TODO processing.
+
 ### Supported tags
 
 It detects `TODO` and `FIXME` by default. At the same time, you can config your custom set of tags in config file.
