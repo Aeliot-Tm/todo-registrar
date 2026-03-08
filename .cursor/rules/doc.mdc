@@ -6,32 +6,41 @@ alwaysApply: true
 
 Download descriptions from files IF you need to understand the work:
 1. Architecture (Technical solutions):
-   - [Overview](../docs/API/Architecture/Overview.md)
-   - [Processing Flow](../docs/API/Architecture/ProcessingFlow.md)
+   - [Overview](../docs/Architecture/Overview.md)
+   - [Processing Flow](../docs/Architecture/ProcessingFlow.md)
 
 2. Features:
-   - [GitHub Registrar](../docs/API/Feature/GitHubRegistrar.md)
-   - [GitLab Registrar](../docs/API/Feature/GitLabRegistrar.md)
-   - [Issue Key Injection](../docs/API/Feature/IssueKeyInjection.md)
-   - [JIRA Registrar](../docs/API/Feature/JIRARegistrar.md)
-   - [Redmine Registrar](../docs/API/Feature/RedmineRegistrar.md)
-   - [Sequential Comments Gluing](../docs/API/Feature/SequentialCommentsGluing.md)
-   - [Yandex Tracker Registrar](../docs/API/Feature/YandexTrackerRegistrar.md)
+   - [Allowed Labels](../docs/Feature/AllowedLabels.md)
+   - [Context Display](../docs/Feature/ContextDisplay.md)
+   - [Dynamic Summary Prefix](../docs/Feature/DynamicSummaryPrefix.md)
+   - [GitHub Registrar](../docs/Feature/GitHubRegistrar.md)
+   - [GitLab Registrar](../docs/Feature/GitLabRegistrar.md)
+   - [Inline Configuration](../docs/Feature/InlineConfiguration.md)
+   - [Issue Key Injection](../docs/Feature/IssueKeyInjection.md)
+   - [JIRA Linked Issues](../docs/Feature/JIRALinkedIssues.md)
+   - [JIRA Registrar](../docs/Feature/JIRARegistrar.md)
+   - [Redmine Registrar](../docs/Feature/RedmineRegistrar.md)
+   - [Report](../docs/Feature/Report.md)
+   - [Same-Ticket Gluing](../docs/Feature/SameTicketGluing.md)
+   - [Sequential Comments Gluing](../docs/Feature/SequentialCommentsGluing.md)
+   - [Yandex Tracker Registrar](../docs/Feature/YandexTrackerRegistrar.md)
 
 When updating functionality or when explicitly requested, update the corresponding documentation files.
    - First, business logic/steps with minimal technical details, then additional logic with minimal technical details,
      and finally, technical details (architecture, paths, settings, commands, etc.).
    - Update without blocks with the latest changes, as if you were doing it from scratch for complete documentation.
-   - Keep documentation of Architecture (Technical solutions) in directory [Architecture](../docs/API/Architecture) and add path to such file
+   - Keep documentation of Architecture (Technical solutions) in directory [Architecture](../docs/Architecture) and add path to such file
      in section `1. Architecture (Technical solutions):` above like others.
-   - Keep documentation of Features in directory [Feature](../docs/API/Feature) and add path to such file in section `2. Features:` above like others.
+   - Keep documentation of Features in directory [Feature](../docs/Feature) and add path to such file in section `2. Features:` above like others.
 
 When creating new documentation files:
    - After creating a new Architecture documentation file, add a link to it in section `1. Architecture (Technical solutions):` above.
-     Format: `- [Description](../docs/API/Architecture/[FileName].md)` (Markdown links format).
+     Format: `- [Description](../docs/Architecture/[FileName].md)` (Markdown links format).
    - After creating a new Feature documentation file, add a link to it in section `2. Features:` above.
-     Format: `- [Description](../docs/API/Feature/[FileName].md)` (Markdown links format).
+     Format: `- [Description](../docs/Feature/[FileName].md)` (Markdown links format).
    - Use relative paths from this file (starting with `../docs/`).
    - Keep entries in alphabetical order by description for better organization.
 
 IMPORTANT: You MUST NOT create links from user's documents to `.cursor` rules! Keep them totally separated.
+           But you can use vice versa (link from your documentation to user's documentation)
+           where it makes sense and does not lead to excessive use of context.

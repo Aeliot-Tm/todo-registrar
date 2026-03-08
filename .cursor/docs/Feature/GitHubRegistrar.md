@@ -27,30 +27,40 @@ GitHub Registrar creates issues in GitHub Issues from TODO/FIXME comments found 
 
 ## Configuration
 
-### Service Configuration
+See [user documentation](../../../docs/registrar/GitHub/config.md) for full configuration reference (YAML/PHP, authentication, inline config keys).
+
+### Registrar type
 
 ```yaml
 registrar:
   type: GitHub
-  service:
-    personalAccessToken: 'ghp_xxx...'  # GitHub Personal Access Token
-    owner: 'username'                   # GitHub username or organization
-    repository: 'repo-name'             # Repository name
+```
+
+### Service Configuration
+
+```yaml
+registrar:
+  options:
+    service:
+      personalAccessToken: '%env(GITHUB_PERSONAL_ACCESS_TOKEN)%'
+      owner: 'username'                   # GitHub username or organization
+      repository: 'repo-name'             # Repository name. May be used 'composite' ('username/repo-name') repo name then `owner` have to be omitted.
 ```
 
 ### Issue Configuration
 
 ```yaml
 registrar:
-  issue:
-    addTagToLabels: true      # Add TODO/FIXME tag as label
-    tagPrefix: 'tag-'         # Prefix for tag label (e.g., "tag-todo")
-    labels:                   # Default labels for all issues
-      - tech-debt
-      - from-code
-    assignees:                # Default assignees
-      - developer1
-    summaryPrefix: '[TODO] '  # Prefix for issue title
+  options:
+    issue:
+      assignees: ['developer1']          # Optional: default assignees
+      labels: ['tech-debt']             # Optional: default labels
+      addTagToLabels: true              # Optional: add tag as label
+      tagPrefix: 'tag-'                 # Optional: prefix for tag label
+      allowedLabels: ['bug', 'feature'] # Optional: restrict allowed labels
+      summaryPrefix: '[TODO] '          # Optional: prefix for issue title
+      showContext: 'numbered'           # Optional: include code context
+      contextTitle: null                # Optional: title of context path
 ```
 
 ## Inline Configuration
@@ -66,8 +76,13 @@ Specify per-comment settings using `{EXTRAS: {...}}` syntax:
 
 | Key | Type | Description |
 |---|---|---|
+| `assignee` | `string` | GitHub username to assign |
 | `assignees` | `string[]` | List of GitHub usernames to assign |
+| `contextTitle` | `string` | Title of context path |
 | `labels` | `string[]` | List of labels to add |
+| `owner` | `string` | GitHub username or organization |
+| `repository` | `string` | Repository name |
+| `showContext` | `string` | Override context display format |
 
 ## Label Auto-Creation
 
@@ -77,9 +92,9 @@ If labels specified in config or inline config don't exist in the repository, th
 
 When the same field can be set from multiple sources, priority is (highest to lowest):
 
-1. **Inline config** — `{EXTRAS: {assignees: [user1]}}`
-2. **Tag assignee** — `TODO@username`
-3. **Global config** — `issue.assignees` in config file
+1. **Tag assignee** — `TODO@username`
+2. **Inline config** — `{EXTRAS: {assignees: [user1]}}`
+3. **General config** — `issue.assignees` in config file
 
 ## Example
 
@@ -124,12 +139,23 @@ function complexMethod() {
 | `GitHubRegistrar` | Main registrar, orchestrates issue creation |
 | `GitHubRegistrarFactory` | Creates registrar from config |
 | `IssueFactory` | Builds Issue DTO from Todo |
-| `IssueConfig` | Holds parsed issue configuration |
+| `GeneralIssueConfig` | Holds parsed issue configuration |
 | `Issue` | DTO for GitHub issue data |
 | `ApiClientFactory` | Creates API clients |
 | `IssueApiClient` | Wrapper for GitHub Issues API |
 | `LabelApiClient` | Wrapper for GitHub Labels API |
 
+### Source Path
+
+`src/Service/Registrar/GitHub/`
+
 ### API Library
 
 Uses `knplabs/github-api` library for GitHub API communication.
+
+## Related Features
+
+- [Allowed Labels](AllowedLabels.md) — filter labels applied to issues
+- [Context Display](ContextDisplay.md) — show code context in issue description
+- [Dynamic Summary Prefix](DynamicSummaryPrefix.md) — add prefixes to issue titles
+- [Inline Configuration](InlineConfiguration.md) — per-comment overrides

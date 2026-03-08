@@ -32,57 +32,60 @@ GitLab Registrar creates issues in GitLab Issues from TODO/FIXME comments found 
 
 ## Configuration
 
-### Service Configuration
+See [user documentation](../../../docs/registrar/GitLab/config.md) for full configuration reference (YAML/PHP, authentication, project identification, inline config keys).
+
+### Registrar type
 
 ```yaml
 registrar:
   type: GitLab
-  service:
-    personalAccessToken: 'glpat-xxx...'  # GitLab Personal Access Token
-    # OR
-    oauthToken: 'oauth-token'             # OAuth 2.0 token
+```
 
-    host: 'https://gitlab.com'            # GitLab host (optional, default: gitlab.com)
-    project: 123                          # Project ID (integer)
-    # OR
-    project: 'owner/repo'                 # Project path (string)
+### Service Configuration
+
+```yaml
+registrar:
+  options:
+    service:
+      host: 'https://gitlab.com'                                 # Optional
+      personalAccessToken: '%env(GITLAB_PERSONAL_ACCESS_TOKEN)%' # OR oauthToken
 ```
 
 ### Issue Configuration
 
 ```yaml
 registrar:
-  issue:
-    addTagToLabels: true         # Add TODO/FIXME tag as label
-    tagPrefix: 'tag-'            # Prefix for tag label (e.g., "tag-todo")
-    labels:                      # Default labels for all issues
-      - tech-debt
-      - from-code
-    assignee:                    # Default assignees (usernames or emails)
-      - developer1
-      - developer@example.com
-    milestone: 5                 # Default milestone (ID, IID, or title)
-    due_date: '2025-12-31'       # Default due date (YYYY-MM-DD)
-    summaryPrefix: '[TODO] '     # Prefix for issue title
+  options:
+    issue:
+      project: 123                         # Required: project ID or path
+      assignee: ['username1']              # Optional: default assignees
+      labels: ['tech-debt']                # Optional: default labels
+      addTagToLabels: true                 # Optional: add tag as label
+      tagPrefix: 'tag-'                    # Optional: prefix for tag label
+      allowedLabels: ['bug', 'feature']    # Optional: restrict allowed labels
+      milestone: 5                         # Optional: default milestone
+      due_date: '2025-12-31'               # Optional: default due date
+      summaryPrefix: '[TODO] '             # Optional: prefix for issue title
+      showContext: 'numbered'              # Optional: include code context
+      contextTitle: null                   # Optional: title of context path
 ```
 
 ## Inline Configuration
 
-Specify per-comment settings using `{EXTRAS: {...}}` syntax:
-
-```php
-// TODO: Fix this bug
-//       {EXTRAS: {labels: [bug, urgent], assignee: [dev1, dev2], milestone: Sprint_1}}
-```
+Specify per-comment settings using `{EXTRAS: {...}}` syntax.
 
 ### Supported Inline Config Keys
 
 | Key | Type | Description |
 |---|---|---|
 | `assignee` | `string` or `string[]` | Username(s) or email(s) to assign |
-| `labels` | `string[]` | List of labels to add |
-| `milestone` | `int` or `string` | Milestone ID, IID, or title |
+| `assignees` | `string` or `string[]` | Same as `assignee` |
+| `contextTitle` | `string` | Title of context path |
 | `due_date` | `string` | Due date in format `YYYY-MM-DD` |
+| `labels` | `string[]` | List of labels to add |
+| `milestone` | `int` or `string` | Milestone ID or title |
+| `project` | `int` or `string` | Project ID or path |
+| `showContext` | `string` | Override context display format |
 
 ## Features
 
@@ -103,58 +106,15 @@ Missing labels are automatically created at project level before issue creation.
 
 ### Self-Hosted GitLab
 
-Supports self-hosted GitLab instances by specifying custom `host`:
-
-```yaml
-service:
-  host: 'https://gitlab.mycompany.com'
-  personalAccessToken: 'token'
-  project: 'group/subgroup/project'
-```
+Supports self-hosted GitLab instances by specifying custom `host`.
 
 ## Priority of Values
 
 When the same field can be set from multiple sources, priority is (highest to lowest):
 
-1. **Inline config** — `{EXTRAS: {assignee: user1}}`
-2. **Tag assignee** — `TODO@username`
-3. **Global config** — `issue.assignee` in config file
-
-## Example
-
-### Comment in Code
-
-```php
-/**
- * TODO@john: Implement caching
- *            Add Redis caching for API responses
- *            {EXTRAS: {labels: [enhancement], milestone: Sprint_2, due_date: 2025-03-01}}
- */
-function fetchData() {
-    // ...
-}
-```
-
-### Created GitLab Issue
-
-- **Title**: `Implement caching`
-- **Description**: `Add Redis caching for API responses`
-- **Assignees**: `john` (resolved to user ID)
-- **Labels**: `enhancement`, `todo` (if `addTagToLabels=true`)
-- **Milestone**: Sprint_2 (resolved to milestone ID)
-- **Due Date**: 2025-03-01
-
-### Result in Code
-
-```php
-/**
- * TODO: #42 Implement caching
- *       Add Redis caching for API responses
- *       {EXTRAS: {labels: [enhancement], milestone: Sprint_2, due_date: 2025-03-01}}
- */
-```
-
-**Note:** The position where the issue key is injected can be configured globally. See [Issue Key Injection](IssueKeyInjection.md) for details.
+1. **Tag assignee** — `TODO@username`
+2. **Inline config** — `{EXTRAS: {assignee: user1}}`
+3. **General config** — `issue.assignee` in config file
 
 ## Authentication Methods
 
@@ -183,14 +143,26 @@ service:
 | `GitlabRegistrar` | Main registrar, orchestrates issue creation |
 | `GitlabRegistrarFactory` | Creates registrar from config |
 | `IssueFactory` | Builds Issue DTO from Todo |
-| `IssueConfig` | Holds parsed issue configuration |
+| `GeneralIssueConfig` | Holds parsed issue configuration |
 | `Issue` | DTO for GitLab issue data |
-| `ApiClientProvider` | Provides API client instances |
+| `ApiClientFactory` | Creates API client |
+| `ApiSectionClientFactory` | Creates API section clients |
 | `IssueApiClient` | Wrapper for GitLab Issues API |
 | `LabelApiClient` | Wrapper for GitLab Labels API |
 | `MilestoneApiClient` | Wrapper for GitLab Milestones API |
 | `UserResolver` | Resolves usernames/emails to user IDs |
 
+### Source Path
+
+`src/Service/Registrar/GitLab/`
+
 ### API Library
 
 Uses `m4tthumphrey/php-gitlab-api` library for GitLab API communication.
+
+## Related Features
+
+- [Allowed Labels](AllowedLabels.md) — filter labels applied to issues
+- [Context Display](ContextDisplay.md) — show code context in issue description
+- [Dynamic Summary Prefix](DynamicSummaryPrefix.md) — add prefixes to issue titles
+- [Inline Configuration](InlineConfiguration.md) — per-comment overrides
