@@ -196,7 +196,7 @@ And others. [See all supported formats](docs/supported_patters_of_comments.md).
 | <img src="https://cdn.simpleicons.org/gitlab" width="16" height="16" alt="" /> [GitLab](https://about.gitlab.com/) | See [description of configuration](docs/registrar/GitLab/config.md). Supported via API tokens (HTTP Token or OAuth). |
 | <img src="https://cdn.simpleicons.org/jira" width="16" height="16" alt="" /> [JIRA](https://www.atlassian.com/software/jira) | See [description of configuration](docs/registrar/JIRA/config.md). Supported via API tokens. |
 | <img src="https://cdn.simpleicons.org/redmine" width="16" height="16" alt="" /> [Redmine](https://www.redmine.org/) | See [description of configuration](docs/registrar/Redmine/config.md). Supported via API keys or Basic Auth. |
-| <img src="https://tracker.yandex.com/favicon.ico" width="16" height="16" alt="" /> [Yandex Tracker](https://tracker.yandex.com/) | See [description of configuration](docs/registrar/YandexTracker/config.md). Supported via OAuth tokens. |
+| <img src="https://upload.wikimedia.org/wikipedia/commons/f/f3/Logo_Yandex_Tracker_2021.svg" width="16" height="16" alt="" /> [Yandex Tracker](https://tracker.yandex.com/) | See [description of configuration](docs/registrar/YandexTracker/config.md). Supported via OAuth tokens. |
 | Any custom Issue Tracker | Read about [customization](docs/customization.md) |
 
 ## Articles
