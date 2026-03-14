@@ -190,11 +190,11 @@ Currently, todo-registrar supports the following issue trackers:
 
 | Issue Tracker | Description |
 |---|---|
-| GitHub issues | Supported via API tokens. See [description of configuration](docs/registrar/GitHub/config.md) |
-| [GitLab](https://about.gitlab.com/) | Supported via API tokens (HTTP Token or OAuth). See [description of configuration](docs/registrar/GitLab/config.md) |
-| [JIRA](https://www.atlassian.com/software/jira) | Supported via API tokens. See [description of configuration](docs/registrar/JIRA/config.md) |
-| [Redmine](https://www.redmine.org/) | Supported via API keys or Basic Auth. See [description of configuration](docs/registrar/Redmine/config.md) |
-| [Yandex Tracker](https://tracker.yandex.com/) | Supported via OAuth tokens. See [description of configuration](docs/registrar/YandexTracker/config.md) |
+| <img src="https://cdn.simpleicons.org/github" width="16" height="16" alt="" /> [GitHub](https://github.com/) | Supported via API tokens. See [description of configuration](docs/registrar/GitHub/config.md) |
+| <img src="https://cdn.simpleicons.org/gitlab" width="16" height="16" alt="" /> [GitLab](https://about.gitlab.com/) | Supported via API tokens (HTTP Token or OAuth). See [description of configuration](docs/registrar/GitLab/config.md) |
+| <img src="https://cdn.simpleicons.org/jira" width="16" height="16" alt="" /> [JIRA](https://www.atlassian.com/software/jira) | Supported via API tokens. See [description of configuration](docs/registrar/JIRA/config.md) |
+| <img src="https://cdn.simpleicons.org/redmine" width="16" height="16" alt="" /> [Redmine](https://www.redmine.org/) | Supported via API keys or Basic Auth. See [description of configuration](docs/registrar/Redmine/config.md) |
+| <img src="https://tracker.yandex.com/favicon.ico" width="16" height="16" alt="" /> [Yandex Tracker](https://tracker.yandex.com/) | Supported via OAuth tokens. See [description of configuration](docs/registrar/YandexTracker/config.md) |
 | Any custom Issue Tracker | Read about [customization](docs/customization.md) |
 
 ## Articles
