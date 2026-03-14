@@ -186,15 +186,13 @@ And others. [See all supported formats](docs/supported_patters_of_comments.md).
 
 ## Supported Issue Trackers
 
-Currently, todo-registrar supports the following issue trackers:
-
 | Issue Tracker | Description |
 |---|---|
-| <img src="https://cdn.simpleicons.org/github" width="16" height="16" alt="" /> [GitHub](https://github.com/) | Supported via API tokens. See [description of configuration](docs/registrar/GitHub/config.md) |
-| <img src="https://cdn.simpleicons.org/gitlab" width="16" height="16" alt="" /> [GitLab](https://about.gitlab.com/) | Supported via API tokens (HTTP Token or OAuth). See [description of configuration](docs/registrar/GitLab/config.md) |
-| <img src="https://cdn.simpleicons.org/jira" width="16" height="16" alt="" /> [JIRA](https://www.atlassian.com/software/jira) | Supported via API tokens. See [description of configuration](docs/registrar/JIRA/config.md) |
-| <img src="https://cdn.simpleicons.org/redmine" width="16" height="16" alt="" /> [Redmine](https://www.redmine.org/) | Supported via API keys or Basic Auth. See [description of configuration](docs/registrar/Redmine/config.md) |
-| <img src="https://tracker.yandex.com/favicon.ico" width="16" height="16" alt="" /> [Yandex Tracker](https://tracker.yandex.com/) | Supported via OAuth tokens. See [description of configuration](docs/registrar/YandexTracker/config.md) |
+| <img src="https://cdn.simpleicons.org/github" width="16" height="16" alt="" /> [GitHub](https://github.com/) | See [description of configuration](docs/registrar/GitHub/config.md). Supported via API tokens. |
+| <img src="https://cdn.simpleicons.org/gitlab" width="16" height="16" alt="" /> [GitLab](https://about.gitlab.com/) | See [description of configuration](docs/registrar/GitLab/config.md). Supported via API tokens (HTTP Token or OAuth). |
+| <img src="https://cdn.simpleicons.org/jira" width="16" height="16" alt="" /> [JIRA](https://www.atlassian.com/software/jira) | See [description of configuration](docs/registrar/JIRA/config.md). Supported via API tokens. |
+| <img src="https://cdn.simpleicons.org/redmine" width="16" height="16" alt="" /> [Redmine](https://www.redmine.org/) | See [description of configuration](docs/registrar/Redmine/config.md). Supported via API keys or Basic Auth. |
+| <img src="https://tracker.yandex.com/favicon.ico" width="16" height="16" alt="" /> [Yandex Tracker](https://tracker.yandex.com/) | See [description of configuration](docs/registrar/YandexTracker/config.md). Supported via OAuth tokens. |
 | Any custom Issue Tracker | Read about [customization](docs/customization.md) |
 
 ## Articles
