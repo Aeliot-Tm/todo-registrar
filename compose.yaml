@@ -40,5 +40,5 @@ services:
       - "${SERENA_DASHBOARD_PORT:-24282}:24282"
     # To work with projects, you must mount them as volumes:
     volumes:
-      - ./.mcp/serena/config:/workspaces/serena/config
+      - ./.cursor/mcp/serena/config:/workspaces/serena/config
       - ./:/workspace/projects/todo-registrar

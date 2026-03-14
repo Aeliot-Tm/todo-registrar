@@ -1,5 +1,5 @@
 .idea
-.mcp/serena/config/logs/
+.cursor/mcp/serena/config/logs
 /tools
 /var
 /vendor
