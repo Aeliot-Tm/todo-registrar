@@ -1,4 +1,4 @@
-![logo](https://raw.githubusercontent.com/Aeliot-Tm/todo-registrar/main/docs/logo.svg)
+![logo](https://cdn.jsdelivr.net/gh/Aeliot-Tm/todo-registrar@main/docs/logo.svg)
 
 [![GitHub Release](https://img.shields.io/github/v/release/Aeliot-Tm/todo-registrar?label=Release&labelColor=black)](https://packagist.org/packages/aeliot/todo-registrar)
 [![Testing](https://github.com/Aeliot-Tm/todo-registrar/actions/workflows/automated_testing.yml/badge.svg?branch=main)](https://github.com/Aeliot-Tm/todo-registrar/actions/workflows/automated_testing.yml?query=branch%3Amain)
@@ -32,7 +32,7 @@ into comment in code. This prevents creating of issues twice and injected marks 
 2. Create issue in issue tracker ([list of supported](#supported-issue-trackers)).
 3. Inject number of ticket into TODO-comment.
 
-![detect_register_inject.png](https://raw.githubusercontent.com/Aeliot-Tm/todo-registrar/main/docs/detect_register_inject.png)
+![detect_register_inject.png](https://cdn.jsdelivr.net/gh/Aeliot-Tm/todo-registrar@main/docs/detect_register_inject.png)
 
 > See latest **benchmark [here](https://github.com/Aeliot-Tm/todo-registrar-benchmark/blob/main/benchmark.md)**.
 
