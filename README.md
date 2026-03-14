@@ -180,6 +180,10 @@ Comments can be formatted differently:
  * TODO: XX-001 comment summary
  *       with some complex description
  */
+
+// TODO: comment summary
+//       with some complex description
+//       in sequential single-line comments
 ```
 
 And others. [See all supported formats](docs/supported_patters_of_comments.md).
