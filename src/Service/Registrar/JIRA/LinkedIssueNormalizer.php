@@ -28,7 +28,7 @@ final readonly class LinkedIssueNormalizer
     }
 
     /**
-     * @param array<string>|array<string,array<string>> $linkedIssues
+     * @param array<string>|array<string,string|array<string>> $linkedIssues
      *
      * @return array<string,array<string>>
      */
@@ -40,8 +40,9 @@ final readonly class LinkedIssueNormalizer
 
         $result = [];
 
-        /** @var array<string,array<string>> $linkedIssues */
+        /** @var array<string,string|array<string>> $linkedIssues */
         foreach ($linkedIssues as $issueLinkTypeAlias => $issueKeys) {
+            $issueKeys = (array) $issueKeys;
             if (!array_is_list($issueKeys)) {
                 throw new InvalidInlineConfigFormatException('List of liked issues must be indexed array of strings');
             }
