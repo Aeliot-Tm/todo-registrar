@@ -44,6 +44,6 @@ $config = (new PhpCsFixer\Config())
 
 /** @var PhpCsFixer\Finder $finder */
 $finder = require __DIR__ . '/finder.php';
-$finder->filter((new FilterFactory())->createFilter(__DIR__ . '/.php-cs-fixer-baseline.json', $config));
+$finder->filter((new FilterFactory())->createFilter(__DIR__ . '/baseline.json', $config));
 
 return $config->setFinder($finder);
