@@ -134,7 +134,7 @@ final class ContextMapVisitor extends NodeVisitorAbstract
     private function collectAllCommentsPositions(array $nodes): void
     {
         foreach ($nodes as $node) {
-            if (!is_object($node) || !$node instanceof Node) {
+            if (!\is_object($node) || !$node instanceof Node) {
                 continue;
             }
 
