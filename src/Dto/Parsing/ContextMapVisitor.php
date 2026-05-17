@@ -129,27 +129,20 @@ final class ContextMapVisitor extends NodeVisitorAbstract
     /**
      * Recursively collect all comments from AST.
      *
-     * @param array<Node|null> $nodes
+     * @param array<int, mixed> $nodes
      */
     private function collectAllCommentsPositions(array $nodes): void
     {
         foreach ($nodes as $node) {
-            if (!$node instanceof Node) {
+            if (!is_object($node) || !$node instanceof Node) {
                 continue;
             }
 
             $this->collectNodeCommentsPositions($node);
             // Recursively collect from child nodes
             foreach ($node->getSubNodeNames() as $name) {
-                $subNodes = $node->$name;
-
-                if ($subNodes instanceof Node) {
-                    $subNodes = [$subNodes];
-                }
-
-                if (\is_array($subNodes)) {
-                    $this->collectAllCommentsPositions($subNodes);
-                }
+                $subNodes = (array) $node->$name;
+                $this->collectAllCommentsPositions($subNodes);
             }
         }
     }
