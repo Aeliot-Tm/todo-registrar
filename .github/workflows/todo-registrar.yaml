@@ -21,10 +21,7 @@ jobs:
       issues: write
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+      - uses: actions/checkout@v6
 
       - name: Register TODOs
         uses: Aeliot-Tm/todo-registrar-action@1.6.2
