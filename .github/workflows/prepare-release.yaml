@@ -193,14 +193,14 @@ jobs:
         run: gpg --verify ${{ env.TODO_REGISTRAR_SIGN }} ${{ env.TODO_REGISTRAR_PHAR }}
 
       - name: Upload PHAR artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         id: upload_phar
         with:
           name: ${{ env.TODO_REGISTRAR_PHAR }}
           path: ${{ env.TODO_REGISTRAR_PHAR }}
 
       - name: Upload signature artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         id: upload_sign
         with:
           name: ${{ env.TODO_REGISTRAR_SIGN }}
