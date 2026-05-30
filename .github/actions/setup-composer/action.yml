@@ -1,0 +1,16 @@
+name: Setup Composer
+description: Cache and install Composer dependencies
+
+runs:
+  using: composite
+  steps:
+    - name: Cache Composer packages
+      id: composer-cache
+      uses: actions/cache@v5
+      with:
+        path: vendor
+        key: "os-${{ runner.os }}-php-${{ runner.php-version }}-composer-${{ hashFiles('composer.json', 'composer.lock') }}"
+        restore-keys: "os-${{ runner.os }}-php-${{ runner.php-version }}-composer-"
+
+    - name: Install packages by Composer
+      uses: ramsey/composer-install@v4

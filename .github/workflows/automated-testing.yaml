@@ -1,0 +1,84 @@
+name: Automated Testing
+
+on:
+  push:
+
+permissions:
+  contents: read
+
+jobs:
+  composer:
+    name: Validate composer files
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup-php
+
+      - name: Validate composer.json and composer.lock
+        run: composer validate --strict
+
+  composer-require-checker:
+    name: Check composer requirements
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup-php
+      - uses: ./.github/actions/setup-composer
+      - uses: ./.github/actions/setup-phive
+
+      - name: Check composer requirements
+        run: composer require-check
+
+  composer-unused:
+    name: Check unused composer requirements
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup-php
+      - uses: ./.github/actions/setup-composer
+      - uses: ./.github/actions/setup-phive
+
+      - name: Check unused composer requirements
+        run: composer unused
+
+  php-cs-check:
+    name: 'PHP CS Fixer: check'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup-php
+      - uses: ./.github/actions/setup-composer
+      - uses: ./.github/actions/setup-phive
+
+      - name: 'Run PHP CS Fixer: check'
+        run: composer run cs-fixer-check
+
+  phpstan:
+    name: 'PHPStan: analyse'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup-php
+      - uses: ./.github/actions/setup-composer
+      - uses: ./.github/actions/setup-phive
+
+      - name: 'Run PHPStan analyse'
+        run: composer run phpstan-analyse
+
+  phpunit:
+    name: 'Tests: Unit'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup-php
+      - uses: ./.github/actions/setup-composer
+      - uses: ./.github/actions/setup-phive
+
+      - name: 'Run all PHPUnit tests'
+        run: composer run phpunit

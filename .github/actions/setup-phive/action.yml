@@ -1,0 +1,25 @@
+name: Setup PHIVE
+description: Cache and install PHIVE tools
+
+runs:
+  using: composite
+  steps:
+    - name: Cache tools installed with PHIVE
+      uses: actions/cache@v5
+      with:
+        path: "${{ runner.temp }}/.phive"
+        key: "os-${{ runner.os }}-php-${{ runner.php-version }}-phive-${{ hashFiles('**/.phive/phars.xml', '**/.phive/trust-gpg-keys.txt') }}"
+        restore-keys: "os-${{ runner.os }}-php-${{ runner.php-version }}-phive-"
+
+    - name: Install PHIVE
+      uses: szepeviktor/phive@v1
+      with:
+        home: "${{ runner.temp }}/.phive"
+        binPath: "${{ github.workspace }}/tools/phive"
+
+    - name: Install PHP tools by PHIVE
+      uses: szepeviktor/phive-install@v1
+      with:
+        home: "${{ runner.temp }}/.phive"
+        binPath: "${{ github.workspace }}/tools/phive"
+        trustGpgKeys: '$(cat ./.phive/trust-gpg-keys.txt)'
