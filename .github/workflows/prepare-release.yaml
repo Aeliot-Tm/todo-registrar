@@ -207,7 +207,7 @@ jobs:
           path: ${{ env.TODO_REGISTRAR_SIGN }}
 
       - name: Attest build provenance
-        uses: actions/attest-build-provenance@v3
+        uses: actions/attest-build-provenance@v4
         with:
           subject-name: ${{ env.TODO_REGISTRAR_PHAR }}
           subject-digest: sha256:${{ steps.upload_phar.outputs.artifact-digest }}
