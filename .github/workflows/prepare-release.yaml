@@ -174,7 +174,7 @@ jobs:
 
       # The following section is done only for releases
       - name: Import GPG key
-        uses: crazy-max/ghaction-import-gpg@v6
+        uses: crazy-max/ghaction-import-gpg@v7
         with:
           gpg_private_key: ${{ secrets.GPG_KEY_9D0DD6FCB92C84688B777DF59204DEE8CAE9C22C }}
           passphrase: "${{ secrets.GPG_KEY_9D0DD6FCB92C84688B777DF59204DEE8CAE9C22C_PASSPHRASE }}"
