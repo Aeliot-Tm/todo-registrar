@@ -27,11 +27,6 @@ final class PhpTokenAdapter implements TokenInterface
     {
     }
 
-    public function getId(): int
-    {
-        return $this->phpToken->id;
-    }
-
     public function getLine(): int
     {
         return $this->phpToken->line;

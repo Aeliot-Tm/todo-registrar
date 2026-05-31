@@ -21,11 +21,6 @@ namespace Aeliot\TodoRegistrar\Dto\Token;
 interface TokenInterface
 {
     /**
-     * Get token identifier (e.g., T_COMMENT, T_DOC_COMMENT for PHP).
-     */
-    public function getId(): int;
-
-    /**
      * Get line number where token appears.
      */
     public function getLine(): int;
