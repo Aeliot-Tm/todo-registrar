@@ -27,7 +27,7 @@ final readonly class MappedContext implements ContextInterface
      */
     public function __construct(
         private int $line,
-        private array|\ArrayAccess $contextMap,
+        private array|\ArrayAccess|ContextMapInterface $contextMap,
     ) {
     }
 
