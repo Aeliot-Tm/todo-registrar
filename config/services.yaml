@@ -14,6 +14,7 @@ services:
   Aeliot\TodoRegistrar\:
     resource: '../src/*'
     exclude:
+      - '../src/AST'
       - '../src/Dto'
       - '../src/Enum'
       - '../src/Exception'

@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\File\Parser;
 
+use Aeliot\TodoRegistrar\AST\PHP\ContextMapBuilder;
 use Aeliot\TodoRegistrar\Dto\Parsing\LazyContextMap;
 use Aeliot\TodoRegistrar\Dto\Parsing\ParsedFile;
 use Aeliot\TodoRegistrar\Dto\Token\PhpTokenAdapter;
@@ -41,7 +42,7 @@ final readonly class PhpFileParser implements FileParserInterface
         $ast = $parser->parse($content) ?? [];
         $tokens = $this->wrapTokens($this->filterEofToken($parser->getTokens()));
 
-        return new ParsedFile($file, $tokens, new LazyContextMap($ast, $pathname));
+        return new ParsedFile($file, $tokens, new LazyContextMap(new ContextMapBuilder($ast, $pathname)));
     }
 
     /**

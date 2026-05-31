@@ -11,8 +11,9 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Aeliot\TodoRegistrar\Dto\Parsing;
+namespace Aeliot\TodoRegistrar\AST\PHP;
 
+use Aeliot\TodoRegistrar\Dto\Parsing\ContextNode;
 use Aeliot\TodoRegistrarContracts\ContextNodeInterface;
 use PhpParser\Node;
 use PhpParser\Node\Const_;
