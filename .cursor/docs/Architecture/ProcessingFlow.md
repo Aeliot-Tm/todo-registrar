@@ -109,7 +109,7 @@ $phpTokens = PhpToken::tokenize(file_get_contents($file->getPathname()));
 $tokens = array_map(fn($t) => new PhpTokenAdapter($t), $phpTokens);
 ```
 
-Result: `ParsedFile` containing array of `TokenInterface` objects and `LazyContextMap` for AST context.
+Result: `ParsedFile` containing array of `TokenInterface` objects and `ContextMapInterface` for AST context.
 
 **Important:** Tokens are mutable objects. The `PhpTokenAdapter` wraps native `\PhpToken` and delegates
 mutations via `setText()` to the underlying token, which is used when saving the file.

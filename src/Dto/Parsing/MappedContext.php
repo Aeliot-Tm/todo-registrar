@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Dto\Parsing;
 
+use Aeliot\TodoRegistrarContracts\ContextNodeInterface;
+
 /**
  * Lazy context for comment position.
  *
@@ -21,7 +23,7 @@ namespace Aeliot\TodoRegistrar\Dto\Parsing;
 final readonly class MappedContext implements ContextInterface
 {
     /**
-     * @param array<int, list<ContextNode>>|\ArrayAccess<int, list<ContextNode>> $contextMap
+     * @param array<int, list<ContextNodeInterface>>|\ArrayAccess<int, list<ContextNodeInterface>> $contextMap
      */
     public function __construct(
         private int $line,

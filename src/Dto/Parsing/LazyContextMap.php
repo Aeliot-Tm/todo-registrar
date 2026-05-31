@@ -21,10 +21,8 @@ use PhpParser\NodeTraverser;
  * Context map is built only on first access via ArrayAccess.
  *
  * @internal
- *
- * @implements \ArrayAccess<int, list<ContextNode>>
  */
-final class LazyContextMap implements \ArrayAccess
+final class LazyContextMap implements ContextMapInterface
 {
     /**
      * @var array<int, list<ContextNode>>|null
