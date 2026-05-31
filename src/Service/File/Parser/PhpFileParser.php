@@ -11,20 +11,23 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Aeliot\TodoRegistrar\Service\File;
+namespace Aeliot\TodoRegistrar\Service\File\Parser;
 
 use Aeliot\TodoRegistrar\Dto\Parsing\LazyContextMap;
 use Aeliot\TodoRegistrar\Dto\Parsing\ParsedFile;
 use Aeliot\TodoRegistrar\Dto\Token\PhpTokenAdapter;
 use Aeliot\TodoRegistrar\Dto\Token\TokenInterface;
+use Aeliot\TodoRegistrar\Service\File\FileParserInterface;
 use PhpParser\ParserFactory;
+use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
 
 /**
  * Hybrid parser: combines tokens from Parser and AST for context mapping.
  *
  * @internal
  */
-final readonly class FileParser
+#[AsTaggedItem(index: 'php')]
+final readonly class PhpFileParser implements FileParserInterface
 {
     public function parse(\SplFileInfo $file): ParsedFile
     {

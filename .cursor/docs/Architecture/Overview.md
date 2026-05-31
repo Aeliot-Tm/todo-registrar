@@ -9,7 +9,7 @@ TODO Registrar is a CLI application that scans PHP source code for TODO/FIXME co
 1. **Entry Point** → `bin/todo-registrar` initializes the Symfony Console application
 2. **Configuration Loading** → Reads `.todo-registrar.yaml`, `.todo-registrar.php` config file, or YAML from STDIN
 3. **File Discovery** → Uses Symfony Finder to locate PHP files
-4. **Tokenization** → FileParser extracts tokens from source files and wraps them in TokenInterface
+4. **Tokenization** → FileParserInterface extracts tokens from source files and wraps them in TokenInterface
 5. **Comment Extraction** → Parses comments to find TODO/FIXME tags
 6. **Issue Registration** → Creates issues in configured issue tracker via API
 7. **Key Injection** → Injects created issue key back into the source comment
@@ -39,7 +39,7 @@ bin/todo-registrar
 
 #### File Processing Services (`Service/File/`)
 - `Finder` — Implements `FinderInterface`, wraps Symfony Finder for file discovery
-- `FileParser` — Parses PHP files, tokenizes them, and wraps tokens in `TokenInterface` abstraction
+- `FileParserInterface` — Parses files, tokenizes them, and wraps tokens in `TokenInterface` abstraction
 - `Saver` — Saves modified files back to disk (language-agnostic via `TokenInterface`)
 
 #### Comment Processing Services (`Service/Comment/`)
@@ -204,7 +204,7 @@ The `TokenInterface` abstraction enables future support for non-PHP files:
 3. Implement file-specific tokenization logic
 4. All downstream processing (CommentNode, CommentPart, Extractor, Saver, HeapRunner) will work unchanged
 
-**Current State:** Only PHP files are supported via `FileParser` + `PhpTokenAdapter`, but the architecture is ready for extension.
+**Current State:** Only PHP files are supported via `PhpFileParser` + `PhpTokenAdapter`, but the architecture is ready for extension.
 
 ### Custom Inline Config
 
