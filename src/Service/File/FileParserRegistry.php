@@ -18,6 +18,9 @@ use Symfony\Component\DependencyInjection\ServiceLocator;
 
 final readonly class FileParserRegistry
 {
+    /**
+     * @param ServiceLocator<FileParserInterface> $parsers
+     */
     public function __construct(
         #[AutowireLocator('aeliot.todo_registrar.file_parser')]
         private ServiceLocator $parsers,
