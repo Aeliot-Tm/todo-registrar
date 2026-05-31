@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\ContextPath\Builder;
 
+use Aeliot\TodoRegistrar\Dto\Parsing\YamlContextNodeInterface;
 use Aeliot\TodoRegistrarContracts\ContextNodeInterface;
 
 abstract readonly class AbstractContextPathBuilder
@@ -43,6 +44,9 @@ abstract readonly class AbstractContextPathBuilder
                 ContextNodeInterface::KIND_PARAMETER => 'Parameter: ' . ($node->getName() ?? '{unknown}'),
                 ContextNodeInterface::KIND_PROPERTY => 'Property: ' . ($node->getName() ?? '{unknown}'),
                 ContextNodeInterface::KIND_TRAIT => "Trait: {$node->getName()}",
+                YamlContextNodeInterface::KIND_DOCUMENT => 'Document: ' . $node->getName(),
+                YamlContextNodeInterface::KIND_KEY => 'Key: ' . ($node->getName() ?? '{unknown}'),
+                YamlContextNodeInterface::KIND_SEQUENCE_ITEM => 'Sequence item: ' . ($node->getName() ?? '{unknown}'),
                 default => ucfirst($node->getKind()) . ($node->getName() ? ": {$node->getName()}" : ''),
             };
         }

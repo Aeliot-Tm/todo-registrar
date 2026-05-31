@@ -58,6 +58,7 @@
         "ext-tokenizer": "*",
         "aeliot/env-resolver": "^1.0.2",
         "aeliot/todo-registrar-contracts": "^2.2.0",
+        "aeliot/yaml-token": "0.1.*",
         "bugrov/yandex-tracker": "0.1.0",
         "guzzlehttp/guzzle": "^7.9",
         "http-interop/http-factory-guzzle": "^1.2",

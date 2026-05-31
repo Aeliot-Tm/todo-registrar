@@ -195,17 +195,6 @@ src/
 3. Implement `RegistrarFactoryInterface` with `#[AutoconfigureTag('aeliot.todo_registrar.registrar_factory')]`
 4. Add case to `Enum/RegistrarType`
 
-### Adding Support for Other File Types (YAML, CSS, etc.)
-
-The `TokenInterface` abstraction enables future support for non-PHP files:
-
-1. Create a new parser class (e.g., `YamlFileParser`) implementing parsing logic
-2. Create token implementation (e.g., `GenericToken implements TokenInterface`)
-3. Implement file-specific tokenization logic
-4. All downstream processing (CommentNode, CommentPart, Extractor, Saver, HeapRunner) will work unchanged
-
-**Current State:** Only PHP files are supported via `PhpFileParser` + `PhpTokenAdapter`, but the architecture is ready for extension.
-
 ### Custom Inline Config
 
 Implement `InlineConfigFactoryInterface` and `InlineConfigReaderInterface` to customize how inline config is parsed from comments.

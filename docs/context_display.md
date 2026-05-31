@@ -137,6 +137,19 @@ The context display includes the following information depending on where the TO
 | Property | Property name | `Property: email` |
 | Parameter | Parameter name | `Parameter: userId` |
 | Constant | Class constant name | `Constant: MAX_SIZE` |
+| Document | YAML document index in a multi-doc stream (0-based) | `Document: 0` |
+| Key | YAML mapping key | `Key: services` |
+| Sequence item | YAML sequence entry index (0-based) | `Sequence item: 1` |
+
+### YAML Example
+
+For a TODO inside nested YAML keys:
+
+```
+File: /app/config/services.yaml -> Document: 0 -> Key: services -> Key: app -> Key: parameters
+```
+
+Comments on the line above a key or sequence entry inherit that element's context (look-ahead).
 
 ## Option 'contextTitle'
 
