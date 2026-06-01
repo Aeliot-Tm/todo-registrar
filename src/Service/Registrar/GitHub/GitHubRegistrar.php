@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Service\Registrar\GitHub;
 
 use Aeliot\TodoRegistrarContracts\RegistrarInterface;
-use Aeliot\TodoRegistrarContracts\TodoInterface;
+use Aeliot\TodoRegistrarContracts\Todo\TodoInterface;
 
 /**
  * @internal

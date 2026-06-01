@@ -18,8 +18,12 @@ use Aeliot\TodoRegistrar\Dto\GeneralConfig\IssueKeyInjectionConfig;
 use Aeliot\TodoRegistrar\Enum\IssueKeyPosition;
 use Aeliot\TodoRegistrar\Service\InlineConfig\ExtrasReader;
 use Aeliot\TodoRegistrar\Service\InlineConfig\InlineConfigFactory;
-use Aeliot\TodoRegistrarContracts\GeneralConfigInterface;
-use Aeliot\TodoRegistrarContracts\IssueKeyInjectionAwareGeneralConfigInterface;
+use Aeliot\TodoRegistrarContracts\GeneralConfig\GeneralConfigInterface;
+use Aeliot\TodoRegistrarContracts\GeneralConfig\InlineConfigFactoryAwareInterface;
+use Aeliot\TodoRegistrarContracts\GeneralConfig\InlineConfigReaderAwareInterface;
+use Aeliot\TodoRegistrarContracts\GeneralConfig\IssueKeyInjectionConfigAwareInterface;
+use Aeliot\TodoRegistrarContracts\InlineConfigFactoryInterface;
+use Aeliot\TodoRegistrarContracts\InlineConfigReaderInterface;
 
 /**
  * @internal
@@ -34,12 +38,13 @@ final readonly class TodoBuilderFactory
 
     public function create(GeneralConfigInterface $config, OutputAdapter $output): TodoBuilder
     {
-        $inlineConfigReader = $config->getInlineConfigReader() ?? $this->extrasReader;
-        $inlineConfigFactory = $config->getInlineConfigFactory() ?? $this->inlineConfigFactory;
+        $inlineConfigFactory = $this->getInlineConfigFactory($config);
+        $inlineConfigReader = $this->getInlineConfigReader($config);
+
         $issueKeyPosition = null;
         $newSeparator = null;
         $replaceSeparator = null;
-        if ($config instanceof IssueKeyInjectionAwareGeneralConfigInterface) {
+        if ($config instanceof IssueKeyInjectionConfigAwareInterface) {
             $injectionConfig = $config->getIssueKeyInjectionConfig();
             $issueKeyPosition = $injectionConfig?->getPosition();
             $newSeparator = $injectionConfig?->getNewSeparator();
@@ -49,5 +54,25 @@ final readonly class TodoBuilderFactory
         $replaceSeparator ??= IssueKeyInjectionConfig::DEFAULT_REPLACE_SEPARATOR;
 
         return new TodoBuilder($inlineConfigFactory, $inlineConfigReader, $issueKeyPosition, $newSeparator, $output, $replaceSeparator);
+    }
+
+    private function getInlineConfigFactory(GeneralConfigInterface $config): InlineConfigFactoryInterface
+    {
+        $inlineConfigFactory = null;
+        if ($config instanceof InlineConfigFactoryAwareInterface) {
+            $inlineConfigFactory = $config->getInlineConfigFactory();
+        }
+
+        return $inlineConfigFactory ?? $this->inlineConfigFactory;
+    }
+
+    private function getInlineConfigReader(GeneralConfigInterface $config): InlineConfigReaderInterface
+    {
+        $inlineConfigReader = null;
+        if ($config instanceof InlineConfigReaderAwareInterface) {
+            $inlineConfigReader = $config->getInlineConfigReader();
+        }
+
+        return $inlineConfigReader ?? $this->extrasReader;
     }
 }

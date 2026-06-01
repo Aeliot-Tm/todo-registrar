@@ -24,10 +24,11 @@ use Aeliot\TodoRegistrar\Service\Comment\Extractor as CommentExtractor;
 use Aeliot\TodoRegistrar\Service\File\FileParser;
 use Aeliot\TodoRegistrar\Service\File\Saver;
 use Aeliot\TodoRegistrarContracts\FinderInterface;
-use Aeliot\TodoRegistrarContracts\GeneralConfigInterface;
-use Aeliot\TodoRegistrarContracts\ProcessAwareGeneralConfigInterface;
+use Aeliot\TodoRegistrarContracts\GeneralConfig\GeneralConfigInterface;
+use Aeliot\TodoRegistrarContracts\GeneralConfig\ProcessConfigAwareInterface;
 use Aeliot\TodoRegistrarContracts\ProcessSameTicketConfigInterface;
-use Aeliot\TodoRegistrarContracts\RegistrarInterface;
+use Aeliot\TodoRegistrarContracts\Registrar\RegistrarInterface;
+use Aeliot\TodoRegistrarContracts\RegistrarInterface as LegacyRegistrarInterface;
 
 /**
  * @internal
@@ -39,7 +40,7 @@ final readonly class HeapRunner
         private FinderInterface $finder,
         private FileParser $fileParser,
         private OutputAdapter $output,
-        private RegistrarInterface $registrar,
+        private RegistrarInterface|LegacyRegistrarInterface $registrar,
         private Saver $saver,
         private TodoBuilder $todoBuilder,
         private GeneralConfigInterface $config,
@@ -132,18 +133,28 @@ final readonly class HeapRunner
 
     private function getGlueSameTickets(): bool
     {
-        $processConfig = $this->config instanceof ProcessAwareGeneralConfigInterface
+        $processConfig = $this->config instanceof ProcessConfigAwareInterface
             ? $this->config->getProcessConfig()
             : null;
 
-        return ($processConfig instanceof ProcessSameTicketConfigInterface
-            ? $processConfig->isGlueSameTicket()
-            : null) ?? ProcessConfig::DEFAULT_GLUE_SAME_TICKETS;
+        $isGlueSameTicket = null;
+        if (
+            $processConfig instanceof ProcessSameTicketConfigInterface
+            || (
+                $processConfig instanceof ProcessConfigAwareInterface
+                // @phpstan-ignore-next-line
+                && method_exists($processConfig, 'isGlueSameTicket')
+            )
+        ) {
+            $isGlueSameTicket = $processConfig->isGlueSameTicket();
+        }
+
+        return $isGlueSameTicket ?? ProcessConfig::DEFAULT_GLUE_SAME_TICKETS;
     }
 
     private function getGlueSequentialComments(): bool
     {
-        return ($this->config instanceof ProcessAwareGeneralConfigInterface
+        return ($this->config instanceof ProcessConfigAwareInterface
             ? $this->config->getProcessConfig()?->isGlueSequentialComments()
             : null) ?? ProcessConfig::DEFAULT_GLUE_SEQUENTIAL_COMMENTS;
     }

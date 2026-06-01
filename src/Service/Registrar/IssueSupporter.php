@@ -14,8 +14,8 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Service\Registrar;
 
 use Aeliot\TodoRegistrar\Service\ContextPath\ContextPathBuilderRegistry;
-use Aeliot\TodoRegistrarContracts\ContextAwareTodoInterface;
-use Aeliot\TodoRegistrarContracts\TodoInterface;
+use Aeliot\TodoRegistrarContracts\Todo\ContextAwareInterface;
+use Aeliot\TodoRegistrarContracts\Todo\TodoInterface;
 
 final readonly class IssueSupporter
 {
@@ -49,7 +49,7 @@ final readonly class IssueSupporter
         $description = $todo->getDescription();
 
         if (
-            $todo instanceof ContextAwareTodoInterface
+            $todo instanceof ContextAwareInterface
             && ($context = $todo->getContext())
             && ($showContext = ($todo->getInlineConfig()['showContext'] ?? $generalIssueConfig->getShowContext()))
         ) {

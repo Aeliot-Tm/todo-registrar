@@ -11,27 +11,27 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Aeliot\TodoRegistrar;
+namespace Aeliot\TodoRegistrar\Test\Stub;
 
 use Aeliot\TodoRegistrar\Dto\GeneralConfig\IssueKeyInjectionConfig;
 use Aeliot\TodoRegistrar\Dto\GeneralConfig\ProcessConfig;
 use Aeliot\TodoRegistrar\Enum\RegistrarType;
 use Aeliot\TodoRegistrarContracts\FinderInterface;
-use Aeliot\TodoRegistrarContracts\GeneralConfig\GeneralConfigInterface;
-use Aeliot\TodoRegistrarContracts\GeneralConfig\InlineConfigFactoryAwareInterface;
-use Aeliot\TodoRegistrarContracts\GeneralConfig\InlineConfigReaderAwareInterface;
-use Aeliot\TodoRegistrarContracts\GeneralConfig\IssueKeyInjectionConfigAwareInterface;
-use Aeliot\TodoRegistrarContracts\GeneralConfig\IssueKeyInjectionConfigInterface;
-use Aeliot\TodoRegistrarContracts\GeneralConfig\ProcessConfigAwareInterface;
-use Aeliot\TodoRegistrarContracts\GeneralConfig\ProcessConfigInterface;
+use Aeliot\TodoRegistrarContracts\GeneralConfigInterface;
 use Aeliot\TodoRegistrarContracts\InlineConfigFactoryInterface;
 use Aeliot\TodoRegistrarContracts\InlineConfigReaderInterface;
-use Aeliot\TodoRegistrarContracts\Registrar\RegistrarFactoryInterface;
-use Aeliot\TodoRegistrarContracts\RegistrarFactoryInterface as LegacyRegistrarFactoryInterface;
+use Aeliot\TodoRegistrarContracts\IssueKeyInjectionAwareGeneralConfigInterface;
+use Aeliot\TodoRegistrarContracts\IssueKeyInjectionConfigInterface;
+use Aeliot\TodoRegistrarContracts\ProcessAwareGeneralConfigInterface;
+use Aeliot\TodoRegistrarContracts\ProcessConfigInterface;
+use Aeliot\TodoRegistrarContracts\RegistrarFactoryInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
-class Config implements GeneralConfigInterface, InlineConfigFactoryAwareInterface, InlineConfigReaderAwareInterface, IssueKeyInjectionConfigAwareInterface, ProcessConfigAwareInterface
+/**
+ * User config stub as it was before contracts migration (deprecated root interfaces).
+ */
+final class LegacyConfig implements GeneralConfigInterface, IssueKeyInjectionAwareGeneralConfigInterface, ProcessAwareGeneralConfigInterface
 {
     public const DEFAULT_TAGS = ['todo', 'fixme'];
 
@@ -52,7 +52,7 @@ class Config implements GeneralConfigInterface, InlineConfigFactoryAwareInterfac
      * @var array<string,mixed>
      */
     private array $registrarConfig;
-    private RegistrarFactoryInterface|string|LegacyRegistrarFactoryInterface $registrarType;
+    private RegistrarFactoryInterface|string $registrarType;
 
     /**
      * @var string[]
@@ -120,7 +120,7 @@ class Config implements GeneralConfigInterface, InlineConfigFactoryAwareInterfac
         return $this->registrarConfig;
     }
 
-    public function getRegistrarType(): RegistrarFactoryInterface|LegacyRegistrarFactoryInterface|string
+    public function getRegistrarType(): RegistrarFactoryInterface|string
     {
         return $this->registrarType;
     }
@@ -128,7 +128,7 @@ class Config implements GeneralConfigInterface, InlineConfigFactoryAwareInterfac
     /**
      * @param array<string,mixed> $config
      */
-    public function setRegistrar(RegistrarType|RegistrarFactoryInterface|LegacyRegistrarFactoryInterface|string $type, array $config): self
+    public function setRegistrar(RegistrarType|RegistrarFactoryInterface|string $type, array $config): self
     {
         if ($type instanceof RegistrarType) {
             $type = $type->value;

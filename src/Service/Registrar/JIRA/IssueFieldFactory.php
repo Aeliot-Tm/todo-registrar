@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Service\Registrar\JIRA;
 
 use Aeliot\TodoRegistrar\Service\Registrar\IssueSupporter;
-use Aeliot\TodoRegistrarContracts\TodoInterface;
+use Aeliot\TodoRegistrarContracts\Todo\TodoInterface;
 use JiraRestApi\Issue\IssueField;
 
 /**

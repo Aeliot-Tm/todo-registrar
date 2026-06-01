@@ -2,7 +2,7 @@
 
 > There is described php-form of [general config file](general_config.md).
 
-Config file have to returns instance of interface `Aeliot\TodoRegistrarContracts\GeneralConfigInterface`.
+Config file have to returns instance of interface `Aeliot\TodoRegistrarContracts\GeneralConfig\GeneralConfigInterface`.
 
 You may implement it yourself (read about [customization](../customization.md))
 or use existing class `Aeliot\TodoRegistrar\Config`.

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ee5b128b4753fb496585f95efcee354d",
+    "content-hash": "c4c2161bc56cfce13d08031a782b15f9",
     "packages": [
         {
             "name": "aeliot/env-resolver",
@@ -54,16 +54,16 @@
         },
         {
             "name": "aeliot/todo-registrar-contracts",
-            "version": "2.2.0",
+            "version": "2.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Aeliot-Tm/todo-registrar-contracts.git",
-                "reference": "ac156d7e0700a572cd2f48aa6d8f4ca000143c0a"
+                "reference": "83a8218f26e273fc8ebf2dab7ebef2515d96a7fe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Aeliot-Tm/todo-registrar-contracts/zipball/ac156d7e0700a572cd2f48aa6d8f4ca000143c0a",
-                "reference": "ac156d7e0700a572cd2f48aa6d8f4ca000143c0a",
+                "url": "https://api.github.com/repos/Aeliot-Tm/todo-registrar-contracts/zipball/83a8218f26e273fc8ebf2dab7ebef2515d96a7fe",
+                "reference": "83a8218f26e273fc8ebf2dab7ebef2515d96a7fe",
                 "shasum": ""
             },
             "require": {
@@ -100,9 +100,9 @@
             ],
             "support": {
                 "issues": "https://github.com/Aeliot-Tm/todo-registrar-contracts/issues",
-                "source": "https://github.com/Aeliot-Tm/todo-registrar-contracts/tree/2.2.0"
+                "source": "https://github.com/Aeliot-Tm/todo-registrar-contracts/tree/2.3.0"
             },
-            "time": "2026-02-27T10:32:51+00:00"
+            "time": "2026-06-01T15:28:57+00:00"
         },
         {
             "name": "bugrov/yandex-tracker",
@@ -4407,6 +4407,6 @@
         "ext-simplexml": "*",
         "ext-tokenizer": "*"
     },
-    "platform-dev": {},
-    "plugin-api-version": "2.9.0"
+    "platform-dev": [],
+    "plugin-api-version": "2.6.0"
 }
