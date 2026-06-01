@@ -18,17 +18,11 @@ use Aeliot\TodoRegistrar\Service\File\Finder;
 use Aeliot\TodoRegistrar\Service\Registrar\RegistrarFactoryRegistry;
 use Aeliot\TodoRegistrar\Service\RegistrarProvider;
 use Aeliot\TodoRegistrar\Service\ValidatorFactory;
-use Aeliot\TodoRegistrar\Test\Stub\LegacyConfig;
-use Aeliot\TodoRegistrar\Test\Stub\NewStaticRegistrarFactory;
 use Aeliot\TodoRegistrar\Test\Stub\StaticRegistrarFactory;
-use Aeliot\TodoRegistrarContracts\GeneralConfigInterface as LegacyGeneralConfigInterface;
-use Aeliot\TodoRegistrarContracts\Registrar\RegistrarFactoryInterface as NewRegistrarFactoryInterface;
-use Aeliot\TodoRegistrarContracts\Registrar\RegistrarInterface as NewRegistrarInterface;
-use Aeliot\TodoRegistrarContracts\RegistrarFactoryInterface as LegacyRegistrarFactoryInterface;
-use Aeliot\TodoRegistrarContracts\RegistrarInterface as LegacyRegistrarInterface;
+use Aeliot\TodoRegistrarContracts\Registrar\RegistrarFactoryInterface;
+use Aeliot\TodoRegistrarContracts\Registrar\RegistrarInterface;
 use Aeliot\TodoRegistrarContracts\Todo\TodoInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(RegistrarProvider::class)]
@@ -42,25 +36,6 @@ final class RegistrarProviderTest extends TestCase
         $this->registrarProvider = new RegistrarProvider($registry, ValidatorFactory::create());
     }
 
-    /**
-     * @return iterable<string, array{0: class-string<NewRegistrarFactoryInterface|LegacyRegistrarFactoryInterface>}>
-     */
-    public static function customRegistrarFactoryClassProvider(): iterable
-    {
-        yield 'legacy factory interface' => [StaticRegistrarFactory::class];
-        yield 'new factory interface' => [NewStaticRegistrarFactory::class];
-    }
-
-    #[DataProvider('customRegistrarFactoryClassProvider')]
-    public function testGetRegistrarWithCustomFactoryClass(string $factoryClass): void
-    {
-        $config = $this->createConfig($factoryClass, ['ticket_key' => 'TEST-100']);
-
-        $registrar = $this->registrarProvider->getRegistrar($config);
-
-        self::assertRegistrarReturnsKey($registrar, 'TEST-100');
-    }
-
     public function testGetRegistrarWithLegacyFactoryInstance(): void
     {
         $factory = new StaticRegistrarFactory();
@@ -71,31 +46,8 @@ final class RegistrarProviderTest extends TestCase
         self::assertRegistrarReturnsKey($registrar, 'LEGACY-1');
     }
 
-    public function testGetRegistrarWithNewFactoryInstance(): void
-    {
-        $factory = new NewStaticRegistrarFactory();
-        $config = $this->createConfig($factory, ['ticket_key' => 'NEW-1']);
-
-        $registrar = $this->registrarProvider->getRegistrar($config);
-
-        self::assertRegistrarReturnsKey($registrar, 'NEW-1');
-    }
-
-    public function testGetRegistrarWithLegacyGeneralConfig(): void
-    {
-        $config = (new LegacyConfig())
-            ->setFinder((new Finder())->in(__DIR__))
-            ->setRegistrar(StaticRegistrarFactory::class, ['ticket_key' => 'LEGACY-CFG-1']);
-
-        self::assertInstanceOf(LegacyGeneralConfigInterface::class, $config);
-
-        $registrar = $this->registrarProvider->getRegistrar($config);
-
-        self::assertRegistrarReturnsKey($registrar, 'LEGACY-CFG-1');
-    }
-
     private static function assertRegistrarReturnsKey(
-        LegacyRegistrarInterface|NewRegistrarInterface $registrar,
+        RegistrarInterface $registrar,
         string $expectedKey,
     ): void {
         $todo = self::createStub(TodoInterface::class);
@@ -103,11 +55,11 @@ final class RegistrarProviderTest extends TestCase
     }
 
     /**
-     * @param class-string<NewRegistrarFactoryInterface|LegacyRegistrarFactoryInterface>|NewRegistrarFactoryInterface|LegacyRegistrarFactoryInterface $registrarType
+     * @param class-string<RegistrarFactoryInterface>|RegistrarFactoryInterface $registrarType
      * @param array<string, mixed> $registrarConfig
      */
     private function createConfig(
-        string|NewRegistrarFactoryInterface|LegacyRegistrarFactoryInterface $registrarType,
+        string|RegistrarFactoryInterface $registrarType,
         array $registrarConfig,
     ): Config {
         return (new Config())

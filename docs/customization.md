@@ -9,7 +9,7 @@ Look no the **processing schema**:
 ## Implementation of Registrar
 
 First of all, you may want to implement **Registrar** for your custom API.
-It has to implement interface `Aeliot\TodoRegistrarContracts\RegistrarInterface`
+It has to implement interface `Aeliot\TodoRegistrarContracts\Registrar\RegistrarInterface`
 
 It accepts interface of TODO object (`Aeliot\TodoRegistrarContracts\Todo\TodoInterface`) and returns identifier (`string`) of created issue.
 In short, returned identifier have to match one of patterns:
@@ -22,7 +22,7 @@ TODO object always contains example of [inline config](inline_config.md) regardl
 
 ### Registrar builder
 
-Implement `Aeliot\TodoRegistrarContracts\RegistrarFactoryInterface` to provide you custom registrar.
+Implement `Aeliot\TodoRegistrarContracts\Registrar\RegistrarFactoryInterface` to provide you custom registrar.
 It accepts array of registrar config which have to be passed via [general config](#general-config).
 
 ## Building of Inline Config

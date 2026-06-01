@@ -14,9 +14,8 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Dto\GeneralConfig;
 
 use Aeliot\TodoRegistrarContracts\GeneralConfig\ProcessConfigInterface;
-use Aeliot\TodoRegistrarContracts\ProcessSameTicketConfigInterface;
 
-final class ProcessConfig implements ProcessConfigInterface, ProcessSameTicketConfigInterface
+final class ProcessConfig implements ProcessConfigInterface
 {
     public const DEFAULT_GLUE_SAME_TICKETS = false;
     public const DEFAULT_GLUE_SEQUENTIAL_COMMENTS = false;

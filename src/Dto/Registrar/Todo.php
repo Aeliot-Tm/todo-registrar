@@ -15,7 +15,7 @@ namespace Aeliot\TodoRegistrar\Dto\Registrar;
 
 use Aeliot\TodoRegistrar\Dto\Comment\CommentPart;
 use Aeliot\TodoRegistrar\Enum\IssueKeyPosition;
-use Aeliot\TodoRegistrarContracts\ContextAwareTodoInterface;
+use Aeliot\TodoRegistrarContracts\Context\ContextNodeInterface;
 use Aeliot\TodoRegistrarContracts\InlineConfigInterface;
 use Aeliot\TodoRegistrarContracts\Todo\ContextAwareInterface;
 use Aeliot\TodoRegistrarContracts\Todo\HashAwareInterface;
@@ -24,7 +24,7 @@ use Aeliot\TodoRegistrarContracts\Todo\TodoInterface;
 /**
  * @internal
  */
-class Todo implements ContextAwareInterface, HashAwareInterface, TodoInterface, ContextAwareTodoInterface
+class Todo implements ContextAwareInterface, HashAwareInterface, TodoInterface
 {
     public function __construct(
         protected string $tag,
@@ -54,7 +54,7 @@ class Todo implements ContextAwareInterface, HashAwareInterface, TodoInterface, 
     }
 
     /**
-     * @return \Aeliot\TodoRegistrarContracts\Context\ContextNodeInterface[]|\Aeliot\TodoRegistrarContracts\ContextNodeInterface[]
+     * @return ContextNodeInterface[]
      */
     public function getContext(): array
     {

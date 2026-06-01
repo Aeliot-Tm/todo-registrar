@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Test\Stub;
 
-use Aeliot\TodoRegistrarContracts\RegistrarInterface;
+use Aeliot\TodoRegistrarContracts\Registrar\RegistrarInterface;
 use Aeliot\TodoRegistrarContracts\Todo\TodoInterface;
 
 /**
