@@ -17,18 +17,25 @@ use Aeliot\TodoRegistrar\Dto\GeneralConfig\IssueKeyInjectionConfig;
 use Aeliot\TodoRegistrar\Dto\GeneralConfig\ProcessConfig;
 use Aeliot\TodoRegistrar\Enum\RegistrarType;
 use Aeliot\TodoRegistrarContracts\FinderInterface;
-use Aeliot\TodoRegistrarContracts\GeneralConfigInterface;
+use Aeliot\TodoRegistrarContracts\GeneralConfig\GeneralConfigInterface;
+use Aeliot\TodoRegistrarContracts\GeneralConfig\InlineConfigFactoryAwareInterface;
+use Aeliot\TodoRegistrarContracts\GeneralConfig\InlineConfigReaderAwareInterface;
+use Aeliot\TodoRegistrarContracts\GeneralConfig\IssueKeyInjectionConfigAwareInterface;
+use Aeliot\TodoRegistrarContracts\GeneralConfig\IssueKeyInjectionConfigInterface;
+use Aeliot\TodoRegistrarContracts\GeneralConfig\ProcessConfigAwareInterface;
+use Aeliot\TodoRegistrarContracts\GeneralConfig\ProcessConfigInterface;
 use Aeliot\TodoRegistrarContracts\InlineConfigFactoryInterface;
 use Aeliot\TodoRegistrarContracts\InlineConfigReaderInterface;
-use Aeliot\TodoRegistrarContracts\IssueKeyInjectionAwareGeneralConfigInterface;
-use Aeliot\TodoRegistrarContracts\IssueKeyInjectionConfigInterface;
-use Aeliot\TodoRegistrarContracts\ProcessAwareGeneralConfigInterface;
-use Aeliot\TodoRegistrarContracts\ProcessConfigInterface;
-use Aeliot\TodoRegistrarContracts\RegistrarFactoryInterface;
+use Aeliot\TodoRegistrarContracts\Registrar\RegistrarFactoryInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
-class Config implements GeneralConfigInterface, IssueKeyInjectionAwareGeneralConfigInterface, ProcessAwareGeneralConfigInterface
+class Config implements
+    GeneralConfigInterface,
+    InlineConfigFactoryAwareInterface,
+    InlineConfigReaderAwareInterface,
+    IssueKeyInjectionConfigAwareInterface,
+    ProcessConfigAwareInterface
 {
     public const DEFAULT_TAGS = ['todo', 'fixme'];
 

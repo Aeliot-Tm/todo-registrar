@@ -159,7 +159,7 @@ It is ignored when showing of context is undefined.
 
 ## Notes
 
-- Context is only added when the TODO implements `ContextAwareTodoInterface`
+- Context is only added when the TODO implements `Aeliot\TodoRegistrarContracts\Todo\ContextAwareInterface`
 - Context is prepended to the issue description with two blank lines separation
 - The context path is built from the outermost level (file) to the innermost level (where TODO is located)
 - Anonymous classes are displayed as `{anonymous}`

@@ -15,7 +15,7 @@ namespace Aeliot\TodoRegistrar\Service\Registrar;
 
 use Aeliot\TodoRegistrar\Enum\RegistrarType;
 use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
-use Aeliot\TodoRegistrarContracts\RegistrarFactoryInterface;
+use Aeliot\TodoRegistrarContracts\Registrar\RegistrarFactoryInterface;
 use Symfony\Component\DependencyInjection\Attribute\AutowireLocator;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 

@@ -54,16 +54,16 @@
         },
         {
             "name": "aeliot/todo-registrar-contracts",
-            "version": "2.2.0",
+            "version": "dev-rc3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Aeliot-Tm/todo-registrar-contracts.git",
-                "reference": "ac156d7e0700a572cd2f48aa6d8f4ca000143c0a"
+                "reference": "39c5b6935b59ff82e1dd42ef012e9767e99db915"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Aeliot-Tm/todo-registrar-contracts/zipball/ac156d7e0700a572cd2f48aa6d8f4ca000143c0a",
-                "reference": "ac156d7e0700a572cd2f48aa6d8f4ca000143c0a",
+                "url": "https://api.github.com/repos/Aeliot-Tm/todo-registrar-contracts/zipball/39c5b6935b59ff82e1dd42ef012e9767e99db915",
+                "reference": "39c5b6935b59ff82e1dd42ef012e9767e99db915",
                 "shasum": ""
             },
             "require": {
@@ -100,9 +100,9 @@
             ],
             "support": {
                 "issues": "https://github.com/Aeliot-Tm/todo-registrar-contracts/issues",
-                "source": "https://github.com/Aeliot-Tm/todo-registrar-contracts/tree/2.2.0"
+                "source": "https://github.com/Aeliot-Tm/todo-registrar-contracts/tree/rc3.0.0"
             },
-            "time": "2026-02-27T10:32:51+00:00"
+            "time": "2026-06-01T16:37:01+00:00"
         },
         {
             "name": "aeliot/yaml-token",
@@ -4446,6 +4446,7 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
+        "aeliot/todo-registrar-contracts": 20,
         "roave/security-advisories": 20
     },
     "prefer-stable": true,

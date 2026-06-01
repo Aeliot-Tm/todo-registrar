@@ -15,7 +15,7 @@ namespace Aeliot\TodoRegistrar\Test\Unit\Service\ContextPath\Builder;
 
 use Aeliot\TodoRegistrar\Dto\Parsing\ContextNode;
 use Aeliot\TodoRegistrar\Service\ContextPath\Builder\AsteriskContextPathBuilder;
-use Aeliot\TodoRegistrarContracts\ContextNodeInterface;
+use Aeliot\TodoRegistrarContracts\Context\PhpContextNodeInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
@@ -33,12 +33,12 @@ final class AsteriskContextPathBuilderTest extends TestCase
             . "* Class: {anonymous}\n"
             . "* Property: aProperty\n",
             [
-                new ContextNode(ContextNodeInterface::KIND_FILE, '/path/to/file'),
-                new ContextNode(ContextNodeInterface::KIND_CLASS, 'MyClass'),
-                new ContextNode(ContextNodeInterface::KIND_METHOD, 'doSomething'),
-                new ContextNode(ContextNodeInterface::KIND_CLOSURE, null),
-                new ContextNode(ContextNodeInterface::KIND_CLASS, null),
-                new ContextNode(ContextNodeInterface::KIND_PROPERTY, 'aProperty'),
+                new ContextNode(PhpContextNodeInterface::KIND_FILE, '/path/to/file'),
+                new ContextNode(PhpContextNodeInterface::KIND_CLASS, 'MyClass'),
+                new ContextNode(PhpContextNodeInterface::KIND_METHOD, 'doSomething'),
+                new ContextNode(PhpContextNodeInterface::KIND_CLOSURE, null),
+                new ContextNode(PhpContextNodeInterface::KIND_CLASS, null),
+                new ContextNode(PhpContextNodeInterface::KIND_PROPERTY, 'aProperty'),
             ],
         ];
     }

@@ -15,7 +15,7 @@ namespace Aeliot\TodoRegistrar\Service\Config;
 
 use Aeliot\TodoRegistrar\Exception\ConfigValidationException;
 use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
-use Aeliot\TodoRegistrarContracts\GeneralConfigInterface;
+use Aeliot\TodoRegistrarContracts\GeneralConfig\GeneralConfigInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**

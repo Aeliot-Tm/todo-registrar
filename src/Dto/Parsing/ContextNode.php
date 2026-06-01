@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Dto\Parsing;
 
-use Aeliot\TodoRegistrarContracts\ContextNodeInterface;
+use Aeliot\TodoRegistrarContracts\Context\ContextNodeInterface;
 
 /**
  * Represents a single element in the context hierarchy (file, namespace, class, method, etc.).

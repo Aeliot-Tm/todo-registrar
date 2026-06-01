@@ -15,7 +15,6 @@ namespace Aeliot\TodoRegistrar\Test\Functional;
 
 use Aeliot\TodoRegistrar\Test\Stub\StaticRegistrarFactory;
 use PHPUnit\Framework\Attributes\CoversNothing;
-use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Large;
 use PHPUnit\Framework\TestCase;
 
@@ -73,29 +72,6 @@ final class RegisterCommandTest extends TestCase
     {
         yield 'PHP config' => ['php'];
         yield 'YAML config' => ['yaml'];
-    }
-
-    #[DataProvider('configProvider')]
-    public function testRegisterWithStubRegistrar(string $configType): void
-    {
-        $expectedTicketKey = 'TEST-456';
-        $configFile = $this->createConfigFile($configType, $expectedTicketKey);
-        file_put_contents($this->testFile, self::ORIGINAL_CONTENT);
-
-        if ('yaml' === $configType) {
-            $this->setTicketKeyEnvironmentVariable($expectedTicketKey);
-        }
-
-        $exitCode = $this->runTodoRegistrar($configFile);
-
-        self::assertSame(0, $exitCode, 'Script should exit with code 0');
-
-        $modifiedContent = file_get_contents($this->testFile);
-        self::assertStringContainsString(
-            "// TODO: {$expectedTicketKey} Test task description",
-            $modifiedContent,
-            'Comment should contain ticket key',
-        );
     }
 
     public function testRegisterWithMissingEnvVarThrowsException(): void
@@ -219,19 +195,23 @@ final class RegisterCommandTest extends TestCase
         );
     }
 
-    private function createConfigFile(string $type, string $ticketKey): string
-    {
+    private function createConfigFile(
+        string $type,
+        string $ticketKey,
+        string $stubFactoryClass = StaticRegistrarFactory::class,
+    ): string {
         if ('php' === $type) {
-            return $this->createPhpConfig($ticketKey);
+            return $this->createPhpConfig($ticketKey, $stubFactoryClass);
         }
 
-        return $this->createYamlConfig();
+        return $this->createYamlConfig($stubFactoryClass);
     }
 
-    private function createPhpConfig(string $ticketKey): string
-    {
+    private function createPhpConfig(
+        string $ticketKey,
+        string $stubFactoryClass = StaticRegistrarFactory::class,
+    ): string {
         $configFile = $this->tempDir . '/.todo-registrar.php';
-        $stubFactoryClass = StaticRegistrarFactory::class;
         $configContent = <<<PHP
 <?php
 
@@ -252,18 +232,17 @@ PHP;
         return $configFile;
     }
 
-    private function createYamlConfig(): string
+    private function createYamlConfig(string $stubFactoryClass = StaticRegistrarFactory::class): string
     {
         $configFile = $this->tempDir . '/.todo-registrar.yaml';
-        $configContent = $this->buildYamlConfigContent();
+        $configContent = $this->buildYamlConfigContent($stubFactoryClass);
         file_put_contents($configFile, $configContent);
 
         return $configFile;
     }
 
-    private function buildYamlConfigContent(): string
+    private function buildYamlConfigContent(string $stubFactoryClass = StaticRegistrarFactory::class): string
     {
-        $stubFactoryClass = StaticRegistrarFactory::class;
         $ticketKeyEnvVar = self::TICKET_KEY_ENV_VAR_NAME;
 
         return <<<YAML

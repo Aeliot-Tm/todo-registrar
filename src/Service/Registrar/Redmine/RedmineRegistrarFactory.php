@@ -16,8 +16,8 @@ namespace Aeliot\TodoRegistrar\Service\Registrar\Redmine;
 use Aeliot\TodoRegistrar\Enum\RegistrarType;
 use Aeliot\TodoRegistrar\Exception\ConfigValidationException;
 use Aeliot\TodoRegistrar\Service\Registrar\IssueSupporter;
-use Aeliot\TodoRegistrarContracts\RegistrarFactoryInterface;
-use Aeliot\TodoRegistrarContracts\RegistrarInterface;
+use Aeliot\TodoRegistrarContracts\Registrar\RegistrarFactoryInterface;
+use Aeliot\TodoRegistrarContracts\Registrar\RegistrarInterface;
 use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 

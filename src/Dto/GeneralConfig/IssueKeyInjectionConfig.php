@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Dto\GeneralConfig;
 
 use Aeliot\TodoRegistrar\Enum\IssueKeyPosition;
-use Aeliot\TodoRegistrarContracts\IssueKeyInjectionConfigInterface;
+use Aeliot\TodoRegistrarContracts\GeneralConfig\IssueKeyInjectionConfigInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 final class IssueKeyInjectionConfig implements IssueKeyInjectionConfigInterface

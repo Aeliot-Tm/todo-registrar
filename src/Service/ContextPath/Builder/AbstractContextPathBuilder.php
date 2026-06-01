@@ -13,8 +13,9 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\ContextPath\Builder;
 
-use Aeliot\TodoRegistrar\Dto\Parsing\YamlContextNodeInterface;
-use Aeliot\TodoRegistrarContracts\ContextNodeInterface;
+use Aeliot\TodoRegistrarContracts\Context\ContextNodeInterface;
+use Aeliot\TodoRegistrarContracts\Context\PhpContextNodeInterface;
+use Aeliot\TodoRegistrarContracts\Context\YamlContextNodeInterface;
 
 abstract readonly class AbstractContextPathBuilder
 {
@@ -29,21 +30,21 @@ abstract readonly class AbstractContextPathBuilder
 
         foreach ($nodes as $node) {
             $lines[] = match ($node->getKind()) {
-                ContextNodeInterface::KIND_ARROW_FUNCTION => 'Arrow function',
-                ContextNodeInterface::KIND_CLASS => 'Class: ' . ($node->getName() ?? '{anonymous}'),
-                ContextNodeInterface::KIND_CLASS_CONST => 'Constant: ' . ($node->getName() ?? '{unknown}'),
-                ContextNodeInterface::KIND_CLOSURE => 'Closure',
-                ContextNodeInterface::KIND_ENUM => "Enum: {$node->getName()}",
-                ContextNodeInterface::KIND_ENUM_CASE => "Enum case: {$node->getName()}",
-                ContextNodeInterface::KIND_FILE => "File: {$node->getName()}",
-                ContextNodeInterface::KIND_FUNCTION => "Function: {$node->getName()}()",
-                ContextNodeInterface::KIND_INTERFACE => "Interface: {$node->getName()}",
-                ContextNodeInterface::KIND_MATCH => 'Match expression',
-                ContextNodeInterface::KIND_METHOD => "Method: {$node->getName()}()",
-                ContextNodeInterface::KIND_NAMESPACE => "Namespace: {$node->getName()}",
-                ContextNodeInterface::KIND_PARAMETER => 'Parameter: ' . ($node->getName() ?? '{unknown}'),
-                ContextNodeInterface::KIND_PROPERTY => 'Property: ' . ($node->getName() ?? '{unknown}'),
-                ContextNodeInterface::KIND_TRAIT => "Trait: {$node->getName()}",
+                PhpContextNodeInterface::KIND_ARROW_FUNCTION => 'Arrow function',
+                PhpContextNodeInterface::KIND_CLASS => 'Class: ' . ($node->getName() ?? '{anonymous}'),
+                PhpContextNodeInterface::KIND_CLASS_CONST => 'Constant: ' . ($node->getName() ?? '{unknown}'),
+                PhpContextNodeInterface::KIND_CLOSURE => 'Closure',
+                PhpContextNodeInterface::KIND_ENUM => "Enum: {$node->getName()}",
+                PhpContextNodeInterface::KIND_ENUM_CASE => "Enum case: {$node->getName()}",
+                PhpContextNodeInterface::KIND_FILE => "File: {$node->getName()}",
+                PhpContextNodeInterface::KIND_FUNCTION => "Function: {$node->getName()}()",
+                PhpContextNodeInterface::KIND_INTERFACE => "Interface: {$node->getName()}",
+                PhpContextNodeInterface::KIND_MATCH => 'Match expression',
+                PhpContextNodeInterface::KIND_METHOD => "Method: {$node->getName()}()",
+                PhpContextNodeInterface::KIND_NAMESPACE => "Namespace: {$node->getName()}",
+                PhpContextNodeInterface::KIND_PARAMETER => 'Parameter: ' . ($node->getName() ?? '{unknown}'),
+                PhpContextNodeInterface::KIND_PROPERTY => 'Property: ' . ($node->getName() ?? '{unknown}'),
+                PhpContextNodeInterface::KIND_TRAIT => "Trait: {$node->getName()}",
                 YamlContextNodeInterface::KIND_DOCUMENT => 'Document: ' . $node->getName(),
                 YamlContextNodeInterface::KIND_KEY => 'Key: ' . ($node->getName() ?? '{unknown}'),
                 YamlContextNodeInterface::KIND_SEQUENCE_ITEM => 'Sequence item: ' . ($node->getName() ?? '{unknown}'),

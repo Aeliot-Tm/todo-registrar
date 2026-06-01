@@ -19,7 +19,8 @@ use Aeliot\TodoRegistrar\Dto\Parsing\ParsedFile;
 use Aeliot\TodoRegistrar\Dto\ProcessStatistic;
 use Aeliot\TodoRegistrar\Service\File\Parser\PhpFileParser;
 use Aeliot\TodoRegistrar\Service\File\Saver;
-use Aeliot\TodoRegistrarContracts\ContextNodeInterface;
+use Aeliot\TodoRegistrarContracts\Context\ContextNodeInterface;
+use Aeliot\TodoRegistrarContracts\Context\PhpContextNodeInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
@@ -215,21 +216,21 @@ final class FileParserContextTest extends TestCase
 
         foreach ($nodes as $node) {
             $lines[] = match ($node->getKind()) {
-                ContextNodeInterface::KIND_ARROW_FUNCTION => 'Arrow function',
-                ContextNodeInterface::KIND_CLASS => 'Class: ' . ($node->getName() ?? '{anonymous}'),
-                ContextNodeInterface::KIND_CLASS_CONST => 'Constant: ' . ($node->getName() ?? '{unknown}'),
-                ContextNodeInterface::KIND_CLOSURE => 'Closure',
-                ContextNodeInterface::KIND_ENUM => "Enum: {$node->getName()}",
-                ContextNodeInterface::KIND_ENUM_CASE => "Enum case: {$node->getName()}",
-                ContextNodeInterface::KIND_FILE => "File: {$node->getName()}",
-                ContextNodeInterface::KIND_FUNCTION => "Function: {$node->getName()}()",
-                ContextNodeInterface::KIND_INTERFACE => "Interface: {$node->getName()}",
-                ContextNodeInterface::KIND_MATCH => 'Match expression',
-                ContextNodeInterface::KIND_METHOD => "Method: {$node->getName()}()",
-                ContextNodeInterface::KIND_NAMESPACE => "Namespace: {$node->getName()}",
-                ContextNodeInterface::KIND_PARAMETER => 'Parameter: ' . ($node->getName() ?? '{unknown}'),
-                ContextNodeInterface::KIND_PROPERTY => 'Property: ' . ($node->getName() ?? '{unknown}'),
-                ContextNodeInterface::KIND_TRAIT => "Trait: {$node->getName()}",
+                PhpContextNodeInterface::KIND_ARROW_FUNCTION => 'Arrow function',
+                PhpContextNodeInterface::KIND_CLASS => 'Class: ' . ($node->getName() ?? '{anonymous}'),
+                PhpContextNodeInterface::KIND_CLASS_CONST => 'Constant: ' . ($node->getName() ?? '{unknown}'),
+                PhpContextNodeInterface::KIND_CLOSURE => 'Closure',
+                PhpContextNodeInterface::KIND_ENUM => "Enum: {$node->getName()}",
+                PhpContextNodeInterface::KIND_ENUM_CASE => "Enum case: {$node->getName()}",
+                PhpContextNodeInterface::KIND_FILE => "File: {$node->getName()}",
+                PhpContextNodeInterface::KIND_FUNCTION => "Function: {$node->getName()}()",
+                PhpContextNodeInterface::KIND_INTERFACE => "Interface: {$node->getName()}",
+                PhpContextNodeInterface::KIND_MATCH => 'Match expression',
+                PhpContextNodeInterface::KIND_METHOD => "Method: {$node->getName()}()",
+                PhpContextNodeInterface::KIND_NAMESPACE => "Namespace: {$node->getName()}",
+                PhpContextNodeInterface::KIND_PARAMETER => 'Parameter: ' . ($node->getName() ?? '{unknown}'),
+                PhpContextNodeInterface::KIND_PROPERTY => 'Property: ' . ($node->getName() ?? '{unknown}'),
+                PhpContextNodeInterface::KIND_TRAIT => "Trait: {$node->getName()}",
                 default => ucfirst($node->getKind()) . ($node->getName() ? ': ' . $node->getName() : ''),
             };
         }

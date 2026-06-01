@@ -18,7 +18,7 @@ use Aeliot\TodoRegistrar\Service\ColorGenerator;
 use Aeliot\TodoRegistrar\Service\ContextPath\ContextPathBuilderRegistry;
 use Aeliot\TodoRegistrar\Service\Registrar\GitHub\GitHubRegistrarFactory;
 use Aeliot\TodoRegistrar\Service\Registrar\IssueSupporter;
-use Aeliot\TodoRegistrarContracts\RegistrarInterface;
+use Aeliot\TodoRegistrarContracts\Registrar\RegistrarInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\Validation;

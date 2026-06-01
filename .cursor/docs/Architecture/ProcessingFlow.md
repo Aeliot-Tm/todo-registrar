@@ -258,7 +258,7 @@ $todo = new Todo(
 
 ### Step 7: Register Issue
 
-**Interface:** `RegistrarInterface`
+**Interface:** `Aeliot\TodoRegistrarContracts\Registrar\RegistrarInterface`
 
 ```php
 $key = $this->registrar->register($todo);

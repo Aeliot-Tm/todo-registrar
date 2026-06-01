@@ -62,35 +62,41 @@ bin/todo-registrar
 Each issue tracker has its own implementation in subdirectories:
 
 #### JIRA (`Service/Registrar/JIRA/`)
-- `JiraRegistrar` — Implements `RegistrarInterface`
-- `JiraRegistrarFactory` — Implements `RegistrarFactoryInterface`
+- `JiraRegistrar` — Implements `Registrar\RegistrarInterface`
+- `JiraRegistrarFactory` — Implements `Registrar\RegistrarFactoryInterface`
 - `IssueFieldFactory` — Creates JIRA issue fields from Todo
 - `ServiceFactory` — Creates JIRA API clients
 - `IssueLinkRegistrar` — Registers issue links
 
 #### GitHub (`Service/Registrar/GitHub/`)
-- `GitHubRegistrar` — Implements `RegistrarInterface`
-- `GitHubRegistrarFactory` — Implements `RegistrarFactoryInterface`
+- `GitHubRegistrar` — Implements `Registrar\RegistrarInterface`
+- `GitHubRegistrarFactory` — Implements `Registrar\RegistrarFactoryInterface`
 - `IssueFactory` — Creates GitHub issue from Todo
 - `ApiClientFactory` — Creates GitHub API clients
 
 #### GitLab (`Service/Registrar/GitLab/`)
-- `GitlabRegistrar` — Implements `RegistrarInterface`
-- `GitlabRegistrarFactory` — Implements `RegistrarFactoryInterface`
+- `GitlabRegistrar` — Implements `Registrar\RegistrarInterface`
+- `GitlabRegistrarFactory` — Implements `Registrar\RegistrarFactoryInterface`
 - `IssueFactory` — Creates GitLab issue from Todo
 - `ApiClientProvider` — Provides GitLab API clients
 
 ### Contracts (Interfaces)
 
-Located in `Contracts/`:
+Located in the `aeliot/todo-registrar-contracts` package (`Aeliot\TodoRegistrarContracts` namespace):
 
 | Interface | Purpose |
 |---|---|
-| `RegistrarInterface` | Contract for issue registration (`register(TodoInterface): string`) |
-| `RegistrarFactoryInterface` | Contract for creating registrars from config |
-| `TodoInterface` | Contract for TODO data transfer object |
+| `Registrar\RegistrarInterface` | Contract for issue registration (`register(Todo\TodoInterface): string`) |
+| `Registrar\RegistrarFactoryInterface` | Contract for creating registrars from config |
+| `Todo\TodoInterface` | Contract for TODO data transfer object |
+| `Todo\ContextAwareInterface` | Contract for TODO with code context nodes |
+| `Todo\HashAwareInterface` | Contract for TODO with content hash |
 | `FinderInterface` | Contract for file finder (iterable over SplFileInfo) |
-| `GeneralConfigInterface` | Contract for application configuration |
+| `GeneralConfig\GeneralConfigInterface` | Contract for application configuration |
+| `GeneralConfig\ProcessConfigInterface` | Contract for process options (gluing, etc.) |
+| `GeneralConfig\IssueKeyInjectionConfigInterface` | Contract for issue key injection options |
+| `Context\ContextNodeInterface` | Contract for a single context path node |
+| `Context\PhpContextNodeInterface` | PHP-specific context node kinds |
 | `InlineConfigInterface` | Contract for inline config in comments |
 | `InlineConfigFactoryInterface` | Contract for creating inline config |
 | `InlineConfigReaderInterface` | Contract for reading inline config from comment |
@@ -123,7 +129,7 @@ Located in `Dto/`:
 | Pattern | Usage |
 |---|---|
 | **Factory** | `HeapRunnerFactory`, `TodoBuilderFactory`, `*RegistrarFactory` |
-| **Strategy** | `RegistrarInterface` implementations for different issue trackers |
+| **Strategy** | `Registrar\RegistrarInterface` implementations for different issue trackers |
 | **Service Locator** | `RegistrarFactoryRegistry` with Symfony's `#[AutowireLocator]` |
 | **Dependency Injection** | Symfony DI Container with autowiring |
 | **Iterator** | `FinderInterface` extends `IteratorAggregate` for file traversal |
@@ -164,7 +170,6 @@ src/
 │   ├── Command/RegisterCommand.php
 │   ├── ContainerBuilder.php
 │   └── OutputAdapter.php
-├── Contracts/                      # Interfaces
 ├── Dto/                            # Data Transfer Objects
 │   ├── Comment/
 │   ├── InlineConfig/
@@ -191,10 +196,10 @@ src/
 ### Adding New Issue Tracker
 
 1. Create new directory in `Service/Registrar/{TrackerName}/`
-2. Implement `RegistrarInterface` for issue creation
-3. Implement `RegistrarFactoryInterface` with `#[AutoconfigureTag('aeliot.todo_registrar.registrar_factory')]`
+2. Implement `Registrar\RegistrarInterface` for issue creation
+3. Implement `Registrar\RegistrarFactoryInterface` with `#[AutoconfigureTag('aeliot.todo_registrar.registrar_factory')]`
 4. Add case to `Enum/RegistrarType`
 
 ### Custom Inline Config
 
-Implement `InlineConfigFactoryInterface` and `InlineConfigReaderInterface` to customize how inline config is parsed from comments.
+Implement `InlineConfigFactoryInterface` and `InlineConfigReaderInterface` (package root namespace) to customize how inline config is parsed from comments.
