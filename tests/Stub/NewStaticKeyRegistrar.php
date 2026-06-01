@@ -11,29 +11,24 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Aeliot\TodoRegistrar\Service\Registrar\YandexTracker;
+namespace Aeliot\TodoRegistrar\Test\Stub;
 
-use Aeliot\TodoRegistrarContracts\RegistrarInterface;
+use Aeliot\TodoRegistrarContracts\Registrar\RegistrarInterface;
 use Aeliot\TodoRegistrarContracts\Todo\TodoInterface;
 
 /**
- * @internal
+ * Stub registrar for testing purposes (new contracts interfaces).
+ * Does not make any API calls, returns ticket key from config.
  */
-final readonly class YandexTrackerRegistrar implements RegistrarInterface
+final class NewStaticKeyRegistrar implements RegistrarInterface
 {
     public function __construct(
-        private IssueFactory $issueFactory,
+        private string $ticketKey,
     ) {
     }
 
     public function register(TodoInterface $todo): string
     {
-        $request = $this->issueFactory->create($todo);
-        $response = $request->send();
-
-        /** @var string $key */
-        $key = $response->getField('key');
-
-        return $key;
+        return $this->ticketKey;
     }
 }

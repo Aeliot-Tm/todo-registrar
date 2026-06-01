@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Dto\Parsing;
 
-use Aeliot\TodoRegistrarContracts\ContextNodeInterface;
+use Aeliot\TodoRegistrarContracts\Context\PhpContextNodeInterface;
 use PhpParser\Node;
 use PhpParser\Node\Const_;
 use PhpParser\Node\Expr\ArrowFunction;
@@ -70,7 +70,7 @@ final class ContextMapVisitor extends NodeVisitorAbstract
 
     public function __construct(string $filePath)
     {
-        $this->stack = [new ContextNode(ContextNodeInterface::KIND_FILE, $filePath)];
+        $this->stack = [new ContextNode(PhpContextNodeInterface::KIND_FILE, $filePath)];
     }
 
     /**
@@ -172,59 +172,59 @@ final class ContextMapVisitor extends NodeVisitorAbstract
     {
         return match (true) {
             $node instanceof ArrowFunction => new ContextNode(
-                ContextNodeInterface::KIND_ARROW_FUNCTION,
+                PhpContextNodeInterface::KIND_ARROW_FUNCTION,
                 null
             ),
             $node instanceof Class_ => new ContextNode(
-                ContextNodeInterface::KIND_CLASS,
+                PhpContextNodeInterface::KIND_CLASS,
                 $node->name?->toString()
             ),
             $node instanceof ClassConst => new ContextNode(
-                ContextNodeInterface::KIND_CLASS_CONST,
+                PhpContextNodeInterface::KIND_CLASS_CONST,
                 $this->getClassConstName($node)
             ),
             $node instanceof Closure => new ContextNode(
-                ContextNodeInterface::KIND_CLOSURE,
+                PhpContextNodeInterface::KIND_CLOSURE,
                 null
             ),
             $node instanceof Enum_ => new ContextNode(
-                ContextNodeInterface::KIND_ENUM,
+                PhpContextNodeInterface::KIND_ENUM,
                 $node->name->toString()
             ),
             $node instanceof EnumCase => new ContextNode(
-                ContextNodeInterface::KIND_ENUM_CASE,
+                PhpContextNodeInterface::KIND_ENUM_CASE,
                 $node->name->toString()
             ),
             $node instanceof Function_ => new ContextNode(
-                ContextNodeInterface::KIND_FUNCTION,
+                PhpContextNodeInterface::KIND_FUNCTION,
                 $node->name->toString()
             ),
             $node instanceof Interface_ => new ContextNode(
-                ContextNodeInterface::KIND_INTERFACE,
+                PhpContextNodeInterface::KIND_INTERFACE,
                 $node->name->toString()
             ),
             $node instanceof Match_ => new ContextNode(
-                ContextNodeInterface::KIND_MATCH,
+                PhpContextNodeInterface::KIND_MATCH,
                 null
             ),
             $node instanceof ClassMethod => new ContextNode(
-                ContextNodeInterface::KIND_METHOD,
+                PhpContextNodeInterface::KIND_METHOD,
                 $node->name->toString()
             ),
             $node instanceof Namespace_ => new ContextNode(
-                ContextNodeInterface::KIND_NAMESPACE,
+                PhpContextNodeInterface::KIND_NAMESPACE,
                 $node->name?->toString()
             ),
             $node instanceof Param => new ContextNode(
-                ContextNodeInterface::KIND_PARAMETER,
+                PhpContextNodeInterface::KIND_PARAMETER,
                 $node->var instanceof Node\Expr\Variable && \is_string($node->var->name) ? $node->var->name : null
             ),
             $node instanceof Property => new ContextNode(
-                ContextNodeInterface::KIND_PROPERTY,
+                PhpContextNodeInterface::KIND_PROPERTY,
                 $this->getPropertyName($node)
             ),
             $node instanceof Trait_ => new ContextNode(
-                ContextNodeInterface::KIND_TRAIT,
+                PhpContextNodeInterface::KIND_TRAIT,
                 $node->name->toString()
             ),
             default => null,
@@ -338,17 +338,17 @@ final class ContextMapVisitor extends NodeVisitorAbstract
     {
         $previousKinds = match (true) {
             $node instanceof ClassConst, $node instanceof Property => [
-                ContextNodeInterface::KIND_CLASS,
-                ContextNodeInterface::KIND_TRAIT,
+                PhpContextNodeInterface::KIND_CLASS,
+                PhpContextNodeInterface::KIND_TRAIT,
             ],
             $node instanceof EnumCase => [
-                ContextNodeInterface::KIND_ENUM,
+                PhpContextNodeInterface::KIND_ENUM,
             ],
             $node instanceof Param => [
-                ContextNodeInterface::KIND_METHOD,
-                ContextNodeInterface::KIND_FUNCTION,
-                ContextNodeInterface::KIND_CLOSURE,
-                ContextNodeInterface::KIND_ARROW_FUNCTION,
+                PhpContextNodeInterface::KIND_METHOD,
+                PhpContextNodeInterface::KIND_FUNCTION,
+                PhpContextNodeInterface::KIND_CLOSURE,
+                PhpContextNodeInterface::KIND_ARROW_FUNCTION,
             ],
             default => null,
         };

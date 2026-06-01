@@ -20,7 +20,7 @@ use Aeliot\TodoRegistrar\Service\Registrar\Redmine\EntityResolver;
 use Aeliot\TodoRegistrar\Service\Registrar\Redmine\GeneralIssueConfig;
 use Aeliot\TodoRegistrar\Service\Registrar\Redmine\IssueFactory;
 use Aeliot\TodoRegistrar\Service\Registrar\Redmine\UserResolver;
-use Aeliot\TodoRegistrarContracts\TodoInterface;
+use Aeliot\TodoRegistrarContracts\Todo\TodoInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 

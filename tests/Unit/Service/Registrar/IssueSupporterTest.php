@@ -16,7 +16,7 @@ namespace Aeliot\TodoRegistrar\Test\Unit\Service\Registrar;
 use Aeliot\TodoRegistrar\Service\ContextPath\ContextPathBuilderRegistry;
 use Aeliot\TodoRegistrar\Service\Registrar\AbstractGeneralIssueConfig;
 use Aeliot\TodoRegistrar\Service\Registrar\IssueSupporter;
-use Aeliot\TodoRegistrarContracts\TodoInterface;
+use Aeliot\TodoRegistrarContracts\Todo\TodoInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;

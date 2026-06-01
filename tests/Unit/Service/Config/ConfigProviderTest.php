@@ -26,7 +26,7 @@ use Aeliot\TodoRegistrar\Service\Config\ConfigProvider;
 use Aeliot\TodoRegistrar\Service\Config\StdinConfigFactory;
 use Aeliot\TodoRegistrar\Service\Config\YamlParser;
 use Aeliot\TodoRegistrar\Service\ValidatorFactory;
-use Aeliot\TodoRegistrarContracts\GeneralConfigInterface;
+use Aeliot\TodoRegistrarContracts\GeneralConfig\GeneralConfigInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;

@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Dto\GeneralConfig;
 
-use Aeliot\TodoRegistrarContracts\ProcessConfigInterface;
+use Aeliot\TodoRegistrarContracts\GeneralConfig\ProcessConfigInterface;
 use Aeliot\TodoRegistrarContracts\ProcessSameTicketConfigInterface;
 
 final class ProcessConfig implements ProcessConfigInterface, ProcessSameTicketConfigInterface

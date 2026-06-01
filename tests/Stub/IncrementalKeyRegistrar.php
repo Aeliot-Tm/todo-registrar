@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Test\Stub;
 
 use Aeliot\TodoRegistrarContracts\RegistrarInterface;
-use Aeliot\TodoRegistrarContracts\TodoInterface;
+use Aeliot\TodoRegistrarContracts\Todo\TodoInterface;
 
 /**
  * Stub registrar for testing purposes.

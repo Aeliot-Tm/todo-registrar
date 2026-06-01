@@ -11,7 +11,7 @@ Look no the **processing schema**:
 First of all, you may want to implement **Registrar** for your custom API.
 It has to implement interface `Aeliot\TodoRegistrarContracts\RegistrarInterface`
 
-It accepts interface of TODO object (`Aeliot\TodoRegistrarContracts\TodoInterface`) and returns identifier (`string`) of created issue.
+It accepts interface of TODO object (`Aeliot\TodoRegistrarContracts\Todo\TodoInterface`) and returns identifier (`string`) of created issue.
 In short, returned identifier have to match one of patterns:
 - `/\#\d++/`
 - `/[A-Z0-9]++-\d++/`
@@ -51,7 +51,7 @@ Nevertheless, you may implement your own. Just implement interface `Aeliot\TodoR
 
 Finally, have to pass all that stuff as [global config](config/general_config.md).
 If you decided implement [PHP version of global config](config/general_config_php.md)
-then implement `Aeliot\TodoRegistrarContracts\GeneralConfigInterface`.
+then implement `Aeliot\TodoRegistrarContracts\GeneralConfig\GeneralConfigInterface`.
 
 ## Contracts package
 

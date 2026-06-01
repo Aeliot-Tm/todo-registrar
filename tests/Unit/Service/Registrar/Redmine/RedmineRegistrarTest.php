@@ -17,7 +17,7 @@ use Aeliot\TodoRegistrar\Service\Registrar\Redmine\Issue;
 use Aeliot\TodoRegistrar\Service\Registrar\Redmine\IssueApiClient;
 use Aeliot\TodoRegistrar\Service\Registrar\Redmine\IssueFactory;
 use Aeliot\TodoRegistrar\Service\Registrar\Redmine\RedmineRegistrar;
-use Aeliot\TodoRegistrarContracts\TodoInterface;
+use Aeliot\TodoRegistrarContracts\Todo\TodoInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
