@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c4c2161bc56cfce13d08031a782b15f9",
+    "content-hash": "17046916e169ff5071519c228c6bd6c0",
     "packages": [
         {
             "name": "aeliot/env-resolver",
@@ -54,16 +54,16 @@
         },
         {
             "name": "aeliot/todo-registrar-contracts",
-            "version": "2.3.0",
+            "version": "dev-rc3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Aeliot-Tm/todo-registrar-contracts.git",
-                "reference": "83a8218f26e273fc8ebf2dab7ebef2515d96a7fe"
+                "reference": "39c5b6935b59ff82e1dd42ef012e9767e99db915"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Aeliot-Tm/todo-registrar-contracts/zipball/83a8218f26e273fc8ebf2dab7ebef2515d96a7fe",
-                "reference": "83a8218f26e273fc8ebf2dab7ebef2515d96a7fe",
+                "url": "https://api.github.com/repos/Aeliot-Tm/todo-registrar-contracts/zipball/39c5b6935b59ff82e1dd42ef012e9767e99db915",
+                "reference": "39c5b6935b59ff82e1dd42ef012e9767e99db915",
                 "shasum": ""
             },
             "require": {
@@ -100,9 +100,9 @@
             ],
             "support": {
                 "issues": "https://github.com/Aeliot-Tm/todo-registrar-contracts/issues",
-                "source": "https://github.com/Aeliot-Tm/todo-registrar-contracts/tree/2.3.0"
+                "source": "https://github.com/Aeliot-Tm/todo-registrar-contracts/tree/rc3.0.0"
             },
-            "time": "2026-06-01T15:28:57+00:00"
+            "time": "2026-06-01T16:37:01+00:00"
         },
         {
             "name": "bugrov/yandex-tracker",
@@ -4396,6 +4396,7 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
+        "aeliot/todo-registrar-contracts": 20,
         "roave/security-advisories": 20
     },
     "prefer-stable": true,

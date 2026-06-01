@@ -58,10 +58,10 @@ Method `setRegistrar` is responsible for configuration of registrar factory.
 
 It accepts two arguments:
 1. First one is registrar type (`Aeliot\TodoRegistrar\Enum\RegistrarType` or its string value)
-   or instance of registrar factory (`Aeliot\TodoRegistrarContracts\RegistrarFactoryInterface`).
+   or instance of registrar factory (`Aeliot\TodoRegistrarContracts\Registrar\RegistrarFactoryInterface`).
 2. Second one is array of config for registrar ('registrar options').
 
-So, you can use build-in registrar or pass your by using `RegistrarFactoryInterface`.
+So, you can use build-in registrar or pass your by using `Aeliot\TodoRegistrarContracts\Registrar\RegistrarFactoryInterface`.
 
 Registrar options specific for each issue tracker see in separate documentation:
 

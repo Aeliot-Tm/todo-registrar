@@ -26,9 +26,8 @@ use Aeliot\TodoRegistrar\Service\File\Saver;
 use Aeliot\TodoRegistrarContracts\FinderInterface;
 use Aeliot\TodoRegistrarContracts\GeneralConfig\GeneralConfigInterface;
 use Aeliot\TodoRegistrarContracts\GeneralConfig\ProcessConfigAwareInterface;
-use Aeliot\TodoRegistrarContracts\ProcessSameTicketConfigInterface;
+use Aeliot\TodoRegistrarContracts\GeneralConfig\ProcessConfigInterface;
 use Aeliot\TodoRegistrarContracts\Registrar\RegistrarInterface;
-use Aeliot\TodoRegistrarContracts\RegistrarInterface as LegacyRegistrarInterface;
 
 /**
  * @internal
@@ -40,7 +39,7 @@ final readonly class HeapRunner
         private FinderInterface $finder,
         private FileParser $fileParser,
         private OutputAdapter $output,
-        private RegistrarInterface|LegacyRegistrarInterface $registrar,
+        private RegistrarInterface $registrar,
         private Saver $saver,
         private TodoBuilder $todoBuilder,
         private GeneralConfigInterface $config,
@@ -138,11 +137,7 @@ final readonly class HeapRunner
             : null;
 
         $isGlueSameTicket = null;
-        if (
-            $processConfig instanceof ProcessSameTicketConfigInterface
-            // @phpstan-ignore-next-line
-            || ($processConfig && method_exists($processConfig, 'isGlueSameTicket'))
-        ) {
+        if ($processConfig instanceof ProcessConfigInterface) {
             $isGlueSameTicket = $processConfig->isGlueSameTicket();
         }
 

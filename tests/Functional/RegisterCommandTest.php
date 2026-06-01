@@ -13,10 +13,8 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Test\Functional;
 
-use Aeliot\TodoRegistrar\Test\Stub\NewStaticRegistrarFactory;
 use Aeliot\TodoRegistrar\Test\Stub\StaticRegistrarFactory;
 use PHPUnit\Framework\Attributes\CoversNothing;
-use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Large;
 use PHPUnit\Framework\TestCase;
 
@@ -74,50 +72,6 @@ final class RegisterCommandTest extends TestCase
     {
         yield 'PHP config' => ['php'];
         yield 'YAML config' => ['yaml'];
-    }
-
-    /**
-     * @return iterable<string, array{class-string}>
-     */
-    public static function registrarFactoryClassProvider(): iterable
-    {
-        yield 'legacy registrar factory' => [StaticRegistrarFactory::class];
-        yield 'new registrar factory' => [NewStaticRegistrarFactory::class];
-    }
-
-    /**
-     * @return iterable<string, array{0: string, 1: class-string}>
-     */
-    public static function registerWithStubRegistrarProvider(): iterable
-    {
-        foreach (self::configProvider() as $configLabel => [$configType]) {
-            foreach (self::registrarFactoryClassProvider() as $factoryLabel => [$factoryClass]) {
-                yield "{$configLabel}, {$factoryLabel}" => [$configType, $factoryClass];
-            }
-        }
-    }
-
-    #[DataProvider('registerWithStubRegistrarProvider')]
-    public function testRegisterWithStubRegistrar(string $configType, string $stubFactoryClass): void
-    {
-        $expectedTicketKey = 'TEST-456';
-        $configFile = $this->createConfigFile($configType, $expectedTicketKey, $stubFactoryClass);
-        file_put_contents($this->testFile, self::ORIGINAL_CONTENT);
-
-        if ('yaml' === $configType) {
-            $this->setTicketKeyEnvironmentVariable($expectedTicketKey);
-        }
-
-        $exitCode = $this->runTodoRegistrar($configFile);
-
-        self::assertSame(0, $exitCode, 'Script should exit with code 0');
-
-        $modifiedContent = file_get_contents($this->testFile);
-        self::assertStringContainsString(
-            "// TODO: {$expectedTicketKey} Test task description",
-            $modifiedContent,
-            'Comment should contain ticket key',
-        );
     }
 
     public function testRegisterWithMissingEnvVarThrowsException(): void
