@@ -31,6 +31,9 @@ See [user documentation](../../../docs/context_display.md) for format examples, 
 
 - Context path builders: `src/Service/ContextPath/` (one builder per format)
 - Format enum: `src/Enum/ContextPathBuilderFormat.php`
-- Context map: `src/Dto/Parsing/LazyContextMap.php`
-- Context map visitor: `src/Dto/Parsing/ContextMapVisitor.php`
+- Context map: `src/Dto/Parsing/ContextMapInterface.php`
+- YAML context kinds (temporary): `src/Dto/Parsing/YamlContextNodeInterface.php`
+- Context map visitors:
+  - PHP: `src/AST/PHP/ContextMapVisitor.php`
+  - YAML: `src/AST/YAML/ContextMapVisitor.php`
 - Issue supporter (integration): `src/Service/Registrar/IssueSupporter.php`

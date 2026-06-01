@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Test\Unit\Service\ContextPath\Builder;
 
-use Aeliot\TodoRegistrar\Dto\Parsing\ContextNode;
+use Aeliot\TodoRegistrar\Dto\Parsing\PhpContextNode;
 use Aeliot\TodoRegistrar\Service\ContextPath\Builder\ArrowContextPathBuilder;
 use Aeliot\TodoRegistrarContracts\Context\PhpContextNodeInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -28,12 +28,12 @@ final class ArrowContextPathBuilderTest extends TestCase
         yield [
             "File: /path/to/file -> Class: MyClass -> Method: doSomething() -> Closure -> Class: {anonymous} -> Property: aProperty\n",
             [
-                new ContextNode(PhpContextNodeInterface::KIND_FILE, '/path/to/file'),
-                new ContextNode(PhpContextNodeInterface::KIND_CLASS, 'MyClass'),
-                new ContextNode(PhpContextNodeInterface::KIND_METHOD, 'doSomething'),
-                new ContextNode(PhpContextNodeInterface::KIND_CLOSURE, null),
-                new ContextNode(PhpContextNodeInterface::KIND_CLASS, null),
-                new ContextNode(PhpContextNodeInterface::KIND_PROPERTY, 'aProperty'),
+                new PhpContextNode(PhpContextNodeInterface::KIND_FILE, '/path/to/file'),
+                new PhpContextNode(PhpContextNodeInterface::KIND_CLASS, 'MyClass'),
+                new PhpContextNode(PhpContextNodeInterface::KIND_METHOD, 'doSomething'),
+                new PhpContextNode(PhpContextNodeInterface::KIND_CLOSURE, null),
+                new PhpContextNode(PhpContextNodeInterface::KIND_CLASS, null),
+                new PhpContextNode(PhpContextNodeInterface::KIND_PROPERTY, 'aProperty'),
             ],
         ];
     }

@@ -13,46 +13,39 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Dto\Parsing;
 
-use PhpParser\Node\Stmt;
-use PhpParser\NodeTraverser;
+use Aeliot\TodoRegistrarContracts\Context\ContextNodeInterface;
 
 /**
  * Provides lazy contextMap building.
  * Context map is built only on first access via ArrayAccess.
  *
  * @internal
- *
- * @implements \ArrayAccess<int, list<ContextNode>>
  */
-final class LazyContextMap implements \ArrayAccess
+final class LazyContextMap implements ContextMapInterface
 {
     /**
-     * @var array<int, list<ContextNode>>|null
+     * @var array<int, list<ContextNodeInterface>>|null
      */
     private ?array $contextMap = null;
 
-    /**
-     * @param array<Stmt> $ast
-     */
     public function __construct(
-        private readonly array $ast,
-        private readonly string $filePath,
+        private readonly ContextMapBuilderInterface $contextMapBuilder,
     ) {
     }
 
     public function offsetExists(mixed $offset): bool
     {
-        $this->contextMap ??= $this->buildContextMap();
+        $this->contextMap ??= $this->contextMapBuilder->buildContextMap();
 
         return isset($this->contextMap[$offset]);
     }
 
     /**
-     * @return list<ContextNode>
+     * @return list<ContextNodeInterface>
      */
     public function offsetGet(mixed $offset): array
     {
-        $this->contextMap ??= $this->buildContextMap();
+        $this->contextMap ??= $this->contextMapBuilder->buildContextMap();
 
         return $this->contextMap[$offset] ?? [];
     }
@@ -65,19 +58,5 @@ final class LazyContextMap implements \ArrayAccess
     public function offsetUnset(mixed $offset): void
     {
         throw new \BadMethodCallException('LazyContextMap is read-only');
-    }
-
-    /**
-     * @return array<int, list<ContextNode>>
-     */
-    private function buildContextMap(): array
-    {
-        $visitor = new ContextMapVisitor($this->filePath);
-
-        $traverser = new NodeTraverser();
-        $traverser->addVisitor($visitor);
-        $traverser->traverse($this->ast);
-
-        return $visitor->getContextMap();
     }
 }

@@ -15,7 +15,7 @@ namespace Aeliot\TodoRegistrar\Service;
 
 use Aeliot\TodoRegistrar\Console\OutputAdapter;
 use Aeliot\TodoRegistrar\Service\Config\ConfigProvider;
-use Aeliot\TodoRegistrar\Service\File\FileParser;
+use Aeliot\TodoRegistrar\Service\File\FileParserRegistry;
 use Aeliot\TodoRegistrar\Service\File\Saver;
 
 /**
@@ -26,7 +26,7 @@ final readonly class HeapRunnerFactory
     public function __construct(
         private CommentExtractorFactory $commentExtractorFactory,
         private ConfigProvider $configProvider,
-        private FileParser $fileParser,
+        private FileParserRegistry $fileParserRegistry,
         private RegistrarProvider $registrarProvider,
         private Saver $saver,
         private TodoBuilderFactory $todoBuilderFactory,
@@ -43,7 +43,7 @@ final readonly class HeapRunnerFactory
         return new HeapRunner(
             $commentExtractor,
             $config->getFinder(),
-            $this->fileParser,
+            $this->fileParserRegistry,
             $output,
             $registrar,
             $this->saver,

@@ -6,12 +6,15 @@ services:
   _instanceof:
     Aeliot\TodoRegistrar\Service\ContextPath\ContextPathBuilderInterface:
       tags: ['aeliot.todo_registrar.context_path_builder']
+    Aeliot\TodoRegistrar\Service\File\FileParserInterface:
+      tags: ['aeliot.todo_registrar.file_parser']
     Aeliot\TodoRegistrarContracts\Registrar\RegistrarFactoryInterface:
       tags: ['aeliot.todo_registrar.registrar_factory']
 
   Aeliot\TodoRegistrar\:
     resource: '../src/*'
     exclude:
+      - '../src/AST'
       - '../src/Dto'
       - '../src/Enum'
       - '../src/Exception'

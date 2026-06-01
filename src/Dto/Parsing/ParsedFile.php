@@ -28,7 +28,7 @@ final readonly class ParsedFile
     public function __construct(
         private \SplFileInfo $file,
         private array $allTokens,
-        private LazyContextMap $contextMap,
+        private ContextMapInterface $contextMap,
     ) {
     }
 
@@ -40,7 +40,7 @@ final readonly class ParsedFile
         return $this->allTokens;
     }
 
-    public function getContextMap(): LazyContextMap
+    public function getContextMap(): ContextMapInterface
     {
         return $this->contextMap;
     }

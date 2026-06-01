@@ -24,6 +24,7 @@ final class FinderTest extends TestCase
     {
         $finder = (new Finder())
             ->in(__DIR__ . '/../../../fixtures')
+            ->notName('/\.(?:yaml|yml)$/')
             ->exclude(['config', 'comments_gluing', 'php', 'start_line'])
             ->sortByName(true);
 

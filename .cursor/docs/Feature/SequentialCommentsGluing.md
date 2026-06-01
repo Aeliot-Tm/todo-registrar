@@ -72,7 +72,7 @@ With gluing enabled:
 ### Architecture
 
 ```
-FileParser → ParsedFile (tokens + context)
+FileParserInterface → ParsedFile (tokens + context)
      ↓
 HeapRunner passes glueSequentialComments from config
      ↓

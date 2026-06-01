@@ -16,11 +16,9 @@ namespace Aeliot\TodoRegistrar\Dto\Parsing;
 use Aeliot\TodoRegistrarContracts\Context\ContextNodeInterface;
 
 /**
- * Represents a single element in the context hierarchy (file, namespace, class, method, etc.).
- *
  * @internal
  */
-final readonly class ContextNode implements ContextNodeInterface
+abstract readonly class ContextNode implements ContextNodeInterface
 {
     public function __construct(
         private string $kind,

@@ -1,0 +1,27 @@
+# TODO: File level comment
+
+services:
+  app:
+    class: App\Service
+    # TODO: Nested key comment
+    parameters:
+      debug: true
+      # TODO: Look-ahead before key
+      env: prod
+  items:
+    - first
+    - second  # TODO: Block sequence item comment
+  flow_items: [ alpha, beta ]  # TODO: Flow sequence item comment
+  flow_map: { nested_key: nested_value }  # TODO: Flow mapping key comment
+  description: |
+    line one
+    line two
+    line three
+  lookahead_seq:
+    # TODO: Look-ahead before sequence entry
+    - entry_value
+
+---
+# TODO: Second document comment
+doc_two:
+  key: value

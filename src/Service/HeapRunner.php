@@ -21,7 +21,7 @@ use Aeliot\TodoRegistrar\Dto\ProcessStatistic;
 use Aeliot\TodoRegistrar\Dto\Registrar\Todo;
 use Aeliot\TodoRegistrar\Exception\CommentRegistrationException;
 use Aeliot\TodoRegistrar\Service\Comment\Extractor as CommentExtractor;
-use Aeliot\TodoRegistrar\Service\File\FileParser;
+use Aeliot\TodoRegistrar\Service\File\FileParserRegistry;
 use Aeliot\TodoRegistrar\Service\File\Saver;
 use Aeliot\TodoRegistrarContracts\FinderInterface;
 use Aeliot\TodoRegistrarContracts\GeneralConfig\GeneralConfigInterface;
@@ -37,7 +37,7 @@ final readonly class HeapRunner
     public function __construct(
         private CommentExtractor $commentExtractor,
         private FinderInterface $finder,
-        private FileParser $fileParser,
+        private FileParserRegistry $fileParserRegistry,
         private OutputAdapter $output,
         private RegistrarInterface $registrar,
         private Saver $saver,
@@ -94,10 +94,16 @@ final readonly class HeapRunner
         $glueSequentialComments = $this->getGlueSequentialComments();
 
         foreach ($this->finder as $file) {
+            $fileParser = $this->fileParserRegistry->findParser($file);
+            if (!$fileParser) {
+                $this->output->writeErr("There is not configured parser for file: {$file->getPathname()}", OutputAdapter::VERBOSITY_NORMAL);
+                continue;
+            }
+
             $this->output->writeln("Begin process file: {$file->getPathname()}", OutputAdapter::VERBOSITY_DEBUG);
             try {
                 $fileHeap = new FileHeap(
-                    $this->fileParser->parse($file),
+                    $fileParser->parse($file),
                     $glueSequentialComments,
                     $statistic,
                     $this->saver,

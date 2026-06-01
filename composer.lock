@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "17046916e169ff5071519c228c6bd6c0",
+    "content-hash": "d876d7f1ef0a7a6f9a7357ff25ad0359",
     "packages": [
         {
             "name": "aeliot/env-resolver",
@@ -103,6 +103,56 @@
                 "source": "https://github.com/Aeliot-Tm/todo-registrar-contracts/tree/rc3.0.0"
             },
             "time": "2026-06-01T16:37:01+00:00"
+        },
+        {
+            "name": "aeliot/yaml-token",
+            "version": "0.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Aeliot-Tm/yaml-token.git",
+                "reference": "39989efdd2dc73801f30d806e9bf70a5bc4385d1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Aeliot-Tm/yaml-token/zipball/39989efdd2dc73801f30d806e9bf70a5bc4385d1",
+                "reference": "39989efdd2dc73801f30d806e9bf70a5bc4385d1",
+                "shasum": ""
+            },
+            "require": {
+                "ext-ctype": "*",
+                "php": "^8.2"
+            },
+            "require-dev": {
+                "dg/bypass-finals": "^1.7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Aeliot\\YamlToken\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Anatoliy Melnikov",
+                    "email": "5785276@gmail.com"
+                }
+            ],
+            "description": "Tokenizer of YAML",
+            "keywords": [
+                "YAML Parser",
+                "YAML Tokenizer",
+                "tokenizer",
+                "yaml"
+            ],
+            "support": {
+                "issues": "https://github.com/Aeliot-Tm/yaml-token/issues",
+                "source": "https://github.com/Aeliot-Tm/yaml-token/tree/0.1.0"
+            },
+            "time": "2026-05-30T18:31:12+00:00"
         },
         {
             "name": "bugrov/yandex-tracker",

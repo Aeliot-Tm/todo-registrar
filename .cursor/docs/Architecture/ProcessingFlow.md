@@ -19,8 +19,8 @@ This document describes the main algorithm of TODO comment processing — from f
                                       │
                                       ▼
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│  2. TOKENIZE FILE (FileParser)                                              │
-│     PhpToken::tokenize($fileContents) → TokenInterface[]                    │
+│  2. TOKENIZE FILE (FileParserInterface)                                     │
+│     Provides: TokenInterface[]                                              │
 └─────────────────────────────────────────────────────────────────────────────┘
                                       │
                                       ▼
@@ -100,7 +100,7 @@ Configuration determines:
 
 ### Step 2: File Tokenization
 
-**Class:** `Service\File\FileParser`
+**Class:** `Service\File\Parser\PhpFileParser`
 
 Each file is tokenized using PHP's built-in tokenizer and wrapped in `TokenInterface`:
 
@@ -109,13 +109,16 @@ $phpTokens = PhpToken::tokenize(file_get_contents($file->getPathname()));
 $tokens = array_map(fn($t) => new PhpTokenAdapter($t), $phpTokens);
 ```
 
-Result: `ParsedFile` containing array of `TokenInterface` objects and `LazyContextMap` for AST context.
+Result: `ParsedFile` containing array of `TokenInterface` objects and `ContextMapInterface` for AST context.
 
-**Important:** Tokens are mutable objects. The `PhpTokenAdapter` wraps native `\PhpToken` and delegates mutations via `setText()` to the underlying token, which is used when saving the file.
+**Important:** Tokens are mutable objects. The `PhpTokenAdapter` wraps native `\PhpToken` and delegates
+mutations via `setText()` to the underlying token, which is used when saving the file.
 
-**Abstraction Layer:** Using `TokenInterface` isolates the domain logic from PHP-specific tokens, enabling future support for other file types (YAML, CSS, etc.) without changing the core processing flow.
+**Abstraction Layer:** Using `TokenInterface` isolates the domain logic from PHP-specific tokens,
+enabling future support for other file types (YAML, CSS, etc.) without changing the core processing flow.
 
-**Note:** FileParser no longer creates CommentNode objects. It returns a clean DTO (`ParsedFile`) with tokens and context map. CommentNode creation is delegated to `FileHeap`.
+**Note:** FileParserInterface returns a clean DTO (`ParsedFile`) with tokens and context map.
+CommentNode creation is delegated to `FileHeap`.
 
 ### Step 2.5: FileHeap Creation and Comment Filtering
 
@@ -151,7 +154,7 @@ When `process.glueSequentialComments: true` is configured:
 // Source file:
 // TODO: first line
 //       second line
-    
+
 //       third line
 
 // Becomes ONE CompositeToken representing all three lines

@@ -11,9 +11,9 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Aeliot\TodoRegistrar\Test\Unit\Dto\Parsing;
+namespace Aeliot\TodoRegistrar\Test\Unit\AST\PHP;
 
-use Aeliot\TodoRegistrar\Dto\Parsing\ContextMapVisitor;
+use Aeliot\TodoRegistrar\AST\PHP\ContextMapVisitor;
 use PhpParser\Node;
 use PhpParser\NodeTraverser;
 use PhpParser\ParserFactory;

@@ -19,7 +19,7 @@ use Aeliot\TodoRegistrar\Dto\ProcessStatistic;
 use Aeliot\TodoRegistrar\Service\Comment\Cleaner\PhpCommentCleaner;
 use Aeliot\TodoRegistrar\Service\Comment\CommentCleanerRegistry;
 use Aeliot\TodoRegistrar\Service\Comment\Extractor;
-use Aeliot\TodoRegistrar\Service\File\FileParser;
+use Aeliot\TodoRegistrar\Service\File\Parser\PhpFileParser;
 use Aeliot\TodoRegistrar\Service\File\Saver;
 use Aeliot\TodoRegistrar\Service\Tag\Detector as TagDetector;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -31,7 +31,7 @@ use PHPUnit\Framework\TestCase;
 #[UsesClass(CommentCleanerRegistry::class)]
 #[UsesClass(Extractor::class)]
 #[UsesClass(FileHeap::class)]
-#[UsesClass(FileParser::class)]
+#[UsesClass(PhpFileParser::class)]
 #[UsesClass(PhpCommentCleaner::class)]
 #[UsesClass(TagDetector::class)]
 final class CommentPartStartLineTest extends TestCase
@@ -71,7 +71,7 @@ final class CommentPartStartLineTest extends TestCase
      */
     private function extractTodos(string $pathname, bool $glueSequentialComments): array
     {
-        $parsedFile = (new FileParser())->parse(new \SplFileInfo($pathname));
+        $parsedFile = (new PhpFileParser())->parse(new \SplFileInfo($pathname));
         $statistic = new ProcessStatistic();
         $saver = $this->createMock(Saver::class);
         $fileHeap = new FileHeap($parsedFile, $glueSequentialComments, $statistic, $saver);
