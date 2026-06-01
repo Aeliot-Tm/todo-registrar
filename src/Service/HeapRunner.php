@@ -140,11 +140,8 @@ final readonly class HeapRunner
         $isGlueSameTicket = null;
         if (
             $processConfig instanceof ProcessSameTicketConfigInterface
-            || (
-                $processConfig instanceof ProcessConfigAwareInterface
-                // @phpstan-ignore-next-line
-                && method_exists($processConfig, 'isGlueSameTicket')
-            )
+            // @phpstan-ignore-next-line
+            || ($processConfig && method_exists($processConfig, 'isGlueSameTicket'))
         ) {
             $isGlueSameTicket = $processConfig->isGlueSameTicket();
         }
