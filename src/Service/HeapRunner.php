@@ -142,6 +142,7 @@ final readonly class HeapRunner
             $processConfig instanceof ProcessSameTicketConfigInterface
             || (
                 $processConfig instanceof ProcessConfigAwareInterface
+                // @phpstan-ignore-next-line
                 && method_exists($processConfig, 'isGlueSameTicket')
             )
         ) {

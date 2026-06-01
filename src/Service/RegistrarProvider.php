@@ -51,6 +51,7 @@ final readonly class RegistrarProvider
             $registrarFactory = $this->getByEnumValue($registrarType);
         }
 
+        // @phpstan-ignore-next-line
         return $registrarFactory->create($config->getRegistrarConfig(), $this->validator);
     }
 

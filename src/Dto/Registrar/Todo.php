@@ -53,6 +53,9 @@ class Todo implements ContextAwareInterface, HashAwareInterface, TodoInterface, 
         return $this->commentPart;
     }
 
+    /**
+     * @return \Aeliot\TodoRegistrarContracts\Context\ContextNodeInterface[]|\Aeliot\TodoRegistrarContracts\ContextNodeInterface[]
+     */
     public function getContext(): array
     {
         return $this->commentPart->getContext()->getContextNodes();
