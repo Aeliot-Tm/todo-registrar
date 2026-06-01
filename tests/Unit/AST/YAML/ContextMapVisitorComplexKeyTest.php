@@ -15,8 +15,8 @@ namespace Aeliot\TodoRegistrar\Test\Unit\AST\YAML;
 
 use Aeliot\TodoRegistrar\AST\YAML\ContextMapBuilder;
 use Aeliot\TodoRegistrar\AST\YAML\ContextMapVisitor;
-use Aeliot\TodoRegistrar\Dto\Parsing\YamlContextNodeInterface;
-use Aeliot\TodoRegistrarContracts\ContextNodeInterface;
+use Aeliot\TodoRegistrarContracts\Context\YamlContextNodeInterface;
+use Aeliot\TodoRegistrarContracts\Context\ContextNodeInterface;
 use Aeliot\YamlToken\Parser\ParserBuilder;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;

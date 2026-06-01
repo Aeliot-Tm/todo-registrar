@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3932698aaccfc16634360e8a95bf42e9",
+    "content-hash": "d876d7f1ef0a7a6f9a7357ff25ad0359",
     "packages": [
         {
             "name": "aeliot/env-resolver",

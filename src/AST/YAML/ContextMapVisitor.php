@@ -14,8 +14,7 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\AST\YAML;
 
 use Aeliot\TodoRegistrar\Dto\Parsing\ContextNode;
-use Aeliot\TodoRegistrar\Dto\Parsing\YamlContextNodeInterface;
-use Aeliot\TodoRegistrarContracts\ContextNodeInterface;
+use Aeliot\TodoRegistrarContracts\Context\YamlContextNodeInterface;
 use Aeliot\YamlToken\Emitter\YamlEmitter;
 use Aeliot\YamlToken\Enum\NodeVisitorSignal;
 use Aeliot\YamlToken\Node\BlockMappingNode;
@@ -77,7 +76,7 @@ final class ContextMapVisitor extends NodeVisitorAbstract
 
     public function __construct(string $filePath)
     {
-        $this->stack = [new ContextNode(ContextNodeInterface::KIND_FILE, $filePath)];
+        $this->stack = [new ContextNode(YamlContextNodeInterface::KIND_FILE, $filePath)];
     }
 
     /**

@@ -16,11 +16,11 @@ namespace Aeliot\TodoRegistrar\Test\Unit\Service\File;
 use Aeliot\TodoRegistrar\Dto\FileHeap;
 use Aeliot\TodoRegistrar\Dto\Parsing\CommentNode;
 use Aeliot\TodoRegistrar\Dto\Parsing\ParsedFile;
-use Aeliot\TodoRegistrar\Dto\Parsing\YamlContextNodeInterface;
 use Aeliot\TodoRegistrar\Dto\ProcessStatistic;
 use Aeliot\TodoRegistrar\Service\File\Parser\YamlFileParser;
 use Aeliot\TodoRegistrar\Service\File\Saver;
-use Aeliot\TodoRegistrarContracts\ContextNodeInterface;
+use Aeliot\TodoRegistrarContracts\Context\ContextNodeInterface;
+use Aeliot\TodoRegistrarContracts\Context\YamlContextNodeInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
@@ -354,7 +354,7 @@ final class YamlFileParserContextTest extends TestCase
 
         foreach ($nodes as $node) {
             $lines[] = match ($node->getKind()) {
-                ContextNodeInterface::KIND_FILE => "File: {$node->getName()}",
+                YamlContextNodeInterface::KIND_FILE => "File: {$node->getName()}",
                 YamlContextNodeInterface::KIND_DOCUMENT => 'Document: ' . $node->getName(),
                 YamlContextNodeInterface::KIND_KEY => 'Key: ' . ($node->getName() ?? '{unknown}'),
                 YamlContextNodeInterface::KIND_SEQUENCE_ITEM => 'Sequence item: ' . ($node->getName() ?? '{unknown}'),
