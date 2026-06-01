@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\AST\YAML;
 
-use Aeliot\TodoRegistrar\Dto\Parsing\ContextNode;
+use Aeliot\TodoRegistrar\Dto\Parsing\YamlContextNode;
 use Aeliot\TodoRegistrarContracts\Context\YamlContextNodeInterface;
 use Aeliot\YamlToken\Emitter\YamlEmitter;
 use Aeliot\YamlToken\Enum\NodeVisitorSignal;
@@ -63,24 +63,24 @@ final class ContextMapVisitor extends NodeVisitorAbstract
     private array $commentRanges = [];
 
     /**
-     * @var array<int, list<ContextNode>>
+     * @var array<int, list<YamlContextNode>>
      */
     private array $contextMap = [];
 
     private int $documentIndex = 0;
 
     /**
-     * @var list<ContextNode>
+     * @var list<YamlContextNode>
      */
     private array $stack;
 
     public function __construct(string $filePath)
     {
-        $this->stack = [new ContextNode(YamlContextNodeInterface::KIND_FILE, $filePath)];
+        $this->stack = [new YamlContextNode(YamlContextNodeInterface::KIND_FILE, $filePath)];
     }
 
     /**
-     * @return array<int, list<ContextNode>>
+     * @return array<int, list<YamlContextNode>>
      */
     public function getContextMap(): array
     {
@@ -233,22 +233,22 @@ final class ContextMapVisitor extends NodeVisitorAbstract
         return implode(' ', $parts);
     }
 
-    private function createContextNode(Node $node): ?ContextNode
+    private function createContextNode(Node $node): ?YamlContextNode
     {
         return match (true) {
-            $node instanceof DocumentNode => new ContextNode(
+            $node instanceof DocumentNode => new YamlContextNode(
                 YamlContextNodeInterface::KIND_DOCUMENT,
                 (string) $this->documentIndex++
             ),
-            $node instanceof KeyValueCoupleNode => new ContextNode(
+            $node instanceof KeyValueCoupleNode => new YamlContextNode(
                 YamlContextNodeInterface::KIND_KEY,
                 $this->getKeyName($node)
             ),
-            $node instanceof BlockSequenceEntryNode => new ContextNode(
+            $node instanceof BlockSequenceEntryNode => new YamlContextNode(
                 YamlContextNodeInterface::KIND_SEQUENCE_ITEM,
                 null !== ($index = $this->getBlockSequenceIndex($node)) ? (string) $index : null,
             ),
-            $node instanceof ValueNode && $node->getParent() instanceof FlowSequenceNode => new ContextNode(
+            $node instanceof ValueNode && $node->getParent() instanceof FlowSequenceNode => new YamlContextNode(
                 YamlContextNodeInterface::KIND_SEQUENCE_ITEM,
                 null !== ($index = $this->getFlowSequenceIndex($node)) ? (string) $index : null,
             ),
@@ -478,8 +478,8 @@ final class ContextMapVisitor extends NodeVisitorAbstract
     }
 
     /**
-     * @param list<ContextNode> $nodeContext
-     * @param list<ContextNode> $commentContext
+     * @param list<YamlContextNode> $nodeContext
+     * @param list<YamlContextNode> $commentContext
      */
     private function isSameParentContext(array $nodeContext, array $commentContext): bool
     {

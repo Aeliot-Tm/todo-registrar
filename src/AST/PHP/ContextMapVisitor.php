@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\AST\PHP;
 
-use Aeliot\TodoRegistrar\Dto\Parsing\ContextNode;
+use Aeliot\TodoRegistrar\Dto\Parsing\PhpContextNode;
 use Aeliot\TodoRegistrarContracts\Context\PhpContextNodeInterface;
 use PhpParser\Node;
 use PhpParser\Node\Const_;
@@ -60,22 +60,22 @@ final class ContextMapVisitor extends NodeVisitorAbstract
     private array $commentRanges = [];
 
     /**
-     * @var array<int, list<ContextNode>>
+     * @var array<int, list<PhpContextNode>>
      */
     private array $contextMap = [];
 
     /**
-     * @var list<ContextNode>
+     * @var list<PhpContextNode>
      */
     private array $stack;
 
     public function __construct(string $filePath)
     {
-        $this->stack = [new ContextNode(PhpContextNodeInterface::KIND_FILE, $filePath)];
+        $this->stack = [new PhpContextNode(PhpContextNodeInterface::KIND_FILE, $filePath)];
     }
 
     /**
-     * @return array<int, list<ContextNode>>
+     * @return array<int, list<PhpContextNode>>
      */
     public function getContextMap(): array
     {
@@ -169,62 +169,62 @@ final class ContextMapVisitor extends NodeVisitorAbstract
         }
     }
 
-    private function createContextNode(Node $node): ?ContextNode
+    private function createContextNode(Node $node): ?PhpContextNode
     {
         return match (true) {
-            $node instanceof ArrowFunction => new ContextNode(
+            $node instanceof ArrowFunction => new PhpContextNode(
                 PhpContextNodeInterface::KIND_ARROW_FUNCTION,
                 null
             ),
-            $node instanceof Class_ => new ContextNode(
+            $node instanceof Class_ => new PhpContextNode(
                 PhpContextNodeInterface::KIND_CLASS,
                 $node->name?->toString()
             ),
-            $node instanceof ClassConst => new ContextNode(
+            $node instanceof ClassConst => new PhpContextNode(
                 PhpContextNodeInterface::KIND_CLASS_CONST,
                 $this->getClassConstName($node)
             ),
-            $node instanceof Closure => new ContextNode(
+            $node instanceof Closure => new PhpContextNode(
                 PhpContextNodeInterface::KIND_CLOSURE,
                 null
             ),
-            $node instanceof Enum_ => new ContextNode(
+            $node instanceof Enum_ => new PhpContextNode(
                 PhpContextNodeInterface::KIND_ENUM,
                 $node->name->toString()
             ),
-            $node instanceof EnumCase => new ContextNode(
+            $node instanceof EnumCase => new PhpContextNode(
                 PhpContextNodeInterface::KIND_ENUM_CASE,
                 $node->name->toString()
             ),
-            $node instanceof Function_ => new ContextNode(
+            $node instanceof Function_ => new PhpContextNode(
                 PhpContextNodeInterface::KIND_FUNCTION,
                 $node->name->toString()
             ),
-            $node instanceof Interface_ => new ContextNode(
+            $node instanceof Interface_ => new PhpContextNode(
                 PhpContextNodeInterface::KIND_INTERFACE,
                 $node->name->toString()
             ),
-            $node instanceof Match_ => new ContextNode(
+            $node instanceof Match_ => new PhpContextNode(
                 PhpContextNodeInterface::KIND_MATCH,
                 null
             ),
-            $node instanceof ClassMethod => new ContextNode(
+            $node instanceof ClassMethod => new PhpContextNode(
                 PhpContextNodeInterface::KIND_METHOD,
                 $node->name->toString()
             ),
-            $node instanceof Namespace_ => new ContextNode(
+            $node instanceof Namespace_ => new PhpContextNode(
                 PhpContextNodeInterface::KIND_NAMESPACE,
                 $node->name?->toString()
             ),
-            $node instanceof Param => new ContextNode(
+            $node instanceof Param => new PhpContextNode(
                 PhpContextNodeInterface::KIND_PARAMETER,
                 $node->var instanceof Node\Expr\Variable && \is_string($node->var->name) ? $node->var->name : null
             ),
-            $node instanceof Property => new ContextNode(
+            $node instanceof Property => new PhpContextNode(
                 PhpContextNodeInterface::KIND_PROPERTY,
                 $this->getPropertyName($node)
             ),
-            $node instanceof Trait_ => new ContextNode(
+            $node instanceof Trait_ => new PhpContextNode(
                 PhpContextNodeInterface::KIND_TRAIT,
                 $node->name->toString()
             ),
@@ -332,8 +332,8 @@ final class ContextMapVisitor extends NodeVisitorAbstract
      * Check if comment and node have the same parent context.
      * For parameters, parent is method/function. For properties, parent is class.
      *
-     * @param list<ContextNode> $nodeContext
-     * @param list<ContextNode> $commentContext
+     * @param list<PhpContextNode> $nodeContext
+     * @param list<PhpContextNode> $commentContext
      */
     private function isSameParentContext(Node $node, array $nodeContext, array $commentContext): bool
     {
