@@ -15,6 +15,11 @@ The orders of files which are looked for:
 
 Otherwise, you may pass a special value`--config=STDIN` then [it obtains YAML from STDIN](general_config_yaml.md#loading-from-stdin).
 
+## Supported tags
+
+It detects `TODO` and `FIXME` by default. At the same time, you can config your custom set of tags in config file.
+Whey will be detected case insensitively.
+
 ## Configs specific for issue trackers
 
 1. [GitHub](../registrar/GitHub/config.md)

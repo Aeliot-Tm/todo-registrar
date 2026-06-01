@@ -40,14 +40,14 @@ into comment in code. This prevents creating of issues twice and injected marks 
 
 **Basic using:**
 1. Create [configuration file](docs/config/general_config.md).
-2. Call shell script with necessary [command line options](#command-line-options).
+2. Call shell script with necessary [command line options](docs/command_line_options.md).
 3. Commit updated files. You can config your pipeline/job on CI which commits updates.
 
 **There are prepared several ways of using:**
 1. Using of GitHub Action: [TODO Registrar Action](https://github.com/marketplace/actions/todo-registrar).
-2. [Using of Docker Container](#using-of-docker-container).
-3. [Using of PHAR file](#using-of-phar-file).
-4. [Using of Composer Package](#using-of-composer-package).
+2. [Using of Docker Container](docs/using/docker.md).
+3. [Using of PHAR file](docs/using/phar.md).
+4. [Using of Composer Package](docs/using/composer.md).
 
 I recommend [TODO Registrar Action](https://github.com/marketplace/actions/todo-registrar) for repositories hosted on GitHub.
 
@@ -61,132 +61,25 @@ However, this may be more familiar for you.
 
 The last one is using of Composer package. The most common, but less flexible method.
 
-### Using of Docker Container
+### Documentation references
 
-You can use the pre-built Docker image from GitHub Container Registry:
-
-1. Pull the latest image
-   ```shell
-   docker pull ghcr.io/aeliot-tm/todo-registrar:latest
-   ```
-2. Run script with necessary [command line options](#command-line-options)
-   ```shell
-   docker run --rm -it \
-     -v $(pwd):/code \
-     ghcr.io/aeliot-tm/todo-registrar:latest <options>
-   ```
-
-**Important notes:**
-- Mount your project directory to `/code` (this is the working directory inside the container).
-- Use `-it` flags for interactive mode if you need to see real-time output.
-- The container uses unbuffered output, so messages will appear in real-time.
-- Pass necessary environment variables instructions `-e $VAR_NAME`
-  or by the creating of `.env` file with necessary variables in the root of project.
-- PHAR file inside the container (`/usr/local/bin/todo-registrar`). You can rely on it.
-
-### Using of PHAR file
-
-1. Download PHAR directly to root directory
-   ```shell
-   wget -O todo-registrar.phar "https://github.com/Aeliot-Tm/todo-registrar/releases/latest/download/todo-registrar.phar"
-   ```
-2. Call script with necessary [command line options](#command-line-options)
-   ```shell
-   php todo-registrar.phar <options>
-   ```
-
-Additional instructions how to verify package read [here](docs/installation/phar_directly.md).
-
-**Alternatively**, you can install `phar` file by [PHIVE](https://phar.io/)
-1. Install phar file (by default it will be installed in directory `tools` in the root of project without extension)
-   ```shell
-   phive install todo-registrar
-   ```
-2. Call script with necessary [command line options](#command-line-options)
-   ```shell
-   tools/todo-registrar <options>
-   ```
-
-Additional instructions read [here](docs/installation/phive.md).
-
-### Using of Composer Package
-
-1. Require the package as development dependency
-   ```shell
-   composer require --dev aeliot/todo-registrar
-   ```
-2. Call script with necessary [command line options](#command-line-options)
-   ```shell
-   vendor/bin/todo-registrar <options>
-   ```
-
-### Command Line Options
-
-First of all, pay attention to **available options:**
-
-| Long Form | Short From | Description |
-|---|---|---|
-| `--config=/path/to/config` | `-c /path/to/config` | Path to [configuration file](docs/config/general_config.md) when it is not in default place |
-| `--report-format=FORMAT` | | Export format for [processing report](docs/report.md): `none`, `json`, `yaml` (default: `none`) |
-| `--report-path=PATH` | | Report file path. Default: `todo-registrar-report.<format>`. Use `-` for stdout |
-| | `-q`, `-v`, `-vv`, `-vvv` | Verbosity levels. The command uses [Symfony Console verbosity levels](https://symfony.com/doc/7.4/console/verbosity.html) |
-
-**NOTE:** You can pass a special value`--config=STDIN` then [script obtains YAML from STDIN](docs/config/general_config_yaml.md#loading-from-stdin).
-
-### Integration on CI
-
-The main idea is monitoring of new TODOs on single branch of repository
-to avoid creation of duplicated issues by competing processes and avoid merge conflicts.
-
-The branch should be quite stable (without development directly in it. At the same time,
-it should be as close to development as possible for earlier catching of tech-debt.
-Soon of all, it is called `development`, but `main`/`master` is useful too.
-
-Configure you integration depending on used git-server:
-
-1. GitHub Action (use [TODO Registrar Action](https://github.com/marketplace/actions/todo-registrar))
-2. [Configure GitLab CI](docs/GitlLab/integration_on_ci.md)
-
-## Configuration
-
-First of all you have to create [general config](docs/config/general_config.md).
-
-Additionally, script supports [inline configuration](docs/inline_config.md) - nice feature for the fine-tuning
-of each created issue. It helps flexibly configure different aspects of created issues
-like labels, components, relations to other issues and so on. So, it becomes mighty tool. 😊
-
-Also, you can enable [sequential comments gluing](docs/sequential_comments_gluing.md) to treat
-consecutive single-line comments as a single multi-line comment for TODO processing.
-
-### Supported tags
-
-It detects `TODO` and `FIXME` by default. At the same time, you can config your custom set of tags in config file.
-Whey will be detected case insensitively.
-
-## Supported formats of comments:
-
-It detects TODO-tags in:
-- single-line comments started with both `//` and `#` symbols
-- multiple-line comments `/* ... */`
-- phpDoc `/** ... **/`.
-
-Comments can be formatted differently:
-```php
-// TODO: comment summary
-// TODO comment summary
-// TODO@assigne: comment summary
-
-/**
- * TODO: XX-001 comment summary
- *       with some complex description
- */
-
-// TODO: comment summary
-//       with some complex description
-//       in sequential single-line comments
-```
-
-And others. [See all supported formats](docs/supported_patters_of_comments.md).
+1. [Command Line Options](docs/command_line_options.md)
+2. [Configuration](docs/configuration.md):
+   1. [General Config](docs/config/general_config.md)
+      1. Config format:
+         1. [YAML file](docs/config/general_config_yaml.md)
+         2. [PHP file](docs/config/general_config_php.md)
+         3. [YAML from STDIN](docs/config/general_config_yaml.md#loading-from-stdin)
+   2. [Inline Config](docs/inline_config.md)
+   3. Specific for issue trackers supported out of the box:
+       1. [GitHub](docs/registrar/GitHub/config.md)
+       2. [GitLab](docs/registrar/GitLab/config.md)
+       3. [JIRA](docs/registrar/JIRA/config.md)
+       4. [Redmine](docs/registrar/Redmine/config.md)
+       5. [Yandex Tracker](docs/registrar/YandexTracker/config.md)
+3. [Supported formats of comments](docs/supported_patters_of_comments.md)
+4. [Integration on CI](docs/integration_on_ci.md)
+5. [Customization](docs/customization.md)
 
 ## Supported Issue Trackers
 

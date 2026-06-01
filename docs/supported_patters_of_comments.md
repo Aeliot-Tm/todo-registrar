@@ -1,4 +1,28 @@
-# Supported formats and patterns of comments
+# Supported formats of comments
+
+It detects TODO-tags in:
+- single-line comments started with both `//` and `#` symbols
+- multiple-line comments `/* ... */`
+- phpDoc `/** ... **/`.
+
+Comments can be formatted differently:
+```php
+// TODO: comment summary
+// TODO comment summary
+// TODO@assigne: comment summary
+
+/**
+ * TODO: XX-001 comment summary
+ *       with some complex description
+ */
+
+// TODO: comment summary
+//       with some complex description
+//       in sequential single-line comments
+```
+
+
+## Formats and patterns of comments
 
 It detects TODO-tags in single-line comments started with both `//` and `#` symbols
 and multiple-line comments `/* ... */` and phpDoc `/** ... **/`.
