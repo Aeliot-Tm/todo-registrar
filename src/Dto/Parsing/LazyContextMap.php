@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Dto\Parsing;
 
+use Aeliot\TodoRegistrar\Exception\BadMethodCallException;
 use Aeliot\TodoRegistrarContracts\Context\ContextNodeInterface;
 
 /**
@@ -50,13 +51,19 @@ final class LazyContextMap implements ContextMapInterface
         return $this->contextMap[$offset] ?? [];
     }
 
+    /**
+     * @throws BadMethodCallException
+     */
     public function offsetSet(mixed $offset, mixed $value): void
     {
-        throw new \BadMethodCallException('LazyContextMap is read-only');
+        throw new BadMethodCallException('LazyContextMap is read-only');
     }
 
+    /**
+     * @throws BadMethodCallException
+     */
     public function offsetUnset(mixed $offset): void
     {
-        throw new \BadMethodCallException('LazyContextMap is read-only');
+        throw new BadMethodCallException('LazyContextMap is read-only');
     }
 }

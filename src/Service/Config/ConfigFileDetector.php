@@ -26,6 +26,9 @@ final readonly class ConfigFileDetector
     ) {
     }
 
+    /**
+     * @throws UnavailableConfigException
+     */
     public function getPath(?string $path): string
     {
         if ($path) {

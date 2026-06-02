@@ -66,6 +66,7 @@
         "knplabs/github-api": "^3.14",
         "lesstif/php-jira-rest-client": "^5.8",
         "m4tthumphrey/php-gitlab-api": "^11.14",
+        "netresearch/jsonmapper": "^4.2",
         "nikic/php-parser": "^5.7",
         "psr/container": "^2.0",
         "psr/http-client": "^1.0",

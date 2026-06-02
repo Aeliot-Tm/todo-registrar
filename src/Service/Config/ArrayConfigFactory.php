@@ -34,6 +34,8 @@ final readonly class ArrayConfigFactory
 
     /**
      * @param array<string,mixed> $options
+     *
+     * @throws ConfigValidationException
      */
     public function create(array $options): Config
     {
@@ -88,6 +90,8 @@ final readonly class ArrayConfigFactory
 
     /**
      * @param array<string,mixed> $options
+     *
+     * @throws ConfigValidationException
      */
     private function createArrayConfig(array $options): ArrayConfig
     {

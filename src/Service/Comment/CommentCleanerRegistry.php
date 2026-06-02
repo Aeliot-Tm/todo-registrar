@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Service\Comment;
 
 use Aeliot\TodoRegistrar\Dto\Token\TokenInterface;
+use Aeliot\TodoRegistrar\Exception\LogicException;
 use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 
 /**
@@ -30,6 +31,9 @@ final readonly class CommentCleanerRegistry
     ) {
     }
 
+    /**
+     * @throws LogicException
+     */
     public function getCleaner(TokenInterface $token): CommentCleanerInterface
     {
         foreach ($this->cleaners as $cleaner) {
@@ -38,6 +42,6 @@ final readonly class CommentCleanerRegistry
             }
         }
 
-        throw new \RuntimeException(\sprintf('No CommentCleaner supports token of type %s', $token::class));
+        throw new LogicException(\sprintf('No CommentCleaner supports token of type %s', $token::class));
     }
 }

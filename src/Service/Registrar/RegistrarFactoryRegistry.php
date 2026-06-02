@@ -33,6 +33,9 @@ final readonly class RegistrarFactoryRegistry
     ) {
     }
 
+    /**
+     * @throws InvalidConfigException
+     */
     public function getFactory(RegistrarType $type): RegistrarFactoryInterface
     {
         if (!$this->registrarFactoryLocator->has($type->value)) {

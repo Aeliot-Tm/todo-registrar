@@ -14,7 +14,9 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Service;
 
 use Aeliot\TodoRegistrar\Enum\RegistrarType;
+use Aeliot\TodoRegistrar\Exception\ConfigValidationException;
 use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
+use Aeliot\TodoRegistrar\Exception\LogicException;
 use Aeliot\TodoRegistrar\Service\Registrar\RegistrarFactoryRegistry;
 use Aeliot\TodoRegistrarContracts\GeneralConfig\GeneralConfigInterface;
 use Aeliot\TodoRegistrarContracts\Registrar\RegistrarFactoryInterface;
@@ -32,6 +34,11 @@ final readonly class RegistrarProvider
     ) {
     }
 
+    /**
+     * @throws ConfigValidationException
+     * @throws InvalidConfigException
+     * @throws LogicException
+     */
     public function getRegistrar(GeneralConfigInterface $config): RegistrarInterface
     {
         $registrarType = $config->getRegistrarType();
@@ -48,6 +55,9 @@ final readonly class RegistrarProvider
         return $registrarFactory->create($config->getRegistrarConfig(), $this->validator);
     }
 
+    /**
+     * @throws InvalidConfigException
+     */
     private function getByEnumValue(string $registrarType): RegistrarFactoryInterface
     {
         // add some backward compatibility

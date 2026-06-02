@@ -15,6 +15,8 @@ namespace Aeliot\TodoRegistrar\Service\Registrar\Redmine;
 
 use Aeliot\TodoRegistrar\Enum\RegistrarType;
 use Aeliot\TodoRegistrar\Exception\ConfigValidationException;
+use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
+use Aeliot\TodoRegistrar\Exception\LogicException;
 use Aeliot\TodoRegistrar\Service\Registrar\IssueSupporter;
 use Aeliot\TodoRegistrarContracts\Registrar\RegistrarFactoryInterface;
 use Aeliot\TodoRegistrarContracts\Registrar\RegistrarInterface;
@@ -31,6 +33,11 @@ final readonly class RedmineRegistrarFactory implements RegistrarFactoryInterfac
     {
     }
 
+    /**
+     * @throws ConfigValidationException
+     * @throws InvalidConfigException
+     * @throws LogicException
+     */
     public function create(array $config): RegistrarInterface
     {
         /** @var ValidatorInterface $validator */
@@ -52,6 +59,8 @@ final readonly class RedmineRegistrarFactory implements RegistrarFactoryInterfac
 
     /**
      * @param array<string,mixed> $issueConfig
+     *
+     * @throws ConfigValidationException
      */
     public function createGeneralIssueConfig(array $issueConfig, ValidatorInterface $validator): GeneralIssueConfig
     {

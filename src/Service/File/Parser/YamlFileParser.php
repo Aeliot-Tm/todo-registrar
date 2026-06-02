@@ -17,6 +17,7 @@ use Aeliot\TodoRegistrar\AST\YAML\ContextMapBuilder;
 use Aeliot\TodoRegistrar\Dto\Parsing\LazyContextMap;
 use Aeliot\TodoRegistrar\Dto\Parsing\ParsedFile;
 use Aeliot\TodoRegistrar\Dto\Token\YamlTokenAdapter;
+use Aeliot\TodoRegistrar\Exception\FileReadException;
 use Aeliot\TodoRegistrar\Service\File\FileParserInterface;
 use Aeliot\YamlToken\Node\Node;
 use Aeliot\YamlToken\Node\StreamNode;
@@ -33,12 +34,15 @@ use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
 #[AsTaggedItem(index: 'yml')]
 final readonly class YamlFileParser implements FileParserInterface
 {
+    /**
+     * @throws FileReadException
+     */
     public function parse(\SplFileInfo $file): ParsedFile
     {
         $pathname = $file->getPathname();
         $content = file_get_contents($pathname);
         if (false === $content) {
-            throw new \RuntimeException(\sprintf('Cannot read file %s', $pathname));
+            throw new FileReadException(\sprintf('Cannot read file %s', $pathname));
         }
 
         $parser = (new ParserBuilder())->createParser();

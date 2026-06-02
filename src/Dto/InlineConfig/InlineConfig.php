@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Dto\InlineConfig;
 
+use Aeliot\TodoRegistrar\Exception\BadMethodCallException;
 use Aeliot\TodoRegistrarContracts\InlineConfigInterface;
 
 class InlineConfig implements InlineConfigInterface
@@ -43,17 +44,21 @@ class InlineConfig implements InlineConfigInterface
 
     /**
      * @param int|string $offset
+     *
+     * @throws BadMethodCallException
      */
     public function offsetSet(mixed $offset, mixed $value): void
     {
-        throw new \BadMethodCallException('Setting value is not allowed.');
+        throw new BadMethodCallException('Setting value is not allowed.');
     }
 
     /**
      * @param int|string $offset
+     *
+     * @throws BadMethodCallException
      */
     public function offsetUnset(mixed $offset): void
     {
-        throw new \BadMethodCallException('Unsetting value is not allowed.');
+        throw new BadMethodCallException('Unsetting value is not allowed.');
     }
 }

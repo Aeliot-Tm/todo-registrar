@@ -17,6 +17,7 @@ use Aeliot\TodoRegistrar\Dto\FileHeap;
 use Aeliot\TodoRegistrar\Dto\Parsing\CommentNode;
 use Aeliot\TodoRegistrar\Dto\Parsing\ParsedFile;
 use Aeliot\TodoRegistrar\Dto\ProcessStatistic;
+use Aeliot\TodoRegistrar\Exception\BadMethodCallException;
 use Aeliot\TodoRegistrar\Service\File\Parser\PhpFileParser;
 use Aeliot\TodoRegistrar\Service\File\Saver;
 use Aeliot\TodoRegistrarContracts\Context\ContextNodeInterface;
@@ -131,7 +132,7 @@ final class FileParserContextTest extends TestCase
         $contextMapProperty->setAccessible(true);
         $contextMapObject = $contextMapProperty->getValue($commentNodes[0]->getContext());
 
-        $this->expectException(\BadMethodCallException::class);
+        $this->expectException(BadMethodCallException::class);
         $this->expectExceptionMessage('LazyContextMap is read-only');
 
         $contextMapObject[999] = [];

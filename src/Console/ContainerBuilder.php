@@ -22,6 +22,9 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
  */
 final readonly class ContainerBuilder
 {
+    /**
+     * @throws \Exception
+     */
     public static function build(): SymfonyContainerBuilder
     {
         $container = new SymfonyContainerBuilder();

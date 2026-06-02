@@ -24,6 +24,9 @@ final readonly class ConfigFileGuesser
     {
     }
 
+    /**
+     * @throws UnavailableConfigException
+     */
     public function guess(): string
     {
         $candidates = [

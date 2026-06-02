@@ -15,6 +15,7 @@ namespace Aeliot\TodoRegistrar\Service\Registrar\GitLab;
 
 use Aeliot\TodoRegistrar\Enum\RegistrarType;
 use Aeliot\TodoRegistrar\Exception\ConfigValidationException;
+use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
 use Aeliot\TodoRegistrar\Service\ColorGenerator;
 use Aeliot\TodoRegistrar\Service\Registrar\IssueSupporter;
 use Aeliot\TodoRegistrarContracts\Registrar\RegistrarFactoryInterface;
@@ -34,6 +35,10 @@ final readonly class GitlabRegistrarFactory implements RegistrarFactoryInterface
     ) {
     }
 
+    /**
+     * @throws ConfigValidationException
+     * @throws InvalidConfigException
+     */
     public function create(array $config): RegistrarInterface
     {
         /** @var ValidatorInterface $validator */
@@ -61,6 +66,8 @@ final readonly class GitlabRegistrarFactory implements RegistrarFactoryInterface
 
     /**
      * @param array<string,mixed> $config
+     *
+     * @throws ConfigValidationException
      */
     public function createGeneralIssueConfig(array $config, ValidatorInterface $validator): GeneralIssueConfig
     {

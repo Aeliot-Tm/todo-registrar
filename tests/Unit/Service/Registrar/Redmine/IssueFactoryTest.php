@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Test\Unit\Service\Registrar\Redmine;
 
 use Aeliot\TodoRegistrar\Dto\InlineConfig\InlineConfig;
+use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
 use Aeliot\TodoRegistrar\Service\ContextPath\ContextPathBuilderRegistry;
 use Aeliot\TodoRegistrar\Service\Registrar\IssueSupporter;
 use Aeliot\TodoRegistrar\Service\Registrar\Redmine\EntityResolver;
@@ -263,7 +264,7 @@ final class IssueFactoryTest extends TestCase
 
         $factory = new IssueFactory($entityResolver, $generalConfig, $this->createIssueSupporter(), $userResolver);
 
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(InvalidConfigException::class);
         $this->expectExceptionMessage('Tracker must be specified in config or inline config');
 
         $factory->create($todo);

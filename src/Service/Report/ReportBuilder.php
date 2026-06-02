@@ -15,6 +15,7 @@ namespace Aeliot\TodoRegistrar\Service\Report;
 
 use Aeliot\TodoRegistrar\Dto\ProcessStatistic;
 use Aeliot\TodoRegistrar\Enum\ReportFormat;
+use Aeliot\TodoRegistrar\Exception\LogicException;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -22,10 +23,14 @@ use Symfony\Component\Yaml\Yaml;
  */
 final readonly class ReportBuilder
 {
+    /**
+     * @throws LogicException
+     */
     public function format(ReportFormat $format, ProcessStatistic $statistic): string
     {
         if ($format->isNone()) {
-            throw new \InvalidArgumentException('Report format "none" cannot be used for formatting');
+            // unreachable statement but leave it here
+            throw new LogicException('Report format "none" cannot be used for formatting');
         }
 
         $data = $this->buildData($statistic);
@@ -33,7 +38,8 @@ final readonly class ReportBuilder
         return match ($format) {
             ReportFormat::JSON => json_encode($data, \JSON_THROW_ON_ERROR),
             ReportFormat::YAML => Yaml::dump($data, 4, 2),
-            default => throw new \DomainException(\sprintf('Report format "%s" is not supported', $format->value)),
+            // unreachable statement but leave it here
+            default => throw new LogicException(\sprintf('Report format "%s" is not supported', $format->value)),
         };
     }
 

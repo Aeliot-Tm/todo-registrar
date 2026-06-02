@@ -29,6 +29,9 @@ final readonly class ContextPathBuilderRegistry
     ) {
     }
 
+    /**
+     * @throws InvalidConfigException
+     */
     public function getBuilder(ContextPathBuilderFormat|string $format): ContextPathBuilderInterface
     {
         $format = $this->getTransformFormat($format);
@@ -39,6 +42,9 @@ final readonly class ContextPathBuilderRegistry
         return $this->contextPathBuilderLocator->get($format->value);
     }
 
+    /**
+     * @throws InvalidConfigException
+     */
     private function getTransformFormat(ContextPathBuilderFormat|string $income): ContextPathBuilderFormat
     {
         if ($income instanceof ContextPathBuilderFormat) {

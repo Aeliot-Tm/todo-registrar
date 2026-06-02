@@ -13,6 +13,9 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\Redmine;
 
+use Aeliot\TodoRegistrar\Exception\Api\UnexpectedResponseException;
+use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
+use Aeliot\TodoRegistrar\Exception\LogicException;
 use Aeliot\TodoRegistrar\Service\Registrar\IssueSupporter;
 use Aeliot\TodoRegistrarContracts\Todo\TodoInterface;
 
@@ -29,6 +32,12 @@ final readonly class IssueFactory
     ) {
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws LogicException
+     * @throws ProjectNotFoundException
+     * @throws UnexpectedResponseException
+     */
     public function create(TodoInterface $todo): Issue
     {
         $issue = new Issue();
@@ -142,18 +151,22 @@ final readonly class IssueFactory
         }
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws UnexpectedResponseException
+     */
     private function setTracker(Issue $issue, TodoInterface $todo): void
     {
         $inlineConfig = $todo->getInlineConfig();
         $tracker = $inlineConfig['tracker'] ?? $this->generalIssueConfig->getTracker();
 
         if (null === $tracker) {
-            throw new \RuntimeException('Tracker must be specified in config or inline config');
+            throw new InvalidConfigException('Tracker must be specified in config or inline config');
         }
 
         $trackerId = $this->entityResolver->resolveTrackerId($tracker);
         if (null === $trackerId) {
-            throw new \RuntimeException(\sprintf('Tracker "%s" not found', $tracker));
+            throw new UnexpectedResponseException(\sprintf('Tracker "%s" not found', $tracker));
         }
 
         $issue->setTrackerId($trackerId);

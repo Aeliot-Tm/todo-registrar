@@ -54,6 +54,9 @@ final class CommentPart
         $this->tokenLinesStacks->attach($tokenLinesStack);
     }
 
+    /**
+     * @throws NoLineException
+     */
     public function getContent(): string
     {
         if (!$this->lines) {
@@ -71,6 +74,9 @@ final class CommentPart
         return $this->context;
     }
 
+    /**
+     * @throws NoLineException
+     */
     public function getDescription(): string
     {
         if (!$this->lines) {
@@ -88,6 +94,9 @@ final class CommentPart
         return implode('', $lines);
     }
 
+    /**
+     * @throws NoLineException
+     */
     public function getSummary(): string
     {
         if (!$this->lines) {
@@ -114,6 +123,10 @@ final class CommentPart
         return $this->startLine;
     }
 
+    /**
+     * @throws NoLineException
+     * @throws NoPrefixException
+     */
     public function injectKey(string $key, IssueKeyPosition $position, ?string $newSeparator, bool $replaceSeparator): void
     {
         if (!$this->lines) {
@@ -167,6 +180,9 @@ final class CommentPart
         }
     }
 
+    /**
+     * @throws NoPrefixException
+     */
     private function getSeparatorOffset(IssueKeyPosition $position): int
     {
         $prefixLength = (int) $this->tagMetadata?->getPrefixLength();

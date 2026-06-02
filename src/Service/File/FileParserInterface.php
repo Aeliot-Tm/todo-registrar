@@ -14,8 +14,12 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Service\File;
 
 use Aeliot\TodoRegistrar\Dto\Parsing\ParsedFile;
+use Aeliot\TodoRegistrar\Exception\FileReadException;
 
 interface FileParserInterface
 {
+    /**
+     * @throws FileReadException
+     */
     public function parse(\SplFileInfo $file): ParsedFile;
 }

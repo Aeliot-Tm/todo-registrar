@@ -15,6 +15,6 @@ namespace Aeliot\TodoRegistrar\Exception;
 
 use Aeliot\TodoRegistrarContracts\Exception\RegistrarException;
 
-final class UnexpectedApiResponseException extends \RuntimeException implements RegistrarException
+final class BadMethodCallException extends \BadMethodCallException implements RegistrarException
 {
 }

@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\JIRA;
 
+use Aeliot\TodoRegistrar\Exception\Api\UnexpectedResponseException;
 use Aeliot\TodoRegistrar\Exception\InvalidInlineConfigFormatException;
 use JiraRestApi\IssueLink\IssueLinkType;
 
@@ -31,6 +32,9 @@ final readonly class LinkedIssueNormalizer
      * @param array<string>|array<string,string|array<string>> $linkedIssues
      *
      * @return array<string,array<string>>
+     *
+     * @throws InvalidInlineConfigFormatException
+     * @throws UnexpectedResponseException
      */
     public function normalizeLinkedIssues(array $linkedIssues): array
     {
@@ -53,6 +57,10 @@ final readonly class LinkedIssueNormalizer
         return $result;
     }
 
+    /**
+     * @throws InvalidInlineConfigFormatException
+     * @throws UnexpectedResponseException
+     */
     private function getIssueLinkType(string $alias): IssueLinkType
     {
         try {

@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Test\Unit\Service\Registrar\Redmine;
 
-use Aeliot\TodoRegistrar\Exception\UnexpectedApiResponseException;
+use Aeliot\TodoRegistrar\Exception\Api\UnexpectedResponseException;
 use Aeliot\TodoRegistrar\Service\Registrar\Redmine\Issue;
 use Aeliot\TodoRegistrar\Service\Registrar\Redmine\IssueApiClient;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -61,7 +61,7 @@ final class IssueApiClientTest extends TestCase
 
         $apiClient = new IssueApiClient($client);
 
-        $this->expectException(UnexpectedApiResponseException::class);
+        $this->expectException(UnexpectedResponseException::class);
         $this->expectExceptionMessage('Redmine API error: HTTP 403 Forbidden');
 
         $apiClient->create($issue);
@@ -80,7 +80,7 @@ final class IssueApiClientTest extends TestCase
 
         $apiClient = new IssueApiClient($client);
 
-        $this->expectException(UnexpectedApiResponseException::class);
+        $this->expectException(UnexpectedResponseException::class);
         $this->expectExceptionMessage('Redmine API error: Error message');
 
         $apiClient->create($issue);
@@ -99,7 +99,7 @@ final class IssueApiClientTest extends TestCase
 
         $apiClient = new IssueApiClient($client);
 
-        $this->expectException(UnexpectedApiResponseException::class);
+        $this->expectException(UnexpectedResponseException::class);
         $this->expectExceptionMessage('Redmine API error: Empty response from Redmine API');
 
         $apiClient->create($issue);
@@ -118,7 +118,7 @@ final class IssueApiClientTest extends TestCase
 
         $apiClient = new IssueApiClient($client);
 
-        $this->expectException(UnexpectedApiResponseException::class);
+        $this->expectException(UnexpectedResponseException::class);
         $this->expectExceptionMessage('Redmine API returned unexpected response type: expected SimpleXMLElement, got array');
 
         $apiClient->create($issue);
