@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\JIRA;
 
-use Aeliot\TodoRegistrar\Exception\UnexpectedApiResponseException;
+use Aeliot\TodoRegistrar\Exception\Api\UnexpectedResponseException;
 use Aeliot\TodoRegistrarContracts\Todo\TodoInterface;
 use JiraRestApi\IssueLink\IssueLink;
 use JiraRestApi\IssueLink\IssueLinkService;
@@ -31,7 +31,7 @@ final readonly class IssueLinkRegistrar
     }
 
     /**
-     * @throws UnexpectedApiResponseException
+     * @throws UnexpectedResponseException
      */
     public function registerLinks(string $inwardIssueKey, TodoInterface $todo): void
     {
@@ -48,7 +48,7 @@ final readonly class IssueLinkRegistrar
                 try {
                     $this->issueLinkService->addIssueLink($issueLink);
                 } catch (JiraException $exception) {
-                    throw new UnexpectedApiResponseException(\sprintf('Cannot add link to JIRA issue: %s', $inwardIssueKey), 0, $exception);
+                    throw new UnexpectedResponseException(\sprintf('Cannot add link to JIRA issue: %s', $inwardIssueKey), 0, $exception);
                 }
             }
         }

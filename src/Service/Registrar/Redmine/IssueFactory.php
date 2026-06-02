@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\Redmine;
 
+use Aeliot\TodoRegistrar\Exception\Api\UnexpectedResponseException;
 use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
-use Aeliot\TodoRegistrar\Exception\UnexpectedApiResponseException;
 use Aeliot\TodoRegistrar\Service\Registrar\IssueSupporter;
 use Aeliot\TodoRegistrarContracts\Todo\TodoInterface;
 
@@ -155,7 +155,7 @@ final readonly class IssueFactory
 
         $trackerId = $this->entityResolver->resolveTrackerId($tracker);
         if (null === $trackerId) {
-            throw new UnexpectedApiResponseException(\sprintf('Tracker "%s" not found', $tracker));
+            throw new UnexpectedResponseException(\sprintf('Tracker "%s" not found', $tracker));
         }
 
         $issue->setTrackerId($trackerId);

@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\Redmine;
 
-use Aeliot\TodoRegistrar\Exception\UnexpectedApiResponseException;
+use Aeliot\TodoRegistrar\Exception\Api\UnexpectedResponseException;
 use Psr\Http\Client\ClientExceptionInterface;
 use Redmine\Client\Client;
 
@@ -41,7 +41,7 @@ final readonly class IssueApiClient
                 $e->getMessage(),
                 json_encode($data),
             );
-            throw new UnexpectedApiResponseException($exceptionMessage, 0, $e);
+            throw new UnexpectedResponseException($exceptionMessage, 0, $e);
         }
 
         if ($response instanceof \SimpleXMLElement) {
@@ -56,7 +56,7 @@ final readonly class IssueApiClient
                 $errorMessage,
                 json_encode($data),
             );
-            throw new UnexpectedApiResponseException($exceptionMessage);
+            throw new UnexpectedResponseException($exceptionMessage);
         }
 
         $exceptionMessage = \sprintf(
@@ -64,6 +64,6 @@ final readonly class IssueApiClient
             get_debug_type($response),
             json_encode($data),
         );
-        throw new UnexpectedApiResponseException($exceptionMessage);
+        throw new UnexpectedResponseException($exceptionMessage);
     }
 }

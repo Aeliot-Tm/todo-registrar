@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\JIRA;
 
-use Aeliot\TodoRegistrar\Exception\UnexpectedApiResponseException;
+use Aeliot\TodoRegistrar\Exception\Api\UnexpectedResponseException;
 use JiraRestApi\IssueLink\IssueLinkService;
 use JiraRestApi\IssueLink\IssueLinkType;
 use JiraRestApi\JiraException;
@@ -46,7 +46,7 @@ final class IssueLinkTypeProvider
     /**
      * @return IssueLinkType[]
      *
-     * @throws UnexpectedApiResponseException
+     * @throws UnexpectedResponseException
      */
     private function getSupportedLinkTypes(): array
     {
@@ -55,7 +55,7 @@ final class IssueLinkTypeProvider
                 /** @var \ArrayObject<int,IssueLinkType>|iterable<IssueLinkType>|IssueLinkType[] $issueLinkTypes */
                 $issueLinkTypes = $this->issueLinkService->getIssueLinkTypes();
             } catch (JiraException $exception) {
-                throw new UnexpectedApiResponseException('Cannot get link types from JIRA', 0, $exception);
+                throw new UnexpectedResponseException('Cannot get link types from JIRA', 0, $exception);
             }
 
             if ($issueLinkTypes instanceof \ArrayObject) {

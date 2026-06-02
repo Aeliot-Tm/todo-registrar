@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\JIRA;
 
+use Aeliot\TodoRegistrar\Exception\Api\UnexpectedResponseException;
 use Aeliot\TodoRegistrar\Exception\LogicException;
-use Aeliot\TodoRegistrar\Exception\UnexpectedApiResponseException;
 use Aeliot\TodoRegistrarContracts\Registrar\RegistrarInterface;
 use Aeliot\TodoRegistrarContracts\Todo\TodoInterface;
 use JiraRestApi\Issue\IssueService;
@@ -34,7 +34,7 @@ final readonly class JiraRegistrar implements RegistrarInterface
 
     /**
      * @throws LogicException
-     * @throws UnexpectedApiResponseException
+     * @throws UnexpectedResponseException
      */
     public function register(TodoInterface $todo): string
     {
@@ -43,7 +43,7 @@ final readonly class JiraRegistrar implements RegistrarInterface
         try {
             $issueKey = $this->issueService->create($issueField)->key;
         } catch (JiraException $exception) {
-            throw new UnexpectedApiResponseException('Cannot create ticket in JIRA', 0, $exception);
+            throw new UnexpectedResponseException('Cannot create ticket in JIRA', 0, $exception);
         } catch (\JsonMapper_Exception $exception) {
             throw new LogicException('Unexpected behavior of JIRA integration', 0, $exception);
         }

@@ -11,10 +11,10 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Aeliot\TodoRegistrar\Exception;
+namespace Aeliot\TodoRegistrar\Exception\Api;
 
 use Aeliot\TodoRegistrarContracts\Exception\RegistrarException;
 
-final class UnexpectedApiResponseException extends \RuntimeException implements RegistrarException
+class UnexpectedResponseException extends \RuntimeException implements RegistrarException
 {
 }
