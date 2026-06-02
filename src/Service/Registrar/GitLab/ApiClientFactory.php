@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\GitLab;
 
+use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
 use Gitlab\Client;
 
 /**
@@ -59,6 +60,6 @@ final readonly class ApiClientFactory
             }
         }
 
-        throw new \InvalidArgumentException('Undefined authentication token');
+        throw new InvalidConfigException('Undefined authentication token');
     }
 }

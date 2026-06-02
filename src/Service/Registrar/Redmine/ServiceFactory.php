@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\Redmine;
 
+use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
 use GuzzleHttp\Client as GuzzleClient;
 use Http\Factory\Guzzle\RequestFactory;
 use Http\Factory\Guzzle\StreamFactory;
@@ -48,7 +49,7 @@ final readonly class ServiceFactory
     {
         $url = $this->config['url'] ?? null;
         if (empty($url)) {
-            throw new \InvalidArgumentException('Redmine URL must be specified in service config');
+            throw new InvalidConfigException('Redmine URL must be specified in service config');
         }
 
         return rtrim((string) $url, '/');

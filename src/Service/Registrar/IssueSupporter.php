@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar;
 
+use Aeliot\TodoRegistrar\Exception\LogicException;
 use Aeliot\TodoRegistrar\Service\ContextPath\ContextPathBuilderRegistry;
 use Aeliot\TodoRegistrarContracts\Todo\ContextAwareInterface;
 use Aeliot\TodoRegistrarContracts\Todo\TodoInterface;
@@ -100,7 +101,7 @@ final readonly class IssueSupporter
                 '{tag}' => $todo->getTag(),
                 '{tag_caps}' => mb_strtoupper($todo->getTag()),
                 // unreachable statement but leave it here
-                default => throw new \RuntimeException('Unknown issue summary tag: ' . $matches[0]),
+                default => throw new LogicException('Unknown issue summary tag: ' . $matches[0]),
             };
         }, $generalIssueConfig->getSummaryPrefix());
     }

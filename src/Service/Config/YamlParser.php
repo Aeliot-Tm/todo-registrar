@@ -37,11 +37,12 @@ final readonly class YamlParser
                 $content,
                 Yaml::PARSE_CONSTANT | Yaml::PARSE_EXCEPTION_ON_INVALID_TYPE | Yaml::PARSE_OBJECT,
             );
-            if (!\is_array($parsed)) {
-                throw new \UnexpectedValueException('Invalid YAML string');
-            }
         } catch (\Exception $e) {
             throw new InvalidConfigException('Cannot parse YAML', 0, $e);
+        }
+
+        if (!\is_array($parsed)) {
+            throw new InvalidConfigException('Cannot parse YAML: Invalid YAML string');
         }
 
         return $parsed;

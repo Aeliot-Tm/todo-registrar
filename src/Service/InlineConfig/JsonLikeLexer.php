@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Service\InlineConfig;
 
 use Aeliot\TodoRegistrar\Dto\InlineConfig\Token;
+use Aeliot\TodoRegistrar\Exception\BadMethodCallException;
 use Aeliot\TodoRegistrar\Exception\InvalidInlineConfigFormatException;
 
 /**
@@ -66,7 +67,7 @@ final class JsonLikeLexer implements \Iterator, \Countable
     public function current(): Token
     {
         if (!$this->valid()) {
-            throw new \BadMethodCallException('Cannot get value of invalid lexer iterator');
+            throw new BadMethodCallException('Cannot get value of invalid lexer iterator');
         }
 
         return $this->tokens[$this->position];
@@ -75,7 +76,7 @@ final class JsonLikeLexer implements \Iterator, \Countable
     public function key(): int
     {
         if (!$this->valid()) {
-            throw new \BadMethodCallException('Cannot get position of invalid lexer iterator');
+            throw new BadMethodCallException('Cannot get position of invalid lexer iterator');
         }
 
         return $this->position;
@@ -92,7 +93,7 @@ final class JsonLikeLexer implements \Iterator, \Countable
     public function predecessor(): ?Token
     {
         if (!$this->valid()) {
-            throw new \BadMethodCallException('Cannot get value of invalid lexer iterator');
+            throw new BadMethodCallException('Cannot get value of invalid lexer iterator');
         }
 
         return $this->tokens[$this->position - 1] ?? null;

@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\GitLab;
 
+use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
 use Aeliot\TodoRegistrarContracts\Registrar\RegistrarInterface;
 use Aeliot\TodoRegistrarContracts\Todo\TodoInterface;
 
@@ -83,7 +84,7 @@ final readonly class GitlabRegistrar implements RegistrarInterface
     private function validateMilestone(int|string $project, int $milestoneId): void
     {
         if (!$this->milestoneApiClient->hasById($project, $milestoneId)) {
-            throw new \RuntimeException(\sprintf('Milestone with ID %d does not exist', $milestoneId));
+            throw new InvalidConfigException(\sprintf('Milestone with ID %d does not exist', $milestoneId));
         }
     }
 }

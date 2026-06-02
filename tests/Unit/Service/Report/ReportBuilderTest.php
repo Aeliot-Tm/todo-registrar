@@ -15,6 +15,7 @@ namespace Aeliot\TodoRegistrar\Test\Unit\Service\Report;
 
 use Aeliot\TodoRegistrar\Dto\ProcessStatistic;
 use Aeliot\TodoRegistrar\Enum\ReportFormat;
+use Aeliot\TodoRegistrar\Exception\LogicException;
 use Aeliot\TodoRegistrar\Service\Report\ReportBuilder;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
@@ -33,7 +34,7 @@ final class ReportBuilderTest extends TestCase
     {
         $statistic = new ProcessStatistic();
 
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(LogicException::class);
         $this->expectExceptionMessage('Report format "none" cannot be used for formatting');
 
         $this->reportBuilder->format(ReportFormat::NONE, $statistic);

@@ -18,6 +18,7 @@ use Aeliot\TodoRegistrar\Dto\Parsing\LazyContextMap;
 use Aeliot\TodoRegistrar\Dto\Parsing\ParsedFile;
 use Aeliot\TodoRegistrar\Dto\Token\PhpTokenAdapter;
 use Aeliot\TodoRegistrar\Dto\Token\TokenInterface;
+use Aeliot\TodoRegistrar\Exception\FileReadException;
 use Aeliot\TodoRegistrar\Service\File\FileParserInterface;
 use PhpParser\ParserFactory;
 use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
@@ -35,7 +36,7 @@ final readonly class PhpFileParser implements FileParserInterface
         $pathname = $file->getPathname();
         $content = file_get_contents($pathname);
         if (false === $content) {
-            throw new \RuntimeException(\sprintf('Cannot read file %s', $pathname));
+            throw new FileReadException(\sprintf('Cannot read file %s', $pathname));
         }
 
         $parser = (new ParserFactory())->createForHostVersion();

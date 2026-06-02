@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\Redmine;
 
+use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
+use Aeliot\TodoRegistrar\Exception\TaskTrackerInvalidResponseException;
 use Aeliot\TodoRegistrar\Service\Registrar\IssueSupporter;
 use Aeliot\TodoRegistrarContracts\Todo\TodoInterface;
 
@@ -148,12 +150,12 @@ final readonly class IssueFactory
         $tracker = $inlineConfig['tracker'] ?? $this->generalIssueConfig->getTracker();
 
         if (null === $tracker) {
-            throw new \RuntimeException('Tracker must be specified in config or inline config');
+            throw new InvalidConfigException('Tracker must be specified in config or inline config');
         }
 
         $trackerId = $this->entityResolver->resolveTrackerId($tracker);
         if (null === $trackerId) {
-            throw new \RuntimeException(\sprintf('Tracker "%s" not found', $tracker));
+            throw new TaskTrackerInvalidResponseException(\sprintf('Tracker "%s" not found', $tracker));
         }
 
         $issue->setTrackerId($trackerId);

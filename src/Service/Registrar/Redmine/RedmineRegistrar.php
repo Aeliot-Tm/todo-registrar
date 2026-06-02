@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\Redmine;
 
+use Aeliot\TodoRegistrar\Exception\TaskTrackerInvalidResponseException;
 use Aeliot\TodoRegistrarContracts\Registrar\RegistrarInterface;
 use Aeliot\TodoRegistrarContracts\Todo\TodoInterface;
 
@@ -48,6 +49,6 @@ final readonly class RedmineRegistrar implements RegistrarInterface
             return (int) $response->id;
         }
 
-        throw new \RuntimeException('Unable to extract issue ID from Redmine API response');
+        throw new TaskTrackerInvalidResponseException('Unable to extract issue ID from Redmine API response');
     }
 }
