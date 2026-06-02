@@ -22,9 +22,6 @@ use Aeliot\TodoRegistrarContracts\InlineConfigInterface;
  */
 final readonly class InlineConfigFactory implements InlineConfigFactoryInterface
 {
-    /**
-     * TODO: #125 create config specific for configured registrar.
-     */
     public function getInlineConfig(array $input): InlineConfigInterface
     {
         return new InlineConfig($input);
