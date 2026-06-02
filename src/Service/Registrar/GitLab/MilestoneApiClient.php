@@ -13,7 +13,13 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\GitLab;
 
+use Aeliot\TodoRegistrar\Exception\Api\LimitExceededException;
+use Aeliot\TodoRegistrar\Exception\Api\UnexpectedResponseException;
 use Gitlab\Api\Milestones;
+use Gitlab\Exception\ApiLimitExceededException;
+use Gitlab\Exception\ErrorException;
+use Gitlab\Exception\RuntimeException;
+use Gitlab\Exception\ValidationFailedException;
 
 /**
  * Client for working with GitLab project milestones.
@@ -48,10 +54,20 @@ final readonly class MilestoneApiClient
 
     private function getIdByField(int|string $project, string $field, int|string $value): ?int
     {
-        foreach ($this->milestones->all($project) as $milestone) {
-            if (isset($milestone['id']) && ($milestone[$field] ?? null) === $value) {
-                return (int) $milestone['id'];
+        try {
+            foreach ($this->milestones->all($project) as $milestone) {
+                if (isset($milestone['id']) && ($milestone[$field] ?? null) === $value) {
+                    return (int) $milestone['id'];
+                }
             }
+        } catch (ApiLimitExceededException $exception) {
+            throw new LimitExceededException('Cannot get list of milestones case of GitLab API limit exceeded', 0, $exception);
+        } catch (ValidationFailedException $exception) {
+            throw new UnexpectedResponseException('Cannot get list of milestones case of GitLab request validation failed', 0, $exception);
+        } catch (ErrorException $exception) {
+            throw new UnexpectedResponseException('Cannot get list of milestones case of GitHud invalid request', 0, $exception);
+        } catch (RuntimeException $exception) {
+            throw new UnexpectedResponseException('Cannot get list of milestones in GitLab', 0, $exception);
         }
 
         return null;

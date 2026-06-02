@@ -13,8 +13,14 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\GitLab;
 
+use Aeliot\TodoRegistrar\Exception\Api\LimitExceededException;
+use Aeliot\TodoRegistrar\Exception\Api\UnexpectedResponseException;
 use Aeliot\TodoRegistrar\Service\ColorGenerator;
 use Gitlab\Api\Projects;
+use Gitlab\Exception\ApiLimitExceededException;
+use Gitlab\Exception\ErrorException;
+use Gitlab\Exception\RuntimeException;
+use Gitlab\Exception\ValidationFailedException;
 
 /**
  * Client for working with GitLab project labels.
@@ -37,10 +43,20 @@ final readonly class LabelApiClient
      */
     public function create(int|string $project, string $name): void
     {
-        $this->projects->addLabel($project, [
-            'name' => $name,
-            'color' => $this->colorGenerator->generateColor($name),
-        ]);
+        try {
+            $this->projects->addLabel($project, [
+                'name' => $name,
+                'color' => $this->colorGenerator->generateColor($name),
+            ]);
+        } catch (ApiLimitExceededException $exception) {
+            throw new LimitExceededException('Cannot create label case of GitLab API limit exceeded', 0, $exception);
+        } catch (ValidationFailedException $exception) {
+            throw new UnexpectedResponseException('Cannot create label case of GitLab request validation failed', 0, $exception);
+        } catch (ErrorException $exception) {
+            throw new UnexpectedResponseException('Cannot create label case of GitLab invalid request', 0, $exception);
+        } catch (RuntimeException $exception) {
+            throw new UnexpectedResponseException('Cannot create label in GitLab', 0, $exception);
+        }
     }
 
     /**
@@ -50,7 +66,17 @@ final readonly class LabelApiClient
      */
     public function getAll(int|string $project): array
     {
-        $labels = $this->projects->labels($project);
+        try {
+            $labels = $this->projects->labels($project);
+        } catch (ApiLimitExceededException $exception) {
+            throw new LimitExceededException('Cannot get list of labels case of GitLab API limit exceeded', 0, $exception);
+        } catch (ValidationFailedException $exception) {
+            throw new UnexpectedResponseException('Cannot get list of labels case of GitLab request validation failed', 0, $exception);
+        } catch (ErrorException $exception) {
+            throw new UnexpectedResponseException('Cannot get list of labels case of GitHud invalid request', 0, $exception);
+        } catch (RuntimeException $exception) {
+            throw new UnexpectedResponseException('Cannot get list of labels in GitLab', 0, $exception);
+        }
 
         return array_map(static fn (array $label): string => $label['name'], $labels);
     }

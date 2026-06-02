@@ -16,6 +16,7 @@ namespace Aeliot\TodoRegistrar\Service\Registrar\Redmine;
 use Aeliot\TodoRegistrar\Exception\Api\UnexpectedResponseException;
 use Psr\Http\Client\ClientExceptionInterface;
 use Redmine\Client\Client;
+use Redmine\Exception\ClientException;
 
 /**
  * @internal
@@ -42,6 +43,8 @@ final readonly class IssueApiClient
                 json_encode($data),
             );
             throw new UnexpectedResponseException($exceptionMessage, 0, $e);
+        } catch (ClientException $exception) {
+            throw new UnexpectedResponseException('Cannot create issue in Redmine', 0, $exception);
         }
 
         if ($response instanceof \SimpleXMLElement) {
