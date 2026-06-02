@@ -13,7 +13,9 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\GitHub;
 
+use Aeliot\TodoRegistrar\Exception\LogicException;
 use Github\Api\Issue as IssueApi;
+use Github\Exception\MissingArgumentException;
 
 /**
  * @internal
@@ -27,9 +29,15 @@ final readonly class IssueApiClient
 
     /**
      * @return array<string,mixed>
+     *
+     * @throws LogicException
      */
     public function create(Issue $issue): array
     {
-        return $this->issueAPI->create($issue->getOwner(), $issue->getRepository(), $issue->getData());
+        try {
+            return $this->issueAPI->create($issue->getOwner(), $issue->getRepository(), $issue->getData());
+        } catch (MissingArgumentException $exception) {
+            throw new LogicException('Cannot create issue case of missing API argument', 0, $exception);
+        }
     }
 }

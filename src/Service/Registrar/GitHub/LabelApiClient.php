@@ -13,8 +13,10 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\GitHub;
 
+use Aeliot\TodoRegistrar\Exception\LogicException;
 use Aeliot\TodoRegistrar\Service\ColorGenerator;
 use Github\Api\Issue\Labels as LabelsApi;
+use Github\Exception\MissingArgumentException;
 
 /**
  * @internal
@@ -39,10 +41,15 @@ final class LabelApiClient
             $this->getAll($owner, $repository);
         }
 
-        $this->labelsApi->create($owner, $repository, [
-            'name' => $label,
-            'color' => $this->colorGenerator->generateColor($label),
-        ]);
+        try {
+            $this->labelsApi->create($owner, $repository, [
+                'name' => $label,
+                'color' => $this->colorGenerator->generateColor($label),
+            ]);
+        } catch (MissingArgumentException $exception) {
+            throw new LogicException('Cannot create label case of missing API argument', 0, $exception);
+        }
+
         $this->labelsCache[$cacheKey][] = $label;
         sort($this->labelsCache[$cacheKey]);
     }

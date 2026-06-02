@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\YandexTracker;
 
+use Aeliot\TodoRegistrar\Exception\UnexpectedApiResponseException;
 use Aeliot\TodoRegistrarContracts\Registrar\RegistrarInterface;
 use Aeliot\TodoRegistrarContracts\Todo\TodoInterface;
 
@@ -26,10 +27,17 @@ final readonly class YandexTrackerRegistrar implements RegistrarInterface
     ) {
     }
 
+    /**
+     * @throws UnexpectedApiResponseException
+     */
     public function register(TodoInterface $todo): string
     {
         $request = $this->issueFactory->create($todo);
-        $response = $request->send();
+        try {
+            $response = $request->send();
+        } catch (\Throwable $exception) {
+            throw new UnexpectedApiResponseException('Cannot create ticket in Yandex Tracker', 0, $exception);
+        }
 
         /** @var string $key */
         $key = $response->getField('key');
