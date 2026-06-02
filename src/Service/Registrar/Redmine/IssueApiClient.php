@@ -39,7 +39,7 @@ final readonly class IssueApiClient
             $exceptionMessage = \sprintf(
                 'Redmine API error: %s. Request data: %s',
                 $e->getMessage(),
-                json_encode($data, \JSON_THROW_ON_ERROR),
+                json_encode($data),
             );
             throw new UnexpectedApiResponseException($exceptionMessage, 0, $e);
         }
@@ -54,7 +54,7 @@ final readonly class IssueApiClient
             $exceptionMessage = \sprintf(
                 'Redmine API error: %s. Request data: %s',
                 $errorMessage,
-                json_encode($data, \JSON_THROW_ON_ERROR),
+                json_encode($data),
             );
             throw new UnexpectedApiResponseException($exceptionMessage);
         }
@@ -62,7 +62,7 @@ final readonly class IssueApiClient
         $exceptionMessage = \sprintf(
             'Redmine API returned unexpected response type: expected SimpleXMLElement, got %s. Request data: %s',
             get_debug_type($response),
-            json_encode($data, \JSON_THROW_ON_ERROR),
+            json_encode($data),
         );
         throw new UnexpectedApiResponseException($exceptionMessage);
     }
