@@ -36,22 +36,37 @@ final readonly class MilestoneApiClient
 
     /**
      * @param int $iid Milestone IID (project-specific ID)
+     *
+     * @throws LimitExceededException
+     * @throws UnexpectedResponseException
      */
     public function findIdByIid(int|string $project, int $iid): ?int
     {
         return $this->getIdByField($project, 'iid', $iid);
     }
 
+    /**
+     * @throws LimitExceededException
+     * @throws UnexpectedResponseException
+     */
     public function findIdByTitle(int|string $project, string $title): ?int
     {
         return $this->getIdByField($project, 'title', $title);
     }
 
+    /**
+     * @throws LimitExceededException
+     * @throws UnexpectedResponseException
+     */
     public function hasById(int|string $project, int $id): bool
     {
         return null !== $this->getIdByField($project, 'id', $id);
     }
 
+    /**
+     * @throws LimitExceededException
+     * @throws UnexpectedResponseException
+     */
     private function getIdByField(int|string $project, string $field, int|string $value): ?int
     {
         try {

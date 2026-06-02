@@ -32,6 +32,10 @@ final class IssueLinkTypeProvider
     {
     }
 
+    /**
+     * @throws NotSupportedLinkTypeException
+     * @throws UnexpectedResponseException
+     */
     public function getLinkType(string $alias): IssueLinkType
     {
         foreach ($this->getSupportedLinkTypes() as $issueLinkType) {

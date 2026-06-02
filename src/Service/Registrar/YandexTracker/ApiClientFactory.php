@@ -29,6 +29,9 @@ final readonly class ApiClientFactory
     ) {
     }
 
+    /**
+     * @throws InvalidConfigException
+     */
     public function createTracker(): Tracker
     {
         return new Tracker(
@@ -38,6 +41,9 @@ final readonly class ApiClientFactory
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     */
     private function isCloud(): bool
     {
         return match ($this->config['isCloud'] ?? true) {

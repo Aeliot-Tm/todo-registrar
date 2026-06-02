@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\GitHub;
 
+use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
+use Aeliot\TodoRegistrar\Exception\LogicException;
 use Aeliot\TodoRegistrar\Service\Registrar\IssueSupporter;
 use Aeliot\TodoRegistrarContracts\Todo\TodoInterface;
 
@@ -27,6 +29,10 @@ final readonly class IssueFactory
     ) {
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws LogicException
+     */
     public function create(TodoInterface $todo): Issue
     {
         $issue = new Issue();

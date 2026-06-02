@@ -31,6 +31,9 @@ use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
 #[AsTaggedItem(index: 'php')]
 final readonly class PhpFileParser implements FileParserInterface
 {
+    /**
+     * @throws FileReadException
+     */
     public function parse(\SplFileInfo $file): ParsedFile
     {
         $pathname = $file->getPathname();

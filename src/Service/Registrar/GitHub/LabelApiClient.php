@@ -43,6 +43,12 @@ final class LabelApiClient
     ) {
     }
 
+    /**
+     * @throws AuthenticationException
+     * @throws LimitExceededException
+     * @throws LogicException
+     * @throws UnexpectedResponseException
+     */
     public function create(string $owner, string $repository, string $label): void
     {
         $cacheKey = $owner . '/' . $repository;
@@ -75,6 +81,10 @@ final class LabelApiClient
 
     /**
      * @return string[]
+     *
+     * @throws AuthenticationException
+     * @throws LimitExceededException
+     * @throws UnexpectedResponseException
      */
     public function getAll(string $owner, string $repository): array
     {

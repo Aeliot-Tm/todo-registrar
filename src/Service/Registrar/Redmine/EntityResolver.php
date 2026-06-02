@@ -39,6 +39,8 @@ final class EntityResolver
      * Resolve project identifier to project ID.
      *
      * @param int|string $identifier Project ID, name, or identifier
+     *
+     * @throws UnexpectedResponseException
      */
     public function resolveProjectId(int|string $identifier): ?int
     {
@@ -76,6 +78,8 @@ final class EntityResolver
      * Resolve tracker identifier to tracker ID.
      *
      * @param int|string $identifier Tracker ID or name
+     *
+     * @throws UnexpectedResponseException
      */
     public function resolveTrackerId(int|string $identifier): ?int
     {
@@ -91,6 +95,8 @@ final class EntityResolver
 
     /**
      * @param int|string $identifier Priority ID or name
+     *
+     * @throws UnexpectedResponseException
      */
     public function resolvePriorityId(int|string $identifier): ?int
     {

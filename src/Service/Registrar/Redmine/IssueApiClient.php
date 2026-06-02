@@ -28,6 +28,9 @@ final readonly class IssueApiClient
     ) {
     }
 
+    /**
+     * @throws UnexpectedResponseException
+     */
     public function create(Issue $issue): \SimpleXMLElement
     {
         // Redmine API library already wraps data in ['issue' => ...], so pass data directly

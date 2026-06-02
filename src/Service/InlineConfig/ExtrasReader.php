@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\InlineConfig;
 
+use Aeliot\TodoRegistrar\Exception\CollectionDuplicatedKeyException;
 use Aeliot\TodoRegistrar\Exception\InvalidInlineConfigFormatException;
 use Aeliot\TodoRegistrarContracts\InlineConfigReaderInterface;
 
@@ -24,6 +25,9 @@ final readonly class ExtrasReader implements InlineConfigReaderInterface
 
     /**
      * @return array<array-key,mixed>
+     *
+     * @throws CollectionDuplicatedKeyException
+     * @throws InvalidInlineConfigFormatException
      */
     public function getInlineConfig(string $input): array
     {

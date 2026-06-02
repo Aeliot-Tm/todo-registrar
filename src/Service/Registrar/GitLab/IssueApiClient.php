@@ -33,6 +33,9 @@ final readonly class IssueApiClient
 
     /**
      * @return array<string,mixed>
+     *
+     * @throws LimitExceededException
+     * @throws UnexpectedResponseException
      */
     public function create(Issue $issue): array
     {

@@ -31,6 +31,9 @@ final readonly class CommentCleanerRegistry
     ) {
     }
 
+    /**
+     * @throws LogicException
+     */
     public function getCleaner(TokenInterface $token): CommentCleanerInterface
     {
         foreach ($this->cleaners as $cleaner) {

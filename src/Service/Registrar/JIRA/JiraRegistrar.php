@@ -14,6 +14,8 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Service\Registrar\JIRA;
 
 use Aeliot\TodoRegistrar\Exception\Api\UnexpectedResponseException;
+use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
+use Aeliot\TodoRegistrar\Exception\InvalidInlineConfigFormatException;
 use Aeliot\TodoRegistrar\Exception\LogicException;
 use Aeliot\TodoRegistrarContracts\Registrar\RegistrarInterface;
 use Aeliot\TodoRegistrarContracts\Todo\TodoInterface;
@@ -33,6 +35,8 @@ final readonly class JiraRegistrar implements RegistrarInterface
     }
 
     /**
+     * @throws InvalidConfigException
+     * @throws InvalidInlineConfigFormatException
      * @throws LogicException
      * @throws UnexpectedResponseException
      */

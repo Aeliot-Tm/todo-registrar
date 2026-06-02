@@ -16,12 +16,16 @@ namespace Aeliot\TodoRegistrar\Service\InlineConfig;
 use Aeliot\TodoRegistrar\Dto\InlineConfig\IndexedCollection;
 use Aeliot\TodoRegistrar\Dto\InlineConfig\NamedCollection;
 use Aeliot\TodoRegistrar\Dto\InlineConfig\Token;
+use Aeliot\TodoRegistrar\Exception\CollectionDuplicatedKeyException;
 use Aeliot\TodoRegistrar\Exception\InvalidInlineConfigFormatException;
 
 final readonly class ArrayFromJsonLikeLexerBuilder
 {
     /**
      * @return array<array-key,mixed>
+     *
+     * @throws CollectionDuplicatedKeyException
+     * @throws InvalidInlineConfigFormatException
      */
     public function build(JsonLikeLexer $lexer): array
     {
@@ -44,6 +48,10 @@ final readonly class ArrayFromJsonLikeLexerBuilder
         return $collection->toArray();
     }
 
+    /**
+     * @throws CollectionDuplicatedKeyException
+     * @throws InvalidInlineConfigFormatException
+     */
     private function addValue(CollectionInterface $collection, ?string $key, mixed $value): void
     {
         if ($collection instanceof NamedCollection) {
@@ -61,6 +69,9 @@ final readonly class ArrayFromJsonLikeLexerBuilder
         }
     }
 
+    /**
+     * @throws InvalidInlineConfigFormatException
+     */
     private function checkPredecessorType(int $current, ?int $predecessor): void
     {
         if (JsonLikeLexer::T_COLON === $current && JsonLikeLexer::T_KEY !== $predecessor) {
@@ -109,6 +120,10 @@ final readonly class ArrayFromJsonLikeLexerBuilder
         return JsonLikeLexer::T_STRING === $token->getType();
     }
 
+    /**
+     * @throws CollectionDuplicatedKeyException
+     * @throws InvalidInlineConfigFormatException
+     */
     private function populate(JsonLikeLexer $lexer, CollectionInterface $collection, int &$level): void
     {
         $key = null;

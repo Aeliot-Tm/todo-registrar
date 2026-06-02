@@ -36,6 +36,7 @@ final readonly class ServiceFactory
 
     /**
      * @throws InvalidConfigException
+     * @throws LogicException
      */
     public function createClient(): Client
     {
@@ -55,6 +56,9 @@ final readonly class ServiceFactory
         }
     }
 
+    /**
+     * @throws InvalidConfigException
+     */
     private function getUrl(): string
     {
         $url = $this->config['url'] ?? null;

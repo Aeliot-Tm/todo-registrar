@@ -44,6 +44,8 @@ class InlineConfig implements InlineConfigInterface
 
     /**
      * @param int|string $offset
+     *
+     * @throws BadMethodCallException
      */
     public function offsetSet(mixed $offset, mixed $value): void
     {
@@ -52,6 +54,8 @@ class InlineConfig implements InlineConfigInterface
 
     /**
      * @param int|string $offset
+     *
+     * @throws BadMethodCallException
      */
     public function offsetUnset(mixed $offset): void
     {

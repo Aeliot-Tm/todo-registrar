@@ -23,6 +23,9 @@ use Symfony\Component\Yaml\Yaml;
  */
 final readonly class ReportBuilder
 {
+    /**
+     * @throws LogicException
+     */
     public function format(ReportFormat $format, ProcessStatistic $statistic): string
     {
         if ($format->isNone()) {

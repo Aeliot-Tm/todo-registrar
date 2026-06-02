@@ -34,6 +34,9 @@ final readonly class GitHubRegistrarFactory implements RegistrarFactoryInterface
     ) {
     }
 
+    /**
+     * @throws ConfigValidationException
+     */
     public function create(array $config): RegistrarInterface
     {
         /** @var ValidatorInterface $validator */
@@ -50,6 +53,8 @@ final readonly class GitHubRegistrarFactory implements RegistrarFactoryInterface
 
     /**
      * @param array<string,mixed> $config
+     *
+     * @throws ConfigValidationException
      */
     private function createGeneralConfig(array $config, ValidatorInterface $validator): GeneralIssueConfig
     {

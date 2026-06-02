@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Service\Registrar\JIRA;
 
 use Aeliot\TodoRegistrar\Exception\Api\UnexpectedResponseException;
+use Aeliot\TodoRegistrar\Exception\InvalidInlineConfigFormatException;
 use Aeliot\TodoRegistrarContracts\Todo\TodoInterface;
 use JiraRestApi\IssueLink\IssueLink;
 use JiraRestApi\IssueLink\IssueLinkService;
@@ -31,6 +32,7 @@ final readonly class IssueLinkRegistrar
     }
 
     /**
+     * @throws InvalidInlineConfigFormatException
      * @throws UnexpectedResponseException
      */
     public function registerLinks(string $inwardIssueKey, TodoInterface $todo): void

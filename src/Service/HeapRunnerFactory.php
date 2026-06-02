@@ -14,6 +14,11 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Service;
 
 use Aeliot\TodoRegistrar\Console\OutputAdapter;
+use Aeliot\TodoRegistrar\Exception\ConfigValidationException;
+use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
+use Aeliot\TodoRegistrar\Exception\LogicException;
+use Aeliot\TodoRegistrar\Exception\NotSupportedConfigException;
+use Aeliot\TodoRegistrar\Exception\UnavailableConfigException;
 use Aeliot\TodoRegistrar\Service\Config\ConfigProvider;
 use Aeliot\TodoRegistrar\Service\File\FileParserRegistry;
 use Aeliot\TodoRegistrar\Service\File\Saver;
@@ -33,6 +38,13 @@ final readonly class HeapRunnerFactory
     ) {
     }
 
+    /**
+     * @throws ConfigValidationException
+     * @throws InvalidConfigException
+     * @throws LogicException
+     * @throws NotSupportedConfigException
+     * @throws UnavailableConfigException
+     */
     public function create(?string $configPath, OutputAdapter $output): HeapRunner
     {
         $config = $this->configProvider->getConfig($configPath);

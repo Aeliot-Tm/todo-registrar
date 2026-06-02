@@ -15,7 +15,14 @@ namespace Aeliot\TodoRegistrar\Console\Command;
 
 use Aeliot\TodoRegistrar\Console\OutputAdapter;
 use Aeliot\TodoRegistrar\Enum\ReportFormat;
+use Aeliot\TodoRegistrar\Exception\CommentRegistrationException;
 use Aeliot\TodoRegistrar\Exception\ConfigValidationException;
+use Aeliot\TodoRegistrar\Exception\FileReadException;
+use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
+use Aeliot\TodoRegistrar\Exception\LogicException;
+use Aeliot\TodoRegistrar\Exception\NoLineException;
+use Aeliot\TodoRegistrar\Exception\NotSupportedConfigException;
+use Aeliot\TodoRegistrar\Exception\UnavailableConfigException;
 use Aeliot\TodoRegistrar\Service\HeapRunnerFactory;
 use Aeliot\TodoRegistrar\Service\Report\ReportBuilder;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -55,6 +62,15 @@ final class RegisterCommand extends Command
         );
     }
 
+    /**
+     * @throws CommentRegistrationException
+     * @throws FileReadException
+     * @throws InvalidConfigException
+     * @throws LogicException
+     * @throws NoLineException
+     * @throws NotSupportedConfigException
+     * @throws UnavailableConfigException
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $configPath = $input->getOption('config');

@@ -14,6 +14,8 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Service\Registrar\YandexTracker;
 
 use Aeliot\TodoRegistrar\Exception\Api\UnexpectedResponseException;
+use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
+use Aeliot\TodoRegistrar\Exception\LogicException;
 use Aeliot\TodoRegistrarContracts\Registrar\RegistrarInterface;
 use Aeliot\TodoRegistrarContracts\Todo\TodoInterface;
 
@@ -28,6 +30,8 @@ final readonly class YandexTrackerRegistrar implements RegistrarInterface
     }
 
     /**
+     * @throws InvalidConfigException
+     * @throws LogicException
      * @throws UnexpectedResponseException
      */
     public function register(TodoInterface $todo): string

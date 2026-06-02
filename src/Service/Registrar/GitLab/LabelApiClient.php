@@ -40,6 +40,9 @@ final readonly class LabelApiClient
      * Create a new label in the project.
      *
      * @param string $name Label name
+     *
+     * @throws LimitExceededException
+     * @throws UnexpectedResponseException
      */
     public function create(int|string $project, string $name): void
     {
@@ -63,6 +66,9 @@ final readonly class LabelApiClient
      * Get all labels for the project.
      *
      * @return string[] Array of label names
+     *
+     * @throws LimitExceededException
+     * @throws UnexpectedResponseException
      */
     public function getAll(int|string $project): array
     {

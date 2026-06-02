@@ -28,6 +28,9 @@ final readonly class ApiClientFactory
     {
     }
 
+    /**
+     * @throws InvalidConfigException
+     */
     public function createClient(): Client
     {
         $client = new Client();
@@ -44,6 +47,9 @@ final readonly class ApiClientFactory
         return $client;
     }
 
+    /**
+     * @throws InvalidConfigException
+     */
     private function authenticate(Client $client): void
     {
         $methodToTokenField = [

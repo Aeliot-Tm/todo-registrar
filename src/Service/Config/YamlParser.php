@@ -28,6 +28,8 @@ final readonly class YamlParser
 
     /**
      * @return array<string, mixed>
+     *
+     * @throws InvalidConfigException
      */
     public function parse(string $content): array
     {

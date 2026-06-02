@@ -54,6 +54,9 @@ final class JsonLikeLexer implements \Iterator, \Countable
      */
     private array $tokens = [];
 
+    /**
+     * @throws InvalidInlineConfigFormatException
+     */
     public function __construct(string $input, int $offset = 0)
     {
         $this->scan($input, $offset);
@@ -64,6 +67,9 @@ final class JsonLikeLexer implements \Iterator, \Countable
         return \count($this->tokens);
     }
 
+    /**
+     * @throws BadMethodCallException
+     */
     public function current(): Token
     {
         if (!$this->valid()) {
@@ -73,6 +79,9 @@ final class JsonLikeLexer implements \Iterator, \Countable
         return $this->tokens[$this->position];
     }
 
+    /**
+     * @throws BadMethodCallException
+     */
     public function key(): int
     {
         if (!$this->valid()) {
@@ -89,6 +98,8 @@ final class JsonLikeLexer implements \Iterator, \Countable
 
     /**
      * @internal
+     *
+     * @throws BadMethodCallException
      */
     public function predecessor(): ?Token
     {
@@ -111,6 +122,8 @@ final class JsonLikeLexer implements \Iterator, \Countable
 
     /**
      * @param array{0: string, 1: int} $previousMatch
+     *
+     * @throws InvalidInlineConfigFormatException
      */
     private function checkGap(array $previousMatch, int $currentPosition, string $input): void
     {
@@ -127,6 +140,8 @@ final class JsonLikeLexer implements \Iterator, \Countable
 
     /**
      * @return array<int,array{0: string, 1: int}>
+     *
+     * @throws InvalidInlineConfigFormatException
      */
     private function getMatches(string $input, int $offset): array
     {
@@ -185,6 +200,9 @@ final class JsonLikeLexer implements \Iterator, \Countable
             && '"' === $value[\strlen($value) - 1];
     }
 
+    /**
+     * @throws InvalidInlineConfigFormatException
+     */
     private function unquote(string $value): string
     {
         if (!$this->isQuoted($value)) {
@@ -206,6 +224,9 @@ final class JsonLikeLexer implements \Iterator, \Countable
         return $value;
     }
 
+    /**
+     * @throws InvalidInlineConfigFormatException
+     */
     private function scan(string $input, int $offset): void
     {
         $matches = $this->getMatches($input, $offset);

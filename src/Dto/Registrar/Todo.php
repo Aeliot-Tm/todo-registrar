@@ -15,6 +15,8 @@ namespace Aeliot\TodoRegistrar\Dto\Registrar;
 
 use Aeliot\TodoRegistrar\Dto\Comment\CommentPart;
 use Aeliot\TodoRegistrar\Enum\IssueKeyPosition;
+use Aeliot\TodoRegistrar\Exception\NoLineException;
+use Aeliot\TodoRegistrar\Exception\NoPrefixException;
 use Aeliot\TodoRegistrarContracts\Context\ContextNodeInterface;
 use Aeliot\TodoRegistrarContracts\InlineConfigInterface;
 use Aeliot\TodoRegistrarContracts\Todo\ContextAwareInterface;
@@ -88,6 +90,9 @@ class Todo implements ContextAwareInterface, HashAwareInterface, TodoInterface
 
     /**
      * @internal
+     *
+     * @throws NoLineException
+     * @throws NoPrefixException
      */
     public function injectKey(string $key): void
     {

@@ -15,6 +15,8 @@ namespace Aeliot\TodoRegistrar\Service\Config;
 
 use Aeliot\TodoRegistrar\Exception\ConfigValidationException;
 use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
+use Aeliot\TodoRegistrar\Exception\NotSupportedConfigException;
+use Aeliot\TodoRegistrar\Exception\UnavailableConfigException;
 use Aeliot\TodoRegistrarContracts\GeneralConfig\GeneralConfigInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -31,6 +33,12 @@ final readonly class ConfigProvider
     ) {
     }
 
+    /**
+     * @throws ConfigValidationException
+     * @throws InvalidConfigException
+     * @throws NotSupportedConfigException
+     * @throws UnavailableConfigException
+     */
     public function getConfig(?string $path): GeneralConfigInterface
     {
         if ('STDIN' === strtoupper((string) $path)) {
@@ -45,6 +53,10 @@ final readonly class ConfigProvider
         return $this->configFactory->create($path);
     }
 
+    /**
+     * @throws ConfigValidationException
+     * @throws InvalidConfigException
+     */
     private function loadPhpConfig(string $path): GeneralConfigInterface
     {
         $config = require $path;

@@ -20,6 +20,9 @@ use Aeliot\TodoRegistrar\Dto\GeneralConfig\ProcessConfig;
 use Aeliot\TodoRegistrar\Dto\ProcessStatistic;
 use Aeliot\TodoRegistrar\Dto\Registrar\Todo;
 use Aeliot\TodoRegistrar\Exception\CommentRegistrationException;
+use Aeliot\TodoRegistrar\Exception\FileReadException;
+use Aeliot\TodoRegistrar\Exception\LogicException;
+use Aeliot\TodoRegistrar\Exception\NoLineException;
 use Aeliot\TodoRegistrar\Service\Comment\Extractor as CommentExtractor;
 use Aeliot\TodoRegistrar\Service\File\FileParserRegistry;
 use Aeliot\TodoRegistrar\Service\File\Saver;
@@ -46,6 +49,12 @@ final readonly class HeapRunner
     ) {
     }
 
+    /**
+     * @throws CommentRegistrationException
+     * @throws FileReadException
+     * @throws LogicException
+     * @throws NoLineException
+     */
     public function run(): ProcessStatistic
     {
         $statistic = new ProcessStatistic();
@@ -62,6 +71,8 @@ final readonly class HeapRunner
 
     /**
      * @return \Generator<array{0: CommentPart, 1: callable}>
+     *
+     * @throws LogicException
      */
     private function getCommentParts(ProcessStatistic $statistic): \Generator
     {
@@ -88,6 +99,9 @@ final readonly class HeapRunner
 
     /**
      * @return \Generator<FileHeap>
+     *
+     * @throws FileReadException
+     * @throws LogicException
      */
     private function getFileHeaps(ProcessStatistic $statistic): \Generator
     {
@@ -159,6 +173,9 @@ final readonly class HeapRunner
 
     /**
      * @return \Generator<array{0: Todo, 1: callable}>
+     *
+     * @throws LogicException
+     * @throws NoLineException
      */
     private function getTodos(ProcessStatistic $statistic): \Generator
     {
@@ -169,6 +186,8 @@ final readonly class HeapRunner
 
     /**
      * @param array<string,string> $hashToKey
+     *
+     * @throws CommentRegistrationException
      */
     private function register(Todo $todo, bool $glueSameTickets, array &$hashToKey, ProcessStatistic $statistic): void
     {

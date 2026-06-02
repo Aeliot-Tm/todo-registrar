@@ -34,6 +34,9 @@ use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
 #[AsTaggedItem(index: 'yml')]
 final readonly class YamlFileParser implements FileParserInterface
 {
+    /**
+     * @throws FileReadException
+     */
     public function parse(\SplFileInfo $file): ParsedFile
     {
         $pathname = $file->getPathname();

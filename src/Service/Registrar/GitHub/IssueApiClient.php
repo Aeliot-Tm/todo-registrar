@@ -39,7 +39,10 @@ final readonly class IssueApiClient
     /**
      * @return array<string,mixed>
      *
+     * @throws AuthenticationException
+     * @throws LimitExceededException
      * @throws LogicException
+     * @throws UnexpectedResponseException
      */
     public function create(Issue $issue): array
     {
