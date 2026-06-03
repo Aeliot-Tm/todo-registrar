@@ -58,12 +58,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Aeliot-Tm/todo-registrar-contracts.git",
-                "reference": "39c5b6935b59ff82e1dd42ef012e9767e99db915"
+                "reference": "4dedb82b09e247b35fe51a242d4dfb1ee09716af"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Aeliot-Tm/todo-registrar-contracts/zipball/39c5b6935b59ff82e1dd42ef012e9767e99db915",
-                "reference": "39c5b6935b59ff82e1dd42ef012e9767e99db915",
+                "url": "https://api.github.com/repos/Aeliot-Tm/todo-registrar-contracts/zipball/4dedb82b09e247b35fe51a242d4dfb1ee09716af",
+                "reference": "4dedb82b09e247b35fe51a242d4dfb1ee09716af",
                 "shasum": ""
             },
             "require": {
@@ -102,7 +102,7 @@
                 "issues": "https://github.com/Aeliot-Tm/todo-registrar-contracts/issues",
                 "source": "https://github.com/Aeliot-Tm/todo-registrar-contracts/tree/rc3.0.0"
             },
-            "time": "2026-06-01T16:37:01+00:00"
+            "time": "2026-06-03T15:02:58+00:00"
         },
         {
             "name": "aeliot/yaml-token",

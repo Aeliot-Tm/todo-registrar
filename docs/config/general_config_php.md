@@ -15,7 +15,7 @@ use Aeliot\TodoRegistrar\Config;
 use Aeliot\TodoRegistrar\Service\File\Finder;
 
 return (new Config())
-    ->setFinder((new Finder())->in(__DIR__))
+    ->setFinder((new Finder())->name('/\.(?:php|yaml|yml)$/')->in(__DIR__))
     ->setRegistrar('JIRA', [
         'issue' => [
             'projectKey' => 'TODO',
@@ -50,7 +50,8 @@ For others read [customization](../customization.md) section.
 Pass instance of `Aeliot\TodoRegistrarContracts\FinderInterface` to method `setFinder`.
 If you use implementation from this project (`Aeliot\TodoRegistrar\Service\File\Finder`)
 then read documentation of [Symfony Finder](https://symfony.com/doc/current/components/finder.html).
-It has the same configuration.
+It has the same configuration: configure file masks with `name()`, directories with `in()`, and so on.
+In YAML config, `paths.extensions` and `paths.name` are applied to Finder automatically; in PHP config you set Finder yourself.
 
 ### Setting of Registrar
 
@@ -83,7 +84,7 @@ Don't wary about case of tags. They will be found in case-insensitive mode.
 
 ### Setting of Process Config
 
-Configure how TODO comments are processed:
+Configure run options (comment gluing, extension aliases for parsers, and so on):
 
 ```php
 use Aeliot\TodoRegistrar\Config;
@@ -92,11 +93,22 @@ use Aeliot\TodoRegistrar\Dto\GeneralConfig\ProcessConfig;
 $processConfig = new ProcessConfig();
 $processConfig->setGlueSameTickets(true);
 $processConfig->setGlueSequentialComments(true);
+$processConfig->setExtensionAliases([
+    'module' => 'php',
+    'inc' => 'php',
+]);
 
 return (new Config())
     // ...
     ->setProcessConfig($processConfig);
 ```
+
+#### Option extensionAliases
+
+**Type:** `array<string, string>`
+
+Maps file extension on disk to parser key (`php`, `yaml`, `yml`). Finder masks are configured separately via `setFinder()`.
+For a `.module` file you must both scan it in Finder and add `'module' => 'php'` in `extensionAliases`.
 
 #### Option glueSequentialComments
 

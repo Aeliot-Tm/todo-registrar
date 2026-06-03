@@ -20,8 +20,29 @@ final class ProcessConfig implements ProcessConfigInterface
     public const DEFAULT_GLUE_SAME_TICKETS = false;
     public const DEFAULT_GLUE_SEQUENTIAL_COMMENTS = false;
 
+    /**
+     * @var array<string, string>
+     */
+    private array $extensionAliases = [];
+
     private bool $glueSameTickets = self::DEFAULT_GLUE_SAME_TICKETS;
     private bool $glueSequentialComments = self::DEFAULT_GLUE_SEQUENTIAL_COMMENTS;
+
+    /**
+     * @return array<string, string>
+     */
+    public function getExtensionAliases(): array
+    {
+        return $this->extensionAliases;
+    }
+
+    /**
+     * @param array<string, string> $extensionAliases
+     */
+    public function setExtensionAliases(array $extensionAliases): void
+    {
+        $this->extensionAliases = $extensionAliases;
+    }
 
     public function isGlueSameTicket(): bool
     {

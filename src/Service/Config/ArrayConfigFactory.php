@@ -20,6 +20,7 @@ use Aeliot\TodoRegistrar\Dto\GeneralConfig\PathsConfig;
 use Aeliot\TodoRegistrar\Dto\GeneralConfig\ProcessConfig;
 use Aeliot\TodoRegistrar\Exception\ConfigValidationException;
 use Aeliot\TodoRegistrar\Service\File\Finder;
+use Aeliot\TodoRegistrar\Service\File\FinderNamePatternBuilder;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
@@ -28,6 +29,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 final readonly class ArrayConfigFactory
 {
     public function __construct(
+        private FinderNamePatternBuilder $finderNamePatternBuilder,
         private ValidatorInterface $validator,
     ) {
     }
@@ -82,6 +84,7 @@ final readonly class ArrayConfigFactory
             $processConfig = new ProcessConfig();
             $processConfig->setGlueSameTickets($processDto->isGlueSameTickets());
             $processConfig->setGlueSequentialComments($processDto->isGlueSequentialComments());
+            $processConfig->setExtensionAliases($processDto->getExtensionAliases());
             $config->setProcessConfig($processConfig);
         }
 
@@ -120,6 +123,20 @@ final readonly class ArrayConfigFactory
         $exclude = $pathsConfig?->getExclude();
         if ($exclude) {
             $finder->exclude((array) $exclude);
+        }
+
+        $name = $pathsConfig?->getName();
+        if ($name) {
+            $finder->name($name);
+        }
+
+        $extensions = $pathsConfig?->getExtensions();
+        if (!$extensions && !$name) {
+            $extensions = PathsConfig::DEFAULT_EXTENSIONS;
+        }
+
+        if ($extensions) {
+            $finder->name($this->finderNamePatternBuilder->buildFromExtensions($extensions));
         }
 
         return $finder;

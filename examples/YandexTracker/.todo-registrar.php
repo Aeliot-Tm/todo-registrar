@@ -9,6 +9,7 @@ use Aeliot\TodoRegistrar\Service\File\Finder;
 return (new Config())
     ->setFinder(
         (new Finder())
+            ->name('/\.(?:php|yaml|yml)$/')
             ->in(dirname(__DIR__, 2))
             ->exclude(['vendor', 'var', 'tests'])
     )

@@ -98,6 +98,16 @@ final readonly class HeapRunner
     }
 
     /**
+     * @return array<string, string>
+     */
+    private function getExtensionAliases(): array
+    {
+        return array_map('strtolower', ($this->config instanceof ProcessConfigAwareInterface
+            ? $this->config->getProcessConfig()?->getExtensionAliases()
+            : null) ?? []);
+    }
+
+    /**
      * @return \Generator<FileHeap>
      *
      * @throws FileReadException
@@ -105,10 +115,13 @@ final readonly class HeapRunner
      */
     private function getFileHeaps(ProcessStatistic $statistic): \Generator
     {
+        $extensionAliases = $this->getExtensionAliases();
         $glueSequentialComments = $this->getGlueSequentialComments();
 
         foreach ($this->finder as $file) {
-            $fileParser = $this->fileParserRegistry->findParser($file);
+            $extension = strtolower($file->getExtension());
+            $extensionAlias = $extensionAliases[$extension] ?? $extension;
+            $fileParser = $this->fileParserRegistry->findParser($extensionAlias);
             if (!$fileParser) {
                 $this->output->writeErr("There is not configured parser for file: {$file->getPathname()}", OutputAdapter::VERBOSITY_NORMAL);
                 continue;
