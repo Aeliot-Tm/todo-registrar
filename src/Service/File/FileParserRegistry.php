@@ -27,9 +27,8 @@ final readonly class FileParserRegistry
     ) {
     }
 
-    public function findParser(\SplFileInfo $file): ?FileParserInterface
+    public function findParser(string $extension): ?FileParserInterface
     {
-        $extension = strtolower($file->getExtension());
         if (!$this->parsers->has($extension)) {
             return null;
         }

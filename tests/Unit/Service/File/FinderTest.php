@@ -14,15 +14,18 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Test\Unit\Service\File;
 
 use Aeliot\TodoRegistrar\Service\File\Finder;
+use Aeliot\TodoRegistrar\Service\File\FinderNamePatternBuilder;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(Finder::class)]
+#[CoversClass(FinderNamePatternBuilder::class)]
 final class FinderTest extends TestCase
 {
     public function testFind(): void
     {
         $finder = (new Finder())
+            ->name((new FinderNamePatternBuilder())->buildFromExtensions(['php']))
             ->in(__DIR__ . '/../../../fixtures')
             ->notName('/\.(?:yaml|yml)$/')
             ->exclude(['config', 'comments_gluing', 'php', 'start_line'])

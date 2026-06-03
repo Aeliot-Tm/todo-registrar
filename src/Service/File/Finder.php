@@ -24,7 +24,6 @@ class Finder extends SymfonyFinder implements FinderInterface
 
         $this
             ->files()
-            ->name('/\.(?:php|yaml|yml)$/')
             ->exclude('vendor');
     }
 }

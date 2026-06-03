@@ -182,6 +182,46 @@ final class ArrayConfigTest extends TestCase
                 'registrar' => ['type' => 'github'],
             ],
         ];
+
+        yield 'paths.extensions as string' => [
+            [
+                'paths' => ['extensions' => 'php'],
+                'registrar' => ['type' => 'github'],
+            ],
+        ];
+
+        yield 'paths.extensions as array' => [
+            [
+                'paths' => ['extensions' => ['php', 'module']],
+                'registrar' => ['type' => 'github'],
+            ],
+        ];
+
+        yield 'paths.name as string' => [
+            [
+                'paths' => ['name' => '/\.custom$/'],
+                'registrar' => ['type' => 'github'],
+            ],
+        ];
+
+        yield 'paths.name and extensions' => [
+            [
+                'paths' => [
+                    'name' => '/\.custom$/',
+                    'extensions' => ['php', 'module'],
+                ],
+                'registrar' => ['type' => 'github'],
+            ],
+        ];
+
+        yield 'process.extensionAliases' => [
+            [
+                'registrar' => ['type' => 'github'],
+                'process' => [
+                    'extensionAliases' => ['module' => 'php'],
+                ],
+            ],
+        ];
     }
 
     public static function getDataForTestMissingRequiredFields(): iterable
@@ -312,6 +352,26 @@ final class ArrayConfigTest extends TestCase
         yield 'process with unknown key' => [
             ['registrar' => ['type' => 'github'], 'process' => ['unknownOption' => true]],
             'Unknown "process" options detected',
+        ];
+
+        yield 'paths.extensions is int' => [
+            ['paths' => ['extensions' => 123], 'registrar' => ['type' => 'github']],
+            'Option "paths.extensions" must be a string or array of strings',
+        ];
+
+        yield 'paths.extensions array contains int' => [
+            ['paths' => ['extensions' => ['php', 123]], 'registrar' => ['type' => 'github']],
+            'Each extension in "paths.extensions" must be a string',
+        ];
+
+        yield 'paths.name is int' => [
+            ['paths' => ['name' => 123], 'registrar' => ['type' => 'github']],
+            'Option "paths.name" must be a string or array of strings',
+        ];
+
+        yield 'process.extensionAliases is string' => [
+            ['registrar' => ['type' => 'github'], 'process' => ['extensionAliases' => 'invalid']],
+            'Option "process.extensionAliases" must be an array',
         ];
     }
 

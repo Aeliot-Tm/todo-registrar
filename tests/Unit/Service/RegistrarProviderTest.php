@@ -63,7 +63,7 @@ final class RegistrarProviderTest extends TestCase
         array $registrarConfig,
     ): Config {
         return (new Config())
-            ->setFinder((new Finder())->in(__DIR__))
+            ->setFinder((new Finder())->name('/\.(?:php|yaml|yml)$/')->in(__DIR__))
             ->setRegistrar($registrarType, $registrarConfig);
     }
 }

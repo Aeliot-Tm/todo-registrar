@@ -41,6 +41,13 @@ final class ProcessArrayConfigTest extends TestCase
         self::assertCount(0, $violations);
     }
 
+    public function testDefaultExtensionAliases(): void
+    {
+        $config = new ProcessArrayConfig([]);
+
+        self::assertSame([], $config->getExtensionAliases());
+    }
+
     public function testDefaultValue(): void
     {
         $config = new ProcessArrayConfig([]);
@@ -65,6 +72,36 @@ final class ProcessArrayConfigTest extends TestCase
         yield 'array' => [[], 'Option "process.glueSequentialComments" must be a boolean'];
     }
 
+    public function testInvalidExtensionAliasesType(): void
+    {
+        $config = new ProcessArrayConfig(['extensionAliases' => 'invalid']);
+        $violations = self::$validator->validate($config);
+
+        self::assertGreaterThan(0, \count($violations));
+        $messages = array_map(static fn ($v) => $v->getMessage(), iterator_to_array($violations));
+        self::assertContains('Option "process.extensionAliases" must be an array', $messages);
+    }
+
+    public function testInvalidExtensionAliasValueType(): void
+    {
+        $config = new ProcessArrayConfig(['extensionAliases' => ['module' => 123]]);
+        $violations = self::$validator->validate($config);
+
+        self::assertGreaterThan(0, \count($violations));
+        $messages = array_map(static fn ($v) => $v->getMessage(), iterator_to_array($violations));
+        self::assertContains('Each extension alias must be a string', $messages);
+    }
+
+    public function testInvalidExtensionAliasKeyType(): void
+    {
+        $config = new ProcessArrayConfig(['extensionAliases' => [123 => 'php']]);
+        $violations = self::$validator->validate($config);
+
+        self::assertGreaterThan(0, \count($violations));
+        $messages = array_map(static fn ($v) => $v->getMessage(), iterator_to_array($violations));
+        self::assertContains('Each key of option "process.extensionAliases" must be a string', $messages);
+    }
+
     public function testUnknownKeys(): void
     {
         $config = new ProcessArrayConfig(['glueSequentialComments' => true, 'unknownKey' => 'value']);
@@ -80,5 +117,17 @@ final class ProcessArrayConfigTest extends TestCase
             }
         }
         self::assertTrue($found, 'Expected unknown keys error message');
+    }
+
+    public function testValidExtensionAliases(): void
+    {
+        $config = new ProcessArrayConfig([
+            'extensionAliases' => ['module' => 'php', 'inc' => 'php'],
+        ]);
+
+        self::assertSame(['module' => 'php', 'inc' => 'php'], $config->getExtensionAliases());
+
+        $violations = self::$validator->validate($config);
+        self::assertCount(0, $violations);
     }
 }

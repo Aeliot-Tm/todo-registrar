@@ -22,6 +22,11 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 final class PathsConfig
 {
+    /**
+     * @var string[]
+     */
+    public const DEFAULT_EXTENSIONS = ['php', 'yaml', 'yml'];
+
     #[Assert\AtLeastOneOf(
         constraints: [
             new Assert\IsNull(),
@@ -51,6 +56,19 @@ final class PathsConfig
     #[Assert\AtLeastOneOf(
         constraints: [
             new Assert\IsNull(),
+            new Assert\Type(type: 'string', message: 'Option "paths.extensions" must be a string or array of strings'),
+            new Assert\Sequentially(constraints: [
+                new Assert\Type(type: 'array', message: 'Option "paths.extensions" must be a string or array of strings'),
+                new Assert\All(constraints: [new Assert\Type(type: 'string', message: 'Each extension in "paths.extensions" must be a string')]),
+            ]),
+        ],
+        message: 'Option "paths.extensions" must be a string or array of strings'
+    )]
+    private mixed $extensions = null;
+
+    #[Assert\AtLeastOneOf(
+        constraints: [
+            new Assert\IsNull(),
             new Assert\Type(type: 'string', message: 'Option "paths.in" must be a string or array of strings'),
             new Assert\Sequentially(constraints: [
                 new Assert\Type(type: 'array', message: 'Option "paths.in" must be a string or array of strings'),
@@ -60,6 +78,19 @@ final class PathsConfig
         message: 'Option "paths.in" must be a string or array of strings'
     )]
     private mixed $in = null;
+
+    #[Assert\AtLeastOneOf(
+        constraints: [
+            new Assert\IsNull(),
+            new Assert\Type(type: 'string', message: 'Option "paths.name" must be a string or array of strings'),
+            new Assert\Sequentially(constraints: [
+                new Assert\Type(type: 'array', message: 'Option "paths.name" must be a string or array of strings'),
+                new Assert\All(constraints: [new Assert\Type(type: 'string', message: 'Each pattern in "paths.name" must be a string')]),
+            ]),
+        ],
+        message: 'Option "paths.name" must be a string or array of strings'
+    )]
+    private mixed $name = null;
 
     #[Assert\IsNull(message: 'Unknown "paths" options detected: {{ value }}')]
     private mixed $invalidKeys = null;
@@ -72,8 +103,10 @@ final class PathsConfig
         $this->in = $options['in'] ?? null;
         $this->append = $options['append'] ?? null;
         $this->exclude = $options['exclude'] ?? null;
+        $this->extensions = $options['extensions'] ?? null;
+        $this->name = $options['name'] ?? null;
 
-        $knownKeys = ['in', 'append', 'exclude'];
+        $knownKeys = ['append', 'exclude', 'extensions', 'in', 'name'];
         $unknownKeys = array_diff(array_keys($options), $knownKeys);
         if ($unknownKeys) {
             $this->invalidKeys = implode(', ', $unknownKeys);
@@ -89,11 +122,27 @@ final class PathsConfig
     }
 
     /**
+     * @return string[]
+     */
+    public function getExtensions(): array
+    {
+        return (array) ($this->extensions ?? []);
+    }
+
+    /**
      * @return string|string[]|null
      */
     public function getIn(): string|array|null
     {
         return $this->in;
+    }
+
+    /**
+     * @return string|string[]|null
+     */
+    public function getName(): string|array|null
+    {
+        return $this->name;
     }
 
     /**

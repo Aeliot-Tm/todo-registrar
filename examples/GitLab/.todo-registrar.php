@@ -16,7 +16,7 @@ use Aeliot\TodoRegistrar\Enum\RegistrarType;
 use Aeliot\TodoRegistrar\Service\File\Finder;
 
 return (new Config())
-    ->setFinder((new Finder())->in(dirname(__DIR__, 2).'/src/Service/Registrar/GitLab'))
+    ->setFinder((new Finder())->name('/\.(?:php|yaml|yml)$/')->in(dirname(__DIR__, 2).'/src/Service/Registrar/GitLab'))
     ->setRegistrar(RegistrarType::GitLab, [
         'issue' => [
             // Use either <project id> (more efficient) or <project path> (mode readable)

@@ -85,7 +85,9 @@ This document describes the main algorithm of TODO comment processing — from f
 
 **Class:** `Service\File\Finder` (implements `FinderInterface`)
 
-The Finder iterates over PHP files in configured directories using Symfony Finder.
+The Finder iterates over files in configured directories using Symfony Finder.
+In YAML config, masks come from `paths.extensions`, `paths.name`, or defaults (`php`, `yaml`, `yml`).
+In PHP config, masks are set on Finder directly (for example `->name('/\.(?:php|yaml|yml)$/')`).
 
 ```php
 foreach ($this->finder as $file) {
@@ -94,15 +96,20 @@ foreach ($this->finder as $file) {
 ```
 
 Configuration determines:
-- Which directories to scan
-- File patterns to include/exclude
+- Which directories to scan (`paths.in`, `in()` on Finder)
+- File patterns to include/exclude (`paths.extensions`, `paths.name`, `exclude`)
 - Recursion depth
 
 ### Step 2: File Tokenization
 
-**Class:** `Service\File\Parser\PhpFileParser`
+**Class:** `Service\File\FileParserRegistry` and parsers (`PhpFileParser`, `YamlFileParser`, …)
 
-Each file is tokenized using PHP's built-in tokenizer and wrapped in `TokenInterface`:
+`HeapRunner` resolves the parser by file extension. If `process.extensionAliases` maps a suffix to another key
+(for example `module` → `php`), that key is used to select the parser.
+
+**Class:** `Service\File\Parser\PhpFileParser` (for `php` and aliased PHP-like extensions)
+
+Each PHP file is tokenized using PHP's built-in tokenizer and wrapped in `TokenInterface`:
 
 ```php
 $phpTokens = PhpToken::tokenize(file_get_contents($file->getPathname()));

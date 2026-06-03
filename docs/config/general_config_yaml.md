@@ -21,6 +21,16 @@ paths:                            # Required. Defines paths which will be walked
                                   #           of directories.
     - tests/fixtures
     - var
+  extensions:                     # Optional. File extensions to scan (without leading dot).
+                                  #           Accepts string (one extension) or array of strings.
+                                  #           When omitted together with "name", defaults to php, yaml, yml.
+    - php
+    - module
+    - yaml
+    - yml
+  name: '/\.(?:php|module)$/'     # Optional. Symfony Finder name pattern(s).
+                                  #           Accepts string or array of strings. Can be used together with
+                                  #           "extensions". Responsibility for a valid pattern is on you.
 
 registrar:                        # Required. Configuration of Registrar
   type: GitHub                    # Required. Type of supported issue tracker or fully qualified class of custom factory
@@ -48,6 +58,9 @@ process:                          # Optional. Processing options
                                   #           Default: false.
     glueSequentialComments: true  # Optional. Glue consecutive single-line comments (// or #) into one multi-line comment.
                                   #           Default: false. Useful for YAML files and multi-line TODO descriptions.
+    extensionAliases:             # Optional. Map file extension on disk to parser key (e.g. php, yaml, yml).
+      module: php                 # Does not affect Finder; list extensions in paths.extensions or paths.name too.
+      inc: php
 ```
 
 ### Registrar options
@@ -204,7 +217,26 @@ docker run --rm --env-file .env -v "$(pwd):/app" ghcr.io/aeliot-tm/todo-registra
 
 ### Process options
 
-The `process` section configures how TODO comments are processed before extraction and registration.
+The `process` section configures how files and TODO comments are processed during a run.
+
+#### Option extensionAliases
+
+**Type:** `array` (map of string to string)
+
+Maps a file extension (without dot) to a built-in parser key: `php`, `yaml`, or `yml`.
+Used when choosing a file parser after discovery. It does **not** add files to the scan:
+include non-standard extensions in `paths.extensions` or `paths.name` as well.
+
+**Example:**
+
+```yaml
+paths:
+  in: src
+  extensions: [php, module]
+process:
+  extensionAliases:
+    module: php
+```
 
 #### Option glueSameTickets
 

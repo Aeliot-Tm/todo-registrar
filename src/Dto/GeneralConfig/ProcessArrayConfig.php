@@ -20,6 +20,25 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 final class ProcessArrayConfig
 {
+    /**
+     * @phpstan-var array<string,string>
+     */
+    #[Assert\Sequentially(constraints: [
+        new Assert\Type(type: 'array', message: 'Option "process.extensionAliases" must be an array'),
+        new Assert\All(constraints: [
+            new Assert\Type(type: 'string', message: 'Each extension alias must be a string'),
+        ]),
+    ])]
+    private mixed $extensionAliases;
+
+    /**
+     * @phpstan-var array<int|string>
+     */
+    #[Assert\All(constraints: [
+        new Assert\Type(type: 'string', message: 'Each key of option "process.extensionAliases" must be a string'),
+    ])]
+    protected array $extensionAliasesKeys = [];
+
     #[Assert\Type(type: 'bool', message: 'Option "process.glueSameTickets" must be a boolean')]
     private mixed $glueSameTickets;
 
@@ -36,12 +55,25 @@ final class ProcessArrayConfig
     {
         $this->glueSameTickets = $options['glueSameTickets'] ?? false;
         $this->glueSequentialComments = $options['glueSequentialComments'] ?? false;
+        $this->extensionAliases = $options['extensionAliases'] ?? [];
 
-        $knownKeys = ['glueSameTickets', 'glueSequentialComments'];
+        if (\is_array($this->extensionAliases)) {
+            $this->extensionAliasesKeys = array_keys($this->extensionAliases);
+        }
+
+        $knownKeys = ['extensionAliases', 'glueSameTickets', 'glueSequentialComments'];
         $unknownKeys = array_diff(array_keys($options), $knownKeys);
         if ($unknownKeys) {
             $this->invalidKeys = implode(', ', $unknownKeys);
         }
+    }
+
+    /**
+     * @return array<string,string>
+     */
+    public function getExtensionAliases(): array
+    {
+        return $this->extensionAliases;
     }
 
     public function isGlueSameTickets(): bool
