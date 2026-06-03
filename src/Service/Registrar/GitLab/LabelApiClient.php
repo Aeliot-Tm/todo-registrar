@@ -39,7 +39,7 @@ final readonly class LabelApiClient
     {
         $this->projects->addLabel($project, [
             'name' => $name,
-            'color' => $this->colorGenerator->generateColor($name),
+            'color' => '#' . $this->colorGenerator->generateColor($name),
         ]);
     }
 

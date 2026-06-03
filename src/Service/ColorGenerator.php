@@ -20,7 +20,7 @@ final class ColorGenerator
      * Uses hash of the name to ensure deterministic color generation.
      * Color values are in range 25% to 85% for each RGB channel.
      *
-     * @return string Hex color code (e.g., "#A1B2C3")
+     * @return string Hex color code without leading hash (e.g., "A1B2C3")
      */
     public function generateColor(string $name): string
     {
@@ -40,6 +40,6 @@ final class ColorGenerator
         $g = $minValue + (int) (($g / 255) * $range);
         $b = $minValue + (int) (($b / 255) * $range);
 
-        return \sprintf('#%02X%02X%02X', $r, $g, $b);
+        return \sprintf('%02X%02X%02X', $r, $g, $b);
     }
 }
