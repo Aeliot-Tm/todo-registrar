@@ -49,7 +49,7 @@ final readonly class LabelApiClient
         try {
             $this->projects->addLabel($project, [
                 'name' => $name,
-                'color' => $this->colorGenerator->generateColor($name),
+                'color' => '#' . $this->colorGenerator->generateColor($name),
             ]);
         } catch (ApiLimitExceededException $exception) {
             throw new LimitExceededException('Cannot create label case of GitLab API limit exceeded', 0, $exception);
