@@ -1,38 +1,62 @@
 # Inline Configuration
 
-Enables per-comment configuration of created issues via `{EXTRAS: ...}` blocks within TODO comments.
+Per-comment overrides parsed from `{EXTRAS: ...}` blocks inside TODO comment descriptions.
 
 ## What It Does
 
-1. Parses `{EXTRAS: {key: value}}` blocks from TODO comment descriptions
-2. Merges inline values with general config (inline takes priority)
-3. Passes the merged configuration to the registrar for issue creation
+1. `ExtrasReader` finds the last `{EXTRAS: ...}` block in the comment description
+2. Parses it with a JSON-like lexer (unquoted keys/values, quoted strings, arrays)
+3. Wraps the result in `InlineConfigInterface` and attaches it to the `Todo` DTO
+4. Registrar factories read inline values with higher priority than general config
+
+Parse errors are logged to stderr; an empty inline config is used and processing continues.
 
 ## Syntax
 
-Uses a format similar to JS objects / JSON without quotes. Supports multi-line blocks, quoted keys/values for multi-word strings, and JSON-compliant escape sequences.
+```php
+// TODO: Fix validation
+//       {EXTRAS: {labels: [bug, urgent], assignee: john}}
+```
 
-## Common Keys (all registrars)
+```yaml
+# TODO: Update defaults
+#      {EXTRAS: {labels: [config], priority: high}}
+```
+
+Rules enforced by `ExtrasReader`:
+
+- Block must match `{EXTRAS: ...}` (case-insensitive `EXTRAS`)
+- Root object must contain exactly one key: `EXTRAS`
+- Value of `EXTRAS` must be an object (not a list)
+
+## Common Keys (All Registrars)
 
 | Key | Description |
 |---|---|
-| `assignee` | User identifier to assign to the issue |
+| `assignee` | User identifier (string or cast to array) |
 | `assignees` | Same as `assignee` |
-| `contextTitle` | Override context path title |
-| `labels` | Labels/tags for the issue |
-| `showContext` | Override context display format |
+| `labels` | Labels/tags list |
+| `showContext` | Context display format override |
+| `contextTitle` | Context block title override |
 
-Each registrar also supports tracker-specific keys (e.g. `linkedIssues` for JIRA, `milestone` for GitLab).
+Registrar-specific keys: see individual registrar docs (e.g. `linkedIssues` for JIRA, `milestone` for GitLab, `queue` for Yandex Tracker).
 
-## Config Priority
+## Priority
 
-1. Tag assignee (`TODO@john`) — highest
-2. Inline config (`{EXTRAS: ...}`)
-3. General config — lowest
+For assignees (`IssueSupporter::getAssignees()`):
 
-See [user documentation](../../../docs/inline_config.md) for syntax details, examples, and registrar-specific keys.
+1. Tag assignee (`TODO@username`) — first in merge order
+2. Inline `assignee` / `assignees`
+3. General config `issue.assignee(s)`
 
-## Key Source Paths
+For other fields, inline config typically overrides general config in each registrar's factory.
 
-- Extras reader: `src/Service/InlineConfig/ExtrasReader.php`
-- Inline config directory: `src/Service/InlineConfig/`
+## Technical Details
+
+| Class | Path |
+|---|---|
+| Reader | `src/Service/InlineConfig/ExtrasReader.php` |
+| Lexer | `src/Service/InlineConfig/JsonLikeLexer.php` |
+| Builder | `src/Service/InlineConfig/ArrayFromJsonLikeLexerBuilder.php` |
+| Factory | `src/Service/InlineConfig/InlineConfigFactory.php` |
+| Attachment | `src/Service/TodoBuilder.php` (`getInlineConfig()`) |
