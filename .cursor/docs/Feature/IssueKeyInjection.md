@@ -1,57 +1,62 @@
 # Issue Key Injection
 
-Controls how issue keys returned by registrars (e.g. `PROJ-123`, `#42`) are injected back into TODO comments in source code after issue creation.
+Controls how registrar-returned keys (`PROJ-123`, `#42`, `QUEUE-1`) are written back into source comments after successful registration.
 
-See [user documentation](../../../docs/issue_key_injection.md) for configuration examples and edge cases.
+## What It Does
 
-## Configuration Options
+1. After `registrar->register($todo)`, `HeapRunner` calls `$todo->injectKey($key)`
+2. `CommentPart::injectKey()` modifies the first line of the comment at the configured position
+3. `FileHeap` save callback writes the updated tokens to disk via `Saver`
 
-| Option | Type | Default | Description |
-|---|---|---|---|
-| `position` | `string` | `after_separator` | Where the issue key is placed |
-| `newSeparator` | `string` | `null` | Separator to add if the comment has none |
-| `replaceSeparator` | `boolean` | `false` | Whether to replace existing separator with `newSeparator` |
-| `summarySeparators` | `string[]` | `[':', '-', '>']` | Recognized separators between tag and summary |
+Works for PHP and YAML source files (any file type that uses `TokenInterface`).
 
-## Position Options
+## Configuration
 
-| Value | Constant | Example |
+Top-level config key `issueKeyInjection`:
+
+```yaml
+issueKeyInjection:
+  position: after_separator       # default
+  newSeparator: null              # optional, exactly 1 character
+  replaceSeparator: false         # default
+  summarySeparators: [':', '-', '>']   # default
+```
+
+| Option | Default | Description |
 |---|---|---|
-| `after_separator` (default) | `AFTER_SEPARATOR` | `TODO: PROJ-123 Fix bug` |
-| `before_separator` | `BEFORE_SEPARATOR` | `TODO PROJ-123 : Fix bug` |
-| `before_separator_sticky` | `BEFORE_SEPARATOR_STICKY` | `TODO PROJ-123: Fix bug` |
+| `position` | `after_separator` | Where to insert the key |
+| `newSeparator` | `null` | Separator added when comment has none |
+| `replaceSeparator` | `false` | Replace existing separator with `newSeparator` |
+| `summarySeparators` | `:`, `-`, `>` | Separators recognized in tag line and tag detection |
 
-## Key Injection Algorithm
+`summarySeparators` also configure `Tag/Detector` — they affect both key injection and detection of existing keys on the tag line.
 
-Located in `CommentPart::injectKey()`:
+## Position Values
 
-1. Find separator offset in comment text
-2. Calculate injection offset based on position:
-   - `after_separator`: offset = separator offset + 1
-   - `before_separator`: offset = separator offset
-   - `before_separator_sticky`: offset = separator offset
-3. Insert key at calculated offset with proper spacing
-4. Add or replace separator if configured
+| Value | Example result |
+|---|---|
+| `after_separator` (default) | `TODO: PROJ-123 Fix bug` |
+| `before_separator` | `TODO PROJ-123: Fix bug` |
+| `before_separator_sticky` | `TODO PROJ-123: Fix bug` (separator stays after key) |
 
-Existing spaces are respected to avoid adding extra whitespace.
+## Existing Keys (Skip Registration)
+
+Comments with a recognized ticket key in the tag line are skipped. Detected formats include:
+
+- JIRA / YouTrack: `PROJ-123`
+- GitHub/GitLab number: `#123`
+- GitHub URL or `owner/repo#123`
+- Date `YYYY-MM-DD`, semver-like versions, composer constraints
 
 ## Technical Details
 
-### Key Classes
-
-| Class | Responsibility |
+| Class | Path |
 |---|---|
-| `IssueKeyInjectionConfig` | Holds parsed injection configuration |
-| `IssueKeyInjectionArrayConfig` | Validates YAML configuration |
-| `IssueKeyPosition` | Enum with position values |
-| `TodoBuilder` | Creates Todo with injection config |
-| `TodoBuilderFactory` | Builds TodoBuilder with config |
-| `CommentPart` | Performs actual key injection |
+| Injection logic | `src/Dto/Comment/CommentPart.php` (`injectKey()`) |
+| Position enum | `src/Enum/IssueKeyPosition.php` |
+| Config DTO | `src/Dto/GeneralConfig/IssueKeyInjectionConfig.php` |
+| YAML validation | `src/Dto/GeneralConfig/IssueKeyInjectionArrayConfig.php` |
+| Tag detection | `src/Service/Tag/Detector.php` |
+| Builder wiring | `src/Service/TodoBuilder.php`, `TodoBuilderFactory.php` |
 
-### Source Paths
-
-- Config DTO: `src/Dto/GeneralConfig/IssueKeyInjectionConfig.php`
-- Array config: `src/Dto/GeneralConfig/IssueKeyInjectionArrayConfig.php`
-- Position enum: `src/Enum/IssueKeyPosition.php`
-- Injection logic: `src/Dto/Comment/CommentPart.php`
-- Builder: `src/Service/TodoBuilder.php`
+Note: `issueKeyInjection.issueKeyPosition` is listed as a known YAML key for validation but is not read; use `position`.

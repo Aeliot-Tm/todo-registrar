@@ -1,24 +1,54 @@
 # JIRA Linked Issues
 
-Automatically links newly created JIRA issues to existing ones using configurable link types.
+Creates issue links from a newly registered JIRA issue to existing issues specified in inline config.
 
 ## What It Does
 
-1. Reads `linkedIssues` from inline config (`{EXTRAS: {linkedIssues: ...}}`)
-2. After creating the new issue, creates issue links to the specified existing issues
-3. Supports single issues, arrays, and different link types per issue
+1. After `IssueService::create()`, `JiraRegistrar` calls `IssueLinkRegistrar::registerLinks()`
+2. Reads `linkedIssues` from inline config only (not from general config)
+3. Normalizes format and creates inward → outward links via JIRA REST API
 
-## Link Type Resolution
+## Inline Config Formats
 
-Link types are matched against JIRA's configured link types by name, inward, or outward description. Matching is case-insensitive and supports prefix matching. Underscore notation (`is_blocked_by`) is supported as legacy syntax.
+**List** — all keys linked with default type:
+
+```php
+// TODO: Depends on auth refactor
+//       {EXTRAS: {linkedIssues: [AUTH-1, AUTH-2]}}
+```
+
+**Map** — link type alias per group:
+
+```php
+// TODO: Blocked work
+//       {EXTRAS: {linkedIssues: {blocks: [TASK-10], relates: [TASK-11]}}}
+```
 
 ## Default Link Type
 
-Falls back to `issueLinkType` from the `issue` config section, then to `Relates`.
+Resolved in order:
 
-See [user documentation](../../../docs/registrar/JIRA/linked_issues.md) for usage formats, link type resolution details, and examples.
+1. `registrar.options.issue.issueLinkType`
+2. `registrar.options.issueLinkType` (top-level in options)
+3. `'Relates'`
 
-## Key Source Paths
+## Link Type Resolution
 
-- Issue link registrar: `src/Service/Registrar/JIRA/IssueLinkRegistrar.php`
-- Link normalizer: `src/Service/Registrar/JIRA/LinkedIssueNormalizer.php`
+`IssueLinkTypeProvider` loads link types from JIRA and matches alias against:
+
+- Exact `name`, `inward`, or `outward`
+- Case-insensitive prefix match
+- Underscore notation (`is_blocked_by`) as legacy alias syntax
+
+Unknown alias → `InvalidInlineConfigFormatException`.
+
+## Technical Details
+
+| Class | Path |
+|---|---|
+| Link registration | `src/Service/Registrar/JIRA/IssueLinkRegistrar.php` |
+| Normalizer | `src/Service/Registrar/JIRA/LinkedIssueNormalizer.php` |
+| Type provider | `src/Service/Registrar/JIRA/IssueLinkTypeProvider.php` |
+| Orchestration | `src/Service/Registrar/JIRA/JiraRegistrar.php` |
+
+See also: [JIRA Registrar](JIRARegistrar.md), [Inline Configuration](InlineConfiguration.md).

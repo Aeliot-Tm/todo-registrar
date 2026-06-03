@@ -2,17 +2,20 @@
 
 ## Purpose
 
-TODO Registrar is a CLI application that scans PHP source code for TODO/FIXME comments and automatically registers them as issues in external issue trackers (JIRA, GitHub, GitLab).
+TODO Registrar is a CLI application that scans PHP and YAML source files for TODO/FIXME comments and registers them as issues in external issue trackers.
+
+Implemented registrars: GitHub, GitLab, JIRA, Redmine, Yandex Tracker.
 
 ## High-Level Flow
 
-1. **Entry Point** → `bin/todo-registrar` initializes the Symfony Console application
-2. **Configuration Loading** → Reads `.todo-registrar.yaml`, `.todo-registrar.php` config file, or YAML from STDIN
-3. **File Discovery** → Uses Symfony Finder to locate PHP files
-4. **Tokenization** → FileParserInterface extracts tokens from source files and wraps them in TokenInterface
-5. **Comment Extraction** → Parses comments to find TODO/FIXME tags
-6. **Issue Registration** → Creates issues in configured issue tracker via API
-7. **Key Injection** → Injects created issue key back into the source comment
+1. **Entry** — `bin/todo-registrar` → Symfony Console `Application`
+2. **Configuration** — `.todo-registrar.yaml` / `.yml`, `.todo-registrar.php`, or YAML via `--config=STDIN`
+3. **File Discovery** — Symfony Finder (`paths` config or PHP Finder)
+4. **Parsing** — `FileParserRegistry` → `PhpFileParser` or `YamlFileParser` → `ParsedFile`
+5. **Comment grouping** — `FileHeap` (optional sequential comment gluing)
+6. **TODO extraction** — `Comment/Extractor` + `Tag/Detector`
+7. **Registration** — `RegistrarInterface` (optional same-ticket gluing)
+8. **Key injection** — `CommentPart::injectKey()` → `Saver` writes file
 
 ## Core Components
 
@@ -20,119 +23,75 @@ TODO Registrar is a CLI application that scans PHP source code for TODO/FIXME co
 
 ```
 bin/todo-registrar
-    └── Console/Application.php (extends Symfony Console)
-        └── Console/ContainerBuilder.php (builds Symfony DI Container from config/services.yaml)
+    └── Console/Application.php
+        └── Console/ContainerBuilder.php  (DI from config/services.yaml)
 ```
 
 ### Command Layer
 
-- `Console/Command/RegisterCommand.php` — Main command that orchestrates the registration process
+- `Console/Command/RegisterCommand.php` — orchestrates run and optional report export
 
-### Service Layer
+### Configuration Services (`Service/Config/`)
 
-#### Configuration Services (`Service/Config/`)
-- `ConfigProvider` — Provides configuration from file path or STDIN
-- `ConfigFactory` — Creates Config object from YAML files
-- `ArrayConfigFactory` — Converts array config to Config object
-- `StdinConfigFactory` — Creates Config object from YAML passed via STDIN
-- `ConfigFileGuesser` — Auto-detects config file location
-
-#### File Processing Services (`Service/File/`)
-- `Finder` — Implements `FinderInterface`, wraps Symfony Finder for file discovery
-- `FileParserInterface` — Parses files, tokenizes them, and wraps tokens in `TokenInterface` abstraction
-- `Saver` — Saves modified files back to disk (language-agnostic via `TokenInterface`)
-
-#### Comment Processing Services (`Service/Comment/`)
-- `Extractor` — Extracts TODO/FIXME parts from comment text
-
-#### Tag Detection (`Service/Tag/`)
-- `Detector` — Parses tag metadata (tag name, assignee, existing ticket key)
-
-#### Core Processing
-- `HeapRunner` — Main processing loop: iterates files → comments → TODOs → register → inject key
-- `HeapRunnerFactory` — Factory for HeapRunner with all dependencies
-- `TodoBuilder` / `TodoBuilderFactory` — Creates Todo DTO from CommentPart
-
-#### Registrar Services (`Service/Registrar/`)
-- `RegistrarProvider` — Resolves registrar from config
-- `RegistrarFactoryRegistry` — Service locator for registrar factories
-
-### Registrar Implementations
-
-Each issue tracker has its own implementation in subdirectories:
-
-#### JIRA (`Service/Registrar/JIRA/`)
-- `JiraRegistrar` — Implements `Registrar\RegistrarInterface`
-- `JiraRegistrarFactory` — Implements `Registrar\RegistrarFactoryInterface`
-- `IssueFieldFactory` — Creates JIRA issue fields from Todo
-- `ServiceFactory` — Creates JIRA API clients
-- `IssueLinkRegistrar` — Registers issue links
-
-#### GitHub (`Service/Registrar/GitHub/`)
-- `GitHubRegistrar` — Implements `Registrar\RegistrarInterface`
-- `GitHubRegistrarFactory` — Implements `Registrar\RegistrarFactoryInterface`
-- `IssueFactory` — Creates GitHub issue from Todo
-- `ApiClientFactory` — Creates GitHub API clients
-
-#### GitLab (`Service/Registrar/GitLab/`)
-- `GitlabRegistrar` — Implements `Registrar\RegistrarInterface`
-- `GitlabRegistrarFactory` — Implements `Registrar\RegistrarFactoryInterface`
-- `IssueFactory` — Creates GitLab issue from Todo
-- `ApiClientProvider` — Provides GitLab API clients
-
-### Contracts (Interfaces)
-
-Located in the `aeliot/todo-registrar-contracts` package (`Aeliot\TodoRegistrarContracts` namespace):
-
-| Interface | Purpose |
+| Class | Role |
 |---|---|
-| `Registrar\RegistrarInterface` | Contract for issue registration (`register(Todo\TodoInterface): string`) |
-| `Registrar\RegistrarFactoryInterface` | Contract for creating registrars from config |
-| `Todo\TodoInterface` | Contract for TODO data transfer object |
-| `Todo\ContextAwareInterface` | Contract for TODO with code context nodes |
-| `Todo\HashAwareInterface` | Contract for TODO with content hash |
-| `FinderInterface` | Contract for file finder (iterable over SplFileInfo) |
-| `GeneralConfig\GeneralConfigInterface` | Contract for application configuration |
-| `GeneralConfig\ProcessConfigInterface` | Contract for process options (gluing, etc.) |
-| `GeneralConfig\IssueKeyInjectionConfigInterface` | Contract for issue key injection options |
-| `Context\ContextNodeInterface` | Contract for a single context path node |
-| `Context\PhpContextNodeInterface` | PHP-specific context node kinds |
-| `InlineConfigInterface` | Contract for inline config in comments |
-| `InlineConfigFactoryInterface` | Contract for creating inline config |
-| `InlineConfigReaderInterface` | Contract for reading inline config from comment |
+| `ConfigProvider` | Loads config from path, auto-detect, or STDIN |
+| `ConfigFactory` | Parses `.yaml`/`.yml` via `YamlParser` + `ArrayConfigFactory` |
+| `ArrayConfigFactory` | Validates array → `Config` object |
+| `StdinConfigFactory` | YAML from stdin |
+| `ConfigFileGuesser` / `ConfigFileDetector` | Auto-detect config file |
 
-### DTOs
+PHP config: `require` must return `GeneralConfigInterface`.
 
-Located in `Dto/`:
+### File Processing (`Service/File/`)
 
-- `Registrar/Todo` — Main data object for TODO comment
-- `Comment/CommentPart` — Represents a part of a comment (single TODO)
-- `Comment/CommentParts` — Collection of CommentPart objects
-- `Tag/TagMetadata` — Parsed tag metadata (tag name, assignee, ticket key)
-- `FileHeap` — File processing context with tokens and update callback
-- `ProcessStatistic` — Statistics of processing (files updated, TODOs registered)
-- `InlineConfig/*` — Inline configuration structures
-- `GeneralConfig/IssueKeyInjectionConfig` — Issue key injection configuration
-- `GeneralConfig/IssueKeyInjectionArrayConfig` — YAML config validation for injection
-- `Token/TokenInterface` — Abstraction for file tokens (isolates language-specific implementation)
-- `Token/PhpTokenAdapter` — Wraps native `\PhpToken` implementing `TokenInterface`
-- `Parsing/CommentNode` — Wrapper around token with context
-- `Parsing/ParsedFile` — Result of file parsing: all tokens and comment nodes
-
-### Enums
-
-- `Enum/RegistrarType` — Supported issue tracker types: GitHub, GitLab, JIRA, etc.
-- `Enum/IssueKeyPosition` — Positions for issue key injection: after_separator, before_separator, before_separator_sticky
-
-## Design Patterns
-
-| Pattern | Usage |
+| Class | Role |
 |---|---|
-| **Factory** | `HeapRunnerFactory`, `TodoBuilderFactory`, `*RegistrarFactory` |
-| **Strategy** | `Registrar\RegistrarInterface` implementations for different issue trackers |
-| **Service Locator** | `RegistrarFactoryRegistry` with Symfony's `#[AutowireLocator]` |
-| **Dependency Injection** | Symfony DI Container with autowiring |
-| **Iterator** | `FinderInterface` extends `IteratorAggregate` for file traversal |
+| `Finder` | Symfony Finder wrapper (`FinderInterface`) |
+| `FileParserRegistry` | Selects parser by extension |
+| `PhpFileParser` | PHP tokens + AST context |
+| `YamlFileParser` | YAML tokens + context (`aeliot/yaml-token`) |
+| `Saver` | Rebuilds file from `TokenInterface[]` |
+
+### Comment Processing
+
+| Class | Role |
+|---|---|
+| `FileHeap` | Builds `CommentNode[]`, glues sequential comments |
+| `Comment/Extractor` | Splits comments into `CommentPart[]` |
+| `Tag/Detector` | Parses tag, assignee, existing key |
+| `CommentCleanerRegistry` | PHP and YAML comment line cleaners |
+
+### Core Processing
+
+| Class | Role |
+|---|---|
+| `HeapRunner` | Main loop: files → comments → todos → register → save |
+| `HeapRunnerFactory` | Wires dependencies from config |
+| `TodoBuilder` | Builds `Todo` DTO with hash and inline config |
+
+### Registrar Services (`Service/Registrar/`)
+
+| Class | Role |
+|---|---|
+| `RegistrarProvider` | Resolves active registrar |
+| `RegistrarFactoryRegistry` | Locator for `*RegistrarFactory` |
+| `IssueSupporter` | Shared summary, description, labels, assignees |
+
+Subdirectories: `GitHub/`, `GitLab/`, `JIRA/`, `Redmine/`, `YandexTracker/`.
+
+### Contracts Package
+
+`aeliot/todo-registrar-contracts` — `RegistrarInterface`, `TodoInterface`, `ContextAwareInterface`, `GeneralConfigInterface`, `TokenInterface` (via adapters), etc.
+
+### Key DTOs (`Dto/`)
+
+- `Registrar/Todo`, `Registrar/ContextAwareTodo` (deprecated alias)
+- `Comment/CommentPart`
+- `Parsing/ParsedFile`, `Parsing/CommentNode`, `Parsing/MappedContext`
+- `FileHeap`, `ProcessStatistic`
+- `Token/PhpTokenAdapter`, `Token/YamlTokenAdapter`
+- `GeneralConfig/*` — validated config sections
 
 ## Configuration
 
@@ -141,13 +100,33 @@ Located in `Dto/`:
 - PHP: `.todo-registrar.php` (for programmatic config)
 - STDIN: Pass YAML via `--config=STDIN` option
 
-### Key Configuration Options
-- `finder` — Symfony Finder configuration (paths, patterns)
-- `registrar` — Issue tracker type and credentials
-- `tags` — TODO tags to detect (default: `['todo', 'fixme']`)
-- `inline_config` — Inline configuration options
-- `issueKeyInjection` — Issue key injection configuration (position, separators)
-  - See [Issue Key Injection](../Feature/IssueKeyInjection.md) for details
+## Configuration Shape (YAML)
+
+Top-level keys: `paths`, `registrar`, `tags`, `issueKeyInjection`, `process`.
+
+```yaml
+paths:
+  in: src
+  extensions: [php, yaml, yml]
+
+registrar:
+  type: GitHub
+  options:
+    service: { ... }
+    issue: { ... }
+
+tags: [todo, fixme]
+
+issueKeyInjection:
+  position: after_separator
+
+process:
+  glueSameTickets: false
+  glueSequentialComments: false
+  extensionAliases: {}
+```
+
+`Enum/RegistrarType` also lists `AzureBoards` and `YouTrack` — no factory implementations exist yet.
 
 ### STDIN Configuration
 
@@ -164,30 +143,21 @@ The `-T` flag is required with `docker compose exec` to disable TTY allocation f
 
 ```
 src/
+├── AST/PHP/                        # PHP context map
+├── AST/YAML/                       # YAML context map
 ├── Config.php                      # Main configuration class
 ├── Console/                        # CLI layer
-│   ├── Application.php
-│   ├── Command/RegisterCommand.php
-│   ├── ContainerBuilder.php
-│   └── OutputAdapter.php
 ├── Dto/                            # Data Transfer Objects
-│   ├── Comment/
-│   ├── InlineConfig/
-│   ├── Parsing/                    # Parsing results
-│   ├── Registrar/
-│   ├── Tag/
-│   └── Token/                      # Token abstraction
 ├── Enum/                           # Enumerations
 ├── Exception/                      # Custom exceptions
 └── Service/                        # Business logic
     ├── Comment/                    # Comment parsing
     ├── Config/                     # Configuration loading
+    ├── ContextPath/
     ├── File/                       # File operations
     ├── InlineConfig/               # Inline config parsing
     ├── Registrar/                  # Issue tracker integrations
-    │   ├── GitHub/
-    │   ├── GitLab/
-    │   └── JIRA/
+    ├── Report/
     └── Tag/                        # Tag detection
 ```
 
@@ -195,11 +165,18 @@ src/
 
 ### Adding New Issue Tracker
 
-1. Create new directory in `Service/Registrar/{TrackerName}/`
-2. Implement `Registrar\RegistrarInterface` for issue creation
-3. Implement `Registrar\RegistrarFactoryInterface` with `#[AutoconfigureTag('aeliot.todo_registrar.registrar_factory')]`
-4. Add case to `Enum/RegistrarType`
+1. Add `Service/Registrar/{Name}/` with `*Registrar` and `*RegistrarFactory`
+2. Tag factory: `#[AsTaggedItem(index: RegistrarType::{Name}->value)]`
+3. Add enum case to `RegistrarType`
 
 ### Custom Inline Config
 
 Implement `InlineConfigFactoryInterface` and `InlineConfigReaderInterface` (package root namespace) to customize how inline config is parsed from comments.
+
+### New Source File Type
+
+1. Implement `FileParserInterface`
+2. Tag with `aeliot.todo_registrar.file_parser` and extension index
+3. Provide `TokenInterface` adapter and optional context map builder
+
+See [Processing Flow](ProcessingFlow.md), [Source File Parsing](../Feature/SourceFileParsing.md).
