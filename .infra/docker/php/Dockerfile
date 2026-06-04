@@ -21,7 +21,7 @@ RUN rm -rf /var/lib/apt/lists/* && \
     apt-get clean
 
 # Copy php configs
-COPY .docker/php/conf.d/*.ini /usr/local/etc/php/conf.d/
+COPY .infra/docker/php/conf.d/*.ini /usr/local/etc/php/conf.d/
 
 # Install composer
 RUN set -xe; \
