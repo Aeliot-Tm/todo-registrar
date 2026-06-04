@@ -3,244 +3,694 @@
     "relative": true,
     "hashes": {
         "bin\/todo-registrar": {
-            "hash": 3169601229
+            "hash": 587849863
         },
-        ".infra\/scripts\/box\/prepare-config.php": {
-            "hash": 897298482
+        "src\/AST\/PHP\/ContextMapBuilder.php": {
+            "hash": 1840643117
         },
-        ".infra\/scripts\/composer-unused\/config.php": {
-            "hash": 3644645831
+        "src\/AST\/PHP\/ContextMapVisitor.php": {
+            "hash": 796108931
         },
-        ".infra\/scripts\/php-cs-fixer\/config.php": {
-            "hash": 1705903584
+        "src\/AST\/YAML\/ContextMapBuilder.php": {
+            "hash": 364898281
         },
-        ".infra\/scripts\/php-cs-fixer\/finder.php": {
-            "hash": 1895290745
-        },
-        ".infra\/scripts\/todo-registrar\/config.php": {
-            "hash": 1199485383
-        },
-        "src\/Application.php": {
-            "hash": 2407248549
-        },
-        "src\/ApplicationFactory.php": {
-            "hash": 1159250558
+        "src\/AST\/YAML\/ContextMapVisitor.php": {
+            "hash": 2232965075
         },
         "src\/Config.php": {
-            "hash": 248702361
+            "hash": 1503074379
+        },
+        "src\/Console\/Application.php": {
+            "hash": 2278387179
+        },
+        "src\/Console\/Command\/RegisterCommand.php": {
+            "hash": 2655393267
+        },
+        "src\/Console\/ContainerBuilder.php": {
+            "hash": 3945846265
+        },
+        "src\/Console\/OutputAdapter.php": {
+            "hash": 2830986675
         },
         "src\/Dto\/Comment\/CommentPart.php": {
-            "hash": 393103539
+            "hash": 1606641426
         },
-        "src\/Dto\/Comment\/CommentParts.php": {
-            "hash": 2039272904
+        "src\/Dto\/Comment\/MiddleSpace.php": {
+            "hash": 768728768
+        },
+        "src\/Dto\/FileHeap.php": {
+            "hash": 436444202
+        },
+        "src\/Dto\/FileStatistic.php": {
+            "hash": 1230727815
+        },
+        "src\/Dto\/GeneralConfig\/ArrayConfig.php": {
+            "hash": 1070307079
+        },
+        "src\/Dto\/GeneralConfig\/IssueKeyInjectionArrayConfig.php": {
+            "hash": 1350175383
+        },
+        "src\/Dto\/GeneralConfig\/IssueKeyInjectionConfig.php": {
+            "hash": 2168281667
+        },
+        "src\/Dto\/GeneralConfig\/PathsConfig.php": {
+            "hash": 4155765411
+        },
+        "src\/Dto\/GeneralConfig\/ProcessArrayConfig.php": {
+            "hash": 2424062648
+        },
+        "src\/Dto\/GeneralConfig\/ProcessConfig.php": {
+            "hash": 1031785066
+        },
+        "src\/Dto\/GeneralConfig\/RegistrarConfig.php": {
+            "hash": 1516302937
         },
         "src\/Dto\/InlineConfig\/IndexedCollection.php": {
             "hash": 219197057
         },
         "src\/Dto\/InlineConfig\/InlineConfig.php": {
-            "hash": 2893097990
+            "hash": 1654006868
         },
         "src\/Dto\/InlineConfig\/NamedCollection.php": {
-            "hash": 37201471
+            "hash": 2862023685
         },
         "src\/Dto\/InlineConfig\/Token.php": {
             "hash": 2115725355
         },
+        "src\/Dto\/Parsing\/CommentNode.php": {
+            "hash": 1155849158
+        },
+        "src\/Dto\/Parsing\/ContextInterface.php": {
+            "hash": 546171186
+        },
+        "src\/Dto\/Parsing\/ContextMapBuilderInterface.php": {
+            "hash": 3648606849
+        },
+        "src\/Dto\/Parsing\/ContextMapInterface.php": {
+            "hash": 378738155
+        },
+        "src\/Dto\/Parsing\/ContextNode.php": {
+            "hash": 1571197350
+        },
+        "src\/Dto\/Parsing\/LazyContextMap.php": {
+            "hash": 3086383672
+        },
+        "src\/Dto\/Parsing\/MappedContext.php": {
+            "hash": 1598283458
+        },
+        "src\/Dto\/Parsing\/ParsedFile.php": {
+            "hash": 236148681
+        },
+        "src\/Dto\/Parsing\/PhpContextNode.php": {
+            "hash": 52281317
+        },
+        "src\/Dto\/Parsing\/YamlContextNode.php": {
+            "hash": 1219088774
+        },
+        "src\/Dto\/ProcessStatistic.php": {
+            "hash": 3051588583
+        },
+        "src\/Dto\/Registrar\/ContextAwareTodo.php": {
+            "hash": 726822923
+        },
         "src\/Dto\/Registrar\/Todo.php": {
-            "hash": 3510938764
+            "hash": 3691021552
         },
         "src\/Dto\/Tag\/TagMetadata.php": {
-            "hash": 183392406
+            "hash": 3513435980
+        },
+        "src\/Dto\/Token\/CommentTokensGroup.php": {
+            "hash": 388454003
+        },
+        "src\/Dto\/Token\/PhpTokenAdapter.php": {
+            "hash": 1268584143
+        },
+        "src\/Dto\/Token\/TokenInterface.php": {
+            "hash": 930918405
+        },
+        "src\/Dto\/Token\/TokenLine.php": {
+            "hash": 1228087428
+        },
+        "src\/Dto\/Token\/TokenLinesStack.php": {
+            "hash": 3509580233
+        },
+        "src\/Dto\/Token\/TokenStream.php": {
+            "hash": 1684910499
+        },
+        "src\/Dto\/Token\/TokenStreamInterface.php": {
+            "hash": 3275442155
+        },
+        "src\/Dto\/Token\/YamlTokenAdapter.php": {
+            "hash": 2466964432
+        },
+        "src\/Enum\/ContextPathBuilderFormat.php": {
+            "hash": 2747586025
+        },
+        "src\/Enum\/GetStringEnumValuesTrait.php": {
+            "hash": 1674125138
+        },
+        "src\/Enum\/IssueKeyPosition.php": {
+            "hash": 1416300251
         },
         "src\/Enum\/RegistrarType.php": {
-            "hash": 303413872
+            "hash": 2458042212
+        },
+        "src\/Enum\/ReportFormat.php": {
+            "hash": 1447328849
+        },
+        "src\/Exception\/Api\/AuthenticationException.php": {
+            "hash": 3258552097
+        },
+        "src\/Exception\/Api\/LimitExceededException.php": {
+            "hash": 597886899
+        },
+        "src\/Exception\/Api\/UnexpectedResponseException.php": {
+            "hash": 2814347388
+        },
+        "src\/Exception\/BadMethodCallException.php": {
+            "hash": 2183214265
         },
         "src\/Exception\/CollectionDuplicatedKeyException.php": {
-            "hash": 11596347
+            "hash": 1252042360
         },
         "src\/Exception\/CommentRegistrationException.php": {
-            "hash": 2860383647
+            "hash": 2293796540
+        },
+        "src\/Exception\/ConfigValidationException.php": {
+            "hash": 812072118
+        },
+        "src\/Exception\/FileReadException.php": {
+            "hash": 150326850
         },
         "src\/Exception\/InvalidConfigException.php": {
-            "hash": 3332560212
+            "hash": 2715443059
         },
         "src\/Exception\/InvalidInlineConfigFormatException.php": {
-            "hash": 531731029
+            "hash": 3034419889
+        },
+        "src\/Exception\/LogicException.php": {
+            "hash": 3583423665
         },
         "src\/Exception\/NoLineException.php": {
-            "hash": 3408971401
+            "hash": 3884036452
         },
         "src\/Exception\/NoPrefixException.php": {
-            "hash": 2246059011
+            "hash": 510132719
         },
-        "src\/InlineConfigFactoryInterface.php": {
-            "hash": 3284702447
+        "src\/Exception\/NotSupportedConfigException.php": {
+            "hash": 614520571
         },
-        "src\/InlineConfigInterface.php": {
-            "hash": 2088018077
+        "src\/Exception\/UnavailableConfigException.php": {
+            "hash": 3140847045
         },
-        "src\/InlineConfigReaderInterface.php": {
-            "hash": 3117880548
+        "src\/Service\/ColorGenerator.php": {
+            "hash": 1292182603
         },
-        "src\/Service\/Comment\/Detector.php": {
-            "hash": 2761165403
+        "src\/Service\/Comment\/Cleaner\/PhpCommentCleaner.php": {
+            "hash": 1828128141
+        },
+        "src\/Service\/Comment\/Cleaner\/YamlCommentCleaner.php": {
+            "hash": 1602967524
+        },
+        "src\/Service\/Comment\/CommentCleanerInterface.php": {
+            "hash": 2340497760
+        },
+        "src\/Service\/Comment\/CommentCleanerRegistry.php": {
+            "hash": 2136355131
         },
         "src\/Service\/Comment\/Extractor.php": {
-            "hash": 2231284157
+            "hash": 1052549202
         },
-        "src\/Service\/CommentRegistrar.php": {
-            "hash": 1631152924
+        "src\/Service\/Comment\/SequentialCommentGlueGate\/AbstractSequentialCommentGlueGate.php": {
+            "hash": 3484544634
+        },
+        "src\/Service\/Comment\/SequentialCommentGlueGate\/PhpSequentialCommentGlueGate.php": {
+            "hash": 3330856835
+        },
+        "src\/Service\/Comment\/SequentialCommentGlueGate\/YamlSequentialCommentGlueGate.php": {
+            "hash": 3605866845
+        },
+        "src\/Service\/Comment\/SequentialCommentGlueGateInterface.php": {
+            "hash": 1470119282
+        },
+        "src\/Service\/Comment\/SequentialCommentGlueGateRegistry.php": {
+            "hash": 780511263
+        },
+        "src\/Service\/CommentExtractorFactory.php": {
+            "hash": 854033575
+        },
+        "src\/Service\/Config\/AbsolutePathMaker.php": {
+            "hash": 3278068550
+        },
+        "src\/Service\/Config\/ArrayConfigFactory.php": {
+            "hash": 2678935047
+        },
+        "src\/Service\/Config\/ConfigFactory.php": {
+            "hash": 2761373120
+        },
+        "src\/Service\/Config\/ConfigFileDetector.php": {
+            "hash": 688108384
+        },
+        "src\/Service\/Config\/ConfigFileGuesser.php": {
+            "hash": 433602676
+        },
+        "src\/Service\/Config\/ConfigProvider.php": {
+            "hash": 96561018
+        },
+        "src\/Service\/Config\/StdinConfigFactory.php": {
+            "hash": 2391714104
+        },
+        "src\/Service\/Config\/YamlParser.php": {
+            "hash": 3255470999
+        },
+        "src\/Service\/ContextPath\/Builder\/AbstractContextPathBuilder.php": {
+            "hash": 4266244436
+        },
+        "src\/Service\/ContextPath\/Builder\/ArrowContextPathBuilder.php": {
+            "hash": 489923489
+        },
+        "src\/Service\/ContextPath\/Builder\/AsteriskContextPathBuilder.php": {
+            "hash": 2403207298
+        },
+        "src\/Service\/ContextPath\/Builder\/CodeBlockContextPathBuilder.php": {
+            "hash": 747090251
+        },
+        "src\/Service\/ContextPath\/Builder\/NumberSignContextPathBuilder.php": {
+            "hash": 3658358665
+        },
+        "src\/Service\/ContextPath\/Builder\/NumberedContextPathBuilder.php": {
+            "hash": 2282431952
+        },
+        "src\/Service\/ContextPath\/ContextPathBuilderInterface.php": {
+            "hash": 257259982
+        },
+        "src\/Service\/ContextPath\/ContextPathBuilderRegistry.php": {
+            "hash": 639648179
+        },
+        "src\/Service\/File\/FileParserInterface.php": {
+            "hash": 2617685216
+        },
+        "src\/Service\/File\/FileParserRegistry.php": {
+            "hash": 2558156983
         },
         "src\/Service\/File\/Finder.php": {
-            "hash": 1872550161
+            "hash": 3760641301
+        },
+        "src\/Service\/File\/FinderNamePatternBuilder.php": {
+            "hash": 4080946502
+        },
+        "src\/Service\/File\/Parser\/PhpFileParser.php": {
+            "hash": 3972351041
+        },
+        "src\/Service\/File\/Parser\/YamlFileParser.php": {
+            "hash": 3607191022
         },
         "src\/Service\/File\/Saver.php": {
-            "hash": 1105039547
+            "hash": 119386446
         },
-        "src\/Service\/File\/Tokenizer.php": {
-            "hash": 834353710
+        "src\/Service\/HeapRunner.php": {
+            "hash": 1596689215
         },
-        "src\/Service\/FileProcessor.php": {
-            "hash": 1315367365
+        "src\/Service\/HeapRunnerFactory.php": {
+            "hash": 2896520749
         },
         "src\/Service\/InlineConfig\/ArrayFromJsonLikeLexerBuilder.php": {
-            "hash": 2506317379
+            "hash": 87478216
         },
         "src\/Service\/InlineConfig\/CollectionInterface.php": {
             "hash": 80740876
         },
         "src\/Service\/InlineConfig\/ExtrasReader.php": {
-            "hash": 2446928041
+            "hash": 3159556437
         },
         "src\/Service\/InlineConfig\/InlineConfigFactory.php": {
-            "hash": 2488245331
-        },
-        "src\/Service\/InlineConfig\/JIRANotSupportedLinkTypeException.php": {
-            "hash": 481162564
+            "hash": 4051076436
         },
         "src\/Service\/InlineConfig\/JsonLikeLexer.php": {
-            "hash": 1557386099
+            "hash": 3995193097
         },
-        "src\/Service\/Registrar\/AbstractIssueConfig.php": {
-            "hash": 1528753214
+        "src\/Service\/Registrar\/AbstractGeneralIssueConfig.php": {
+            "hash": 1132830582
         },
         "src\/Service\/Registrar\/GitHub\/ApiClientFactory.php": {
-            "hash": 3174191168
+            "hash": 1560806906
+        },
+        "src\/Service\/Registrar\/GitHub\/GeneralIssueConfig.php": {
+            "hash": 2614465444
         },
         "src\/Service\/Registrar\/GitHub\/GitHubRegistrar.php": {
-            "hash": 2851033346
+            "hash": 2522369157
         },
         "src\/Service\/Registrar\/GitHub\/GitHubRegistrarFactory.php": {
-            "hash": 224695018
+            "hash": 1333635461
         },
         "src\/Service\/Registrar\/GitHub\/Issue.php": {
-            "hash": 3945416898
+            "hash": 3792184395
         },
         "src\/Service\/Registrar\/GitHub\/IssueApiClient.php": {
-            "hash": 453333599
-        },
-        "src\/Service\/Registrar\/GitHub\/IssueConfig.php": {
-            "hash": 3420049987
+            "hash": 430313084
         },
         "src\/Service\/Registrar\/GitHub\/IssueFactory.php": {
-            "hash": 3814030650
+            "hash": 723918060
         },
         "src\/Service\/Registrar\/GitHub\/LabelApiClient.php": {
-            "hash": 2666335577
+            "hash": 2974921083
         },
-        "src\/Service\/Registrar\/JIRA\/IssueConfig.php": {
-            "hash": 4144297573
+        "src\/Service\/Registrar\/GitLab\/ApiClientFactory.php": {
+            "hash": 4190986833
+        },
+        "src\/Service\/Registrar\/GitLab\/ApiSectionClientFactory.php": {
+            "hash": 3335067463
+        },
+        "src\/Service\/Registrar\/GitLab\/GeneralIssueConfig.php": {
+            "hash": 3734265464
+        },
+        "src\/Service\/Registrar\/GitLab\/GitlabRegistrar.php": {
+            "hash": 3639440052
+        },
+        "src\/Service\/Registrar\/GitLab\/GitlabRegistrarFactory.php": {
+            "hash": 1319239157
+        },
+        "src\/Service\/Registrar\/GitLab\/Issue.php": {
+            "hash": 174612972
+        },
+        "src\/Service\/Registrar\/GitLab\/IssueApiClient.php": {
+            "hash": 2163988064
+        },
+        "src\/Service\/Registrar\/GitLab\/IssueFactory.php": {
+            "hash": 3631193721
+        },
+        "src\/Service\/Registrar\/GitLab\/LabelApiClient.php": {
+            "hash": 1512909985
+        },
+        "src\/Service\/Registrar\/GitLab\/MilestoneApiClient.php": {
+            "hash": 3483508094
+        },
+        "src\/Service\/Registrar\/GitLab\/UserResolver.php": {
+            "hash": 886713401
+        },
+        "src\/Service\/Registrar\/IssueSupporter.php": {
+            "hash": 1899151721
+        },
+        "src\/Service\/Registrar\/JIRA\/GeneralIssueConfig.php": {
+            "hash": 90343779
         },
         "src\/Service\/Registrar\/JIRA\/IssueFieldFactory.php": {
-            "hash": 661864814
+            "hash": 779820843
         },
         "src\/Service\/Registrar\/JIRA\/IssueLinkRegistrar.php": {
-            "hash": 341482026
+            "hash": 523141155
         },
         "src\/Service\/Registrar\/JIRA\/IssueLinkTypeProvider.php": {
-            "hash": 2554169065
+            "hash": 254772633
         },
         "src\/Service\/Registrar\/JIRA\/IssueServiceArrayConfigPreparer.php": {
-            "hash": 2745389393
+            "hash": 3970376749
         },
         "src\/Service\/Registrar\/JIRA\/JiraRegistrar.php": {
-            "hash": 2210352376
+            "hash": 2173202802
         },
         "src\/Service\/Registrar\/JIRA\/JiraRegistrarFactory.php": {
-            "hash": 3067493686
+            "hash": 4017589723
         },
         "src\/Service\/Registrar\/JIRA\/LinkedIssueNormalizer.php": {
-            "hash": 3120711816
+            "hash": 2139412938
+        },
+        "src\/Service\/Registrar\/JIRA\/NotSupportedLinkTypeException.php": {
+            "hash": 2444013126
         },
         "src\/Service\/Registrar\/JIRA\/ServiceFactory.php": {
-            "hash": 3811085786
+            "hash": 4144649120
         },
-        "src\/Service\/Registrar\/RegistrarFactoryInterface.php": {
-            "hash": 1237206508
+        "src\/Service\/Registrar\/Redmine\/EntityResolver.php": {
+            "hash": 1391816111
+        },
+        "src\/Service\/Registrar\/Redmine\/GeneralIssueConfig.php": {
+            "hash": 461486148
+        },
+        "src\/Service\/Registrar\/Redmine\/Issue.php": {
+            "hash": 3439529417
+        },
+        "src\/Service\/Registrar\/Redmine\/IssueApiClient.php": {
+            "hash": 365792007
+        },
+        "src\/Service\/Registrar\/Redmine\/IssueFactory.php": {
+            "hash": 2820576785
+        },
+        "src\/Service\/Registrar\/Redmine\/ProjectNotFoundException.php": {
+            "hash": 2588409220
+        },
+        "src\/Service\/Registrar\/Redmine\/RedmineRegistrar.php": {
+            "hash": 3351841426
+        },
+        "src\/Service\/Registrar\/Redmine\/RedmineRegistrarFactory.php": {
+            "hash": 1609821734
+        },
+        "src\/Service\/Registrar\/Redmine\/ServiceFactory.php": {
+            "hash": 622207008
+        },
+        "src\/Service\/Registrar\/Redmine\/UserResolver.php": {
+            "hash": 681104919
         },
         "src\/Service\/Registrar\/RegistrarFactoryRegistry.php": {
-            "hash": 2612888739
+            "hash": 4275566234
         },
-        "src\/Service\/Registrar\/RegistrarInterface.php": {
-            "hash": 154608395
+        "src\/Service\/Registrar\/YandexTracker\/ApiClientFactory.php": {
+            "hash": 2997965922
+        },
+        "src\/Service\/Registrar\/YandexTracker\/ExtendedIssueCreateRequest.php": {
+            "hash": 4029763710
+        },
+        "src\/Service\/Registrar\/YandexTracker\/GeneralIssueConfig.php": {
+            "hash": 490153108
+        },
+        "src\/Service\/Registrar\/YandexTracker\/IssueFactory.php": {
+            "hash": 3323906382
+        },
+        "src\/Service\/Registrar\/YandexTracker\/YandexTrackerRegistrar.php": {
+            "hash": 3371996680
+        },
+        "src\/Service\/Registrar\/YandexTracker\/YandexTrackerRegistrarFactory.php": {
+            "hash": 804716088
+        },
+        "src\/Service\/RegistrarProvider.php": {
+            "hash": 47368998
+        },
+        "src\/Service\/Report\/ReportBuilder.php": {
+            "hash": 2163343570
         },
         "src\/Service\/Tag\/Detector.php": {
-            "hash": 1586927943
+            "hash": 1364029935
         },
-        "src\/Service\/TodoFactory.php": {
-            "hash": 3583397615
+        "src\/Service\/TodoBuilder.php": {
+            "hash": 742980496
+        },
+        "src\/Service\/TodoBuilderFactory.php": {
+            "hash": 2357071751
+        },
+        "src\/Service\/ValidatorFactory.php": {
+            "hash": 4179987335
+        },
+        "tests\/Functional\/GlueSameTicketsTest.php": {
+            "hash": 3291368426
+        },
+        "tests\/Functional\/RegisterCommandTest.php": {
+            "hash": 1567981749
+        },
+        "tests\/Integration\/Service\/Registrar\/RegistrarFactoryRegistryTest.php": {
+            "hash": 2970734501
+        },
+        "tests\/Stub\/IncrementalKeyRegistrar.php": {
+            "hash": 483383206
+        },
+        "tests\/Stub\/IncrementalRegistrarFactory.php": {
+            "hash": 900056016
+        },
+        "tests\/Stub\/StaticKeyRegistrar.php": {
+            "hash": 504151406
+        },
+        "tests\/Stub\/StaticRegistrarFactory.php": {
+            "hash": 569574308
+        },
+        "tests\/Unit\/AST\/PHP\/ContextMapVisitorNullBugTest.php": {
+            "hash": 886134722
+        },
+        "tests\/Unit\/AST\/YAML\/ContextMapVisitorComplexKeyTest.php": {
+            "hash": 3518938463
+        },
+        "tests\/Unit\/ConfigFactoryTest.php": {
+            "hash": 4003823620
+        },
+        "tests\/Unit\/Dto\/Comment\/CommentPartStartLineTest.php": {
+            "hash": 2129863952
         },
         "tests\/Unit\/Dto\/Comment\/CommentPartTest.php": {
-            "hash": 1448685166
+            "hash": 4222689380
         },
-        "tests\/Unit\/Dto\/Comment\/CommentPartsTest.php": {
-            "hash": 1707390199
+        "tests\/Unit\/Dto\/FileHeapTest.php": {
+            "hash": 1743998130
+        },
+        "tests\/Unit\/Dto\/FileHeapYamlGluingTest.php": {
+            "hash": 1764061813
+        },
+        "tests\/Unit\/Dto\/GeneralConfig\/ArrayConfigTest.php": {
+            "hash": 1635437485
+        },
+        "tests\/Unit\/Dto\/GeneralConfig\/ProcessArrayConfigTest.php": {
+            "hash": 242841344
+        },
+        "tests\/Unit\/Dto\/GeneralConfig\/ProcessConfigTest.php": {
+            "hash": 3754756936
         },
         "tests\/Unit\/Dto\/InlineConfig\/TokenTest.php": {
             "hash": 3417222240
         },
-        "tests\/Unit\/Service\/Comment\/DetectorTest.php": {
-            "hash": 1196377818
+        "tests\/Unit\/Dto\/Token\/TokenLinesStackTest.php": {
+            "hash": 3878611785
+        },
+        "tests\/Unit\/Dto\/Token\/TokenStreamTest.php": {
+            "hash": 3247453011
+        },
+        "tests\/Unit\/Exception\/ConfigValidationExceptionTest.php": {
+            "hash": 425897878
+        },
+        "tests\/Unit\/Service\/ColorGeneratorTest.php": {
+            "hash": 469521135
+        },
+        "tests\/Unit\/Service\/Comment\/CommentCleanerRegistryTest.php": {
+            "hash": 2097147514
         },
         "tests\/Unit\/Service\/Comment\/ExtractorTest.php": {
-            "hash": 385216321
+            "hash": 1121049946
         },
-        "tests\/Unit\/Service\/CommentRegistrarTest.php": {
-            "hash": 2244823197
+        "tests\/Unit\/Service\/Comment\/Gluing\/PhpSequentialCommentGlueGateTest.php": {
+            "hash": 3648841543
+        },
+        "tests\/Unit\/Service\/Comment\/Gluing\/YamlSequentialCommentGlueGateTest.php": {
+            "hash": 173785851
+        },
+        "tests\/Unit\/Service\/Comment\/PhpCommentCleanerTest.php": {
+            "hash": 1464097460
+        },
+        "tests\/Unit\/Service\/Config\/ArrayConfigFactoryValidationTest.php": {
+            "hash": 643414395
+        },
+        "tests\/Unit\/Service\/Config\/ConfigProviderTest.php": {
+            "hash": 1716929718
+        },
+        "tests\/Unit\/Service\/Config\/YamlParserTest.php": {
+            "hash": 343756857
+        },
+        "tests\/Unit\/Service\/ContextPath\/Builder\/ArrowContextPathBuilderTest.php": {
+            "hash": 810154648
+        },
+        "tests\/Unit\/Service\/ContextPath\/Builder\/AsteriskContextPathBuilderTest.php": {
+            "hash": 3166662195
+        },
+        "tests\/Unit\/Service\/ContextPath\/Builder\/CodeBlockContextPathBuilderTest.php": {
+            "hash": 3388435921
+        },
+        "tests\/Unit\/Service\/ContextPath\/Builder\/NumberSignContextPathBuilderTest.php": {
+            "hash": 497423278
+        },
+        "tests\/Unit\/Service\/ContextPath\/Builder\/NumberedContextPathBuilderTest.php": {
+            "hash": 776231745
+        },
+        "tests\/Unit\/Service\/File\/FileParserContextTest.php": {
+            "hash": 1260873508
+        },
+        "tests\/Unit\/Service\/File\/FinderNamePatternBuilderTest.php": {
+            "hash": 852046935
         },
         "tests\/Unit\/Service\/File\/FinderTest.php": {
-            "hash": 4208662655
+            "hash": 1907677294
         },
-        "tests\/Unit\/Service\/File\/TokenizerAndSaverTest.php": {
-            "hash": 1759882062
+        "tests\/Unit\/Service\/File\/ParserTest.php": {
+            "hash": 4144054247
         },
-        "tests\/Unit\/Service\/FileProcessorTest.php": {
-            "hash": 582200816
+        "tests\/Unit\/Service\/File\/SaverTest.php": {
+            "hash": 3954829441
+        },
+        "tests\/Unit\/Service\/File\/YamlFileParserContextTest.php": {
+            "hash": 390764874
         },
         "tests\/Unit\/Service\/InlineConfig\/ArrayFromJsonLikeLexerBuilderTest.php": {
-            "hash": 691832200
+            "hash": 4280575416
         },
         "tests\/Unit\/Service\/InlineConfig\/ExtrasReaderTest.php": {
             "hash": 3953665875
         },
         "tests\/Unit\/Service\/InlineConfig\/JsonLikeLexerTest.php": {
-            "hash": 196793774
+            "hash": 1934518905
         },
-        "tests\/Unit\/Service\/Registrar\/IssueConfigTest.php": {
-            "hash": 301897578
+        "tests\/Unit\/Service\/Registrar\/GitHub\/GeneralIssueConfigTest.php": {
+            "hash": 3039172113
+        },
+        "tests\/Unit\/Service\/Registrar\/GitHub\/GitHubRegistrarFactoryTest.php": {
+            "hash": 3912780324
+        },
+        "tests\/Unit\/Service\/Registrar\/GitLab\/GeneralIssueConfigTest.php": {
+            "hash": 3660839127
+        },
+        "tests\/Unit\/Service\/Registrar\/GitLab\/GitlabRegistrarFactoryTest.php": {
+            "hash": 1364259698
+        },
+        "tests\/Unit\/Service\/Registrar\/IssueSupporterTest.php": {
+            "hash": 1201156318
+        },
+        "tests\/Unit\/Service\/Registrar\/JIRA\/GeneralIssueConfigTest.php": {
+            "hash": 3312205
         },
         "tests\/Unit\/Service\/Registrar\/JIRA\/IssueLinkTypeProviderTest.php": {
-            "hash": 440333680
+            "hash": 2389138495
+        },
+        "tests\/Unit\/Service\/Registrar\/JIRA\/JiraRegistrarFactoryTest.php": {
+            "hash": 3317664247
+        },
+        "tests\/Unit\/Service\/Registrar\/Redmine\/EntityResolverTest.php": {
+            "hash": 3558455531
+        },
+        "tests\/Unit\/Service\/Registrar\/Redmine\/GeneralIssueConfigTest.php": {
+            "hash": 1810298578
+        },
+        "tests\/Unit\/Service\/Registrar\/Redmine\/IssueApiClientTest.php": {
+            "hash": 2949552492
+        },
+        "tests\/Unit\/Service\/Registrar\/Redmine\/IssueFactoryTest.php": {
+            "hash": 2468698312
+        },
+        "tests\/Unit\/Service\/Registrar\/Redmine\/IssueTest.php": {
+            "hash": 4176263661
+        },
+        "tests\/Unit\/Service\/Registrar\/Redmine\/RedmineRegistrarFactoryTest.php": {
+            "hash": 203568522
+        },
+        "tests\/Unit\/Service\/Registrar\/Redmine\/RedmineRegistrarTest.php": {
+            "hash": 162853589
+        },
+        "tests\/Unit\/Service\/Registrar\/Redmine\/ServiceFactoryTest.php": {
+            "hash": 685635855
+        },
+        "tests\/Unit\/Service\/Registrar\/Redmine\/UserResolverTest.php": {
+            "hash": 3932513105
+        },
+        "tests\/Unit\/Service\/RegistrarProviderTest.php": {
+            "hash": 845153605
+        },
+        "tests\/Unit\/Service\/Report\/ReportBuilderTest.php": {
+            "hash": 2287929756
         },
         "tests\/Unit\/Service\/Tag\/DetectorTest.php": {
-            "hash": 3289469194
+            "hash": 3622747347
         },
         "tests\/Unit\/Service\/TodoFactoryTest.php": {
-            "hash": 432085102
+            "hash": 2217368095
+        },
+        "tests\/Unit\/Service\/ValidatorFactoryTest.php": {
+            "hash": 4104622078
         },
         "tests\/bootstrap.php": {
-            "hash": 1164284435
+            "hash": 2184344122
         }
     }
 }
