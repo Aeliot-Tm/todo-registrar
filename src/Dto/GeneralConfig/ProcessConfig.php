@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Dto\GeneralConfig;
 
 use Aeliot\TodoRegistrarContracts\GeneralConfig\ProcessConfigInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 final class ProcessConfig implements ProcessConfigInterface
 {
@@ -23,6 +24,7 @@ final class ProcessConfig implements ProcessConfigInterface
     /**
      * @var array<string, string>
      */
+    #[Assert\All(constraints: [new Assert\Type(type: 'string', message: 'Each extension alias must be a string')])]
     private array $extensionAliases = [];
 
     private bool $glueSameTickets = self::DEFAULT_GLUE_SAME_TICKETS;
