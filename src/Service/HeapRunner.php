@@ -24,6 +24,7 @@ use Aeliot\TodoRegistrar\Exception\FileReadException;
 use Aeliot\TodoRegistrar\Exception\LogicException;
 use Aeliot\TodoRegistrar\Exception\NoLineException;
 use Aeliot\TodoRegistrar\Service\Comment\Extractor as CommentExtractor;
+use Aeliot\TodoRegistrar\Service\Comment\SequentialCommentGlueGateRegistry;
 use Aeliot\TodoRegistrar\Service\File\FileParserRegistry;
 use Aeliot\TodoRegistrar\Service\File\Saver;
 use Aeliot\TodoRegistrarContracts\FinderInterface;
@@ -41,6 +42,7 @@ final readonly class HeapRunner
         private CommentExtractor $commentExtractor,
         private FinderInterface $finder,
         private FileParserRegistry $fileParserRegistry,
+        private SequentialCommentGlueGateRegistry $glueGateRegistry,
         private OutputAdapter $output,
         private RegistrarInterface $registrar,
         private Saver $saver,
@@ -129,9 +131,18 @@ final readonly class HeapRunner
 
             $this->output->writeln("Begin process file: {$file->getPathname()}", OutputAdapter::VERBOSITY_DEBUG);
             try {
+                $glueGate = null;
+                if ($glueSequentialComments) {
+                    $glueGate = $this->glueGateRegistry->find($extensionAlias);
+                    if (null === $glueGate) {
+                        throw new LogicException(\sprintf('Sequential comment glue is enabled but no glue gate is configured for extension alias "%s" (file: %s)', $extensionAlias, $file->getPathname()));
+                    }
+                }
+
                 $fileHeap = new FileHeap(
                     $fileParser->parse($file),
                     $glueSequentialComments,
+                    $glueGate,
                     $statistic,
                     $this->saver,
                 );

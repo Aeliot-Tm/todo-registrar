@@ -18,6 +18,7 @@ use Aeliot\TodoRegistrar\Dto\Parsing\MappedContext;
 use Aeliot\TodoRegistrar\Dto\Parsing\ParsedFile;
 use Aeliot\TodoRegistrar\Dto\Token\CommentTokensGroup;
 use Aeliot\TodoRegistrar\Dto\Token\TokenInterface;
+use Aeliot\TodoRegistrar\Service\Comment\SequentialCommentGlueGateInterface;
 use Aeliot\TodoRegistrar\Service\File\Saver;
 
 /**
@@ -36,6 +37,7 @@ final class FileHeap
     public function __construct(
         private readonly ParsedFile $parsedFile,
         private readonly bool $glueSequentialComments,
+        private readonly ?SequentialCommentGlueGateInterface $glueGate,
         private readonly ProcessStatistic $statistic,
         Saver $saver,
     ) {
@@ -43,7 +45,7 @@ final class FileHeap
         $this->fileStatistic = new FileStatistic($file->getPathname(), $statistic);
         $this->fileUpdateCallback = function () use ($file, $saver): void {
             $this->fileStatistic->tickRegistration();
-            $saver->save($file, $this->parsedFile->getAllTokens());
+            $saver->save($file, $this->parsedFile->getTokenStream());
         };
     }
 
@@ -72,42 +74,37 @@ final class FileHeap
     {
         $commentNodes = [];
         $group = new CommentTokensGroup();
+        $stream = $this->parsedFile->getTokenStream();
 
-        foreach ($this->parsedFile->getAllTokens() as $token) {
+        while (!$stream->isEnd()) {
+            $token = $stream->current();
             if ($token->isComment()) {
                 $this->statistic->tickCommentToken();
             }
 
-            if ($this->glueSequentialComments && $token->isSingleLineComment()) {
+            if ($this->glueSequentialComments && $this->glueGate?->canGlueCurrent($stream, !$group->isEmpty())) {
                 $group->addToken($token);
+                $stream->next();
                 continue;
             }
 
-            // If gluing is enabled and we have active group, check whitespace
-            if ($this->glueSequentialComments && !$group->isEmpty() && !$token->isComment() && '' === trim($token->getText())) {
-                // Empty line (multiple line breaks) breaks the group
-                if ($group->hasPendingWhitespace() || $this->hasMultipleLineBreaks($token->getText())) {
-                    $commentNodes[] = $this->createCommentNode($group->grabTokens());
-                    continue;
-                }
-                // Single line break - store as pending
-                $group->addWhitespace($token);
-                continue;
-            }
-
-            // Break group on non-empty, non-comment token
             if (!$token->isComment()) {
-                if (!$group->isEmpty() && ('' !== trim($token->getText()))) {
-                    $commentNodes[] = $this->createCommentNode($group->grabTokens());
+                if (!$group->isEmpty()) {
+                    if ('' !== trim($token->getText())) {
+                        $commentNodes[] = $this->createCommentNode($group->grabTokens());
+                    } elseif (null !== $this->glueGate) {
+                        $commentNodes[] = $this->createCommentNode($group->grabTokens());
+                    }
                 }
+                $stream->next();
                 continue;
             }
 
-            // Multi-line comment - flush group and add comment
             if (!$group->isEmpty()) {
                 $commentNodes[] = $this->createCommentNode($group->grabTokens());
             }
             $commentNodes[] = $this->createCommentNode([$token]);
+            $stream->next();
         }
 
         if (!$group->isEmpty()) {
@@ -123,10 +120,5 @@ final class FileHeap
     private function createCommentNode(array $tokens): CommentNode
     {
         return new CommentNode($tokens, new MappedContext($tokens[0]->getLine(), $this->parsedFile->getContextMap()));
-    }
-
-    private function hasMultipleLineBreaks(string $text): bool
-    {
-        return substr_count($text, "\n") > 1 || substr_count($text, "\r") > 1;
     }
 }

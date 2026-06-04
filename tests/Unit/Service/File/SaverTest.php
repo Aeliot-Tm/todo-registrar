@@ -41,7 +41,7 @@ final class SaverTest extends TestCase
         $outgoingPathname = sys_get_temp_dir() . '/tr-' . microtime(true) . '-' . mt_rand() . '.php';
 
         $parsedFile = (new PhpFileParser())->parse($this->getMockSplFileInfo($incomingPathame));
-        (new Saver())->save($this->getMockSplFileInfo($outgoingPathname), $parsedFile->getAllTokens());
+        (new Saver())->save($this->getMockSplFileInfo($outgoingPathname), $parsedFile->getTokenStream());
 
         self::assertFileEquals($incomingPathame, $outgoingPathname);
     }

@@ -372,7 +372,7 @@ final class YamlFileParserContextTest extends TestCase
     {
         $statistic = new ProcessStatistic();
         $saver = $this->createMock(Saver::class);
-        $fileHeap = new FileHeap($parsedFile, false, $statistic, $saver);
+        $fileHeap = new FileHeap($parsedFile, false, null, $statistic, $saver);
 
         return $fileHeap->getCommentNodes();
     }

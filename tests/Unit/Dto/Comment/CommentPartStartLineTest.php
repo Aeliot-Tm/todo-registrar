@@ -19,6 +19,7 @@ use Aeliot\TodoRegistrar\Dto\ProcessStatistic;
 use Aeliot\TodoRegistrar\Service\Comment\Cleaner\PhpCommentCleaner;
 use Aeliot\TodoRegistrar\Service\Comment\CommentCleanerRegistry;
 use Aeliot\TodoRegistrar\Service\Comment\Extractor;
+use Aeliot\TodoRegistrar\Service\Comment\SequentialCommentGlueGate\PhpSequentialCommentGlueGate;
 use Aeliot\TodoRegistrar\Service\File\Parser\PhpFileParser;
 use Aeliot\TodoRegistrar\Service\File\Saver;
 use Aeliot\TodoRegistrar\Service\Tag\Detector as TagDetector;
@@ -74,7 +75,8 @@ final class CommentPartStartLineTest extends TestCase
         $parsedFile = (new PhpFileParser())->parse(new \SplFileInfo($pathname));
         $statistic = new ProcessStatistic();
         $saver = $this->createMock(Saver::class);
-        $fileHeap = new FileHeap($parsedFile, $glueSequentialComments, $statistic, $saver);
+        $glueGate = $glueSequentialComments ? new PhpSequentialCommentGlueGate() : null;
+        $fileHeap = new FileHeap($parsedFile, $glueSequentialComments, $glueGate, $statistic, $saver);
 
         $extractor = new Extractor(
             new TagDetector(['todo', 'fixme'], [':', '-']),

@@ -21,11 +21,13 @@ use Aeliot\TodoRegistrar\Dto\Token\TokenInterface;
 final readonly class Saver
 {
     /**
-     * @param TokenInterface[] $tokens
+     * @param \Traversable<TokenInterface> $tokens
      */
-    public function save(\SplFileInfo $file, array $tokens): void
+    public function save(\SplFileInfo $file, \Traversable $tokens): void
     {
-        $content = implode('', array_map(static fn (TokenInterface $x): string => $x->getText(), $tokens));
-        file_put_contents($file->getPathname(), $content);
+        file_put_contents($file->getPathname(), implode('', array_map(
+            static fn (TokenInterface $x): string => $x->getText(),
+            iterator_to_array($tokens)),
+        ));
     }
 }

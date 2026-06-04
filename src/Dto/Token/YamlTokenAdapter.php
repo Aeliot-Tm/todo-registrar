@@ -53,6 +53,6 @@ final class YamlTokenAdapter implements TokenInterface
 
     public function isSingleLineComment(): bool
     {
-        return true;
+        return $this->isComment();
     }
 }
