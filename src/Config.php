@@ -44,6 +44,7 @@ class Config implements
     private ?InlineConfigReaderInterface $inlineConfigReader = null;
     #[Assert\Valid]
     private ?IssueKeyInjectionConfig $issueKeyInjectionConfig = null;
+    #[Assert\Valid]
     private ?ProcessConfig $processConfig = null;
 
     /**
@@ -61,6 +62,8 @@ class Config implements
     /**
      * @var string[]
      */
+    #[Assert\NotBlank(message: 'Option "tags" must not be blank')]
+    #[Assert\All(constraints: [new Assert\Type(type: 'string', message: 'Each tag must be a string')])]
     private array $tags = self::DEFAULT_TAGS;
 
     public function getFinder(): FinderInterface
