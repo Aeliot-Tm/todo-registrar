@@ -11,7 +11,7 @@
 
 use Aeliot\PhpCsFixerBaseline\Service\FilterFactory;
 
-Phar::loadPhar(dirname(__DIR__, 2) . '/tools/pcsf-baseline.phar', 'pcsf-baseline.phar');
+Phar::loadPhar(dirname(__DIR__, 3) . '/tools/pcsf-baseline.phar', 'pcsf-baseline.phar');
 require_once 'phar://pcsf-baseline.phar/vendor/autoload.php';
 
 $rules = [
@@ -39,7 +39,7 @@ $rules = [
 
 $config = (new PhpCsFixer\Config())
     ->setRiskyAllowed(true)
-    ->setCacheFile(dirname(__DIR__, 2) . '/var/.php-cs-fixer.cache')
+    ->setCacheFile(dirname(__DIR__, 3) . '/var/.php-cs-fixer.cache')
     ->setRules($rules);
 
 /** @var PhpCsFixer\Finder $finder */

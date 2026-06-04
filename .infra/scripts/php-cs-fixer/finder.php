@@ -14,6 +14,6 @@ declare(strict_types=1);
 return $finder = (new PhpCsFixer\Finder())
     ->files()
     ->ignoreVCS(true)
-    ->in(dirname(__DIR__, 2))
+    ->in(dirname(__DIR__, 3))
     ->exclude(['tests/fixtures', 'var', 'vendor'])
-    ->append([dirname(__DIR__, 2) . '/bin/todo-registrar']);
+    ->append([dirname(__DIR__, 3) . '/bin/todo-registrar']);

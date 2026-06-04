@@ -14,6 +14,6 @@ declare(strict_types=1);
 $configPath = __DIR__ . '/config.json';
 $config = json_decode(file_get_contents($configPath), true, 512, \JSON_THROW_ON_ERROR);
 
-$config['base-path'] = dirname($configPath, 3) . '/';
+$config['base-path'] = dirname($configPath, 4) . '/';
 
 file_put_contents($configPath, json_encode($config, \JSON_THROW_ON_ERROR | \JSON_PRETTY_PRINT));

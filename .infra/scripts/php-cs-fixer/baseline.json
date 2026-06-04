@@ -5,19 +5,19 @@
         "bin\/todo-registrar": {
             "hash": 3169601229
         },
-        "scripts\/box\/prepare-config.php": {
+        ".infra\/scripts\/box\/prepare-config.php": {
             "hash": 897298482
         },
-        "scripts\/composer-unused\/config.php": {
+        ".infra\/scripts\/composer-unused\/config.php": {
             "hash": 3644645831
         },
-        "scripts\/php-cs-fixer\/config.php": {
+        ".infra\/scripts\/php-cs-fixer\/config.php": {
             "hash": 1705903584
         },
-        "scripts\/php-cs-fixer\/finder.php": {
+        ".infra\/scripts\/php-cs-fixer\/finder.php": {
             "hash": 1895290745
         },
-        "scripts\/todo-registrar\/config.php": {
+        ".infra\/scripts\/todo-registrar\/config.php": {
             "hash": 1199485383
         },
         "src\/Application.php": {
