@@ -52,23 +52,26 @@ Extension resolution:
 
 Output: `ParsedFile` with:
 
-- `getAllTokens()` — `TokenInterface[]` (mutable via `setText()`)
+- `getTokenStream()` — cursor over the same token list (`current`, `advance`, `peek`)
+  which allows iterate `TokenInterface` (mutable via `setText()`)
 - Lazy context map for AST/YAML structure
 
 See [Source File Parsing](../Feature/SourceFileParsing.md).
 
 ## Step 3: Comment Node Building
 
-**Class:** `Dto/FileHeap`
+**Classes:** `Dto/FileHeap`, `Service/Comment/SequentialCommentGlueGateRegistry`
 
-Single pass over all tokens:
+Single pass via `ParsedFile::getTokenStream()`:
 
 | Token | Action (gluing enabled) |
 |---|---|
-| Single-line comment | Add to `CommentTokensGroup` |
-| Whitespace only | Buffer if group active; multiple line breaks flush group |
+| Token accepted by glue gate | Add to `CommentTokensGroup` (comment or whitespace between glued lines) |
+| Non-glueable whitespace with active group | Flush group |
 | Non-empty non-comment | Flush group |
-| Multi-line comment | Flush group; create node for block comment alone |
+| Non-glueable comment (e.g. PHP block) | Flush group; create node for that comment alone |
+
+Glue gate is selected by file extension alias (`php`, `yaml`, `yml`). Lookahead on the stream decides whether whitespace bridges to the next glueable comment.
 
 Gluing disabled: each comment token becomes its own `CommentNode` immediately.
 

@@ -19,6 +19,7 @@ use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
 use Aeliot\TodoRegistrar\Exception\LogicException;
 use Aeliot\TodoRegistrar\Exception\NotSupportedConfigException;
 use Aeliot\TodoRegistrar\Exception\UnavailableConfigException;
+use Aeliot\TodoRegistrar\Service\Comment\SequentialCommentGlueGateRegistry;
 use Aeliot\TodoRegistrar\Service\Config\ConfigProvider;
 use Aeliot\TodoRegistrar\Service\File\FileParserRegistry;
 use Aeliot\TodoRegistrar\Service\File\Saver;
@@ -32,6 +33,7 @@ final readonly class HeapRunnerFactory
         private CommentExtractorFactory $commentExtractorFactory,
         private ConfigProvider $configProvider,
         private FileParserRegistry $fileParserRegistry,
+        private SequentialCommentGlueGateRegistry $glueGateRegistry,
         private RegistrarProvider $registrarProvider,
         private Saver $saver,
         private TodoBuilderFactory $todoBuilderFactory,
@@ -56,6 +58,7 @@ final readonly class HeapRunnerFactory
             $commentExtractor,
             $config->getFinder(),
             $this->fileParserRegistry,
+            $this->glueGateRegistry,
             $output,
             $registrar,
             $this->saver,

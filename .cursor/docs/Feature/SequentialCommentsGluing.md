@@ -4,12 +4,12 @@ Merges consecutive single-line comments into one comment node before TODO extrac
 
 ## What It Does
 
-When `process.glueSequentialComments` is enabled, `FileHeap` groups adjacent single-line comment tokens separated by at most one blank line. The grouped tokens form one `CommentNode`; `Extractor` can then find multiple TODOs inside the combined text.
+When `process.glueSequentialComments` is enabled, `FileHeap` groups adjacent single-line comment tokens separated by at most one blank line. Format-specific glue gates decide whether the current stream token may join the active group (with lookahead for whitespace between comments). The grouped tokens form one `CommentNode`; `Extractor` can then find multiple TODOs inside the combined text.
 
 Applies to:
 
-- PHP: `//` and `#` comments (`PhpTokenAdapter::isSingleLineComment()`)
-- YAML: `#` comments (all YAML comments are single-line)
+- PHP: `//` and `#` single-line comments
+- YAML: `#` comments; newline and indent tokens between consecutive `#` lines are glueable whitespace
 
 Multi-line block comments (`/* */`, `/** */`) flush any active group and are processed separately.
 
@@ -63,10 +63,13 @@ One `CommentNode`, two `CommentPart` objects, two registrations (unless same-tic
 | Class | Path |
 |---|---|
 | Grouping logic | `src/Dto/FileHeap.php` (`buildCommentNodes()`) |
+| Token stream | `src/Dto/Token/TokenStream.php`; `ParsedFile::getTokenStream()` |
+| Glue gates | `src/Service/Comment/SequentialCommentGlueGate/PhpSequentialCommentGlueGate.php`, `YamlSequentialCommentGlueGate.php` |
+| Gate registry | `src/Service/Comment/SequentialCommentGlueGateRegistry.php` |
 | Token grouping | `src/Dto/Token/CommentTokensGroup.php` |
 | Comment node | `src/Dto/Parsing/CommentNode.php` |
 | Config | `src/Dto/GeneralConfig/ProcessConfig.php` |
 
-Flow: `FileParserRegistry` → `ParsedFile` → `FileHeap` → `Extractor`.
+Flow: `FileParserRegistry` → `ParsedFile` → `SequentialCommentGlueGateRegistry` + `FileHeap` → `Extractor`.
 
 See also: [Source File Parsing](SourceFileParsing.md).

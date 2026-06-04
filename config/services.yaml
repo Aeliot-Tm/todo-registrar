@@ -8,6 +8,8 @@ services:
       tags: ['aeliot.todo_registrar.context_path_builder']
     Aeliot\TodoRegistrar\Service\File\FileParserInterface:
       tags: ['aeliot.todo_registrar.file_parser']
+    Aeliot\TodoRegistrar\Service\Comment\SequentialCommentGlueGateInterface:
+      tags: ['aeliot.todo_registrar.sequential_comment_glue_gate']
     Aeliot\TodoRegistrarContracts\Registrar\RegistrarFactoryInterface:
       tags: ['aeliot.todo_registrar.registrar_factory']
 

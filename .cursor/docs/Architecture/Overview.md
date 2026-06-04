@@ -57,7 +57,8 @@ PHP config: `require` must return `GeneralConfigInterface`.
 
 | Class | Role |
 |---|---|
-| `FileHeap` | Builds `CommentNode[]`, glues sequential comments |
+| `FileHeap` | Builds `CommentNode[]`, glues sequential comments via glue gates |
+| `SequentialCommentGlueGateRegistry` | PHP/YAML rules for sequential comment gluing |
 | `Comment/Extractor` | Splits comments into `CommentPart[]` |
 | `Tag/Detector` | Parses tag, assignee, existing key |
 | `CommentCleanerRegistry` | PHP and YAML comment line cleaners |
