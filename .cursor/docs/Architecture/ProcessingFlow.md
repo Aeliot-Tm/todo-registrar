@@ -15,7 +15,7 @@ HeapRunner.run()
             │       ├─► FileParserRegistry → ParsedFile (tokens + context map)
             │       └─► CommentNodesBuilder.build()  [optional sequential gluing]
             │
-            ├─► processFile()
+            ├─► FileProcessor.process()
             │       ├─► Comment/Extractor → CommentPart[]
             │       │       └─ skip if tag line has ticketKey
             │       ├─► TodoBuilder → Todo
@@ -118,7 +118,7 @@ Creates `ContextAwareTodo` (implements `Todo`):
 
 ## Step 7: Register Issue
 
-**Class:** `HeapRunner::register()`
+**Class:** `FileProcessor`
 
 Run-scoped state lives in `HeapContext` (`statistic`, `hashToKey`, `glueSameTickets`).
 
@@ -167,11 +167,11 @@ run()
   └── foreach finder → SplFileInfo
         try
           ├── FileHeapFactory.create() → FileHeap (or skip if no parser)
-          ├── processFile()
+          ├── FileProcessor.process()
           │     └── foreach commentNode
           │           └── foreach CommentPart
           │                 ├── TodoBuilder → Todo
-          │                 ├── register() + saveAfterRegistration()
+          │                 ├── FileProcessor.register() + saveAfterRegistration()
           │                 └── CommentRegistrationException propagates up
           └── logFileCompletion()
         catch Exception
@@ -181,14 +181,14 @@ run()
 
 Per-file processing is wrapped in a single `try/catch` in `run()`. Any `\Exception`
 (parse, glue gate, registration, todo building) triggers `writeError()` with the current
-file path and stops the run (fail-fast). `register()` wraps registrar failures in
+file path and stops the run (fail-fast). `FileProcessor` wraps registrar failures in
 `CommentRegistrationException` before they reach the outer catch.
 
 ## HeapContext
 
 **Class:** `Dto/HeapContext`
 
-Mutable run-scoped bag passed through `FileHeapFactory.create()`, `processFile()`, and `register()`:
+Mutable run-scoped bag passed through `FileHeapFactory.create()`, `FileProcessor.process()`, and registration:
 
 | Property | Purpose |
 |---|---|
@@ -205,7 +205,7 @@ Built once in `run()` via `HeapContextFactory`; shared across all files in the r
 |---|---|
 | No parser for file extension | `writeErr`, skip file (`continue`) |
 | Parse / glue gate / registration / build error | `writeError($exception, $file)` in `run()`, rethrow |
-| Registrar failure | Wrapped in `CommentRegistrationException` in `register()` |
+| Registrar failure | Wrapped in `CommentRegistrationException` in `FileProcessor` |
 
 ## Related Features
 

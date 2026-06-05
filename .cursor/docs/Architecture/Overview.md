@@ -69,7 +69,8 @@ PHP config: `require` must return `GeneralConfigInterface`.
 | Class | Role |
 |---|---|
 | `FileHeapFactory` | Parses a file and builds `FileHeap` (parser lookup, optional sequential gluing) |
-| `HeapRunner` | Main loop: files → comments → todos → register → save |
+| `FileProcessor` | Processes one file: extract TODOs → register → inject key → save |
+| `HeapRunner` | Main loop over finder: create file heap, delegate to `FileProcessor`, handle errors |
 | `HeapContext` | Run-scoped state: statistic, hash→key map, glue flags, output |
 | `HeapRunnerFactory` | Wires dependencies from config |
 | `TodoBuilder` | Builds `Todo` DTO with hash and inline config |

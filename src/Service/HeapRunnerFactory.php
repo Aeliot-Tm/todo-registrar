@@ -49,15 +49,14 @@ final readonly class HeapRunnerFactory
         $commentExtractor = $this->commentExtractorFactory->create($config);
         $registrar = $this->registrarProvider->getRegistrar($config);
         $todoBuilder = $this->todoBuilderFactory->create($config, $output);
+        $fileProcessor = new FileProcessor($commentExtractor, $registrar, $todoBuilder);
 
         return new HeapRunner(
-            $commentExtractor,
             $config,
             $this->fileHeapFactory,
+            $fileProcessor,
             $this->heapContextFactory,
             $output,
-            $registrar,
-            $todoBuilder,
         );
     }
 }
