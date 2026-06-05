@@ -26,27 +26,21 @@ use Aeliot\TodoRegistrar\Service\File\Saver;
  */
 final class FileHeap
 {
-    private FileStatistic $fileStatistic;
-    private \Closure $fileUpdateCallback;
-
     /**
      * @var CommentNode[]|null
      */
     private ?array $commentNodes = null;
+
+    private FileStatistic $fileStatistic;
 
     public function __construct(
         private readonly ParsedFile $parsedFile,
         private readonly bool $glueSequentialComments,
         private readonly ?SequentialCommentGlueGateInterface $glueGate,
         private readonly ProcessStatistic $statistic,
-        Saver $saver,
+        private readonly Saver $saver,
     ) {
-        $file = $parsedFile->getFile();
-        $this->fileStatistic = new FileStatistic($file->getPathname(), $statistic);
-        $this->fileUpdateCallback = function () use ($file, $saver): void {
-            $this->fileStatistic->tickRegistration();
-            $saver->save($file, $this->parsedFile->getTokenStream());
-        };
+        $this->fileStatistic = new FileStatistic($parsedFile->getFile()->getPathname(), $statistic);
     }
 
     /**
@@ -57,14 +51,15 @@ final class FileHeap
         return $this->commentNodes ??= $this->buildCommentNodes();
     }
 
-    public function getFileUpdateCallback(): \Closure
-    {
-        return $this->fileUpdateCallback;
-    }
-
     public function getRegistrationCount(): int
     {
         return $this->fileStatistic->getRegistrationCount();
+    }
+
+    public function saveAfterRegistration(): void
+    {
+        $this->fileStatistic->tickRegistration();
+        $this->saver->save($this->parsedFile->getFile(), $this->parsedFile->getTokenStream());
     }
 
     /**

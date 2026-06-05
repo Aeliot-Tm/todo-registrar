@@ -190,7 +190,7 @@ final readonly class HeapRunner
 
                 $todo = $this->todoBuilder->create($commentPart);
                 $this->register($todo, $context);
-                $fileHeap->getFileUpdateCallback()();
+                $fileHeap->saveAfterRegistration();
             }
         }
     }
