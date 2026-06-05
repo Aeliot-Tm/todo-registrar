@@ -54,7 +54,6 @@ final readonly class HeapRunnerFactory
             $commentExtractor,
             $config,
             $this->fileHeapFactory,
-            $config->getFinder(),
             $this->heapContextFactory,
             $output,
             $registrar,

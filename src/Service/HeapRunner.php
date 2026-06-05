@@ -23,7 +23,6 @@ use Aeliot\TodoRegistrar\Exception\FileReadException;
 use Aeliot\TodoRegistrar\Exception\LogicException;
 use Aeliot\TodoRegistrar\Exception\NoLineException;
 use Aeliot\TodoRegistrar\Service\Comment\Extractor as CommentExtractor;
-use Aeliot\TodoRegistrarContracts\FinderInterface;
 use Aeliot\TodoRegistrarContracts\GeneralConfig\GeneralConfigInterface;
 use Aeliot\TodoRegistrarContracts\Registrar\RegistrarInterface;
 
@@ -36,7 +35,6 @@ final readonly class HeapRunner
         private CommentExtractor $commentExtractor,
         private GeneralConfigInterface $config,
         private FileHeapFactory $fileHeapFactory,
-        private FinderInterface $finder,
         private HeapContextFactory $heapContextFactory,
         private OutputAdapter $output,
         private RegistrarInterface $registrar,
@@ -54,7 +52,7 @@ final readonly class HeapRunner
     {
         $context = $this->heapContextFactory->create($this->config, $this->output);
 
-        foreach ($this->finder as $file) {
+        foreach ($this->config->getFinder() as $file) {
             try {
                 $fileHeap = $this->fileHeapFactory->create($file, $context);
                 if (null === $fileHeap) {
