@@ -219,6 +219,11 @@ docker run --rm --env-file .env -v "$(pwd):/app" ghcr.io/aeliot-tm/todo-registra
 
 The `process` section configures how files and TODO comments are processed during a run.
 
+Source files are saved to disk **after each successful registration** (incremental save), not after the
+whole file or run. If the run stops with an error, a file may already contain injected keys for some
+TODOs while others in the same file are still without keys; already written keys are not rolled back.
+See [Issue Key Injection — When source files are saved](../source_files_updating.md).
+
 #### Option extensionAliases
 
 **Type:** `array` (map of string to string)
