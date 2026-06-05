@@ -23,6 +23,7 @@ services:
       - '../src/Console/OutputAdapter.php'
       - '../src/Service/Comment/Extractor.php'
       - '../src/Service/File/Finder.php'
+      - '../src/Service/FileProcessor.php'
       - '../src/Service/HeapRunner.php'
       - '../src/Service/InlineConfig/JsonLikeLexer.php'
       - '../src/Service/Registrar/GitHub/'

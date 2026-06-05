@@ -4,9 +4,9 @@ Controls how registrar-returned keys (`PROJ-123`, `#42`, `QUEUE-1`) are written 
 
 ## What It Does
 
-1. After `registrar->register($todo)`, `HeapRunner` calls `$todo->injectKey($key)`
+1. After `registrar->register($todo)`, `FileProcessor` calls `$todo->injectKey($key)`
 2. `CommentPart::injectKey()` modifies the first line of the comment at the configured position
-3. `FileHeap` save callback writes the updated tokens to disk via `Saver`
+3. `FileHeap::saveAfterRegistration()` writes the updated tokens to disk via `Saver`
 
 Works for PHP and YAML source files (any file type that uses `TokenInterface`).
 

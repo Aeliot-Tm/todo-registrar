@@ -57,7 +57,8 @@ PHP config: `require` must return `GeneralConfigInterface`.
 
 | Class | Role |
 |---|---|
-| `FileHeap` | Builds `CommentNode[]`, glues sequential comments via glue gates |
+| `CommentNodesBuilder` | Builds `CommentNode[]`, glues sequential comments via glue gates |
+| `FileHeap` | Per-file heap: lazy comment nodes, registration stats, save after register |
 | `SequentialCommentGlueGateRegistry` | PHP/YAML rules for sequential comment gluing |
 | `Comment/Extractor` | Splits comments into `CommentPart[]` |
 | `Tag/Detector` | Parses tag, assignee, existing key |
@@ -67,7 +68,10 @@ PHP config: `require` must return `GeneralConfigInterface`.
 
 | Class | Role |
 |---|---|
-| `HeapRunner` | Main loop: files → comments → todos → register → save |
+| `FileHeapFactory` | Parses a file and builds `FileHeap` (parser lookup, optional sequential gluing) |
+| `FileProcessor` | Processes one file: extract TODOs → register → inject key → save |
+| `HeapRunner` | Main loop over finder: create file heap, delegate to `FileProcessor`, handle errors |
+| `HeapContext` | Run-scoped state: statistic, hash→key map, glue flags, output |
 | `HeapRunnerFactory` | Wires dependencies from config |
 | `TodoBuilder` | Builds `Todo` DTO with hash and inline config |
 
