@@ -1,0 +1,57 @@
+---
+description: Naming conventions and alphabetical sorting rules (incl. PHP attributes and class member order)
+alwaysApply: true
+---
+
+# Architecture: naming and sorting
+
+## Naming
+
+- Use clear, domain-oriented names. Avoid abbreviations unless they are widely accepted in the domain.
+- PHP naming:
+  - Classes/Interfaces/Traits/Enums: `StudlyCaps`
+  - Methods/functions: `camelCase` (verbs for actions, nouns for queries)
+  - Properties/variables: `camelCase`
+  - Constants: `UPPER_SNAKE_CASE`
+  - Booleans: start with `is|has|can|should|was`
+  - Interfaces: use `*Interface` suffix when it improves clarity
+    (avoid redundant suffixing if the name already communicates the abstraction)
+
+## Sorting (general)
+
+- Prefer alphabetical order **everywhere it is reasonable** and does not harm readability:
+  - Import/use statements (grouped, then alphabetically inside a group)
+  - Lists of scalar items (e.g., allowed values, small registries, mappings)
+  - Array/map keys when order is not semantically meaningful
+- Do not alphabetize when order is meaningful (e.g., execution order, precedence, layered pipeline steps, user-facing order).
+
+## Sorting (PHP class members, `**/*.php`)
+
+**Mandatory for every change that adds, removes, or renames a class member:** before you stop editing that class file,
+reorder members so the whole class matches the rules below. Do **not** place new methods or properties at the bottom
+of the class “for convenience” unless that position is already correct after sorting.
+
+Sort class elements deterministically using the rules below.
+
+1. Group order:
+   - Traits (`use SomeTrait;`)
+   - Constants
+   - Properties
+   - Methods
+2. Static first, then non-static (inside each group).
+3. Visibility order (inside each static/non-static bucket):
+   - `public`, then `protected`, then `private`
+4. Name: alphabetical by member name (case-insensitive).
+5. Getters/setters: keep pairs adjacent and ordered as getter first, then setter,
+   even if strict alphabetical order would separate them.
+
+## Sorting (PHP attributes)
+
+When several `#[...]` attributes sit in a row on the **same** declaration and their **order does not change behavior**
+(typical for metadata: tooling, coverage, documentation), keep a stable layout:
+
+1. Sort by **attribute name** (the identifier after `#`, case-insensitive).
+2. If the same attribute is repeated, sort those lines by the **full argument list** as written in parentheses (case-insensitive).
+
+Do **not** reorder when the language, framework, or a standard assigns meaning to attribute order,
+or when reordering would obscure an intentional sequence.

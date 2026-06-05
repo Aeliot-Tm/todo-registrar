@@ -43,8 +43,14 @@ Follow these rules when developing:
 8. Project runs in Docker containers configured in `compose.yaml`.
    To execute shell scripts, add prefix `docker compose exec php-cli ` to them.
 
-9. After creating or updating *.php files, at the end of the work run these shell scripts:
-   1. PHP CS Fixer: `composer cs-fix -- --show-progress=none`
-   2. PHPStan: `composer phpstan`
+9. When editing PHP classes, keep methods, properties, and constants ordered per
+   `.cursor/rules/architecture-naming-and-sorting.mdc` (do not leave new members only at the end of the file
+   if sort order requires another place).
 
-10. Don't run tests, `cs-fix` and `phpstan` when only documentation is updated.
+10. After creating or updating *.php files, at the end of the work run these shell scripts:
+    - PHP CS Fixer: `composer cs-fix -- --show-progress=none`
+    - PHPStan: `composer phpstan`
+
+11. Don't run tests, `cs-fix` and `phpstan` when only documentation is updated.
+
+12. When you have to run tests then call shell script `composer test-all`
