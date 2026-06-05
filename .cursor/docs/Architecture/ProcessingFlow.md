@@ -7,25 +7,29 @@ Main algorithm from file discovery to issue registration and source update. Impl
 ```
 HeapRunner.run()
     │
-    ├─► Finder (SplFileInfo)
+    ├─► HeapContext (ProcessStatistic, hashToKey, glueSameTickets)
     │
-    ├─► FileParserRegistry → ParsedFile (tokens + context map)
-    │
-    ├─► FileHeap.buildCommentNodes()  [optional sequential gluing]
-    │
-    ├─► Comment/Extractor → CommentPart[]
-    │       └─ skip if tag line has ticketKey
-    │
-    ├─► TodoBuilder → Todo
-    │
-    ├─► Registrar.register()  [optional same-ticket gluing by hash]
-    │
-    ├─► Todo.injectKey() → CommentPart updates token text
-    │
-    └─► Saver.save() via fileUpdateCallback
+    └─► foreach Finder (SplFileInfo)
+            │
+            ├─► createFileHeap()
+            │       ├─► FileParserRegistry → ParsedFile (tokens + context map)
+            │       └─► FileHeap.buildCommentNodes()  [optional sequential gluing]
+            │
+            ├─► processFile()
+            │       ├─► Comment/Extractor → CommentPart[]
+            │       │       └─ skip if tag line has ticketKey
+            │       ├─► TodoBuilder → Todo
+            │       ├─► Registrar.register()  [optional same-ticket gluing by hash]
+            │       ├─► Todo.injectKey() → CommentPart updates token text
+            │       └─► Saver.save() via fileUpdateCallback
+            │
+            ├─► logFileCompletion()
+            │
+            └─► on Exception: writeError() + rethrow (fail-fast)
 ```
 
-Processing uses generators: one file in memory at a time; file saved after each registration.
+One file in memory at a time; file saved after each registration. The main loop is imperative;
+generators are used only in local helpers (e.g. `Comment/Extractor::getLines()`).
 
 ## Step 1: File Discovery
 
@@ -116,6 +120,8 @@ Creates `ContextAwareTodo` (implements `Todo`):
 
 **Class:** `HeapRunner::register()`
 
+Run-scoped state lives in `HeapContext` (`statistic`, `hashToKey`, `glueSameTickets`).
+
 If `process.glueSameTickets` and hash seen → reuse key, `tickGluedTodo()`.
 Else → `registrar->register($todo)`, store hash → key mapping.
 
@@ -153,15 +159,52 @@ Tracks per run: analyzed/updated files, comment tokens, ignored/glued/registered
 
 Optional export via [Report](../Feature/Report.md).
 
-## Generator Chain
+## Processing Loop
 
 ```
 run()
-  └── getTodos()                 → [Todo, fileUpdateCallback]
-        └── getCommentParts()    → [CommentPart, fileUpdateCallback]
-              └── getFileHeaps() → FileHeap
-                    └── finder   → SplFileInfo
+  ├── new HeapContext
+  └── foreach finder → SplFileInfo
+        try
+          ├── createFileHeap()     → FileHeap (or skip if no parser)
+          ├── processFile()
+          │     └── foreach commentNode
+          │           └── foreach CommentPart
+          │                 ├── TodoBuilder → Todo
+          │                 ├── register() + fileUpdateCallback
+          │                 └── CommentRegistrationException propagates up
+          └── logFileCompletion()
+        catch Exception
+          ├── writeError($exception, $file)
+          └── rethrow
 ```
+
+Per-file processing is wrapped in a single `try/catch` in `run()`. Any `\Exception`
+(parse, glue gate, registration, todo building) triggers `writeError()` with the current
+file path and stops the run (fail-fast). `register()` wraps registrar failures in
+`CommentRegistrationException` before they reach the outer catch.
+
+## HeapContext
+
+**Class:** `Dto/HeapContext`
+
+Mutable run-scoped bag passed through `createFileHeap()`, `processFile()`, and `register()`:
+
+| Property | Purpose |
+|---|---|
+| `statistic` | `ProcessStatistic` for the whole run |
+| `hashToKey` | Hash → issue key map for same-ticket gluing |
+| `glueSameTickets` | From `process.glueSameTickets` config |
+
+Created once in `run()`; shared across all files in the run.
+
+## Error Handling
+
+| Situation | Behavior |
+|---|---|
+| No parser for file extension | `writeErr`, skip file (`continue`) |
+| Parse / glue gate / registration / build error | `writeError($exception, $file)` in `run()`, rethrow |
+| Registrar failure | Wrapped in `CommentRegistrationException` in `register()` |
 
 ## Related Features
 

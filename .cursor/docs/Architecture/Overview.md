@@ -68,6 +68,7 @@ PHP config: `require` must return `GeneralConfigInterface`.
 | Class | Role |
 |---|---|
 | `HeapRunner` | Main loop: files → comments → todos → register → save |
+| `HeapContext` | Run-scoped state: statistic, hash→key map, glueSameTickets flag |
 | `HeapRunnerFactory` | Wires dependencies from config |
 | `TodoBuilder` | Builds `Todo` DTO with hash and inline config |
 
