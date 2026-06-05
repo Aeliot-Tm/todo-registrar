@@ -15,11 +15,17 @@ namespace Aeliot\TodoRegistrar\Dto;
 
 final class HeapContext
 {
+    /**
+     * @var array<string,string>
+     */
+    public array $extensionAliases;
+
+    public bool $glueSameTickets;
+    public bool $glueSequentialComments;
     public ProcessStatistic $statistic;
 
     /**
      * @var array<string,string>
      */
     public array $hashToKey;
-    public bool $glueSameTickets;
 }

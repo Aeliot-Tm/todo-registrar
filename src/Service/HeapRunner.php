@@ -61,8 +61,10 @@ final readonly class HeapRunner
     {
         $context = new HeapContext();
         $context->statistic = new ProcessStatistic();
+        $context->extensionAliases = $this->getExtensionAliases();
         $context->hashToKey = [];
         $context->glueSameTickets = $this->getGlueSameTickets();
+        $context->glueSequentialComments = $this->getGlueSequentialComments();
 
         foreach ($this->finder as $file) {
             try {
@@ -87,24 +89,13 @@ final readonly class HeapRunner
     }
 
     /**
-     * @return array<string, string>
-     */
-    private function getExtensionAliases(): array
-    {
-        return array_map('strtolower', ($this->config instanceof ProcessConfigAwareInterface
-            ? $this->config->getProcessConfig()?->getExtensionAliases()
-            : null) ?? []);
-    }
-
-    /**
      * @throws FileReadException
      * @throws LogicException
      */
     private function createFileHeap(\SplFileInfo $file, HeapContext $context): ?FileHeap
     {
-        $extensionAliases = $this->getExtensionAliases();
         $extension = strtolower($file->getExtension());
-        $extensionAlias = $extensionAliases[$extension] ?? $extension;
+        $extensionAlias = $context->extensionAliases[$extension] ?? $extension;
         $fileParser = $this->fileParserRegistry->findParser($extensionAlias);
         if (!$fileParser) {
             $this->output->writeErr("There is not configured parser for file: {$file->getPathname()}", OutputAdapter::VERBOSITY_NORMAL);
@@ -113,9 +104,8 @@ final readonly class HeapRunner
         }
 
         $this->output->writeln("Begin process file: {$file->getPathname()}", OutputAdapter::VERBOSITY_DEBUG);
-        $glueSequentialComments = $this->getGlueSequentialComments();
         $glueGate = null;
-        if ($glueSequentialComments) {
+        if ($context->glueSequentialComments) {
             $glueGate = $this->glueGateRegistry->find($extensionAlias);
             if (null === $glueGate) {
                 throw new LogicException(\sprintf('Sequential comment glue is enabled but no glue gate is configured for extension alias "%s" (file: %s)', $extensionAlias, $file->getPathname()));
@@ -124,7 +114,7 @@ final readonly class HeapRunner
 
         $fileHeap = new FileHeap(
             $fileParser->parse($file),
-            $glueSequentialComments,
+            $context->glueSequentialComments,
             $glueGate,
             $context->statistic,
             $this->saver,
@@ -135,6 +125,16 @@ final readonly class HeapRunner
         }
 
         return $fileHeap;
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private function getExtensionAliases(): array
+    {
+        return array_map('strtolower', ($this->config instanceof ProcessConfigAwareInterface
+            ? $this->config->getProcessConfig()?->getExtensionAliases()
+            : null) ?? []);
     }
 
     private function getGlueSameTickets(): bool
