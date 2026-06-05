@@ -19,6 +19,7 @@ use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
 use Aeliot\TodoRegistrar\Exception\LogicException;
 use Aeliot\TodoRegistrar\Exception\NotSupportedConfigException;
 use Aeliot\TodoRegistrar\Exception\UnavailableConfigException;
+use Aeliot\TodoRegistrar\Service\Comment\CommentNodesBuilder;
 use Aeliot\TodoRegistrar\Service\Comment\SequentialCommentGlueGateRegistry;
 use Aeliot\TodoRegistrar\Service\Config\ConfigProvider;
 use Aeliot\TodoRegistrar\Service\File\FileParserRegistry;
@@ -31,6 +32,7 @@ final readonly class HeapRunnerFactory
 {
     public function __construct(
         private CommentExtractorFactory $commentExtractorFactory,
+        private CommentNodesBuilder $commentNodesBuilder,
         private ConfigProvider $configProvider,
         private FileParserRegistry $fileParserRegistry,
         private SequentialCommentGlueGateRegistry $glueGateRegistry,
@@ -56,6 +58,7 @@ final readonly class HeapRunnerFactory
 
         return new HeapRunner(
             $commentExtractor,
+            $this->commentNodesBuilder,
             $config->getFinder(),
             $this->fileParserRegistry,
             $this->glueGateRegistry,

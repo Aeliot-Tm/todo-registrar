@@ -17,6 +17,7 @@ use Aeliot\TodoRegistrar\Dto\FileHeap;
 use Aeliot\TodoRegistrar\Dto\Parsing\CommentNode;
 use Aeliot\TodoRegistrar\Dto\ProcessStatistic;
 use Aeliot\TodoRegistrar\Dto\Token\TokenInterface;
+use Aeliot\TodoRegistrar\Service\Comment\CommentNodesBuilder;
 use Aeliot\TodoRegistrar\Service\Comment\SequentialCommentGlueGate\PhpSequentialCommentGlueGate;
 use Aeliot\TodoRegistrar\Service\File\Parser\PhpFileParser;
 use Aeliot\TodoRegistrar\Service\File\Saver;
@@ -126,7 +127,7 @@ final class FileHeapTest extends TestCase
         $statistic = new ProcessStatistic();
         $saver = $this->createMock(Saver::class);
         $glueGate = $glueSequentialComments ? new PhpSequentialCommentGlueGate() : null;
-        $fileHeap = new FileHeap($parsedFile, $glueSequentialComments, $glueGate, $statistic, $saver);
+        $fileHeap = new FileHeap(new CommentNodesBuilder(), $parsedFile, $glueSequentialComments, $glueGate, $statistic, $saver);
 
         return $fileHeap->getCommentNodes();
     }

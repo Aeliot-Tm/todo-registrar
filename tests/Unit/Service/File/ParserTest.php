@@ -17,6 +17,7 @@ use Aeliot\TodoRegistrar\Dto\FileHeap;
 use Aeliot\TodoRegistrar\Dto\Parsing\CommentNode;
 use Aeliot\TodoRegistrar\Dto\ProcessStatistic;
 use Aeliot\TodoRegistrar\Dto\Tag\TagMetadata;
+use Aeliot\TodoRegistrar\Service\Comment\CommentNodesBuilder;
 use Aeliot\TodoRegistrar\Service\File\Parser\PhpFileParser;
 use Aeliot\TodoRegistrar\Service\File\Saver;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -71,7 +72,7 @@ CONT,
         $parsedFile = (new PhpFileParser())->parse($this->getMockSplFileInfo($path));
         $statistic = new ProcessStatistic();
         $saver = $this->createMock(Saver::class);
-        $fileHeap = new FileHeap($parsedFile, false, null, $statistic, $saver);
+        $fileHeap = new FileHeap(new CommentNodesBuilder(), $parsedFile, false, null, $statistic, $saver);
 
         return $fileHeap->getCommentNodes();
     }

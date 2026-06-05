@@ -23,6 +23,7 @@ use Aeliot\TodoRegistrar\Exception\CommentRegistrationException;
 use Aeliot\TodoRegistrar\Exception\FileReadException;
 use Aeliot\TodoRegistrar\Exception\LogicException;
 use Aeliot\TodoRegistrar\Exception\NoLineException;
+use Aeliot\TodoRegistrar\Service\Comment\CommentNodesBuilder;
 use Aeliot\TodoRegistrar\Service\Comment\Extractor as CommentExtractor;
 use Aeliot\TodoRegistrar\Service\Comment\SequentialCommentGlueGateRegistry;
 use Aeliot\TodoRegistrar\Service\File\FileParserRegistry;
@@ -40,6 +41,7 @@ final readonly class HeapRunner
 {
     public function __construct(
         private CommentExtractor $commentExtractor,
+        private CommentNodesBuilder $commentNodesBuilder,
         private FinderInterface $finder,
         private FileParserRegistry $fileParserRegistry,
         private SequentialCommentGlueGateRegistry $glueGateRegistry,
@@ -113,6 +115,7 @@ final readonly class HeapRunner
         }
 
         $fileHeap = new FileHeap(
+            $this->commentNodesBuilder,
             $fileParser->parse($file),
             $context->glueSequentialComments,
             $glueGate,

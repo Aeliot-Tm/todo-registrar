@@ -62,7 +62,7 @@ One `CommentNode`, two `CommentPart` objects, two registrations (unless same-tic
 
 | Class | Path |
 |---|---|
-| Grouping logic | `src/Dto/FileHeap.php` (`buildCommentNodes()`) |
+| Grouping logic | `src/Service/Comment/CommentNodesBuilder.php` |
 | Token stream | `src/Dto/Token/TokenStream.php`; `ParsedFile::getTokenStream()` |
 | Glue gates | `src/Service/Comment/SequentialCommentGlueGate/PhpSequentialCommentGlueGate.php`, `YamlSequentialCommentGlueGate.php` |
 | Gate registry | `src/Service/Comment/SequentialCommentGlueGateRegistry.php` |
@@ -70,6 +70,6 @@ One `CommentNode`, two `CommentPart` objects, two registrations (unless same-tic
 | Comment node | `src/Dto/Parsing/CommentNode.php` |
 | Config | `src/Dto/GeneralConfig/ProcessConfig.php` |
 
-Flow: `FileParserRegistry` → `ParsedFile` → `SequentialCommentGlueGateRegistry` + `FileHeap` → `Extractor`.
+Flow: `FileParserRegistry` → `ParsedFile` → `SequentialCommentGlueGateRegistry` + `CommentNodesBuilder` → `Extractor`.
 
 See also: [Source File Parsing](SourceFileParsing.md).

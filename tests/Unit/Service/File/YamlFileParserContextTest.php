@@ -17,6 +17,7 @@ use Aeliot\TodoRegistrar\Dto\FileHeap;
 use Aeliot\TodoRegistrar\Dto\Parsing\CommentNode;
 use Aeliot\TodoRegistrar\Dto\Parsing\ParsedFile;
 use Aeliot\TodoRegistrar\Dto\ProcessStatistic;
+use Aeliot\TodoRegistrar\Service\Comment\CommentNodesBuilder;
 use Aeliot\TodoRegistrar\Service\File\Parser\YamlFileParser;
 use Aeliot\TodoRegistrar\Service\File\Saver;
 use Aeliot\TodoRegistrarContracts\Context\ContextNodeInterface;
@@ -372,7 +373,7 @@ final class YamlFileParserContextTest extends TestCase
     {
         $statistic = new ProcessStatistic();
         $saver = $this->createMock(Saver::class);
-        $fileHeap = new FileHeap($parsedFile, false, null, $statistic, $saver);
+        $fileHeap = new FileHeap(new CommentNodesBuilder(), $parsedFile, false, null, $statistic, $saver);
 
         return $fileHeap->getCommentNodes();
     }

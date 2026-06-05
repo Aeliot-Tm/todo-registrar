@@ -13,7 +13,7 @@ HeapRunner.run()
             │
             ├─► createFileHeap()
             │       ├─► FileParserRegistry → ParsedFile (tokens + context map)
-            │       └─► FileHeap.buildCommentNodes()  [optional sequential gluing]
+            │       └─► CommentNodesBuilder.build()  [optional sequential gluing]
             │
             ├─► processFile()
             │       ├─► Comment/Extractor → CommentPart[]
@@ -21,7 +21,7 @@ HeapRunner.run()
             │       ├─► TodoBuilder → Todo
             │       ├─► Registrar.register()  [optional same-ticket gluing by hash]
             │       ├─► Todo.injectKey() → CommentPart updates token text
-            │       └─► Saver.save() via fileUpdateCallback
+            │       └─► FileHeap.saveAfterRegistration() → Saver.save()
             │
             ├─► logFileCompletion()
             │
@@ -64,7 +64,7 @@ See [Source File Parsing](../Feature/SourceFileParsing.md).
 
 ## Step 3: Comment Node Building
 
-**Classes:** `Dto/FileHeap`, `Service/Comment/SequentialCommentGlueGateRegistry`
+**Classes:** `Dto/FileHeap`, `Service/Comment/CommentNodesBuilder`, `Service/Comment/SequentialCommentGlueGateRegistry`
 
 Single pass via `ParsedFile::getTokenStream()`:
 
@@ -143,13 +143,13 @@ See [Issue Key Injection](../Feature/IssueKeyInjection.md).
 
 ## Step 9: Save File
 
-**Class:** `Service/File/Saver`
+**Classes:** `Dto/FileHeap`, `Service/File/Saver`
 
 ```php
 implode('', array_map(fn ($t) => $t->getText(), $tokens))
 ```
 
-Called from `FileHeap` closure after each successful registration for that file.
+`FileHeap::saveAfterRegistration()` updates per-file statistics and writes the file after each successful registration.
 
 ## Statistics
 
@@ -171,7 +171,7 @@ run()
           │     └── foreach commentNode
           │           └── foreach CommentPart
           │                 ├── TodoBuilder → Todo
-          │                 ├── register() + fileUpdateCallback
+          │                 ├── register() + saveAfterRegistration()
           │                 └── CommentRegistrationException propagates up
           └── logFileCompletion()
         catch Exception
