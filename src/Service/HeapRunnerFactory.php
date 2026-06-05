@@ -30,6 +30,7 @@ final readonly class HeapRunnerFactory
         private CommentExtractorFactory $commentExtractorFactory,
         private ConfigProvider $configProvider,
         private FileHeapFactory $fileHeapFactory,
+        private HeapContextFactory $heapContextFactory,
         private RegistrarProvider $registrarProvider,
         private TodoBuilderFactory $todoBuilderFactory,
     ) {
@@ -51,12 +52,13 @@ final readonly class HeapRunnerFactory
 
         return new HeapRunner(
             $commentExtractor,
+            $config,
             $this->fileHeapFactory,
             $config->getFinder(),
+            $this->heapContextFactory,
             $output,
             $registrar,
             $todoBuilder,
-            $config,
         );
     }
 }

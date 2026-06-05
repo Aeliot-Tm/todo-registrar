@@ -15,7 +15,6 @@ namespace Aeliot\TodoRegistrar\Service;
 
 use Aeliot\TodoRegistrar\Console\OutputAdapter;
 use Aeliot\TodoRegistrar\Dto\FileHeap;
-use Aeliot\TodoRegistrar\Dto\GeneralConfig\ProcessConfig;
 use Aeliot\TodoRegistrar\Dto\HeapContext;
 use Aeliot\TodoRegistrar\Dto\ProcessStatistic;
 use Aeliot\TodoRegistrar\Dto\Registrar\Todo;
@@ -26,8 +25,6 @@ use Aeliot\TodoRegistrar\Exception\NoLineException;
 use Aeliot\TodoRegistrar\Service\Comment\Extractor as CommentExtractor;
 use Aeliot\TodoRegistrarContracts\FinderInterface;
 use Aeliot\TodoRegistrarContracts\GeneralConfig\GeneralConfigInterface;
-use Aeliot\TodoRegistrarContracts\GeneralConfig\ProcessConfigAwareInterface;
-use Aeliot\TodoRegistrarContracts\GeneralConfig\ProcessConfigInterface;
 use Aeliot\TodoRegistrarContracts\Registrar\RegistrarInterface;
 
 /**
@@ -37,12 +34,13 @@ final readonly class HeapRunner
 {
     public function __construct(
         private CommentExtractor $commentExtractor,
+        private GeneralConfigInterface $config,
         private FileHeapFactory $fileHeapFactory,
         private FinderInterface $finder,
+        private HeapContextFactory $heapContextFactory,
         private OutputAdapter $output,
         private RegistrarInterface $registrar,
         private TodoBuilder $todoBuilder,
-        private GeneralConfigInterface $config,
     ) {
     }
 
@@ -54,13 +52,7 @@ final readonly class HeapRunner
      */
     public function run(): ProcessStatistic
     {
-        $context = new HeapContext();
-        $context->statistic = new ProcessStatistic();
-        $context->extensionAliases = $this->getExtensionAliases();
-        $context->hashToKey = [];
-        $context->glueSameTickets = $this->getGlueSameTickets();
-        $context->glueSequentialComments = $this->getGlueSequentialComments();
-        $context->output = $this->output;
+        $context = $this->heapContextFactory->create($this->config, $this->output);
 
         foreach ($this->finder as $file) {
             try {
@@ -82,37 +74,6 @@ final readonly class HeapRunner
         }
 
         return $context->statistic;
-    }
-
-    /**
-     * @return array<string, string>
-     */
-    private function getExtensionAliases(): array
-    {
-        return array_map('strtolower', ($this->config instanceof ProcessConfigAwareInterface
-            ? $this->config->getProcessConfig()?->getExtensionAliases()
-            : null) ?? []);
-    }
-
-    private function getGlueSameTickets(): bool
-    {
-        $processConfig = $this->config instanceof ProcessConfigAwareInterface
-            ? $this->config->getProcessConfig()
-            : null;
-
-        $isGlueSameTicket = null;
-        if ($processConfig instanceof ProcessConfigInterface) {
-            $isGlueSameTicket = $processConfig->isGlueSameTicket();
-        }
-
-        return $isGlueSameTicket ?? ProcessConfig::DEFAULT_GLUE_SAME_TICKETS;
-    }
-
-    private function getGlueSequentialComments(): bool
-    {
-        return ($this->config instanceof ProcessConfigAwareInterface
-            ? $this->config->getProcessConfig()?->isGlueSequentialComments()
-            : null) ?? ProcessConfig::DEFAULT_GLUE_SEQUENTIAL_COMMENTS;
     }
 
     private function logFileCompletion(\SplFileInfo $file, FileHeap $fileHeap): void

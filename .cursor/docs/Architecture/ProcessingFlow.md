@@ -163,7 +163,7 @@ Optional export via [Report](../Feature/Report.md).
 
 ```
 run()
-  ├── new HeapContext
+  ├── HeapContextFactory.create(config, output)
   └── foreach finder → SplFileInfo
         try
           ├── FileHeapFactory.create() → FileHeap (or skip if no parser)
@@ -197,7 +197,7 @@ Mutable run-scoped bag passed through `FileHeapFactory.create()`, `processFile()
 | `glueSameTickets` | From `process.glueSameTickets` config |
 | `output` | Console output adapter for the run |
 
-Created once in `run()`; shared across all files in the run.
+Built once in `run()` via `HeapContextFactory`; shared across all files in the run.
 
 ## Error Handling
 
