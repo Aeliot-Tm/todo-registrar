@@ -11,7 +11,7 @@ HeapRunner.run()
     │
     └─► foreach Finder (SplFileInfo)
             │
-            ├─► createFileHeap()
+            ├─► FileHeapFactory.create()
             │       ├─► FileParserRegistry → ParsedFile (tokens + context map)
             │       └─► CommentNodesBuilder.build()  [optional sequential gluing]
             │
@@ -166,7 +166,7 @@ run()
   ├── new HeapContext
   └── foreach finder → SplFileInfo
         try
-          ├── createFileHeap()     → FileHeap (or skip if no parser)
+          ├── FileHeapFactory.create() → FileHeap (or skip if no parser)
           ├── processFile()
           │     └── foreach commentNode
           │           └── foreach CommentPart
@@ -188,13 +188,14 @@ file path and stops the run (fail-fast). `register()` wraps registrar failures i
 
 **Class:** `Dto/HeapContext`
 
-Mutable run-scoped bag passed through `createFileHeap()`, `processFile()`, and `register()`:
+Mutable run-scoped bag passed through `FileHeapFactory.create()`, `processFile()`, and `register()`:
 
 | Property | Purpose |
 |---|---|
 | `statistic` | `ProcessStatistic` for the whole run |
 | `hashToKey` | Hash → issue key map for same-ticket gluing |
 | `glueSameTickets` | From `process.glueSameTickets` config |
+| `output` | Console output adapter for the run |
 
 Created once in `run()`; shared across all files in the run.
 

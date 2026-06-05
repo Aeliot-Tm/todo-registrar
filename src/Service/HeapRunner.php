@@ -23,11 +23,7 @@ use Aeliot\TodoRegistrar\Exception\CommentRegistrationException;
 use Aeliot\TodoRegistrar\Exception\FileReadException;
 use Aeliot\TodoRegistrar\Exception\LogicException;
 use Aeliot\TodoRegistrar\Exception\NoLineException;
-use Aeliot\TodoRegistrar\Service\Comment\CommentNodesBuilder;
 use Aeliot\TodoRegistrar\Service\Comment\Extractor as CommentExtractor;
-use Aeliot\TodoRegistrar\Service\Comment\SequentialCommentGlueGateRegistry;
-use Aeliot\TodoRegistrar\Service\File\FileParserRegistry;
-use Aeliot\TodoRegistrar\Service\File\Saver;
 use Aeliot\TodoRegistrarContracts\FinderInterface;
 use Aeliot\TodoRegistrarContracts\GeneralConfig\GeneralConfigInterface;
 use Aeliot\TodoRegistrarContracts\GeneralConfig\ProcessConfigAwareInterface;
@@ -41,13 +37,10 @@ final readonly class HeapRunner
 {
     public function __construct(
         private CommentExtractor $commentExtractor,
-        private CommentNodesBuilder $commentNodesBuilder,
+        private FileHeapFactory $fileHeapFactory,
         private FinderInterface $finder,
-        private FileParserRegistry $fileParserRegistry,
-        private SequentialCommentGlueGateRegistry $glueGateRegistry,
         private OutputAdapter $output,
         private RegistrarInterface $registrar,
-        private Saver $saver,
         private TodoBuilder $todoBuilder,
         private GeneralConfigInterface $config,
     ) {
@@ -67,10 +60,11 @@ final readonly class HeapRunner
         $context->hashToKey = [];
         $context->glueSameTickets = $this->getGlueSameTickets();
         $context->glueSequentialComments = $this->getGlueSequentialComments();
+        $context->output = $this->output;
 
         foreach ($this->finder as $file) {
             try {
-                $fileHeap = $this->createFileHeap($file, $context);
+                $fileHeap = $this->fileHeapFactory->create($file, $context);
                 if (null === $fileHeap) {
                     continue;
                 }
@@ -88,46 +82,6 @@ final readonly class HeapRunner
         }
 
         return $context->statistic;
-    }
-
-    /**
-     * @throws FileReadException
-     * @throws LogicException
-     */
-    private function createFileHeap(\SplFileInfo $file, HeapContext $context): ?FileHeap
-    {
-        $extension = strtolower($file->getExtension());
-        $extensionAlias = $context->extensionAliases[$extension] ?? $extension;
-        $fileParser = $this->fileParserRegistry->findParser($extensionAlias);
-        if (!$fileParser) {
-            $this->output->writeErr("There is not configured parser for file: {$file->getPathname()}", OutputAdapter::VERBOSITY_NORMAL);
-
-            return null;
-        }
-
-        $this->output->writeln("Begin process file: {$file->getPathname()}", OutputAdapter::VERBOSITY_DEBUG);
-        $glueGate = null;
-        if ($context->glueSequentialComments) {
-            $glueGate = $this->glueGateRegistry->find($extensionAlias);
-            if (null === $glueGate) {
-                throw new LogicException(\sprintf('Sequential comment glue is enabled but no glue gate is configured for extension alias "%s" (file: %s)', $extensionAlias, $file->getPathname()));
-            }
-        }
-
-        $fileHeap = new FileHeap(
-            $this->commentNodesBuilder,
-            $fileParser->parse($file),
-            $context->glueSequentialComments,
-            $glueGate,
-            $context->statistic,
-            $this->saver,
-        );
-
-        if ($this->output->isDebug()) {
-            $this->output->writeln('Detected comment nodes: ' . \count($fileHeap->getCommentNodes()));
-        }
-
-        return $fileHeap;
     }
 
     /**

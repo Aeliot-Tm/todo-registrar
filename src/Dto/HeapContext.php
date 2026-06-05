@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Dto;
 
+use Aeliot\TodoRegistrar\Console\OutputAdapter;
+
 final class HeapContext
 {
     /**
@@ -27,6 +29,8 @@ final class HeapContext
      * @var array<string,string>
      */
     public array $hashToKey;
+
+    public OutputAdapter $output;
 
     public ProcessStatistic $statistic;
 }
