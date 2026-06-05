@@ -22,10 +22,11 @@ final class HeapContext
 
     public bool $glueSameTickets;
     public bool $glueSequentialComments;
-    public ProcessStatistic $statistic;
 
     /**
      * @var array<string,string>
      */
     public array $hashToKey;
+
+    public ProcessStatistic $statistic;
 }
