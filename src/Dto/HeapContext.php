@@ -30,6 +30,8 @@ final class HeapContext
      */
     public array $hashToKey;
 
+    public bool $isDryRun;
+
     public OutputAdapter $output;
 
     public ProcessStatistic $statistic;

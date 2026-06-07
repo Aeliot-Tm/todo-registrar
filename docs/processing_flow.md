@@ -80,6 +80,10 @@ Issue title and description can include a [dynamic summary prefix](dynamic_summa
 The returned issue key is written into the comment according to [issue key injection](issue_key_injection.md)
 settings. The source file is saved immediately.
 
+When `--dry-run` is set, parsing and statistics collection run as usual, but the tool does not call the
+issue tracker API and does not write changes to source files. Use this to estimate how many TODOs would
+be registered in the scanned scope (for example, changed files in a CI job). See [Processing report](report.md).
+
 ## Step 8: Report (optional)
 
 When `--report-format` is set, run statistics are exported. See [Processing report](report.md).

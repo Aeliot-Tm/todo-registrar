@@ -20,6 +20,7 @@ use Aeliot\TodoRegistrar\Exception\LogicException;
 use Aeliot\TodoRegistrar\Exception\NotSupportedConfigException;
 use Aeliot\TodoRegistrar\Exception\UnavailableConfigException;
 use Aeliot\TodoRegistrar\Service\Config\ConfigProvider;
+use Aeliot\TodoRegistrar\Service\Registrar\DryRunRegistrar;
 
 /**
  * @internal
@@ -43,11 +44,11 @@ final readonly class HeapRunnerFactory
      * @throws NotSupportedConfigException
      * @throws UnavailableConfigException
      */
-    public function create(?string $configPath, OutputAdapter $output): HeapRunner
+    public function create(?string $configPath, OutputAdapter $output, bool $isDryRun = false): HeapRunner
     {
         $config = $this->configProvider->getConfig($configPath);
         $commentExtractor = $this->commentExtractorFactory->create($config);
-        $registrar = $this->registrarProvider->getRegistrar($config);
+        $registrar = $isDryRun ? new DryRunRegistrar() : $this->registrarProvider->getRegistrar($config);
         $todoBuilder = $this->todoBuilderFactory->create($config, $output);
         $fileProcessor = new FileProcessor($commentExtractor, $registrar, $todoBuilder);
 
@@ -57,6 +58,7 @@ final readonly class HeapRunnerFactory
             $fileProcessor,
             $this->heapContextFactory,
             $output,
+            $isDryRun,
         );
     }
 }

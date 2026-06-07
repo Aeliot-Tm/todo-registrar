@@ -47,6 +47,7 @@ final class RegisterCommand extends Command
     protected function configure(): void
     {
         $this->addOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Path to configuration file');
+        $this->addOption('dry-run', null, InputOption::VALUE_NONE, 'Parse and count TODOs without API calls or file changes');
         $this->addOption(
             'report-format',
             null,
@@ -82,8 +83,10 @@ final class RegisterCommand extends Command
             return self::INVALID;
         }
 
+        $isDryRun = (bool) $input->getOption('dry-run');
+
         try {
-            $statistic = $this->heapRunnerFactory->create($configPath, $outputAdapter)->run();
+            $statistic = $this->heapRunnerFactory->create($configPath, $outputAdapter, $isDryRun)->run();
         } catch (ConfigValidationException $exception) {
             $outputAdapter->writeErr("[ERROR] {$exception->getMessage()}\n");
             $outputAdapter->writeErr("Validation errors:\n");
@@ -97,7 +100,8 @@ final class RegisterCommand extends Command
 
         $outputAdapter->writeln(
             \sprintf(
-                'Registered %d of %d TODOs for %d of %d files. Ignored: %d. Glued: %d.',
+                '%s %d of %d TODOs for %d of %d files. Ignored: %d. Glued: %d.',
+                $isDryRun ? 'Would register' : 'Registered',
                 $statistic->getCountRegisteredTODOs(),
                 $statistic->getTodosTotal(),
                 $statistic->getCountUpdatedFiles(),

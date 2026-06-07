@@ -59,6 +59,7 @@ final class ReportBuilderTest extends TestCase
         self::assertSame(2, $decoded['summary']['files']['updated']);
         self::assertSame(1, $decoded['summary']['todos']['ignored']);
         self::assertSame(1, $decoded['summary']['todos']['glued']);
+        self::assertSame(4, $decoded['summary']['todos']['newIssues']);
         self::assertSame(5, $decoded['summary']['todos']['registered']);
         self::assertSame(7, $decoded['summary']['todos']['total']);
         self::assertSame(10, $decoded['summary']['comments']['detected']);
@@ -95,6 +96,17 @@ final class ReportBuilderTest extends TestCase
         $filesByPath = array_column($decoded['files'], null, 'path');
         self::assertSame(2, $filesByPath['updated.php']['summary']['todos']['registered']);
         self::assertSame(0, $filesByPath['empty.php']['summary']['todos']['registered']);
+    }
+
+    public function testFormatIncludesDryRunFlagAndNewIssues(): void
+    {
+        $statistic = $this->createStatistic(['src/foo.php' => 3], 0, 1, 0);
+
+        $result = $this->reportBuilder->format(ReportFormat::JSON, $statistic);
+
+        $decoded = json_decode($result, true);
+        self::assertSame(2, $decoded['summary']['todos']['newIssues']);
+        self::assertSame(3, $decoded['summary']['todos']['registered']);
     }
 
     /**

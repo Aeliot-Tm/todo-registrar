@@ -49,7 +49,11 @@ final readonly class FileProcessor
 
                 $todo = $this->todoBuilder->create($commentPart);
                 $this->register($todo, $context);
-                $fileHeap->saveAfterRegistration();
+                if ($context->isDryRun) {
+                    $fileHeap->recordRegistration();
+                } else {
+                    $fileHeap->saveAfterRegistration();
+                }
             }
         }
     }
@@ -67,9 +71,13 @@ final readonly class FileProcessor
                 $context->statistic->tickGluedTodo();
             } else {
                 $context->hashToKey[$hash] = $key = $this->registrar->register($todo);
-                $context->output->writeln("Registered new key: $key", OutputAdapter::VERBOSITY_VERBOSE);
+                $message = $context->isDryRun ? 'Would register new key: %s' : 'Registered new key: %s';
+                $context->output->writeln(\sprintf($message, $key), OutputAdapter::VERBOSITY_VERBOSE);
             }
-            $todo->injectKey($key);
+
+            if (!$context->isDryRun) {
+                $todo->injectKey($key);
+            }
         } catch (\Throwable $exception) {
             throw new CommentRegistrationException($todo, $exception);
         }

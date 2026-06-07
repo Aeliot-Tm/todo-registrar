@@ -12,6 +12,7 @@ Exports processing statistics after a run. Configured via CLI options only (not 
 
 | Option | Default | Description |
 |---|---|---|
+| `--dry-run` | off | Parse and count TODOs without API calls or file changes |
 | `--report-format` | `none` | `none`, `json`, or `yaml` |
 | `--report-path` | `todo-registrar-report.<format>` | Output path; use `-` for stdout |
 
@@ -27,7 +28,8 @@ summary:
   todos:
     ignored: 5        # skipped (existing key in tag line)
     glued: 2          # same-ticket gluing reuses
-    registered: 8     # new API registrations
+    newIssues: 6      # registered - glued (new tracker issues)
+    registered: 8     # comments that would receive a key
     total: 15         # registered + glued + ignored
 files:
   - path: src/Foo.php
@@ -41,6 +43,7 @@ files:
 | Class | Path |
 |---|---|
 | Builder | `src/Service/Report/ReportBuilder.php` |
+| Dry-run registrar | `src/Service/Registrar/DryRunRegistrar.php` |
 | Format enum | `src/Enum/ReportFormat.php` |
 | Statistics DTO | `src/Dto/ProcessStatistic.php`, `FileStatistic.php` |
 | CLI wiring | `src/Console/Command/RegisterCommand.php` |
