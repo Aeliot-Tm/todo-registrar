@@ -13,9 +13,10 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\Redmine;
 
-use Aeliot\TodoRegistrar\Exception\UnexpectedApiResponseException;
+use Aeliot\TodoRegistrar\Exception\Api\UnexpectedResponseException;
 use Psr\Http\Client\ClientExceptionInterface;
 use Redmine\Client\Client;
+use Redmine\Exception\ClientException;
 
 /**
  * @internal
@@ -27,6 +28,9 @@ final readonly class IssueApiClient
     ) {
     }
 
+    /**
+     * @throws UnexpectedResponseException
+     */
     public function create(Issue $issue): \SimpleXMLElement
     {
         // Redmine API library already wraps data in ['issue' => ...], so pass data directly
@@ -39,9 +43,11 @@ final readonly class IssueApiClient
             $exceptionMessage = \sprintf(
                 'Redmine API error: %s. Request data: %s',
                 $e->getMessage(),
-                json_encode($data, \JSON_THROW_ON_ERROR),
+                json_encode($data),
             );
-            throw new UnexpectedApiResponseException($exceptionMessage, 0, $e);
+            throw new UnexpectedResponseException($exceptionMessage, 0, $e);
+        } catch (ClientException $exception) {
+            throw new UnexpectedResponseException('Cannot create issue in Redmine', 0, $exception);
         }
 
         if ($response instanceof \SimpleXMLElement) {
@@ -54,16 +60,16 @@ final readonly class IssueApiClient
             $exceptionMessage = \sprintf(
                 'Redmine API error: %s. Request data: %s',
                 $errorMessage,
-                json_encode($data, \JSON_THROW_ON_ERROR),
+                json_encode($data),
             );
-            throw new UnexpectedApiResponseException($exceptionMessage);
+            throw new UnexpectedResponseException($exceptionMessage);
         }
 
         $exceptionMessage = \sprintf(
             'Redmine API returned unexpected response type: expected SimpleXMLElement, got %s. Request data: %s',
             get_debug_type($response),
-            json_encode($data, \JSON_THROW_ON_ERROR),
+            json_encode($data),
         );
-        throw new UnexpectedApiResponseException($exceptionMessage);
+        throw new UnexpectedResponseException($exceptionMessage);
     }
 }

@@ -27,11 +27,15 @@ use Aeliot\TodoRegistrarContracts\GeneralConfig\ProcessConfigInterface;
 use Aeliot\TodoRegistrarContracts\InlineConfigFactoryInterface;
 use Aeliot\TodoRegistrarContracts\InlineConfigReaderInterface;
 use Aeliot\TodoRegistrarContracts\Registrar\RegistrarFactoryInterface;
-use Aeliot\TodoRegistrarContracts\RegistrarFactoryInterface as LegacyRegistrarFactoryInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
-class Config implements GeneralConfigInterface, InlineConfigFactoryAwareInterface, InlineConfigReaderAwareInterface, IssueKeyInjectionConfigAwareInterface, ProcessConfigAwareInterface
+class Config implements
+    GeneralConfigInterface,
+    InlineConfigFactoryAwareInterface,
+    InlineConfigReaderAwareInterface,
+    IssueKeyInjectionConfigAwareInterface,
+    ProcessConfigAwareInterface
 {
     public const DEFAULT_TAGS = ['todo', 'fixme'];
 
@@ -40,6 +44,7 @@ class Config implements GeneralConfigInterface, InlineConfigFactoryAwareInterfac
     private ?InlineConfigReaderInterface $inlineConfigReader = null;
     #[Assert\Valid]
     private ?IssueKeyInjectionConfig $issueKeyInjectionConfig = null;
+    #[Assert\Valid]
     private ?ProcessConfig $processConfig = null;
 
     /**
@@ -52,11 +57,13 @@ class Config implements GeneralConfigInterface, InlineConfigFactoryAwareInterfac
      * @var array<string,mixed>
      */
     private array $registrarConfig;
-    private RegistrarFactoryInterface|string|LegacyRegistrarFactoryInterface $registrarType;
+    private RegistrarFactoryInterface|string $registrarType;
 
     /**
      * @var string[]
      */
+    #[Assert\NotBlank(message: 'Option "tags" must not be blank')]
+    #[Assert\All(constraints: [new Assert\Type(type: 'string', message: 'Each tag must be a string')])]
     private array $tags = self::DEFAULT_TAGS;
 
     public function getFinder(): FinderInterface
@@ -120,7 +127,7 @@ class Config implements GeneralConfigInterface, InlineConfigFactoryAwareInterfac
         return $this->registrarConfig;
     }
 
-    public function getRegistrarType(): RegistrarFactoryInterface|LegacyRegistrarFactoryInterface|string
+    public function getRegistrarType(): RegistrarFactoryInterface|string
     {
         return $this->registrarType;
     }
@@ -128,7 +135,7 @@ class Config implements GeneralConfigInterface, InlineConfigFactoryAwareInterfac
     /**
      * @param array<string,mixed> $config
      */
-    public function setRegistrar(RegistrarType|RegistrarFactoryInterface|LegacyRegistrarFactoryInterface|string $type, array $config): self
+    public function setRegistrar(RegistrarType|RegistrarFactoryInterface|string $type, array $config): self
     {
         if ($type instanceof RegistrarType) {
             $type = $type->value;

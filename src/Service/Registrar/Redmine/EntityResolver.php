@@ -13,7 +13,9 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\Redmine;
 
+use Aeliot\TodoRegistrar\Exception\Api\UnexpectedResponseException;
 use Redmine\Client\Client;
+use Redmine\Exception\ClientException;
 
 /**
  * Resolves Redmine entity identifiers (ID or name) to entity IDs.
@@ -37,6 +39,8 @@ final class EntityResolver
      * Resolve project identifier to project ID.
      *
      * @param int|string $identifier Project ID, name, or identifier
+     *
+     * @throws UnexpectedResponseException
      */
     public function resolveProjectId(int|string $identifier): ?int
     {
@@ -44,10 +48,15 @@ final class EntityResolver
             $page = 1;
             $limit = 100;
             do {
-                $response = $this->client->getApi('project')->list([
-                    'limit' => $limit,
-                    'offset' => ($page - 1) * $limit,
-                ]);
+                try {
+                    $response = $this->client->getApi('project')->list([
+                        'limit' => $limit,
+                        'offset' => ($page - 1) * $limit,
+                    ]);
+                } catch (ClientException $exception) {
+                    throw new UnexpectedResponseException('Cannot get list of projects in Redmine', 0, $exception);
+                }
+
                 $items = $response['projects'] ?? [];
                 $this->casheIdentifiers($entityType, $items, function (array $item) use ($entityType) {
                     $id = (int) $item['id'];
@@ -69,22 +78,34 @@ final class EntityResolver
      * Resolve tracker identifier to tracker ID.
      *
      * @param int|string $identifier Tracker ID or name
+     *
+     * @throws UnexpectedResponseException
      */
     public function resolveTrackerId(int|string $identifier): ?int
     {
         return $this->resolveEntityId('tracker', $identifier, function (string $entityType): void {
-            $items = $this->client->getApi('tracker')->list()['trackers'] ?? [];
+            try {
+                $items = $this->client->getApi('tracker')->list()['trackers'] ?? [];
+            } catch (ClientException $exception) {
+                throw new UnexpectedResponseException('Cannot get list of trackers in Redmine', 0, $exception);
+            }
             $this->casheIdentifiers($entityType, $items);
         });
     }
 
     /**
      * @param int|string $identifier Priority ID or name
+     *
+     * @throws UnexpectedResponseException
      */
     public function resolvePriorityId(int|string $identifier): ?int
     {
         return $this->resolveEntityId('priority', $identifier, function (string $entityType): void {
-            $items = $this->client->getApi('issue_priority')->list()['issue_priorities'] ?? [];
+            try {
+                $items = $this->client->getApi('issue_priority')->list()['issue_priorities'] ?? [];
+            } catch (ClientException $exception) {
+                throw new UnexpectedResponseException('Cannot get list of issue priority in Redmine', 0, $exception);
+            }
             $this->casheIdentifiers($entityType, $items);
         });
     }

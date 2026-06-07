@@ -1,7 +1,7 @@
 # Option Allowed Labels
 
-The `allowedLabels` option allows you to restrict which tags can be applied to issues.
-This is useful when you want to ensure only predefined tags from your Yandex Tracker queue are used.
+The `allowedLabels` option restricts which labels can be applied to created issues.
+Use it when your tracker allows only predefined labels, or when you want to block typos and unexpected tag names.
 
 ### How it works
 

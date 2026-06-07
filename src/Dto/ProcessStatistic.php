@@ -47,6 +47,11 @@ final class ProcessStatistic
         return $this->countIgnoredTodos;
     }
 
+    public function getCountNewIssues(): int
+    {
+        return $this->getCountRegisteredTODOs() - $this->countGluedTodos;
+    }
+
     public function getCountUpdatedFiles(): int
     {
         return \count(array_filter($this->files));

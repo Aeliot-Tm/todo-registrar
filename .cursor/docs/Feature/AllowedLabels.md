@@ -1,28 +1,41 @@
 # Allowed Labels
 
-Restricts which labels can be applied to created issues by filtering against a predefined list.
+Restricts which labels (or Yandex Tracker tags) are applied to newly created issues.
 
 ## What It Does
 
-1. Collects labels from all sources: general config, tag-based labels, inline config
-2. Filters the collected labels to keep only those present in the `allowedLabels` list
-3. Applies only the filtered labels to the created issue
+1. Collects labels from inline config, general `issue.labels`, and optionally from the tag name (`addTagToLabels`)
+2. If `allowedLabels` is non-empty, keeps only labels present in that list (`array_intersect`)
+3. Passes the filtered list to the registrar
+
+When `allowedLabels` is empty (default), no filtering is applied.
 
 ## Supported Registrars
 
-- GitHub
-- GitLab
-- JIRA
-- Yandex Tracker
-
-Redmine does not support labels, so this option is ignored for Redmine.
+| Registrar | Field |
+|---|---|
+| GitHub | `labels[]` |
+| GitLab | `labels` |
+| JIRA | `labels[]` |
+| Yandex Tracker | `tags[]` (labels are mapped to tags) |
+| Redmine | ignored (Redmine has no labels) |
 
 ## Configuration
 
-Configured via `allowedLabels` option in the registrar's `issue` section.
+```yaml
+registrar:
+  options:
+    issue:
+      labels: [bug, feature, tech-debt]
+      allowedLabels: [bug, feature]   # tech-debt will be dropped
+      addTagToLabels: true            # tag label also filtered
+      tagPrefix: 'tag-'
+```
 
-See [user documentation](../../../docs/allowed_labels.md) for filtering rules and usage examples.
+Inline `labels` in `{EXTRAS: ...}` are filtered the same way.
 
-## Key Source Paths
+## Technical Details
 
-- Label filtering: `src/Service/Registrar/IssueSupporter.php`
+Label merging and filtering: `src/Service/Registrar/IssueSupporter.php` (`getLabels()`).
+
+Shared issue options validated in `src/Service/Registrar/AbstractGeneralIssueConfig.php`.

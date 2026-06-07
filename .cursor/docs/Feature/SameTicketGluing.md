@@ -1,27 +1,42 @@
 # Same-Ticket Gluing
 
-Links identical TODOs to the same issue instead of creating duplicate tickets.
+Reuses an already-created issue key for identical TODOs within one run instead of creating duplicate tickets.
 
 ## What It Does
 
-1. Before creating an issue, computes a normalized hash of the TODO's content (tag, assignee, summary, description including inline config)
-2. If a TODO with the same hash was already processed in the current run, reuses the same issue key
-3. Injects the reused key into all matching TODO comments
+1. `TodoBuilder` computes a hash (`crc32`) from tag, assignee, summary, and description
+2. Before calling the registrar, `HeapRunner` checks `HeapContext.hashToKey` for the same hash in this run
+3. If `process.glueSameTickets` is true and hash matches, skips API call, reuses stored key, increments glued counter
+4. Injects the reused key into all matching comments
+
+TODOs that already have a ticket key in the tag line are always skipped (ignored counter).
 
 ## Configuration
 
-Configured via `process.glueSameTickets` option. Default: `false` (disabled).
+```yaml
+process:
+  glueSameTickets: false   # default
+```
 
-## When to Use
+## Identity Rules
 
-- The same TODO text appears in multiple places in the codebase
-- You want to avoid creating duplicate tickets for repeated identical TODOs
+Hash input (whitespace-normalized):
 
-## How Identity Is Determined
+- Tag name
+- Assignee from tag metadata
+- Summary (first line after tag)
+- Full description (remaining lines, including `{EXTRAS: ...}` block)
 
-Two TODOs are considered identical when their tag, assignee, summary, and description (including inline config) produce the same normalized hash. Normalization strips redundant whitespace (including line breaks) before comparison. Comparison is done within a single run — TODOs that already have an injected key are skipped.
+Normalization: `trim(preg_replace('/\s+/u', ' ', $raw))` then `crc32()`.
 
-## Key Source Paths
+Comparison scope: single CLI run only. Cross-run deduplication is not supported.
 
-- Gluing logic: `src/Service/HeapRunner.php`
-- Config: `src/Dto/GeneralConfig/ProcessConfig.php`
+## Technical Details
+
+| Class | Path |
+|---|---|
+| Gluing logic | `src/Service/HeapRunner.php` (`register()`) |
+| Run-scoped hash map | `src/Dto/HeapContext.php` (`hashToKey`) |
+| Hash calculation | `src/Service/TodoBuilder.php` (`calculateHash()`) |
+| Config | `src/Dto/GeneralConfig/ProcessConfig.php` |
+| Statistics | `src/Dto/ProcessStatistic.php` (`tickGluedTodo()`) |

@@ -13,7 +13,11 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\GitLab;
 
-use Aeliot\TodoRegistrarContracts\RegistrarInterface;
+use Aeliot\TodoRegistrar\Exception\Api\LimitExceededException;
+use Aeliot\TodoRegistrar\Exception\Api\UnexpectedResponseException;
+use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
+use Aeliot\TodoRegistrar\Exception\LogicException;
+use Aeliot\TodoRegistrarContracts\Registrar\RegistrarInterface;
 use Aeliot\TodoRegistrarContracts\Todo\TodoInterface;
 
 /**
@@ -29,6 +33,12 @@ final readonly class GitlabRegistrar implements RegistrarInterface
     ) {
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws LimitExceededException
+     * @throws LogicException
+     * @throws UnexpectedResponseException
+     */
     public function register(TodoInterface $todo): string
     {
         $issue = $this->issueFactory->create($todo);
@@ -66,6 +76,9 @@ final readonly class GitlabRegistrar implements RegistrarInterface
      * Register missing labels in the project.
      *
      * @param string[] $labels
+     *
+     * @throws LimitExceededException
+     * @throws UnexpectedResponseException
      */
     private function registerLabels(int|string $project, array $labels): void
     {
@@ -79,11 +92,15 @@ final readonly class GitlabRegistrar implements RegistrarInterface
 
     /**
      * Validate that milestone exists.
+     *
+     * @throws InvalidConfigException
+     * @throws LimitExceededException
+     * @throws UnexpectedResponseException
      */
     private function validateMilestone(int|string $project, int $milestoneId): void
     {
         if (!$this->milestoneApiClient->hasById($project, $milestoneId)) {
-            throw new \RuntimeException(\sprintf('Milestone with ID %d does not exist', $milestoneId));
+            throw new InvalidConfigException(\sprintf('Milestone with ID %d does not exist', $milestoneId));
         }
     }
 }

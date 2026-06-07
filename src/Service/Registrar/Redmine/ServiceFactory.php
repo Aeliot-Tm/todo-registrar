@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\Redmine;
 
+use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
+use Aeliot\TodoRegistrar\Exception\LogicException;
 use GuzzleHttp\Client as GuzzleClient;
 use Http\Factory\Guzzle\RequestFactory;
 use Http\Factory\Guzzle\StreamFactory;
@@ -32,23 +34,36 @@ final readonly class ServiceFactory
     ) {
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws LogicException
+     */
     public function createClient(): Client
     {
-        return new Psr18Client(
-            new GuzzleClient(['http_errors' => true]),
-            new RequestFactory(),
-            new StreamFactory(),
-            $this->getUrl(),
-            $this->config['apikeyOrUsername'],
-            $this->config['password'] ?? null,
-        );
+        $url = $this->getUrl();
+        try {
+            return new Psr18Client(
+                new GuzzleClient(['http_errors' => true]),
+                new RequestFactory(),
+                new StreamFactory(),
+                $url,
+                $this->config['apikeyOrUsername'],
+                $this->config['password'] ?? null,
+            );
+        } catch (\Exception $exception) {
+            // not reachable statement but leave it here
+            throw new LogicException('Cannot create Redmine service', 0, $exception);
+        }
     }
 
+    /**
+     * @throws InvalidConfigException
+     */
     private function getUrl(): string
     {
         $url = $this->config['url'] ?? null;
         if (empty($url)) {
-            throw new \InvalidArgumentException('Redmine URL must be specified in service config');
+            throw new InvalidConfigException('Redmine URL must be specified in service config');
         }
 
         return rtrim((string) $url, '/');

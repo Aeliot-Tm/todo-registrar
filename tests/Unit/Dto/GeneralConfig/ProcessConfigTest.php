@@ -24,6 +24,16 @@ final class ProcessConfigTest extends TestCase
     {
         $config = new ProcessConfig();
         self::assertFalse($config->isGlueSequentialComments());
+        self::assertSame([], $config->getExtensionAliases());
+    }
+
+    public function testExtensionAliasesGetterSetter(): void
+    {
+        $config = new ProcessConfig();
+        $aliases = ['module' => 'php', 'inc' => 'php'];
+        $config->setExtensionAliases($aliases);
+
+        self::assertSame($aliases, $config->getExtensionAliases());
     }
 
     public function testGetterSetter(): void

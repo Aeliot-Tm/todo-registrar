@@ -1,0 +1,4 @@
+? { a: 1, b # comment
+  : 2
+  }
+: value

@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Test\Unit\Service\File;
 
-use Aeliot\TodoRegistrar\Service\File\FileParser;
+use Aeliot\TodoRegistrar\Service\File\Parser\PhpFileParser;
 use Aeliot\TodoRegistrar\Service\File\Saver;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -22,7 +22,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(Saver::class)]
-#[UsesClass(FileParser::class)]
+#[UsesClass(PhpFileParser::class)]
 final class SaverTest extends TestCase
 {
     /**
@@ -40,8 +40,8 @@ final class SaverTest extends TestCase
     {
         $outgoingPathname = sys_get_temp_dir() . '/tr-' . microtime(true) . '-' . mt_rand() . '.php';
 
-        $parsedFile = (new FileParser())->parse($this->getMockSplFileInfo($incomingPathame));
-        (new Saver())->save($this->getMockSplFileInfo($outgoingPathname), $parsedFile->getAllTokens());
+        $parsedFile = (new PhpFileParser())->parse($this->getMockSplFileInfo($incomingPathame));
+        (new Saver())->save($this->getMockSplFileInfo($outgoingPathname), $parsedFile->getTokenStream());
 
         self::assertFileEquals($incomingPathame, $outgoingPathname);
     }

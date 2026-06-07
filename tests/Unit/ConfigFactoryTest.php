@@ -14,9 +14,11 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Test\Unit;
 
 use Aeliot\EnvResolver\Service\StringProcessor;
+use Aeliot\TodoRegistrar\Dto\GeneralConfig\PathsConfig;
 use Aeliot\TodoRegistrar\Service\Config\ArrayConfigFactory;
 use Aeliot\TodoRegistrar\Service\Config\ConfigFactory;
 use Aeliot\TodoRegistrar\Service\Config\YamlParser;
+use Aeliot\TodoRegistrar\Service\File\FinderNamePatternBuilder;
 use Aeliot\TodoRegistrar\Service\ValidatorFactory;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
@@ -31,7 +33,7 @@ final class ConfigFactoryTest extends TestCase
     {
         $validator = ValidatorFactory::create();
         $config = (new ConfigFactory(
-            new ArrayConfigFactory($validator),
+            new ArrayConfigFactory(new FinderNamePatternBuilder(), $validator),
             new YamlParser(new StringProcessor()))
         )->create(__DIR__ . '/../fixtures/config/simple_config.yaml');
 
@@ -66,5 +68,10 @@ final class ConfigFactoryTest extends TestCase
             $propertyIterators->getValue($finder),
         )));
         self::assertSame(['bin/todo-registrar'], $appends);
+
+        $propertyNames = $reflection->getProperty('names');
+        $propertyNames->setAccessible(true);
+        $expected = (new FinderNamePatternBuilder())->buildFromExtensions(PathsConfig::DEFAULT_EXTENSIONS);
+        self::assertContains($expected, $propertyNames->getValue($finder));
     }
 }

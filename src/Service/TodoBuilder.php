@@ -18,6 +18,7 @@ use Aeliot\TodoRegistrar\Dto\Comment\CommentPart;
 use Aeliot\TodoRegistrar\Dto\Registrar\ContextAwareTodo;
 use Aeliot\TodoRegistrar\Dto\Registrar\Todo;
 use Aeliot\TodoRegistrar\Enum\IssueKeyPosition;
+use Aeliot\TodoRegistrar\Exception\NoLineException;
 use Aeliot\TodoRegistrarContracts\InlineConfigFactoryInterface;
 use Aeliot\TodoRegistrarContracts\InlineConfigInterface;
 use Aeliot\TodoRegistrarContracts\InlineConfigReaderInterface;
@@ -37,6 +38,9 @@ final readonly class TodoBuilder
     ) {
     }
 
+    /**
+     * @throws NoLineException
+     */
     public function create(CommentPart $commentPart): Todo
     {
         $description = $commentPart->getDescription();

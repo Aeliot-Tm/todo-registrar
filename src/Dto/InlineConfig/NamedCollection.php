@@ -23,6 +23,9 @@ final class NamedCollection implements CollectionInterface
      */
     private array $data = [];
 
+    /**
+     * @throws CollectionDuplicatedKeyException
+     */
     public function add(string $key, mixed $value): void
     {
         if (\array_key_exists($key, $this->data)) {

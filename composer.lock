@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c4c2161bc56cfce13d08031a782b15f9",
+    "content-hash": "447e702cd70b4911e403f2b67e13ecbe",
     "packages": [
         {
             "name": "aeliot/env-resolver",
@@ -54,16 +54,16 @@
         },
         {
             "name": "aeliot/todo-registrar-contracts",
-            "version": "2.3.0",
+            "version": "3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Aeliot-Tm/todo-registrar-contracts.git",
-                "reference": "83a8218f26e273fc8ebf2dab7ebef2515d96a7fe"
+                "reference": "57f5510bf304adfcb98880aef8e714d1d7cc0608"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Aeliot-Tm/todo-registrar-contracts/zipball/83a8218f26e273fc8ebf2dab7ebef2515d96a7fe",
-                "reference": "83a8218f26e273fc8ebf2dab7ebef2515d96a7fe",
+                "url": "https://api.github.com/repos/Aeliot-Tm/todo-registrar-contracts/zipball/57f5510bf304adfcb98880aef8e714d1d7cc0608",
+                "reference": "57f5510bf304adfcb98880aef8e714d1d7cc0608",
                 "shasum": ""
             },
             "require": {
@@ -100,9 +100,59 @@
             ],
             "support": {
                 "issues": "https://github.com/Aeliot-Tm/todo-registrar-contracts/issues",
-                "source": "https://github.com/Aeliot-Tm/todo-registrar-contracts/tree/2.3.0"
+                "source": "https://github.com/Aeliot-Tm/todo-registrar-contracts/tree/3.0.0"
             },
-            "time": "2026-06-01T15:28:57+00:00"
+            "time": "2026-06-07T20:30:13+00:00"
+        },
+        {
+            "name": "aeliot/yaml-token",
+            "version": "0.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Aeliot-Tm/yaml-token.git",
+                "reference": "39989efdd2dc73801f30d806e9bf70a5bc4385d1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Aeliot-Tm/yaml-token/zipball/39989efdd2dc73801f30d806e9bf70a5bc4385d1",
+                "reference": "39989efdd2dc73801f30d806e9bf70a5bc4385d1",
+                "shasum": ""
+            },
+            "require": {
+                "ext-ctype": "*",
+                "php": "^8.2"
+            },
+            "require-dev": {
+                "dg/bypass-finals": "^1.7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Aeliot\\YamlToken\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Anatoliy Melnikov",
+                    "email": "5785276@gmail.com"
+                }
+            ],
+            "description": "Tokenizer of YAML",
+            "keywords": [
+                "YAML Parser",
+                "YAML Tokenizer",
+                "tokenizer",
+                "yaml"
+            ],
+            "support": {
+                "issues": "https://github.com/Aeliot-Tm/yaml-token/issues",
+                "source": "https://github.com/Aeliot-Tm/yaml-token/tree/0.1.0"
+            },
+            "time": "2026-05-30T18:31:12+00:00"
         },
         {
             "name": "bugrov/yandex-tracker",
@@ -1019,16 +1069,16 @@
         },
         {
             "name": "netresearch/jsonmapper",
-            "version": "v4.4.1",
+            "version": "v4.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cweiske/jsonmapper.git",
-                "reference": "132c75c7dd83e45353ebb9c6c9f591952995bbf0"
+                "reference": "8e76efb98ee8b6afc54687045e1b8dba55ac76e5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cweiske/jsonmapper/zipball/132c75c7dd83e45353ebb9c6c9f591952995bbf0",
-                "reference": "132c75c7dd83e45353ebb9c6c9f591952995bbf0",
+                "url": "https://api.github.com/repos/cweiske/jsonmapper/zipball/8e76efb98ee8b6afc54687045e1b8dba55ac76e5",
+                "reference": "8e76efb98ee8b6afc54687045e1b8dba55ac76e5",
                 "shasum": ""
             },
             "require": {
@@ -1064,9 +1114,9 @@
             "support": {
                 "email": "cweiske@cweiske.de",
                 "issues": "https://github.com/cweiske/jsonmapper/issues",
-                "source": "https://github.com/cweiske/jsonmapper/tree/v4.4.1"
+                "source": "https://github.com/cweiske/jsonmapper/tree/v4.5.0"
             },
-            "time": "2024-01-31T06:18:54+00:00"
+            "time": "2024-09-08T10:13:13+00:00"
         },
         {
             "name": "nikic/php-parser",

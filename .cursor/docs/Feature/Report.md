@@ -1,28 +1,49 @@
 # Report
 
-Exports processing results to a report file for integration with CI pipelines, dashboards, or archiving.
+Exports processing statistics after a run. Configured via CLI options only (not in YAML/PHP config).
 
 ## What It Does
 
-1. Collects statistics during processing (files analyzed, TODOs detected, registered, etc.)
-2. Exports the collected data in the selected format (JSON or YAML)
-3. Supports output to file or stdout
+1. `HeapRunner` collects `ProcessStatistic` during file processing
+2. After registration completes, `RegisterCommand` optionally formats and writes the report
+3. Default console summary is always printed; report file is optional
 
 ## CLI Options
 
-| Option | Description |
+| Option | Default | Description |
+|---|---|---|
+| `--dry-run` | off | Parse and count TODOs without API calls or file changes |
+| `--report-format` | `none` | `none`, `json`, or `yaml` |
+| `--report-path` | `todo-registrar-report.<format>` | Output path; use `-` for stdout |
+
+## Report Structure
+
+```yaml
+summary:
+  files:
+    analyzed: 10      # files visited
+    updated: 3        # files with at least one registration
+  comments:
+    detected: 45      # comment tokens seen
+  todos:
+    ignored: 5        # skipped (existing key in tag line)
+    glued: 2          # same-ticket gluing reuses
+    newIssues: 6      # registered - glued (new tracker issues)
+    registered: 8     # comments that would receive a key
+    total: 15         # registered + glued + ignored
+files:
+  - path: src/Foo.php
+    summary:
+      todos:
+        registered: 2
+```
+
+## Technical Details
+
+| Class | Path |
 |---|---|
-| `--report-format=FORMAT` | Export format: `none` (default), `json`, `yaml` |
-| `--report-path=PATH` | Output file path. Use `-` for stdout |
-
-## Report Contents
-
-- **Summary**: files analyzed/updated, comments detected, TODOs registered/ignored/glued
-- **Files**: per-file breakdown with registration counts
-
-See [user documentation](../../../docs/report.md) for full structure, JSON/YAML examples, and usage commands.
-
-## Key Source Paths
-
-- Report builder: `src/Service/Report/ReportBuilder.php`
-- Format enum: `src/Enum/ReportFormat.php`
+| Builder | `src/Service/Report/ReportBuilder.php` |
+| Dry-run registrar | `src/Service/Registrar/DryRunRegistrar.php` |
+| Format enum | `src/Enum/ReportFormat.php` |
+| Statistics DTO | `src/Dto/ProcessStatistic.php`, `FileStatistic.php` |
+| CLI wiring | `src/Console/Command/RegisterCommand.php` |

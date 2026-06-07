@@ -14,10 +14,9 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Dto;
 
 use Aeliot\TodoRegistrar\Dto\Parsing\CommentNode;
-use Aeliot\TodoRegistrar\Dto\Parsing\MappedContext;
 use Aeliot\TodoRegistrar\Dto\Parsing\ParsedFile;
-use Aeliot\TodoRegistrar\Dto\Token\CommentTokensGroup;
-use Aeliot\TodoRegistrar\Dto\Token\TokenInterface;
+use Aeliot\TodoRegistrar\Service\Comment\CommentNodesBuilder;
+use Aeliot\TodoRegistrar\Service\Comment\SequentialCommentGlueGateInterface;
 use Aeliot\TodoRegistrar\Service\File\Saver;
 
 /**
@@ -25,26 +24,22 @@ use Aeliot\TodoRegistrar\Service\File\Saver;
  */
 final class FileHeap
 {
-    private FileStatistic $fileStatistic;
-    private \Closure $fileUpdateCallback;
-
     /**
      * @var CommentNode[]|null
      */
     private ?array $commentNodes = null;
 
+    private FileStatistic $fileStatistic;
+
     public function __construct(
+        private readonly CommentNodesBuilder $commentNodesBuilder,
         private readonly ParsedFile $parsedFile,
         private readonly bool $glueSequentialComments,
+        private readonly ?SequentialCommentGlueGateInterface $glueGate,
         private readonly ProcessStatistic $statistic,
-        Saver $saver,
+        private readonly Saver $saver,
     ) {
-        $file = $parsedFile->getFile();
-        $this->fileStatistic = new FileStatistic($file->getPathname(), $statistic);
-        $this->fileUpdateCallback = function () use ($file, $saver): void {
-            $this->fileStatistic->tickRegistration();
-            $saver->save($file, $this->parsedFile->getAllTokens());
-        };
+        $this->fileStatistic = new FileStatistic($parsedFile->getFile()->getPathname(), $statistic);
     }
 
     /**
@@ -52,12 +47,12 @@ final class FileHeap
      */
     public function getCommentNodes(): array
     {
-        return $this->commentNodes ??= $this->buildCommentNodes();
-    }
-
-    public function getFileUpdateCallback(): \Closure
-    {
-        return $this->fileUpdateCallback;
+        return $this->commentNodes ??= $this->commentNodesBuilder->build(
+            $this->parsedFile,
+            $this->glueSequentialComments,
+            $this->glueGate,
+            $this->statistic,
+        );
     }
 
     public function getRegistrationCount(): int
@@ -65,68 +60,14 @@ final class FileHeap
         return $this->fileStatistic->getRegistrationCount();
     }
 
-    /**
-     * @return CommentNode[]
-     */
-    private function buildCommentNodes(): array
+    public function recordRegistration(): void
     {
-        $commentNodes = [];
-        $group = new CommentTokensGroup();
-
-        foreach ($this->parsedFile->getAllTokens() as $token) {
-            if ($token->isComment()) {
-                $this->statistic->tickCommentToken();
-            }
-
-            if ($this->glueSequentialComments && $token->isSingleLineComment()) {
-                $group->addToken($token);
-                continue;
-            }
-
-            // If gluing is enabled and we have active group, check whitespace
-            if ($this->glueSequentialComments && !$group->isEmpty() && !$token->isComment() && '' === trim($token->getText())) {
-                // Empty line (multiple line breaks) breaks the group
-                if ($group->hasPendingWhitespace() || $this->hasMultipleLineBreaks($token->getText())) {
-                    $commentNodes[] = $this->createCommentNode($group->grabTokens());
-                    continue;
-                }
-                // Single line break - store as pending
-                $group->addWhitespace($token);
-                continue;
-            }
-
-            // Break group on non-empty, non-comment token
-            if (!$token->isComment()) {
-                if (!$group->isEmpty() && ('' !== trim($token->getText()))) {
-                    $commentNodes[] = $this->createCommentNode($group->grabTokens());
-                }
-                continue;
-            }
-
-            // Multi-line comment - flush group and add comment
-            if (!$group->isEmpty()) {
-                $commentNodes[] = $this->createCommentNode($group->grabTokens());
-            }
-            $commentNodes[] = $this->createCommentNode([$token]);
-        }
-
-        if (!$group->isEmpty()) {
-            $commentNodes[] = $this->createCommentNode($group->grabTokens());
-        }
-
-        return $commentNodes;
+        $this->fileStatistic->tickRegistration();
     }
 
-    /**
-     * @param TokenInterface[] $tokens
-     */
-    private function createCommentNode(array $tokens): CommentNode
+    public function saveAfterRegistration(): void
     {
-        return new CommentNode($tokens, new MappedContext($tokens[0]->getLine(), $this->parsedFile->getContextMap()));
-    }
-
-    private function hasMultipleLineBreaks(string $text): bool
-    {
-        return substr_count($text, "\n") > 1 || substr_count($text, "\r") > 1;
+        $this->recordRegistration();
+        $this->saver->save($this->parsedFile->getFile(), $this->parsedFile->getTokenStream());
     }
 }

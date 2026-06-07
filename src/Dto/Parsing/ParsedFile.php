@@ -14,6 +14,8 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Dto\Parsing;
 
 use Aeliot\TodoRegistrar\Dto\Token\TokenInterface;
+use Aeliot\TodoRegistrar\Dto\Token\TokenStream;
+use Aeliot\TodoRegistrar\Dto\Token\TokenStreamInterface;
 
 /**
  * Result of file parsing: all tokens and context map.
@@ -28,19 +30,16 @@ final readonly class ParsedFile
     public function __construct(
         private \SplFileInfo $file,
         private array $allTokens,
-        private LazyContextMap $contextMap,
+        private ContextMapInterface $contextMap,
     ) {
     }
 
-    /**
-     * @return TokenInterface[]
-     */
-    public function getAllTokens(): array
+    public function getTokenStream(): TokenStreamInterface
     {
-        return $this->allTokens;
+        return new TokenStream($this->allTokens);
     }
 
-    public function getContextMap(): LazyContextMap
+    public function getContextMap(): ContextMapInterface
     {
         return $this->contextMap;
     }

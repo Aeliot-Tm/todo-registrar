@@ -7,5 +7,5 @@ use Aeliot\TodoRegistrar\Service\File\Finder;
 
 // Invalid: missing setRegistrar() call
 return (new Config())
-    ->setFinder((new Finder())->in(__DIR__));
+    ->setFinder((new Finder())->name('/\.(?:php|yaml|yml)$/')->in(__DIR__));
 

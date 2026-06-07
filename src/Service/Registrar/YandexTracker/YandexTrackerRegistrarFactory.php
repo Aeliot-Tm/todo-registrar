@@ -15,9 +15,10 @@ namespace Aeliot\TodoRegistrar\Service\Registrar\YandexTracker;
 
 use Aeliot\TodoRegistrar\Enum\RegistrarType;
 use Aeliot\TodoRegistrar\Exception\ConfigValidationException;
+use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
 use Aeliot\TodoRegistrar\Service\Registrar\IssueSupporter;
-use Aeliot\TodoRegistrarContracts\RegistrarFactoryInterface;
-use Aeliot\TodoRegistrarContracts\RegistrarInterface;
+use Aeliot\TodoRegistrarContracts\Registrar\RegistrarFactoryInterface;
+use Aeliot\TodoRegistrarContracts\Registrar\RegistrarInterface;
 use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -31,6 +32,10 @@ final readonly class YandexTrackerRegistrarFactory implements RegistrarFactoryIn
     {
     }
 
+    /**
+     * @throws ConfigValidationException
+     * @throws InvalidConfigException
+     */
     public function create(array $config): RegistrarInterface
     {
         /** @var ValidatorInterface $validator */
@@ -49,6 +54,8 @@ final readonly class YandexTrackerRegistrarFactory implements RegistrarFactoryIn
 
     /**
      * @param array<string, mixed> $issueConfig
+     *
+     * @throws ConfigValidationException
      */
     public function createGeneralIssueConfig(array $issueConfig, ValidatorInterface $validator): GeneralIssueConfig
     {

@@ -6,12 +6,18 @@ The script collects information about the processing and can export it to a repo
 
 | Option | Description |
 |---|---|
+| `--dry-run` | Parse and count TODOs without API calls or source file changes |
 | `--report-format=FORMAT` | Export format: `none`, `json`, `yaml`. Default: `none` |
 | `--report-path=PATH` | Output file path. Default: `todo-registrar-report.<format>`. Use `-` for stdout |
 
 When `--report-format` is `none` (default), no report file is generated.
 
 ## Usage examples
+
+**Dry-run with JSON report (for CI statistics):**
+```shell
+todo-registrar register --dry-run --report-format=json --report-path=-
+```
 
 **Export to JSON file (default path `todo-registrar-report.json`):**
 ```shell
@@ -37,8 +43,9 @@ The report contains summary statistics and per-file details.
 - `files.updated` — number of files with registered TODOs
 - `comments.detected` — total detected comment tokens
 - `todos.ignored` — TODOs ignored (e.g. already had issue key)
-- `todos.glued` — TODOs merged via sequential comments gluing
-- `todos.registered` — newly registered TODOs
+- `todos.glued` — TODOs that reused an issue key via same-ticket gluing
+- `todos.newIssues` — new issues that would be created in the tracker (`registered - glued`)
+- `todos.registered` — TODO comments that would receive an issue key
 - `todos.total` — total TODOs (registered + glued + ignored)
 
 **Files:** list of all analyzed files, each with path and `todos.registered` count (zero for files with no new registrations).
@@ -58,6 +65,7 @@ The report contains summary statistics and per-file details.
     "todos": {
       "ignored": 3,
       "glued": 2,
+      "newIssues": 5,
       "registered": 7,
       "total": 12
     }
@@ -95,6 +103,7 @@ summary:
   todos:
     ignored: 3
     glued: 2
+    newIssues: 5
     registered: 7
     total: 12
 files:

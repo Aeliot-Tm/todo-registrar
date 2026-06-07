@@ -3,11 +3,10 @@
 *.png binary
 
 /.cursor        export-ignore
-/.docker        export-ignore
 /.github        export-ignore
+/.infra         export-ignore
 /.mcp           export-ignore
 /.phive         export-ignore
-/.scripts       export-ignore
 /.vscode        export-ignore
 /examples       export-ignore
 /tools          export-ignore

@@ -14,9 +14,13 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Service;
 
 use Aeliot\TodoRegistrar\Console\OutputAdapter;
+use Aeliot\TodoRegistrar\Exception\ConfigValidationException;
+use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
+use Aeliot\TodoRegistrar\Exception\LogicException;
+use Aeliot\TodoRegistrar\Exception\NotSupportedConfigException;
+use Aeliot\TodoRegistrar\Exception\UnavailableConfigException;
 use Aeliot\TodoRegistrar\Service\Config\ConfigProvider;
-use Aeliot\TodoRegistrar\Service\File\FileParser;
-use Aeliot\TodoRegistrar\Service\File\Saver;
+use Aeliot\TodoRegistrar\Service\Registrar\DryRunRegistrar;
 
 /**
  * @internal
@@ -26,29 +30,35 @@ final readonly class HeapRunnerFactory
     public function __construct(
         private CommentExtractorFactory $commentExtractorFactory,
         private ConfigProvider $configProvider,
-        private FileParser $fileParser,
+        private FileHeapFactory $fileHeapFactory,
+        private HeapContextFactory $heapContextFactory,
         private RegistrarProvider $registrarProvider,
-        private Saver $saver,
         private TodoBuilderFactory $todoBuilderFactory,
     ) {
     }
 
-    public function create(?string $configPath, OutputAdapter $output): HeapRunner
+    /**
+     * @throws ConfigValidationException
+     * @throws InvalidConfigException
+     * @throws LogicException
+     * @throws NotSupportedConfigException
+     * @throws UnavailableConfigException
+     */
+    public function create(?string $configPath, OutputAdapter $output, bool $isDryRun = false): HeapRunner
     {
         $config = $this->configProvider->getConfig($configPath);
         $commentExtractor = $this->commentExtractorFactory->create($config);
-        $registrar = $this->registrarProvider->getRegistrar($config);
+        $registrar = $isDryRun ? new DryRunRegistrar() : $this->registrarProvider->getRegistrar($config);
         $todoBuilder = $this->todoBuilderFactory->create($config, $output);
+        $fileProcessor = new FileProcessor($commentExtractor, $registrar, $todoBuilder);
 
         return new HeapRunner(
-            $commentExtractor,
-            $config->getFinder(),
-            $this->fileParser,
-            $output,
-            $registrar,
-            $this->saver,
-            $todoBuilder,
             $config,
+            $this->fileHeapFactory,
+            $fileProcessor,
+            $this->heapContextFactory,
+            $output,
+            $isDryRun,
         );
     }
 }

@@ -13,7 +13,12 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\GitHub;
 
-use Aeliot\TodoRegistrarContracts\RegistrarInterface;
+use Aeliot\TodoRegistrar\Exception\Api\AuthenticationException;
+use Aeliot\TodoRegistrar\Exception\Api\LimitExceededException;
+use Aeliot\TodoRegistrar\Exception\Api\UnexpectedResponseException;
+use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
+use Aeliot\TodoRegistrar\Exception\LogicException;
+use Aeliot\TodoRegistrarContracts\Registrar\RegistrarInterface;
 use Aeliot\TodoRegistrarContracts\Todo\TodoInterface;
 
 /**
@@ -28,6 +33,13 @@ final readonly class GitHubRegistrar implements RegistrarInterface
     ) {
     }
 
+    /**
+     * @throws AuthenticationException
+     * @throws InvalidConfigException
+     * @throws LimitExceededException
+     * @throws LogicException
+     * @throws UnexpectedResponseException
+     */
     public function register(TodoInterface $todo): string
     {
         $issue = $this->issueFactory->create($todo);
@@ -41,6 +53,12 @@ final readonly class GitHubRegistrar implements RegistrarInterface
         return '#' . $response['number'];
     }
 
+    /**
+     * @throws AuthenticationException
+     * @throws LimitExceededException
+     * @throws LogicException
+     * @throws UnexpectedResponseException
+     */
     private function registerLabels(Issue $issue): void
     {
         $owner = $issue->getOwner();

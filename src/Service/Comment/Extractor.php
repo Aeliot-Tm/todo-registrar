@@ -17,6 +17,7 @@ use Aeliot\TodoRegistrar\Dto\Comment\CommentPart;
 use Aeliot\TodoRegistrar\Dto\Parsing\CommentNode;
 use Aeliot\TodoRegistrar\Dto\Token\TokenLine;
 use Aeliot\TodoRegistrar\Dto\Token\TokenLinesStack;
+use Aeliot\TodoRegistrar\Exception\LogicException;
 use Aeliot\TodoRegistrar\Service\Tag\Detector as TagDetector;
 
 /**
@@ -32,6 +33,8 @@ final readonly class Extractor
 
     /**
      * @return CommentPart[]
+     *
+     * @throws LogicException
      */
     public function extract(CommentNode $commentNode): array
     {
@@ -78,6 +81,8 @@ final readonly class Extractor
 
     /**
      * @return \Generator<array{0: TokenLine, 1: TokenLinesStack}>
+     *
+     * @throws LogicException
      */
     private function getLines(CommentNode $commentNode): \Generator
     {

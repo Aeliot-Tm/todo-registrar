@@ -13,9 +13,11 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\JIRA;
 
+use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
 use JiraRestApi\Configuration\ArrayConfiguration;
 use JiraRestApi\Issue\IssueService;
 use JiraRestApi\IssueLink\IssueLinkService;
+use JiraRestApi\JiraException;
 
 /**
  * @internal
@@ -29,14 +31,32 @@ final readonly class ServiceFactory
     {
     }
 
+    /**
+     * @throws InvalidConfigException
+     */
     public function createIssueLinkService(): IssueLinkService
     {
-        return new IssueLinkService($this->getServiceConfig());
+        $serviceConfig = $this->getServiceConfig();
+
+        try {
+            return new IssueLinkService($serviceConfig);
+        } catch (JiraException $exception) {
+            throw new InvalidConfigException('Cannot create JIRA issue link service', 0, $exception);
+        }
     }
 
+    /**
+     * @throws InvalidConfigException
+     */
     public function createIssueService(): IssueService
     {
-        return new IssueService($this->getServiceConfig());
+        $serviceConfig = $this->getServiceConfig();
+
+        try {
+            return new IssueService($serviceConfig);
+        } catch (JiraException $exception) {
+            throw new InvalidConfigException('Cannot create JIRA issue service', 0, $exception);
+        }
     }
 
     private function getServiceConfig(): ArrayConfiguration

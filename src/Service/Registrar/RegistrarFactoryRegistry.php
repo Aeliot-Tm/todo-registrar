@@ -16,7 +16,6 @@ namespace Aeliot\TodoRegistrar\Service\Registrar;
 use Aeliot\TodoRegistrar\Enum\RegistrarType;
 use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
 use Aeliot\TodoRegistrarContracts\Registrar\RegistrarFactoryInterface;
-use Aeliot\TodoRegistrarContracts\RegistrarFactoryInterface as LegacyRegistrarFactoryInterface;
 use Symfony\Component\DependencyInjection\Attribute\AutowireLocator;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 
@@ -26,7 +25,7 @@ use Symfony\Component\DependencyInjection\ServiceLocator;
 final readonly class RegistrarFactoryRegistry
 {
     /**
-     * @param ServiceLocator<RegistrarFactoryInterface|LegacyRegistrarFactoryInterface> $registrarFactoryLocator
+     * @param ServiceLocator<RegistrarFactoryInterface> $registrarFactoryLocator
      */
     public function __construct(
         #[AutowireLocator('aeliot.todo_registrar.registrar_factory')]
@@ -34,7 +33,10 @@ final readonly class RegistrarFactoryRegistry
     ) {
     }
 
-    public function getFactory(RegistrarType $type): RegistrarFactoryInterface|LegacyRegistrarFactoryInterface
+    /**
+     * @throws InvalidConfigException
+     */
+    public function getFactory(RegistrarType $type): RegistrarFactoryInterface
     {
         if (!$this->registrarFactoryLocator->has($type->value)) {
             throw new InvalidConfigException(\sprintf('Not supported registrar type "%s"', $type->value));

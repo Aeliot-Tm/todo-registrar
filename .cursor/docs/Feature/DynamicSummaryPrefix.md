@@ -1,29 +1,40 @@
 # Dynamic Summary Prefix
 
-Adds a configurable prefix to issue titles with support for dynamic placeholders that are resolved from TODO comment metadata.
+Prepends a configurable prefix to the issue title (summary) before registration.
 
 ## What It Does
 
-1. Takes the `summaryPrefix` value from the registrar's `issue` config
-2. Replaces placeholders with actual values from the TODO comment
-3. Prepends the resolved prefix to the issue summary
+1. Reads `summaryPrefix` from `registrar.options.issue`
+2. Replaces placeholders with values from the TODO comment
+3. Concatenates the resolved prefix with `todo->getSummary()`
 
-## Supported Placeholders
+Applies to all registrars via `IssueSupporter::getSummary()`.
 
-| Placeholder | Description |
+## Placeholders
+
+| Placeholder | Resolved value |
 |---|---|
-| `{tag}` | Tag name in original case (e.g. `TODO`, `fixme`) |
-| `{tag_caps}` | Tag name in uppercase (e.g. `TODO`, `FIXME`) |
-| `{assignee}` | First assignee name; empty string if none |
+| `{tag}` | Tag name as detected (uppercase stored internally, e.g. `TODO`) |
+| `{tag_caps}` | Tag name in uppercase via `mb_strtoupper()` |
+| `{assignee}` | First resolved assignee; empty string if none |
 
-Placeholders are case-insensitive. Multiple placeholders can be combined.
+Placeholder names are case-insensitive. Multiple placeholders can appear in one prefix.
 
 ## Configuration
 
-Configured via `summaryPrefix` option in the registrar's `issue` section.
+```yaml
+registrar:
+  options:
+    issue:
+      summaryPrefix: '[{tag_caps}] '
+```
+
+Example: tag `TODO`, summary `Fix bug` → title `[TODO] Fix bug`.
 
 See [user documentation](../../../docs/dynamic_summary_prefix.md) for examples and details.
 
-## Key Source Paths
+## Technical Details
 
-- Prefix resolution: `src/Service/Registrar/IssueSupporter.php`
+Prefix resolution: `src/Service/Registrar/IssueSupporter.php` (`getSummaryPrefix()`, `getSummary()`).
+
+Option defined in `src/Service/Registrar/AbstractGeneralIssueConfig.php`.

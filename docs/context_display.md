@@ -56,9 +56,9 @@ File: /app/src/Service/UserService.php -> Namespace: App\Service -> Class: UserS
 
 This format is compact and useful when you want to save space in the issue description.
 
-### Code Block Format (`'asterisk'`)
+### Asterisk list format (`'asterisk'`)
 
-Displays context as a list with 'asterisk' symbol as prefix for each line:
+Displays context as a list with an asterisk prefix on each line:
 
 **Example:**
 ```
@@ -70,9 +70,9 @@ User needs to verify email before updating profile
 * Method: updateUser()
 ```
 
-### Code Block Format (`'code_block'`)
+### Code block format (`'code_block'`)
 
-Displays context as a formatted code block with each level on a separate line:
+Displays context inside a fenced code block with each level on a separate line:
 
 **Example:**
 ````
@@ -86,9 +86,9 @@ Method: updateUser()
 ```
 ````
 
-### Code Block Format (`'number_sign'`)
+### Number sign list format (`'number_sign'`)
 
-Displays context as a list with number sign symbol as prefix for each line:
+Displays context as a list with a `#` prefix on each line:
 
 **Example:**
 ```
@@ -100,9 +100,9 @@ User needs to verify email before updating profile
 # Method: updateUser()
 ```
 
-### Code Block Format (`'numbered'`)
+### Numbered list format (`'numbered'`)
 
-Displays context as a formatted numbered list:
+Displays context as a numbered list:
 
 **Example:**
 ```
@@ -137,6 +137,19 @@ The context display includes the following information depending on where the TO
 | Property | Property name | `Property: email` |
 | Parameter | Parameter name | `Parameter: userId` |
 | Constant | Class constant name | `Constant: MAX_SIZE` |
+| Document | YAML document index in a multi-doc stream (0-based) | `Document: 0` |
+| Key | YAML mapping key | `Key: services` |
+| Sequence item | YAML sequence entry index (0-based) | `Sequence item: 1` |
+
+### YAML Example
+
+For a TODO inside nested YAML keys:
+
+```
+File: /app/config/services.yaml -> Document: 0 -> Key: services -> Key: app -> Key: parameters
+```
+
+Comments on the line above a key or sequence entry inherit that element's context (look-ahead).
 
 ## Option 'contextTitle'
 
@@ -146,7 +159,7 @@ It is ignored when showing of context is undefined.
 
 ## Notes
 
-- Context is only added when the TODO implements `ContextAwareTodoInterface`
+- Context is only added when the TODO implements `Aeliot\TodoRegistrarContracts\Todo\ContextAwareInterface`
 - Context is prepended to the issue description with two blank lines separation
 - The context path is built from the outermost level (file) to the innermost level (where TODO is located)
 - Anonymous classes are displayed as `{anonymous}`

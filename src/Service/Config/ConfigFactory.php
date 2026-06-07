@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Config;
 
+use Aeliot\TodoRegistrar\Exception\ConfigValidationException;
+use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
 use Aeliot\TodoRegistrar\Exception\NotSupportedConfigException;
 use Aeliot\TodoRegistrar\Exception\UnavailableConfigException;
 use Aeliot\TodoRegistrarContracts\GeneralConfig\GeneralConfigInterface;
@@ -28,6 +30,12 @@ final readonly class ConfigFactory
     ) {
     }
 
+    /**
+     * @throws ConfigValidationException
+     * @throws InvalidConfigException
+     * @throws NotSupportedConfigException
+     * @throws UnavailableConfigException
+     */
     public function create(string $path): GeneralConfigInterface
     {
         return match (strtolower(pathinfo($path, \PATHINFO_EXTENSION))) {
@@ -36,6 +44,11 @@ final readonly class ConfigFactory
         };
     }
 
+    /**
+     * @throws ConfigValidationException
+     * @throws InvalidConfigException
+     * @throws UnavailableConfigException
+     */
     private function getFromYAML(string $path): GeneralConfigInterface
     {
         $contents = file_get_contents($path);

@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar;
 
+use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
+use Aeliot\TodoRegistrar\Exception\LogicException;
 use Aeliot\TodoRegistrar\Service\ContextPath\ContextPathBuilderRegistry;
 use Aeliot\TodoRegistrarContracts\Todo\ContextAwareInterface;
 use Aeliot\TodoRegistrarContracts\Todo\TodoInterface;
@@ -44,6 +46,9 @@ final readonly class IssueSupporter
         return array_values(array_unique(array_filter($assignees, static fn ($value): bool => '' !== (string) $value)));
     }
 
+    /**
+     * @throws InvalidConfigException
+     */
     public function getDescription(TodoInterface $todo, AbstractGeneralIssueConfig $generalIssueConfig): string
     {
         $description = $todo->getDescription();
@@ -85,11 +90,17 @@ final readonly class IssueSupporter
         return array_values(array_map('trim', $labels));
     }
 
+    /**
+     * @throws LogicException
+     */
     public function getSummary(TodoInterface $todo, AbstractGeneralIssueConfig $generalIssueConfig): string
     {
         return $this->getSummaryPrefix($todo, $generalIssueConfig) . $todo->getSummary();
     }
 
+    /**
+     * @throws LogicException
+     */
     public function getSummaryPrefix(TodoInterface $todo, AbstractGeneralIssueConfig $generalIssueConfig): string
     {
         return preg_replace_callback('/\\{(?:assignee|tag|tag_caps)}/iu', function (
@@ -100,7 +111,7 @@ final readonly class IssueSupporter
                 '{tag}' => $todo->getTag(),
                 '{tag_caps}' => mb_strtoupper($todo->getTag()),
                 // unreachable statement but leave it here
-                default => throw new \RuntimeException('Unknown issue summary tag: ' . $matches[0]),
+                default => throw new LogicException('Unknown issue summary tag: ' . $matches[0]),
             };
         }, $generalIssueConfig->getSummaryPrefix());
     }

@@ -17,14 +17,16 @@ use Aeliot\TodoRegistrar\Dto\FileHeap;
 use Aeliot\TodoRegistrar\Dto\Parsing\CommentNode;
 use Aeliot\TodoRegistrar\Dto\Parsing\ParsedFile;
 use Aeliot\TodoRegistrar\Dto\ProcessStatistic;
-use Aeliot\TodoRegistrar\Service\File\FileParser;
+use Aeliot\TodoRegistrar\Exception\BadMethodCallException;
+use Aeliot\TodoRegistrar\Service\Comment\CommentNodesBuilder;
+use Aeliot\TodoRegistrar\Service\File\Parser\PhpFileParser;
 use Aeliot\TodoRegistrar\Service\File\Saver;
 use Aeliot\TodoRegistrarContracts\Context\ContextNodeInterface;
 use Aeliot\TodoRegistrarContracts\Context\PhpContextNodeInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(FileParser::class)]
+#[CoversClass(PhpFileParser::class)]
 final class FileParserContextTest extends TestCase
 {
     private const FIXTURE_PATH = __DIR__ . '/../../../fixtures/complex_context.php';
@@ -32,7 +34,7 @@ final class FileParserContextTest extends TestCase
     public function testParseComplexFileWithContexts(): void
     {
         $file = $this->getMockSplFileInfo(self::FIXTURE_PATH);
-        $parser = new FileParser();
+        $parser = new PhpFileParser();
 
         $parsedFile = $parser->parse($file);
         $commentNodes = $this->getCommentNodes($parsedFile);
@@ -57,7 +59,7 @@ final class FileParserContextTest extends TestCase
     public function testLazyContextMapInitialization(): void
     {
         $file = $this->getMockSplFileInfo(self::FIXTURE_PATH);
-        $parser = new FileParser();
+        $parser = new PhpFileParser();
 
         $parsedFile = $parser->parse($file);
         $commentNodes = $this->getCommentNodes($parsedFile);
@@ -95,7 +97,7 @@ final class FileParserContextTest extends TestCase
     public function testLazyContextMapSharedBetweenComments(): void
     {
         $file = $this->getMockSplFileInfo(self::FIXTURE_PATH);
-        $parser = new FileParser();
+        $parser = new PhpFileParser();
 
         $parsedFile = $parser->parse($file);
         $commentNodes = $this->getCommentNodes($parsedFile);
@@ -119,7 +121,7 @@ final class FileParserContextTest extends TestCase
     public function testLazyContextMapIsReadOnly(): void
     {
         $file = $this->getMockSplFileInfo(self::FIXTURE_PATH);
-        $parser = new FileParser();
+        $parser = new PhpFileParser();
 
         $parsedFile = $parser->parse($file);
         $commentNodes = $this->getCommentNodes($parsedFile);
@@ -131,7 +133,7 @@ final class FileParserContextTest extends TestCase
         $contextMapProperty->setAccessible(true);
         $contextMapObject = $contextMapProperty->getValue($commentNodes[0]->getContext());
 
-        $this->expectException(\BadMethodCallException::class);
+        $this->expectException(BadMethodCallException::class);
         $this->expectExceptionMessage('LazyContextMap is read-only');
 
         $contextMapObject[999] = [];
@@ -245,7 +247,7 @@ final class FileParserContextTest extends TestCase
     {
         $statistic = new ProcessStatistic();
         $saver = $this->createMock(Saver::class);
-        $fileHeap = new FileHeap($parsedFile, false, $statistic, $saver);
+        $fileHeap = new FileHeap(new CommentNodesBuilder(), $parsedFile, false, null, $statistic, $saver);
 
         return $fileHeap->getCommentNodes();
     }

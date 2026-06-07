@@ -1,112 +1,75 @@
 # Sequential Comments Gluing
 
-Merges consecutive single-line comments (`//` or `#`) into a single multi-line comment block for TODO processing.
+Merges consecutive single-line comments into one comment node before TODO extraction.
 
-See [user documentation](../../../docs/sequential_comments_gluing.md) for configuration, rules, and examples.
+## What It Does
+
+When `process.glueSequentialComments` is enabled, `FileHeap` groups adjacent single-line comment tokens separated by at most one blank line. Format-specific glue gates decide whether the current stream token may join the active group (with lookahead for whitespace between comments). The grouped tokens form one `CommentNode`; `Extractor` can then find multiple TODOs inside the combined text.
+
+Applies to:
+
+- PHP: `//` and `#` single-line comments
+- YAML: `#` comments; newline and indent tokens between consecutive `#` lines are glueable whitespace
+
+Multi-line block comments (`/* */`, `/** */`) flush any active group and are processed separately.
 
 ## Configuration
 
-Enable via `process.glueSequentialComments` option of general config. Default: `false` (disabled).
-
 ```yaml
 process:
-  glueSequentialComments: true
+  glueSequentialComments: false   # default
 ```
 
 ## Gluing Rules
 
-### 1. Single-Line Comments Only
-
-Only consecutive single-line comments are glued:
-- PHP: `//` and `#` comments
-
-Multi-line comments (`/* */` or `/** */`) are not affected and break the sequence.
-
-### 2. Empty Line Breaks Sequence
-
-Single line break between comments doesn't prevent gluing:
+**Merged:**
 
 ```php
 // TODO: first line
 //       second line
 //       third line
 ```
-All three comments are glued together.
 
-But an **empty line** (multiple line breaks) breaks the sequence:
+```yaml
+# TODO: first
+#       second
+```
+
+**Not merged** (empty line between comments):
 
 ```php
-// TODO: first line
-//       second line
+// TODO: first
+//       second
 
-//       third line
+//       third
 ```
-Two separate groups: first two comments glued, third comment separate.
 
-### 3. Indentation Ignored
+**Not merged** (non-comment token with non-whitespace content breaks the group).
 
-Leading whitespace before the comment marker is ignored:
+Indentation differences between consecutive comment lines do not prevent gluing.
 
-```php
-// Comment 1
-    // Comment 2 (different indentation)
-        // Comment 3 (even more indentation)
-```
-All three comments are glued together.
-
-## Multiple TODOs in Glued Block
+## Multiple TODOs in One Glued Block
 
 ```php
 // TODO: Task 1
-// TODO: Task 2 description
-//       with more details
+// TODO: Task 2
+//       details
 ```
 
-With gluing enabled:
-- One composite comment node from all three lines
-- Extractor finds two separate TODOs within that node
-- Both TODOs get registered and keys injected correctly
-
-## Technical Implementation
-
-### Architecture
-
-```
-FileParser → ParsedFile (tokens + context)
-     ↓
-HeapRunner passes glueSequentialComments from config
-     ↓
-FileHeap.buildCommentNodes():
-  Single pass through all tokens:
-    - Filter comments
-    - Group sequential single-line comments via CommentTokensGroup
-    - Create CommentNode[] with MappedContext
-```
-
-### CommentTokensGroup
-
-Groups consecutive single-line comment tokens. Manages pending whitespace between comments — single line breaks are buffered and included if the next token is another single-line comment; multiple line breaks flush the group.
-
-### Key Properties
-
-- Original line break style is preserved from the source file (no normalization)
-- `CommentNode` receives all tokens from the group
-- `MappedContext` provides context at the first token's line number
+One `CommentNode`, two `CommentPart` objects, two registrations (unless same-ticket gluing applies).
 
 ## Technical Details
 
-### Key Classes
-
-| Class | Responsibility |
+| Class | Path |
 |---|---|
-| `FileHeap` | Builds comment nodes from tokens, implements gluing logic |
-| `CommentTokensGroup` | Groups consecutive single-line comment tokens |
-| `CommentNode` | Wraps token(s) with context information |
-| `ProcessConfig` | Holds `glueSequentialComments` setting |
+| Grouping logic | `src/Service/Comment/CommentNodesBuilder.php` |
+| Token stream | `src/Dto/Token/TokenStream.php`; `ParsedFile::getTokenStream()` |
+| Glue gates | `src/Service/Comment/SequentialCommentGlueGate/PhpSequentialCommentGlueGate.php`, `YamlSequentialCommentGlueGate.php` |
+| Gate registry | `src/Service/Comment/SequentialCommentGlueGateRegistry.php` |
+| Token grouping | `src/Dto/Token/CommentTokensGroup.php` |
+| Comment node | `src/Dto/Parsing/CommentNode.php` |
+| Config | `src/Dto/GeneralConfig/ProcessConfig.php` |
 
-### Source Paths
+Flow: `FileParserRegistry` → `ParsedFile` → `SequentialCommentGlueGateRegistry` + `CommentNodesBuilder` → `Extractor`.
 
-- Heap building: `src/Dto/FileHeap.php`
-- Token grouping: `src/Dto/Token/CommentTokensGroup.php`
-- Comment node: `src/Dto/Parsing/CommentNode.php`
-- Config: `src/Dto/GeneralConfig/ProcessConfig.php`
+See also: [Source File Parsing](SourceFileParsing.md).

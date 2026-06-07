@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Test\Unit\Service\Comment;
 
 use Aeliot\TodoRegistrar\Dto\Token\TokenInterface;
+use Aeliot\TodoRegistrar\Exception\LogicException;
 use Aeliot\TodoRegistrar\Service\Comment\CommentCleanerInterface;
 use Aeliot\TodoRegistrar\Service\Comment\CommentCleanerRegistry;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -43,7 +44,7 @@ final class CommentCleanerRegistryTest extends TestCase
 
         $registry = new CommentCleanerRegistry([$cleaner]);
 
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(LogicException::class);
         $registry->getCleaner($this->createMock(TokenInterface::class));
     }
 
@@ -51,7 +52,7 @@ final class CommentCleanerRegistryTest extends TestCase
     {
         $registry = new CommentCleanerRegistry([]);
 
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(LogicException::class);
         $registry->getCleaner($this->createMock(TokenInterface::class));
     }
 }

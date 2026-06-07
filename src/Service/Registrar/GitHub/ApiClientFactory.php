@@ -62,6 +62,7 @@ final readonly class ApiClientFactory
         $httpClientBuilder = new Builder();
         $httpClientBuilder->addPlugin($this->createAuthenticationPlugin());
 
+        // TODO: implement decorator which catches vendor-specific exceptions and throws project-specific
         return new GithubClient($httpClientBuilder);
     }
 }

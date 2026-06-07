@@ -1,427 +1,219 @@
 # Processing Flow
 
-## Overview
+Main algorithm from file discovery to issue registration and source update. Implemented in `HeapRunner`.
 
-This document describes the main algorithm of TODO comment processing — from file discovery to issue registration and source code update.
-
-## High-Level Flow Diagram
+## Flow Diagram
 
 ```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                              HeapRunner.run()                               │
-└─────────────────────────────────────────────────────────────────────────────┘
-                                      │
-                                      ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│  1. ITERATE FILES (Finder)                                                  │
-│     foreach ($finder as $file)                                              │
-└─────────────────────────────────────────────────────────────────────────────┘
-                                      │
-                                      ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│  2. TOKENIZE FILE (FileParser)                                              │
-│     PhpToken::tokenize($fileContents) → TokenInterface[]                    │
-└─────────────────────────────────────────────────────────────────────────────┘
-                                      │
-                                      ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│  3. FILTER COMMENT TOKENS (CommentDetector)                                 │
-│     Keep only T_COMMENT and T_DOC_COMMENT tokens                            │
-└─────────────────────────────────────────────────────────────────────────────┘
-                                      │
-                                      ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│  4. EXTRACT TODO PARTS (CommentExtractor)                                   │
-│     foreach ($commentTokens as $token)                                      │
-│         Split comment into lines                                            │
-│         Detect TODO/FIXME tags (TagDetector)                                │
-│         Build CommentParts with CommentPart objects                         │
-└─────────────────────────────────────────────────────────────────────────────┘
-                                      │
-                                      ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│  5. SKIP ALREADY REGISTERED (check ticketKey)                               │
-│     if (commentPart.getTagMetadata().getTicketKey()) → skip                 │
-└─────────────────────────────────────────────────────────────────────────────┘
-                                      │
-                                      ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│  6. BUILD TODO DTO (TodoBuilder)                                            │
-│     Create Todo from CommentPart with:                                      │
-│     - tag, summary, description, assignee                                   │
-│     - inlineConfig (parsed from description)                                │
-└─────────────────────────────────────────────────────────────────────────────┘
-                                      │
-                                      ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│  7. REGISTER ISSUE (Registrar)                                              │
-│     Call external API (JIRA/GitHub/GitLab)                                  │
-│     Returns issue key (e.g., "PROJ-123", "#42")                             │
-└─────────────────────────────────────────────────────────────────────────────┘
-                                      │
-                                      ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│  8. INJECT KEY INTO COMMENT (CommentPart.injectKey)                         │
-│     Modify comment text: "TODO:" → "TODO: PROJ-123"                         │
-└─────────────────────────────────────────────────────────────────────────────┘
-                                      │
-                                      ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│  9. UPDATE TOKEN TEXT                                                       │
-│     token.text = commentParts.getContent()                                  │
-└─────────────────────────────────────────────────────────────────────────────┘
-                                      │
-                                      ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│  10. SAVE FILE (Saver)                                                      │
-│      Rebuild file content from all tokens                                   │
-│      Write to disk                                                          │
-└─────────────────────────────────────────────────────────────────────────────┘
+HeapRunner.run()
+    │
+    ├─► HeapContext (ProcessStatistic, hashToKey, glueSameTickets)
+    │
+    └─► foreach Finder (SplFileInfo)
+            │
+            ├─► FileHeapFactory.create()
+            │       ├─► FileParserRegistry → ParsedFile (tokens + context map)
+            │       └─► CommentNodesBuilder.build()  [optional sequential gluing]
+            │
+            ├─► FileProcessor.process()
+            │       ├─► Comment/Extractor → CommentPart[]
+            │       │       └─ skip if tag line has ticketKey
+            │       ├─► TodoBuilder → Todo
+            │       ├─► Registrar.register()  [optional same-ticket gluing by hash]
+            │       ├─► Todo.injectKey() → CommentPart updates token text
+            │       └─► FileHeap.saveAfterRegistration() or recordRegistration() in --dry-run
+            │
+            ├─► logFileCompletion()
+            │
+            └─► on Exception: writeError() + rethrow (fail-fast)
 ```
 
-## Detailed Step-by-Step Description
+One file in memory at a time; file saved after each registration. The main loop is imperative;
+generators are used only in local helpers (e.g. `Comment/Extractor::getLines()`).
 
-### Step 1: File Discovery
+## Step 1: File Discovery
 
-**Class:** `Service\File\Finder` (implements `FinderInterface`)
+**Class:** `Service/File/Finder`
 
-The Finder iterates over PHP files in configured directories using Symfony Finder.
+Iterates configured paths via Symfony Finder.
+
+YAML config (`paths`):
+
+- `in`, `append`, `exclude`, `extensions`, `name`
+- Default extensions: `php`, `yaml`, `yml`
+
+PHP config: configure Finder directly.
+
+## Step 2: File Parsing
+
+**Classes:** `FileParserRegistry`, `PhpFileParser`, `YamlFileParser`
+
+Extension resolution:
+
+1. Lowercase file extension
+2. Map via `process.extensionAliases` if set
+3. Select parser from registry; skip file if none
+
+Output: `ParsedFile` with:
+
+- `getTokenStream()` — cursor over the same token list (`current`, `advance`, `peek`)
+  which allows iterate `TokenInterface` (mutable via `setText()`)
+- Lazy context map for AST/YAML structure
+
+See [Source File Parsing](../Feature/SourceFileParsing.md).
+
+## Step 3: Comment Node Building
+
+**Classes:** `Dto/FileHeap`, `Service/Comment/CommentNodesBuilder`, `Service/Comment/SequentialCommentGlueGateRegistry`
+
+Single pass via `ParsedFile::getTokenStream()`:
+
+| Token | Action (gluing enabled) |
+|---|---|
+| Token accepted by glue gate | Add to `CommentTokensGroup` (comment or whitespace between glued lines) |
+| Non-glueable whitespace with active group | Flush group |
+| Non-empty non-comment | Flush group |
+| Non-glueable comment (e.g. PHP block) | Flush group; create node for that comment alone |
+
+Glue gate is selected by file extension alias (`php`, `yaml`, `yml`). Lookahead on the stream decides whether whitespace bridges to the next glueable comment.
+
+Gluing disabled: each comment token becomes its own `CommentNode` immediately.
+
+`CommentNode` wraps one or more tokens + `MappedContext` at first token line.
+
+## Step 4: TODO Extraction
+
+**Classes:** `Comment/Extractor`, `Tag/Detector`, `CommentCleanerRegistry`
+
+For each `CommentNode`:
+
+1. Split comment tokens into lines (PHP or YAML cleaner)
+2. Detect configured tags (`tags` config, default `todo`, `fixme`) on each line
+3. Group continuation lines (whitespace-only prefix before content)
+4. Yield `CommentPart` per TODO
+
+Tag pattern (simplified): optional comment prefix, `@?tag`, optional `@assignee`, optional separator, optional existing key.
+
+Separators from `issueKeyInjection.summarySeparators` (default `:`, `-`, `>`).
+
+## Step 5: Skip Registered
 
 ```php
-foreach ($this->finder as $file) {
-    // $file is SplFileInfo
+if ($commentPart->getTagMetadata()?->getTicketKey()) {
+    // skip — already has key
 }
 ```
 
-Configuration determines:
-- Which directories to scan
-- File patterns to include/exclude
-- Recursion depth
+## Step 6: Build Todo
 
-### Step 2: File Tokenization
+**Class:** `TodoBuilder`
 
-**Class:** `Service\File\FileParser`
+Creates `ContextAwareTodo` (implements `Todo`):
 
-Each file is tokenized using PHP's built-in tokenizer and wrapped in `TokenInterface`:
+- tag, summary, description, assignee
+- context from `CommentNode`
+- hash for same-ticket gluing
+- inline config from `{EXTRAS: ...}`
+- issue key injection settings
 
-```php
-$phpTokens = PhpToken::tokenize(file_get_contents($file->getPathname()));
-$tokens = array_map(fn($t) => new PhpTokenAdapter($t), $phpTokens);
-```
+## Step 7: Register Issue
 
-Result: `ParsedFile` containing array of `TokenInterface` objects and `LazyContextMap` for AST context.
+**Class:** `FileProcessor`
 
-**Important:** Tokens are mutable objects. The `PhpTokenAdapter` wraps native `\PhpToken` and delegates mutations via `setText()` to the underlying token, which is used when saving the file.
+Run-scoped state lives in `HeapContext` (`statistic`, `hashToKey`, `glueSameTickets`).
 
-**Abstraction Layer:** Using `TokenInterface` isolates the domain logic from PHP-specific tokens, enabling future support for other file types (YAML, CSS, etc.) without changing the core processing flow.
+If `process.glueSameTickets` and hash seen → reuse key, `tickGluedTodo()`.
+Else → `registrar->register($todo)`, store hash → key mapping.
 
-**Note:** FileParser no longer creates CommentNode objects. It returns a clean DTO (`ParsedFile`) with tokens and context map. CommentNode creation is delegated to `FileHeap`.
+With `--dry-run`, `DryRunRegistrar` returns fake keys (`#dry-run-N`); the real registrar is not instantiated.
 
-### Step 2.5: FileHeap Creation and Comment Filtering
+Errors wrapped in `CommentRegistrationException` with comment line and content.
 
-**Class:** `Dto\FileHeap`
-
-FileHeap is responsible for lazy creation of CommentNode objects from tokens:
-
-```php
-$shouldGlue = $config->getProcessConfig()?->isGlueSequentialComments() ?? false;
-$fileHeap = new FileHeap($parsedFile, $shouldGlue, $statistic, $saver);
-$commentNodes = $fileHeap->getCommentNodes(); // Lazy initialization
-```
-
-**Lazy Initialization:** `FileHeap::getCommentNodes()` creates CommentNode array on first call using **single pass through all tokens**:
-
-1. **For each token in order:**
-   - **Non-comment token:**
-     - If non-empty (`trim($token->getText()) !== ''`) → flush current group (breaks sequence)
-     - If empty (whitespace only) → continue (preserves sequence)
-   - **Multi-line comment** → flush group, create CommentNode immediately
-   - **Single-line comment (gluing enabled):**
-     - No group exists → start new group
-     - Group exists → add to group
-   - **Single-line comment (gluing disabled)** → create CommentNode immediately
-2. **Flush remaining group** (if any) at end of loop
-3. **Result:** Array of `CommentNode[]` with optimal performance (one iteration, no nested loops)
-
-**Sequential Comments Gluing:**
-
-When `process.glueSequentialComments: true` is configured:
-
-```php
-// Source file:
-// TODO: first line
-//       second line
-    
-//       third line
-
-// Becomes ONE CompositeToken representing all three lines
-```
-
-**Gluing Rules:**
-- Only single-line comments (`//` or `#`)
-- Single line break between comments allowed
-- Multiple line breaks (empty line) break the sequence
-- Different indentation allowed
-
-**CompositeToken Behavior:**
-
-`CompositeToken` wraps multiple tokens (comments + whitespace) and presents them as one:
-
-```php
-// Wraps: comment, whitespace, comment, whitespace, comment
-$composite = new CompositeToken([$commentToken1, $whitespaceToken1, $commentToken2, $whitespaceToken2, $commentToken3]);
-
-// getText() concatenates all tokens, preserving original line breaks (\n, \r\n, or mixed)
-$text = $composite->getText(); // "line1\nline2\r\nline3"
-
-// setText() puts ALL text into first token, clears others
-$composite->setText($updatedText);
-// Result: $token1->text = $updatedText, $token2->text = "", $token3->text = ""
-```
-
-**Critical:** This prevents duplication when `Saver` concatenates all tokens.
-
-| Token Type | Description | Example |
-|---|---|---|
-| `T_COMMENT` | Single-line or multi-line comment | `// comment`, `/* comment */` |
-| `T_DOC_COMMENT` | PHPDoc comment | `/** @param ... */` |
-
-### Step 3: Extract TODO Parts
-
-**Classes:** `Service\Comment\Extractor`, `Service\Tag\Detector`
-
-**Note:** This step processes CommentNode objects created by FileHeap.
-
-For each comment token:
-
-1. **Split into lines** — preserving line endings (CR, LF, CRLF)
-2. **Detect tag on each line** — using regex pattern for TODO/FIXME
-3. **Group lines into CommentPart** — consecutive lines belong to same TODO if they have proper prefix
-
-**Tag Detection Pattern:**
-```regex
-~^([\s\#*/]*@?(?P<tag>todo|fixme)(?:@(?P<assignee>[a-z0-9._-]+))?...)~ix
-```
-
-Detects:
-- Tag name (TODO, FIXME)
-- Optional assignee (`@username`)
-- Optional existing ticket key (to skip already registered)
-
-**Result:** `CommentParts` object containing:
-- `parts[]` — all comment parts (with and without tags)
-- `todos[]` — only parts with TODO/FIXME tags
-
-### Step 5: Skip Already Registered
-
-Before processing, check if TODO already has a ticket key:
-
-```php
-$ticketKey = $commentPart->getTagMetadata()?->getTicketKey();
-if ($ticketKey) {
-    // Skip — already registered
-    continue;
-}
-```
-
-Recognized ticket key formats:
-- JIRA: `PROJ-123`
-- GitHub/GitLab: `#123`
-- Date: `2024-12-31`
-- Version: `v1.2.3`
-- Package version: `symfony/console:^7.0`
-
-### Step 6: Build Todo DTO
-
-**Class:** `Service\TodoBuilder`
-
-Creates `Todo` DTO from `CommentPart`:
-
-```php
-$todo = new Todo(
-    tag: $commentPart->getTag(),           // "TODO" or "FIXME"
-    summary: $commentPart->getSummary(),    // First line after tag
-    description: $commentPart->getDescription(), // Rest of lines
-    assignee: $tagMetadata->getAssignee(), // From @username
-    commentPart: $commentPart,             // Reference for key injection
-    inlineConfig: $inlineConfig,           // Parsed {EXTRAS: {...}}
-);
-```
-
-**Inline Config Parsing:**
-- Reads `{EXTRAS: {...}}` from description
-- Parses JSON-like syntax
-- Returns `InlineConfigInterface` with parsed values
-
-### Step 7: Register Issue
-
-**Interface:** `RegistrarInterface`
-
-```php
-$key = $this->registrar->register($todo);
-```
-
-Each registrar implementation:
-1. Builds issue data from Todo (title, body, labels, assignees, etc.)
-2. Calls external API to create issue
-3. Returns issue key/number
-
-| Registrar | Returns |
+| Registrar | Returned key |
 |---|---|
 | JIRA | `PROJ-123` |
-| GitHub | `#123` |
-| GitLab | `#123` |
+| GitHub / GitLab / Redmine | `#123` |
+| Yandex Tracker | `QUEUE-123` |
 
-### Step 8: Inject Key into Comment
+## Step 8: Inject Key
 
-**Class:** `Dto\Comment\CommentPart`
+**Class:** `CommentPart::injectKey()`
 
-After successful registration, inject the key back into the comment:
+Modifies first line at configured `IssueKeyPosition`; updates underlying tokens via `TokenLinesStack::flush()`.
 
-```php
-$todo->injectKey($key); // Delegates to CommentPart.injectKey()
-```
+See [Issue Key Injection](../Feature/IssueKeyInjection.md).
 
-The injection position is configurable via `issueKeyInjection.position` setting. Three positions are supported:
+## Step 9: Save File
 
-**Position: `after_separator` (default)**
+**Classes:** `Dto/FileHeap`, `Service/File/Saver`
 
 ```php
-// Before: TODO: Fix this bug
-// After:  TODO: PROJ-123 Fix this bug
+implode('', array_map(fn ($t) => $t->getText(), $tokens))
 ```
 
-**Position: `before_separator`**
+`FileHeap::saveAfterRegistration()` updates per-file statistics and writes the file after each successful registration.
 
-```php
-// Before: TODO: Fix this bug
-// After:  TODO PROJ-123: Fix this bug
-```
-
-**Position: `before_separator_sticky`**
-
-```php
-// Before: TODO: Fix this bug
-// After:  TODO PROJ-123: Fix this bug
-```
-
-**Algorithm:**
-1. Find separator offset in comment text (`:` or `-`)
-2. Calculate injection offset based on configured position
-3. Insert key at calculated offset with proper spacing
-4. Add or replace separator if configured via `newSeparator` and `replaceSeparator`
-5. Update first line of CommentPart
-
-See [Issue Key Injection](../Feature/IssueKeyInjection.md) for detailed configuration options.
-
-### Step 9: Update Token Text
-
-After key injection, update the original token:
-
-```php
-$token->setText($commentParts->getContent());
-```
-
-`CommentParts.getContent()` rebuilds the full comment text from all parts (both TODO and non-TODO parts).
-
-**Note:** The `setText()` method is part of `TokenInterface` and ensures the mutation is applied to the underlying token implementation (e.g., `PhpTokenAdapter` modifies the wrapped `\PhpToken`).
-
-### Step 10: Save File
-
-**Class:** `Service\File\Saver`
-
-Rebuild and save the file:
-
-```php
-$content = implode('', array_map(fn($token) => $token->getText(), $tokens));
-file_put_contents($file->getPathname(), $content);
-```
-
-**Important:** File is saved immediately after each TODO registration, not batched. This ensures:
-- Partial progress is preserved if process fails
-- Each TODO gets registered and saved before moving to next
-
-**Abstraction:** Using `getText()` method from `TokenInterface` makes the saver independent of the token implementation.
-
-## Lazy Processing with Generators
-
-The flow uses PHP Generators for memory-efficient processing:
-
-```php
-// HeapRunner.run()
-foreach ($this->getTodos($statistic) as [$todo, $fileUpdateCallback]) {
-    $this->register($todo);      // Register issue
-    $fileUpdateCallback();       // Save file
-}
-```
-
-**Generator Chain:**
-
-```
-run()
-  └── getTodos()                     yields [Todo, callback]
-        └── getCommentParts()        yields [CommentPart, callback]
-              └── getFileHeaps()     yields FileHeap
-                    └── finder       yields SplFileInfo
-```
-
-**Benefits:**
-- Only one file loaded in memory at a time
-- Immediate save after each registration
-- Process can be interrupted and resumed (already registered TODOs are skipped)
-
-## FileHeap and Update Callback
-
-`FileHeap` encapsulates file processing context:
-
-```php
-$fileHeap = new FileHeap(
-    $commentTokens,  // Filtered comment tokens
-    $tokens,         // All tokens (for saving)
-    $file,           // SplFileInfo
-    $statistic,      // ProcessStatistic
-    $saver,          // File saver
-);
-```
-
-**fileUpdateCallback** is a closure that:
-1. Increments registration counter
-2. Updates statistics
-3. Saves file with modified tokens
-
-```php
-$this->fileUpdateCallback = function () {
-    ++$this->registrationCounter;
-    $statistic->setFileRegistrationCount($file->getPathname(), $this->registrationCounter);
-    $saver->save($file, $this->tokens);
-};
-```
-
-## Error Handling
-
-Errors during registration are wrapped in `CommentRegistrationException`:
-
-```php
-try {
-    $key = $this->registrar->register($todo);
-} catch (\Throwable $exception) {
-    throw new CommentRegistrationException($todo, $exception);
-}
-```
-
-This preserves context:
-- Original exception
-- Todo object with comment details
-- Token with line number
+With `--dry-run`, `FileHeap::recordRegistration()` updates statistics only; `Saver` is not called.
 
 ## Statistics
 
-`ProcessStatistic` tracks:
-- Number of updated files
-- Number of registered TODOs per file
-- Total registered TODOs
+**Class:** `ProcessStatistic`
 
-```php
-$statistic->getCountRegisteredTODOs();
-$statistic->getCountUpdatedFiles();
+Tracks per run: analyzed/updated files, comment tokens, ignored/glued/registered TODOs, `newIssues` (registered − glued), per-file registration counts, and `dryRun` flag.
+
+Optional export via [Report](../Feature/Report.md).
+
+## Processing Loop
+
 ```
+run()
+  ├── HeapContextFactory.create(config, output)
+  └── foreach finder → SplFileInfo
+        try
+          ├── FileHeapFactory.create() → FileHeap (or skip if no parser)
+          ├── FileProcessor.process()
+          │     └── foreach commentNode
+          │           └── foreach CommentPart
+          │                 ├── TodoBuilder → Todo
+          │                 ├── FileProcessor.register() + saveAfterRegistration()
+          │                 └── CommentRegistrationException propagates up
+          └── logFileCompletion()
+        catch Exception
+          ├── writeError($exception, $file)
+          └── rethrow
+```
+
+Per-file processing is wrapped in a single `try/catch` in `run()`. Any `\Exception`
+(parse, glue gate, registration, todo building) triggers `writeError()` with the current
+file path and stops the run (fail-fast). `FileProcessor` wraps registrar failures in
+`CommentRegistrationException` before they reach the outer catch.
+
+## HeapContext
+
+**Class:** `Dto/HeapContext`
+
+Mutable run-scoped bag passed through `FileHeapFactory.create()`, `FileProcessor.process()`, and registration:
+
+| Property | Purpose |
+|---|---|
+| `statistic` | `ProcessStatistic` for the whole run |
+| `hashToKey` | Hash → issue key map for same-ticket gluing |
+| `glueSameTickets` | From `process.glueSameTickets` config |
+| `isDryRun` | From `--dry-run` CLI flag |
+| `output` | Console output adapter for the run |
+
+Built once in `run()` via `HeapContextFactory`; shared across all files in the run.
+
+## Error Handling
+
+| Situation | Behavior |
+|---|---|
+| No parser for file extension | `writeErr`, skip file (`continue`) |
+| Parse / glue gate / registration / build error | `writeError($exception, $file)` in `run()`, rethrow |
+| Registrar failure | Wrapped in `CommentRegistrationException` in `FileProcessor` |
+
+## Related Features
+
+- [Sequential Comments Gluing](../Feature/SequentialCommentsGluing.md)
+- [Same-Ticket Gluing](../Feature/SameTicketGluing.md)
+- [Issue Key Injection](../Feature/IssueKeyInjection.md)

@@ -13,10 +13,8 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Test\Functional;
 
-use Aeliot\TodoRegistrar\Test\Stub\NewStaticRegistrarFactory;
 use Aeliot\TodoRegistrar\Test\Stub\StaticRegistrarFactory;
 use PHPUnit\Framework\Attributes\CoversNothing;
-use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Large;
 use PHPUnit\Framework\TestCase;
 
@@ -74,50 +72,6 @@ final class RegisterCommandTest extends TestCase
     {
         yield 'PHP config' => ['php'];
         yield 'YAML config' => ['yaml'];
-    }
-
-    /**
-     * @return iterable<string, array{class-string}>
-     */
-    public static function registrarFactoryClassProvider(): iterable
-    {
-        yield 'legacy registrar factory' => [StaticRegistrarFactory::class];
-        yield 'new registrar factory' => [NewStaticRegistrarFactory::class];
-    }
-
-    /**
-     * @return iterable<string, array{0: string, 1: class-string}>
-     */
-    public static function registerWithStubRegistrarProvider(): iterable
-    {
-        foreach (self::configProvider() as $configLabel => [$configType]) {
-            foreach (self::registrarFactoryClassProvider() as $factoryLabel => [$factoryClass]) {
-                yield "{$configLabel}, {$factoryLabel}" => [$configType, $factoryClass];
-            }
-        }
-    }
-
-    #[DataProvider('registerWithStubRegistrarProvider')]
-    public function testRegisterWithStubRegistrar(string $configType, string $stubFactoryClass): void
-    {
-        $expectedTicketKey = 'TEST-456';
-        $configFile = $this->createConfigFile($configType, $expectedTicketKey, $stubFactoryClass);
-        file_put_contents($this->testFile, self::ORIGINAL_CONTENT);
-
-        if ('yaml' === $configType) {
-            $this->setTicketKeyEnvironmentVariable($expectedTicketKey);
-        }
-
-        $exitCode = $this->runTodoRegistrar($configFile);
-
-        self::assertSame(0, $exitCode, 'Script should exit with code 0');
-
-        $modifiedContent = file_get_contents($this->testFile);
-        self::assertStringContainsString(
-            "// TODO: {$expectedTicketKey} Test task description",
-            $modifiedContent,
-            'Comment should contain ticket key',
-        );
     }
 
     public function testRegisterWithMissingEnvVarThrowsException(): void
@@ -241,6 +195,32 @@ final class RegisterCommandTest extends TestCase
         );
     }
 
+    public function testDryRunDoesNotModifyFileAndExportsReport(): void
+    {
+        $configFile = $this->createPhpConfig('TEST-DRY-RUN');
+        file_put_contents($this->testFile, self::ORIGINAL_CONTENT);
+
+        [$exitCode, $output] = $this->runTodoRegistrarWithOutput($configFile, ['--dry-run', '--report-format=json']);
+
+        self::assertSame(0, $exitCode, 'Script should exit with code 0');
+        self::assertSame(
+            self::ORIGINAL_CONTENT,
+            file_get_contents($this->testFile),
+            'Source file should remain unchanged in dry-run mode',
+        );
+
+        $outputString = implode("\n", $output);
+        self::assertStringContainsString('Would register', $outputString);
+
+        $reportPath = $this->projectRoot . '/todo-registrar-report.json';
+        self::assertFileExists($reportPath, 'Report file should be created');
+
+        $report = json_decode((string) file_get_contents($reportPath), true);
+        self::assertIsArray($report);
+        self::assertSame(1, $report['summary']['todos']['registered']);
+        self::assertSame(1, $report['summary']['todos']['newIssues']);
+    }
+
     private function createConfigFile(
         string $type,
         string $ticketKey,
@@ -267,7 +247,7 @@ use Aeliot\TodoRegistrar\Config;
 use Aeliot\TodoRegistrar\Service\File\Finder;
 
 return (new Config())
-    ->setFinder((new Finder())->in('{$this->tempDir}'))
+    ->setFinder((new Finder())->name('/\.(?:php|yaml|yml)$/')->in('{$this->tempDir}'))
     ->setRegistrar('{$stubFactoryClass}', [
         'ticket_key' => '{$ticketKey}',
     ]);
@@ -350,18 +330,23 @@ YAML;
     }
 
     /**
+     * @param string[] $extraArgs
+     *
      * @return array{0: int, 1: string[]}
      */
-    private function runTodoRegistrarWithOutput(string $configFile): array
+    private function runTodoRegistrarWithOutput(string $configFile, array $extraArgs = []): array
     {
         $projectRoot = \dirname(__DIR__, 2);
         $scriptPath = $projectRoot . '/bin/todo-registrar';
-        $command = \sprintf(
-            '%s %s --config=%s 2>&1',
+        $parts = [
             escapeshellarg(\PHP_BINARY),
             escapeshellarg($scriptPath),
-            escapeshellarg($configFile)
-        );
+            '--config=' . escapeshellarg($configFile),
+        ];
+        foreach ($extraArgs as $arg) {
+            $parts[] = escapeshellarg($arg);
+        }
+        $command = implode(' ', $parts) . ' 2>&1';
 
         $output = [];
         $exitCode = 0;

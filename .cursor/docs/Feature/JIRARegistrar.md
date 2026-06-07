@@ -1,141 +1,83 @@
 # JIRA Registrar
 
-## Overview
-
-JIRA Registrar creates issues in Atlassian JIRA from TODO/FIXME comments found in source code.
+Creates JIRA issues from TODO/FIXME comments in PHP and YAML source files.
 
 ## How It Works
 
-1. Parses TODO comment to extract summary, description, assignee, and inline config
-2. Creates JIRA issue with configured project key, type, and fields
-3. Registers issue links if specified in inline config
-4. Returns issue key (e.g., `PROJ-123`) which is injected back into comment
+1. Builds issue fields via `IssueFieldFactory` and `IssueSupporter`
+2. Creates issue via `IssueService::create()`
+3. Registers issue links from inline `linkedIssues` if present
+4. Returns issue key (e.g. `PROJ-42`) for key injection
 
 ## Issue Fields Mapping
 
-| TODO Comment | JIRA Issue Field |
+| Source | JIRA field |
 |---|---|
-| Summary (first line) | `summary` |
-| Description (full text) | `description` |
-| Tag assignee (`TODO@username`) | `assignee` |
-| Inline config `assignee` | `assignee` |
-| Config `issue.assignee` | `assignee` |
-| Inline config `labels` | `labels[]` |
-| Config `issue.labels` | `labels[]` |
-| Tag name (if `addTagToLabels=true`) | `labels[]` |
-| Inline config `components` | `components[]` |
-| Config `issue.components` | `components[]` |
-| Inline config `priority` | `priority` |
-| Config `issue.priority` | `priority` |
-| Inline config `issueType` | `issuetype` |
-| Config `issue.issueType` | `issuetype` |
-| Inline config `linkedIssues` | Issue links |
+| Summary (+ prefix) | `summary` |
+| Description (+ context) | `description` |
+| Assignee | `assignee` |
+| Labels | `labels[]` |
+| Components | `components[]` |
+| Priority | `priority` |
+| Inline `issueType` / config `issueType` | `issuetype` |
+| Inline `projectKey` | `project` key |
+| Inline `linkedIssues` | issue links (after create) |
 
 ## Configuration
 
-See [user documentation](../../../docs/registrar/JIRA/config.md) for full configuration reference (YAML/PHP, authentication, inline config keys).
-
-### Registrar type
-
-```yaml
-registrar:
-  type: JIRA
-```
-
-### Service Configuration
-
 ```yaml
 registrar:
   type: JIRA
   options:
+    projectKey: PROJ              # fallback if not in issue section
+    issueLinkType: Relates       # default link type for linkedIssues list form
     service:
       host: '%env(JIRA_HOST)%'
-      personalAccessToken: '%env(JIRA_PERSONAL_ACCESS_TOKEN)%'
+      personalAccessToken: '%env(JIRA_TOKEN)%'
       tokenBasedAuth: true
-      ## Alternative: username/password auth (tokenBasedAuth: false)
-      # jiraUser: 'username'
-      # jiraPassword: 'password'
-```
-
-### Issue Configuration
-
-```yaml
-registrar:
-  options:
+      # Alternative: jiraUser + jiraPassword with tokenBasedAuth: false
     issue:
-      projectKey: 'PROJ'                  # Required: JIRA project key
-      issueType: 'Task'                   # Required: issue type (Task, Bug, Story, etc.)
-      priority: 'Medium'                  # Optional: default priority
-      assignee: 'developer1'              # Optional: default assignee
-      labels: ['tech-debt']               # Optional: default labels
-      addTagToLabels: true                # Optional: add tag as label
-      tagPrefix: 'tag-'                   # Optional: prefix for tag label
-      allowedLabels: ['bug', 'feature']   # Optional: restrict allowed labels
-      components: ['Backend']             # Optional: default components
-      summaryPrefix: '[TODO] '            # Optional: prefix for issue summary
-      showContext: 'numbered'             # Optional: include code context
-      contextTitle: null                  # Optional: title of context path
-      issueLinkType: null                 # Optional: default link type (default: 'Relates')
+      projectKey: PROJ
+      issueType: Task
+      assignee: null
+      priority: null
+      components: []
+      labels: []
+      issueLinkType: null
+      addTagToLabels: false
+      tagPrefix: ''
+      allowedLabels: []
+      summaryPrefix: ''
+      showContext: null
+      contextTitle: null
 ```
 
-> **Note:** `issueType` replaces the deprecated `type` key. If both are specified, a validation error is raised.
+**`issueType` vs `type`:** use `issueType`. Legacy `type` is migrated automatically; specifying both raises a validation error.
 
-## Inline Configuration
+## Inline Config Keys
 
-Specify per-comment settings using `{EXTRAS: {...}}` syntax.
+| Key | Type |
+|---|---|
+| `assignee`, `assignees` | string |
+| `labels`, `components` | string[] |
+| `issueType` | string |
+| `priority` | string |
+| `projectKey` | string |
+| `linkedIssues` | list or map — see [JIRA Linked Issues](JIRALinkedIssues.md) |
+| `showContext`, `contextTitle` | string |
 
-### Supported Inline Config Keys
-
-| Key | Type | Description |
-|---|---|---|
-| `assignee` | `string` | JIRA username to assign |
-| `assignees` | `string` | Same as `assignee` |
-| `components` | `string[]` | List of JIRA components |
-| `contextTitle` | `string` | Title of context path |
-| `issueType` | `string` | Issue type (Bug, Task, Story, etc.) |
-| `labels` | `string[]` | List of labels to add |
-| `linkedIssues` | `array` | Issue links (see [JIRA Linked Issues](JIRALinkedIssues.md)) |
-| `priority` | `string` | Priority name |
-| `projectKey` | `string` | Override project key |
-| `showContext` | `string` | Override context display format |
-
-## Priority of Values
-
-When the same field can be set from multiple sources, priority is (highest to lowest):
-
-1. **Tag assignee** — `TODO@username`
-2. **Inline config** — `{EXTRAS: {assignee: user1}}`
-3. **General config** — `issue.assignee` in config file
+Legacy inline key `issue_type` is also accepted in `IssueFieldFactory`.
 
 ## Technical Details
 
-### Key Classes
-
-| Class | Responsibility |
+| Class | Path |
 |---|---|
-| `JiraRegistrar` | Main registrar, orchestrates issue creation |
-| `JiraRegistrarFactory` | Creates registrar from config |
-| `IssueFieldFactory` | Builds IssueField from Todo |
-| `GeneralIssueConfig` | Holds parsed issue configuration |
-| `ServiceFactory` | Creates JIRA API service clients |
-| `IssueServiceArrayConfigPreparer` | Prepares service config array |
-| `IssueLinkRegistrar` | Creates issue links after issue creation |
-| `LinkedIssueNormalizer` | Normalizes linked issues format |
-| `IssueLinkTypeProvider` | Provides available link types from JIRA |
-| `NotSupportedLinkTypeException` | Exception for unsupported link types |
+| Registrar | `src/Service/Registrar/JIRA/JiraRegistrar.php` |
+| Factory | `src/Service/Registrar/JIRA/JiraRegistrarFactory.php` |
+| Field factory | `src/Service/Registrar/JIRA/IssueFieldFactory.php` |
+| Service factory | `src/Service/Registrar/JIRA/ServiceFactory.php` |
+| Issue config | `src/Service/Registrar/JIRA/GeneralIssueConfig.php` |
 
-### Source Path
+Library: `lesstif/php-jira-rest-client`.
 
-`src/Service/Registrar/JIRA/`
-
-### API Library
-
-Uses `lesstif/php-jira-rest-client` library for JIRA API communication.
-
-## Related Features
-
-- [Allowed Labels](AllowedLabels.md) — filter labels applied to issues
-- [Context Display](ContextDisplay.md) — show code context in issue description
-- [Dynamic Summary Prefix](DynamicSummaryPrefix.md) — add prefixes to issue titles
-- [Inline Configuration](InlineConfiguration.md) — per-comment overrides
-- [JIRA Linked Issues](JIRALinkedIssues.md) — link new issues to existing ones
+Related: [JIRA Linked Issues](JIRALinkedIssues.md), [Allowed Labels](AllowedLabels.md), [Context Display](ContextDisplay.md), [Inline Configuration](InlineConfiguration.md).

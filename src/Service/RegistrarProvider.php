@@ -14,13 +14,13 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Service;
 
 use Aeliot\TodoRegistrar\Enum\RegistrarType;
+use Aeliot\TodoRegistrar\Exception\ConfigValidationException;
 use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
+use Aeliot\TodoRegistrar\Exception\LogicException;
 use Aeliot\TodoRegistrar\Service\Registrar\RegistrarFactoryRegistry;
 use Aeliot\TodoRegistrarContracts\GeneralConfig\GeneralConfigInterface;
 use Aeliot\TodoRegistrarContracts\Registrar\RegistrarFactoryInterface;
 use Aeliot\TodoRegistrarContracts\Registrar\RegistrarInterface;
-use Aeliot\TodoRegistrarContracts\RegistrarFactoryInterface as LegacyRegistrarFactoryInterface;
-use Aeliot\TodoRegistrarContracts\RegistrarInterface as LegacyRegistrarInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
@@ -34,18 +34,18 @@ final readonly class RegistrarProvider
     ) {
     }
 
-    public function getRegistrar(GeneralConfigInterface $config): RegistrarInterface|LegacyRegistrarInterface
+    /**
+     * @throws ConfigValidationException
+     * @throws InvalidConfigException
+     * @throws LogicException
+     */
+    public function getRegistrar(GeneralConfigInterface $config): RegistrarInterface
     {
         $registrarType = $config->getRegistrarType();
 
-        if ($registrarType instanceof RegistrarFactoryInterface || $registrarType instanceof LegacyRegistrarFactoryInterface) {
+        if ($registrarType instanceof RegistrarFactoryInterface) {
             $registrarFactory = $registrarType;
-        } elseif (class_exists($registrarType)
-            && (
-                is_a($registrarType, RegistrarFactoryInterface::class, true)
-                || is_a($registrarType, LegacyRegistrarFactoryInterface::class, true)
-            )
-        ) {
+        } elseif (class_exists($registrarType) && is_a($registrarType, RegistrarFactoryInterface::class, true)) {
             $registrarFactory = new $registrarType();
         } else {
             $registrarFactory = $this->getByEnumValue($registrarType);
@@ -55,7 +55,10 @@ final readonly class RegistrarProvider
         return $registrarFactory->create($config->getRegistrarConfig(), $this->validator);
     }
 
-    private function getByEnumValue(string $registrarType): RegistrarFactoryInterface|LegacyRegistrarFactoryInterface
+    /**
+     * @throws InvalidConfigException
+     */
+    private function getByEnumValue(string $registrarType): RegistrarFactoryInterface
     {
         // add some backward compatibility
         if ('github' === strtolower($registrarType)) {

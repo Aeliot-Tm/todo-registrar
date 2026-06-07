@@ -2,7 +2,7 @@ services:
   php-cli:
     build:
       context: ./
-      dockerfile: .docker/php/Dockerfile
+      dockerfile: .infra/docker/php/Dockerfile
     environment:
       GITHUB_PERSONAL_ACCESS_TOKEN: ${GITHUB_PERSONAL_ACCESS_TOKEN:-}
       GITLAB_HOST: ${GITLAB_HOST:-https://gitlab.com}

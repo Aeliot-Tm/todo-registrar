@@ -13,6 +13,10 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Registrar\GitLab;
 
+use Aeliot\TodoRegistrar\Exception\Api\LimitExceededException;
+use Aeliot\TodoRegistrar\Exception\Api\UnexpectedResponseException;
+use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
+use Aeliot\TodoRegistrar\Exception\LogicException;
 use Aeliot\TodoRegistrar\Service\Registrar\IssueSupporter;
 use Aeliot\TodoRegistrarContracts\Todo\TodoInterface;
 
@@ -29,6 +33,12 @@ final readonly class IssueFactory
     ) {
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws LimitExceededException
+     * @throws LogicException
+     * @throws UnexpectedResponseException
+     */
     public function create(TodoInterface $todo): Issue
     {
         $issue = new Issue();
@@ -69,6 +79,10 @@ final readonly class IssueFactory
         $issue->setLabels($this->issueSupporter->getLabels($todo, $this->generalIssueConfig));
     }
 
+    /**
+     * @throws LimitExceededException
+     * @throws UnexpectedResponseException
+     */
     private function setMilestone(Issue $issue, TodoInterface $todo): void
     {
         $milestone = array_values(array_filter([

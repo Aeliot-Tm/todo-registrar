@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Config;
 
+use Aeliot\TodoRegistrar\Exception\ConfigValidationException;
+use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
 use Aeliot\TodoRegistrar\Exception\UnavailableConfigException;
 use Aeliot\TodoRegistrarContracts\GeneralConfig\GeneralConfigInterface;
 
@@ -27,6 +29,11 @@ final readonly class StdinConfigFactory
     ) {
     }
 
+    /**
+     * @throws ConfigValidationException
+     * @throws InvalidConfigException
+     * @throws UnavailableConfigException
+     */
     public function create(): GeneralConfigInterface
     {
         $contents = file_get_contents('php://stdin');

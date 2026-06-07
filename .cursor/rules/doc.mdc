@@ -23,6 +23,7 @@ Download descriptions from files IF you need to understand the work:
    - [Report](../docs/Feature/Report.md)
    - [Same-Ticket Gluing](../docs/Feature/SameTicketGluing.md)
    - [Sequential Comments Gluing](../docs/Feature/SequentialCommentsGluing.md)
+   - [Source File Parsing](../docs/Feature/SourceFileParsing.md)
    - [Yandex Tracker Registrar](../docs/Feature/YandexTrackerRegistrar.md)
 
 When updating functionality or when explicitly requested, update the corresponding documentation files.

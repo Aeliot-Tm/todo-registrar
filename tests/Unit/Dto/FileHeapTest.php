@@ -17,7 +17,9 @@ use Aeliot\TodoRegistrar\Dto\FileHeap;
 use Aeliot\TodoRegistrar\Dto\Parsing\CommentNode;
 use Aeliot\TodoRegistrar\Dto\ProcessStatistic;
 use Aeliot\TodoRegistrar\Dto\Token\TokenInterface;
-use Aeliot\TodoRegistrar\Service\File\FileParser;
+use Aeliot\TodoRegistrar\Service\Comment\CommentNodesBuilder;
+use Aeliot\TodoRegistrar\Service\Comment\SequentialCommentGlueGate\PhpSequentialCommentGlueGate;
+use Aeliot\TodoRegistrar\Service\File\Parser\PhpFileParser;
 use Aeliot\TodoRegistrar\Service\File\Saver;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -25,7 +27,7 @@ use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(FileHeap::class)]
-#[UsesClass(FileParser::class)]
+#[UsesClass(PhpFileParser::class)]
 final class FileHeapTest extends TestCase
 {
     public static function getDataForTestGluing(): iterable
@@ -121,10 +123,11 @@ final class FileHeapTest extends TestCase
      */
     private function getCommentNodes(string $pathname, bool $glueSequentialComments): array
     {
-        $parsedFile = (new FileParser())->parse($this->getMockSplFileInfo($pathname));
+        $parsedFile = (new PhpFileParser())->parse($this->getMockSplFileInfo($pathname));
         $statistic = new ProcessStatistic();
         $saver = $this->createMock(Saver::class);
-        $fileHeap = new FileHeap($parsedFile, $glueSequentialComments, $statistic, $saver);
+        $glueGate = $glueSequentialComments ? new PhpSequentialCommentGlueGate() : null;
+        $fileHeap = new FileHeap(new CommentNodesBuilder(), $parsedFile, $glueSequentialComments, $glueGate, $statistic, $saver);
 
         return $fileHeap->getCommentNodes();
     }

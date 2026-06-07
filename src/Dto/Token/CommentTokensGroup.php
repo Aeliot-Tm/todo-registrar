@@ -25,30 +25,9 @@ final class CommentTokensGroup
      */
     private array $tokens = [];
 
-    /**
-     * @var TokenInterface[]
-     */
-    private array $pendingWhitespace = [];
-
     public function addToken(TokenInterface $token): void
     {
-        // Flush pending whitespace before adding new token
-        if (!empty($this->pendingWhitespace)) {
-            array_push($this->tokens, ...$this->pendingWhitespace);
-            $this->pendingWhitespace = [];
-        }
-
         $this->tokens[] = $token;
-    }
-
-    public function addWhitespace(TokenInterface $token): void
-    {
-        $this->pendingWhitespace[] = $token;
-    }
-
-    public function hasPendingWhitespace(): bool
-    {
-        return !empty($this->pendingWhitespace);
     }
 
     public function isEmpty(): bool
@@ -63,7 +42,6 @@ final class CommentTokensGroup
     {
         $tokens = $this->tokens;
         $this->tokens = [];
-        $this->pendingWhitespace = [];
 
         return $tokens;
     }

@@ -7,7 +7,7 @@ are injected back into TODO comments in source code. This feature is configurabl
 
 1. After creating an issue in the external tracker, the registrar returns an issue key
 2. The key is injected into the original TODO comment based on configured position
-3. File is saved with the updated comment
+3. The source file is saved to disk immediately (see [When source files are saved](source_files_updating.md))
 
 ## Configuration
 
