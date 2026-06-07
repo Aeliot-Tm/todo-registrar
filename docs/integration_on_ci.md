@@ -10,4 +10,4 @@ Soon of all, it is called `development`, but `main`/`master` is useful too.
 Configure you integration depending on used git-server:
 
 1. GitHub Action (use [TODO Registrar Action](https://github.com/marketplace/actions/todo-registrar))
-2. [Configure GitLab CI](GitlLab/integration_on_ci.md)
+2. [Configure GitLab CI](GitLab/integration_on_ci.md)
