@@ -4,9 +4,9 @@ Script supports inline configuration of each TODO-comment. It helps flexibly con
 Like relations to other issues, labels, components and so on.
 
 Very flexible tool. A format similar to js objects or JSON, only without quotes.
-It is so-called "EXTRAS" case they started with `{EXTRAS: ...`. It should be a part of multi-line commit
-and indented a description ([see supported formats](supported_patters_of_comments.md)).
-The system expects no more than one inline config per TODO. And it would be nice to keep them as last part of TODO-commit.
+It is so-called "EXTRAS" when it starts with `{EXTRAS: ...`. It should be part of a multiline comment
+and indented with the description ([see supported formats](supported_patters_of_comments.md)).
+The system expects no more than one inline config per TODO. Keep it as the last part of the TODO comment when possible.
 
 It may be split to multiple lines. But don't forget about indents of each line.
 

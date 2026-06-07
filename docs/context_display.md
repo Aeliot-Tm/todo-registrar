@@ -56,9 +56,9 @@ File: /app/src/Service/UserService.php -> Namespace: App\Service -> Class: UserS
 
 This format is compact and useful when you want to save space in the issue description.
 
-### Code Block Format (`'asterisk'`)
+### Asterisk list format (`'asterisk'`)
 
-Displays context as a list with 'asterisk' symbol as prefix for each line:
+Displays context as a list with an asterisk prefix on each line:
 
 **Example:**
 ```
@@ -70,9 +70,9 @@ User needs to verify email before updating profile
 * Method: updateUser()
 ```
 
-### Code Block Format (`'code_block'`)
+### Code block format (`'code_block'`)
 
-Displays context as a formatted code block with each level on a separate line:
+Displays context inside a fenced code block with each level on a separate line:
 
 **Example:**
 ````
@@ -86,9 +86,9 @@ Method: updateUser()
 ```
 ````
 
-### Code Block Format (`'number_sign'`)
+### Number sign list format (`'number_sign'`)
 
-Displays context as a list with number sign symbol as prefix for each line:
+Displays context as a list with a `#` prefix on each line:
 
 **Example:**
 ```
@@ -100,9 +100,9 @@ User needs to verify email before updating profile
 # Method: updateUser()
 ```
 
-### Code Block Format (`'numbered'`)
+### Numbered list format (`'numbered'`)
 
-Displays context as a formatted numbered list:
+Displays context as a numbered list:
 
 **Example:**
 ```

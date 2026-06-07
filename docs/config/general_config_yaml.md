@@ -260,6 +260,8 @@ injected into all occurrences.
 Two TODOs are considered identical when their tag, assignee, summary, and description (including inline config)
 produce the same normalized hash. Normalization strips redundant whitespace (including line breaks) before comparison.
 
+For detailed documentation, see [Same-Ticket Gluing](../same_ticket_gluing.md).
+
 **Note:** Comparison is done within a single run. TODOs that already have an injected key are skipped regardless
 of this setting.
 
