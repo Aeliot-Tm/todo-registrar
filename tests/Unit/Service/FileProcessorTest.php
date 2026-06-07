@@ -97,6 +97,27 @@ final class FileProcessorTest extends TestCase
         }
     }
 
+    public function testDryRunCollectsStatisticsWithoutSavingFile(): void
+    {
+        $originalContent = "<?php\n\n// TODO: First task\n// TODO: Second task\n";
+        $path = $this->createTempPhpFile($originalContent);
+        try {
+            $context = $this->createHeapContext(isDryRun: true);
+            $fileHeap = $this->createFileHeap($this->parsePhpFile($path), $context);
+            $registrar = new IncrementalKeyRegistrar('KEY');
+
+            (new FileProcessor($this->createCommentExtractor(), $registrar, $this->createTodoBuilder()))
+                ->process($fileHeap, $context);
+
+            self::assertSame($originalContent, (string) file_get_contents($path));
+            self::assertSame(2, $context->statistic->getCountRegisteredTODOs());
+            self::assertSame(2, $context->statistic->getCountNewIssues());
+            self::assertSame(2, $fileHeap->getRegistrationCount());
+        } finally {
+            $this->removeFile($path);
+        }
+    }
+
     public function testWrapsRegistrarFailureInCommentRegistrationException(): void
     {
         $path = $this->createTempPhpFile("<?php\n\n// TODO: Failing task\n");

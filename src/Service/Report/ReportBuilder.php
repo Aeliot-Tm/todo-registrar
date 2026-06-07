@@ -62,6 +62,7 @@ final readonly class ReportBuilder
                 'todos' => [
                     'ignored' => $statistic->getCountIgnoredTodos(),
                     'glued' => $statistic->getCountGluedTodos(),
+                    'newIssues' => $statistic->getCountNewIssues(),
                     'registered' => $statistic->getCountRegisteredTODOs(),
                     'total' => $statistic->getTodosTotal(),
                 ],

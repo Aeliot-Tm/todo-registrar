@@ -61,12 +61,14 @@ trait ProcessingTestSupport
     protected function createHeapContext(
         OutputInterface $output = new NullOutput(),
         bool $glueSameTickets = false,
+        bool $isDryRun = false,
     ): HeapContext {
         $context = new HeapContext();
         $context->extensionAliases = [];
         $context->glueSameTickets = $glueSameTickets;
         $context->glueSequentialComments = false;
         $context->hashToKey = [];
+        $context->isDryRun = $isDryRun;
         $context->output = new OutputAdapter($output);
         $context->statistic = new ProcessStatistic();
 

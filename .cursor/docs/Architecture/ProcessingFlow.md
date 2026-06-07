@@ -21,7 +21,7 @@ HeapRunner.run()
             │       ├─► TodoBuilder → Todo
             │       ├─► Registrar.register()  [optional same-ticket gluing by hash]
             │       ├─► Todo.injectKey() → CommentPart updates token text
-            │       └─► FileHeap.saveAfterRegistration() → Saver.save()
+            │       └─► FileHeap.saveAfterRegistration() or recordRegistration() in --dry-run
             │
             ├─► logFileCompletion()
             │
@@ -125,6 +125,8 @@ Run-scoped state lives in `HeapContext` (`statistic`, `hashToKey`, `glueSameTick
 If `process.glueSameTickets` and hash seen → reuse key, `tickGluedTodo()`.
 Else → `registrar->register($todo)`, store hash → key mapping.
 
+With `--dry-run`, `DryRunRegistrar` returns fake keys (`#dry-run-N`); the real registrar is not instantiated.
+
 Errors wrapped in `CommentRegistrationException` with comment line and content.
 
 | Registrar | Returned key |
@@ -151,11 +153,13 @@ implode('', array_map(fn ($t) => $t->getText(), $tokens))
 
 `FileHeap::saveAfterRegistration()` updates per-file statistics and writes the file after each successful registration.
 
+With `--dry-run`, `FileHeap::recordRegistration()` updates statistics only; `Saver` is not called.
+
 ## Statistics
 
 **Class:** `ProcessStatistic`
 
-Tracks per run: analyzed/updated files, comment tokens, ignored/glued/registered TODOs, per-file registration counts.
+Tracks per run: analyzed/updated files, comment tokens, ignored/glued/registered TODOs, `newIssues` (registered − glued), per-file registration counts, and `dryRun` flag.
 
 Optional export via [Report](../Feature/Report.md).
 
@@ -195,6 +199,7 @@ Mutable run-scoped bag passed through `FileHeapFactory.create()`, `FileProcessor
 | `statistic` | `ProcessStatistic` for the whole run |
 | `hashToKey` | Hash → issue key map for same-ticket gluing |
 | `glueSameTickets` | From `process.glueSameTickets` config |
+| `isDryRun` | From `--dry-run` CLI flag |
 | `output` | Console output adapter for the run |
 
 Built once in `run()` via `HeapContextFactory`; shared across all files in the run.

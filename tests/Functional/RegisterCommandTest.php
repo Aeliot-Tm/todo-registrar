@@ -195,6 +195,32 @@ final class RegisterCommandTest extends TestCase
         );
     }
 
+    public function testDryRunDoesNotModifyFileAndExportsReport(): void
+    {
+        $configFile = $this->createPhpConfig('TEST-DRY-RUN');
+        file_put_contents($this->testFile, self::ORIGINAL_CONTENT);
+
+        [$exitCode, $output] = $this->runTodoRegistrarWithOutput($configFile, ['--dry-run', '--report-format=json']);
+
+        self::assertSame(0, $exitCode, 'Script should exit with code 0');
+        self::assertSame(
+            self::ORIGINAL_CONTENT,
+            file_get_contents($this->testFile),
+            'Source file should remain unchanged in dry-run mode',
+        );
+
+        $outputString = implode("\n", $output);
+        self::assertStringContainsString('Would register', $outputString);
+
+        $reportPath = $this->projectRoot . '/todo-registrar-report.json';
+        self::assertFileExists($reportPath, 'Report file should be created');
+
+        $report = json_decode((string) file_get_contents($reportPath), true);
+        self::assertIsArray($report);
+        self::assertSame(1, $report['summary']['todos']['registered']);
+        self::assertSame(1, $report['summary']['todos']['newIssues']);
+    }
+
     private function createConfigFile(
         string $type,
         string $ticketKey,
@@ -304,18 +330,23 @@ YAML;
     }
 
     /**
+     * @param string[] $extraArgs
+     *
      * @return array{0: int, 1: string[]}
      */
-    private function runTodoRegistrarWithOutput(string $configFile): array
+    private function runTodoRegistrarWithOutput(string $configFile, array $extraArgs = []): array
     {
         $projectRoot = \dirname(__DIR__, 2);
         $scriptPath = $projectRoot . '/bin/todo-registrar';
-        $command = \sprintf(
-            '%s %s --config=%s 2>&1',
+        $parts = [
             escapeshellarg(\PHP_BINARY),
             escapeshellarg($scriptPath),
-            escapeshellarg($configFile)
-        );
+            '--config=' . escapeshellarg($configFile),
+        ];
+        foreach ($extraArgs as $arg) {
+            $parts[] = escapeshellarg($arg);
+        }
+        $command = implode(' ', $parts) . ' 2>&1';
 
         $output = [];
         $exitCode = 0;

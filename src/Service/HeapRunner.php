@@ -33,6 +33,7 @@ final readonly class HeapRunner
         private FileProcessor $fileProcessor,
         private HeapContextFactory $heapContextFactory,
         private OutputAdapter $output,
+        private bool $isDryRun = false,
     ) {
     }
 
@@ -44,7 +45,7 @@ final readonly class HeapRunner
      */
     public function run(): ProcessStatistic
     {
-        $context = $this->heapContextFactory->create($this->config, $this->output);
+        $context = $this->heapContextFactory->create($this->config, $this->output, $this->isDryRun);
 
         foreach ($this->config->getFinder() as $file) {
             try {
@@ -75,8 +76,9 @@ final readonly class HeapRunner
             || ($this->output->isVeryVerbose() && $fileHeap->getCommentNodes())
             || ($this->output->isVerbose() && $fileHeap->getRegistrationCount())
         ) {
+            $verb = $this->isDryRun ? 'Would register' : 'Registered';
             $this->output->writeln(
-                "Registered {$fileHeap->getRegistrationCount()} for file: {$file->getPathname()}"
+                "{$verb} {$fileHeap->getRegistrationCount()} for file: {$file->getPathname()}"
             );
         }
     }

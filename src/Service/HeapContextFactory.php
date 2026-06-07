@@ -26,7 +26,7 @@ use Aeliot\TodoRegistrarContracts\GeneralConfig\ProcessConfigInterface;
  */
 final readonly class HeapContextFactory
 {
-    public function create(GeneralConfigInterface $config, OutputAdapter $output): HeapContext
+    public function create(GeneralConfigInterface $config, OutputAdapter $output, bool $isDryRun = false): HeapContext
     {
         $context = new HeapContext();
         $context->statistic = new ProcessStatistic();
@@ -34,6 +34,7 @@ final readonly class HeapContextFactory
         $context->hashToKey = [];
         $context->glueSameTickets = $this->getGlueSameTickets($config);
         $context->glueSequentialComments = $this->getGlueSequentialComments($config);
+        $context->isDryRun = $isDryRun;
         $context->output = $output;
 
         return $context;

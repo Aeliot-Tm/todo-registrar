@@ -60,9 +60,14 @@ final class FileHeap
         return $this->fileStatistic->getRegistrationCount();
     }
 
-    public function saveAfterRegistration(): void
+    public function recordRegistration(): void
     {
         $this->fileStatistic->tickRegistration();
+    }
+
+    public function saveAfterRegistration(): void
+    {
+        $this->recordRegistration();
         $this->saver->save($this->parsedFile->getFile(), $this->parsedFile->getTokenStream());
     }
 }
