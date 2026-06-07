@@ -57,7 +57,7 @@
         "ext-simplexml": "*",
         "ext-tokenizer": "*",
         "aeliot/env-resolver": "^1.0.2",
-        "aeliot/todo-registrar-contracts": "dev-rc3.0.0",
+        "aeliot/todo-registrar-contracts": "^3.0.0",
         "aeliot/yaml-token": "0.1.*",
         "bugrov/yandex-tracker": "0.1.0",
         "guzzlehttp/guzzle": "^7.9",
