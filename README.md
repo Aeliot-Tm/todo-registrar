@@ -33,6 +33,8 @@ from a tracker ticket to the right place in code.
 ![detect_register_inject.png](https://cdn.jsdelivr.net/gh/Aeliot-Tm/todo-registrar@main/docs/detect_register_inject.png)
 
 > See latest **benchmark [here](https://github.com/Aeliot-Tm/todo-registrar-benchmark/blob/main/benchmark.md)**.
+>
+> According to benchmark **TODO Registrar became quicker 20% since version 4.0.0**.
 
 ## Using
 
