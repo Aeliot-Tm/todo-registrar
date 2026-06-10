@@ -8,9 +8,16 @@ stages:
     interruptible: false
     allow_failure: true
     before_script:
+        - command -v jq >/dev/null || (apt-get update -qq && apt-get install -y -qq jq)
         - curl -sL "https://gitlab.com/aeliot-tm/gitlab-control/-/raw/main/controller.sh" -o ./gitlab-control
         - chmod +x ./gitlab-control
+        - |
+          curl -sL "https://raw.githubusercontent.com/Aeliot-Tm/todo-registrar/refs/heads/main/examples/GitLab/scripts/build-mr-body.sh" \
+          -o ./scripts/build-mr-body.sh
+        - chmod +x ./scripts/build-mr-body.sh
     script:
+        - export RUNNER_TEMP="/tmp/todo-registrar-${CI_PIPELINE_ID}"
+        - mkdir -p "$RUNNER_TEMP"
         - export NEW_BRANCH=$(./gitlab-control generate_name 'todo-registrar-{random:8}')
         - "[ 1 -eq $(./gitlab-control branch_exists \"$NEW_BRANCH\") ] && echo 'Skipping: branch already exists' && exit 0"
         - "[ 1 -eq $(./gitlab-control check_opened \"$NEW_BRANCH\" \"development\" --like 'todo-registrar-*') ] && echo 'Skipping: opened MR exists' && exit 0"
@@ -19,13 +26,23 @@ stages:
         - |
             docker run --rm \
                 -v "$(pwd):/code" \
+                -v "${RUNNER_TEMP}:/runner-temp" \
                 -e GITLAB_PERSONAL_ACCESS_TOKEN \
                 -e GITLAB_PROJECT_IDENTIFIER \
-                ghcr.io/aeliot-tm/todo-registrar:latest --config=.todo-registrar.yaml
+                ghcr.io/aeliot-tm/todo-registrar:latest \
+                --config=.todo-registrar.yaml \
+                --report-format=json --report-path=/runner-temp/todo-registrar-report.json
         - |
             if ./gitlab-control commit "TODO-REGISTRAR: automated registering of new TODOs"; then
                 ./gitlab-control push "$NEW_BRANCH"
-                ./gitlab-control create_mr --target "development" --title "TODO-REGISTRAR: automated registering of new TODOs"
+                REPORT_PATH="${RUNNER_TEMP}/todo-registrar-report.json"
+                MR_BODY_PATH="${RUNNER_TEMP}/mr-body.md"
+                export COMMIT_SHA="$(git rev-parse HEAD)"
+                ./scripts/build-mr-body.sh "$REPORT_PATH" "$MR_BODY_PATH"
+                ./gitlab-control create_mr \
+                    --target "development" \
+                    --title "TODO-REGISTRAR: automated registering of new TODOs" \
+                    --description "$(cat "$MR_BODY_PATH")"
             else
                 echo "No changes, nothing to commit & push!"
             fi
