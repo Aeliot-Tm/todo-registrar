@@ -8,18 +8,58 @@ Config CI/CD variables:
 - `GITLAB_PERSONAL_ACCESS_TOKEN` and `GITLAB_PROJECT_IDENTIFIER` — for todo-registrar to create issues in GitLab
   or others according to used issue tracker in TODO Registrar config.
 
+The runner must have Docker, git, curl and `jq` (or install `jq` in `before_script` as in the example).
+
 ### Configuration of GitLab CI pipeline
 
-You have to describe pipeline in `.gitlab-ci.yml`. See [example](../../examples/GitLab/.gitlab-ci.yml).
-The example uses [gitlab-control](https://gitlab.com/aeliot-tm/gitlab-control) and runs todo-registrar via `docker run` with project directory mounted to `/code`.
-The runner must have Docker, git and curl.
+You have to describe pipeline in `.gitlab-ci.yml`. See example of [.gitlab-ci.yml](../../examples/GitLab/.gitlab-ci.yml).
+The example uses [gitlab-control](https://gitlab.com/aeliot-tm/gitlab-control)
+and runs todo-registrar via `docker run` with project directory mounted to `/code`.
 
-> For the duties of example it added into stage `tests`. Usually it is quite good place.
-
-**Algorithm of script:**
+### Algorithm of script:
 1. Download gitlab-control script and generate name for new branch (`todo-registrar-{random:8}`).
 2. Check if previous MR is opened yet. Stop working when "yes".
 3. Checkout new branch.
 4. Run detection of not managed TODOs and creation of issues via todo-registrar.
-5. Commit injected IDs of created issues.
-6. Push changes and create Merge Request when something is committed.
+   Export JSON report to `/runner-temp` to build useful description.
+5. Commit injected IDs of created issues (only source changes under `/code`).
+6. Push changes.
+7. _Optional._ Build MR description with [build-mr-body.sh](../../examples/GitLab/scripts/build-mr-body.sh).
+8. Create Merge Request when something is committed.
+
+> For the duties of example it added into stage `tests`. Usually it is quite good place.
+
+> Download [build-mr-body.sh](../../examples/GitLab/scripts/build-mr-body.sh) via `curl` in `before_script`
+> or place it next to your config (`./scripts/build-mr-body.sh`).
+
+### CI artifacts isolation (`/runner-temp`)
+
+`gitlab-control commit` runs `git add -A .`. To avoid committing the processing report or MR description,
+store CI artifacts outside the mounted `/code` directory:
+
+```bash
+export RUNNER_TEMP="/tmp/todo-registrar-${CI_PIPELINE_ID}"
+mkdir -p "$RUNNER_TEMP"
+```
+
+Mount it into the container and write the report there:
+
+```bash
+docker run --rm \
+    -v "$(pwd):/code" \
+    -v "${RUNNER_TEMP}:/runner-temp" \
+    ... \
+    --report-format=json --report-path=/runner-temp/todo-registrar-report.json
+```
+
+After commit and push, build the MR description from the report:
+
+```bash
+REPORT_PATH="${RUNNER_TEMP}/todo-registrar-report.json"
+MR_BODY_PATH="${RUNNER_TEMP}/mr-body.md"
+export COMMIT_SHA="$(git rev-parse HEAD)"
+./scripts/build-mr-body.sh "$REPORT_PATH" "$MR_BODY_PATH"
+./gitlab-control create_mr \
+    --title "TODO-REGISTRAR: automated registering of new TODOs" \
+    --description "$(cat "$MR_BODY_PATH")"
+```
