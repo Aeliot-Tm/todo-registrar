@@ -74,10 +74,10 @@ jobs:
       - name: Update VERSION constant
         run: |
           VERSION="${{ github.event.inputs.version }}"
-          sed -i "s/private const VERSION = '[^']*'/private const VERSION = '${VERSION}'/" src/Console/Application.php
+          sed -i "s/const VERSION = '[^']*'/const VERSION = '${VERSION}'/" src/Console/Application.php
 
           echo "✅ Updated Application.php VERSION constant to: ${VERSION}"
-          grep "private const VERSION" src/Console/Application.php
+          grep "const VERSION" src/Console/Application.php
 
       - name: Configure Git
         run: |

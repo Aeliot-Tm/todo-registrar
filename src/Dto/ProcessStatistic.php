@@ -32,6 +32,11 @@ final class ProcessStatistic
      */
     private array $issueKeyUsages = [];
 
+    public function __construct(
+        private readonly ProcessMeta $meta = new ProcessMeta(),
+    ) {
+    }
+
     public function getCountAnalyzedFiles(): int
     {
         return \count($this->files);
@@ -95,6 +100,11 @@ final class ProcessStatistic
         }
 
         return $issueKeys;
+    }
+
+    public function getMeta(): ProcessMeta
+    {
+        return $this->meta;
     }
 
     public function getTodosTotal(): int
