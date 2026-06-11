@@ -113,7 +113,7 @@ use Aeliot\TodoRegistrar\Service\File\Finder;
 \$processConfig->setGlueSameTickets({$glueSameTicketsStr});
 
 return (new Config())
-    ->setFinder((new Finder())->name('/\.(?:php|yaml|yml)$/')->in('{$this->tempDir}'))
+    ->setFinder((new Finder())->name('/\.(?:php|yaml|yml)$/')->in('{$this->tempDir}')->sortByName(true))
     ->setRegistrar('{$stubFactoryClass}', ['prefix' => 'KEY'])
     ->setProcessConfig(\$processConfig);
 
