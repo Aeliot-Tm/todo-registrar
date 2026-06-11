@@ -12,6 +12,7 @@ return (new Config())
             ->name('/\.(?:php|yaml|yml)$/')
             ->in(dirname(__DIR__, 2))
             ->exclude(['vendor', 'var', 'tests'])
+            ->sortByName(true),
     )
     ->setRegistrar(RegistrarType::YandexTracker, [
         'queue' => 'MYQUEUE',

@@ -15,7 +15,7 @@ use Aeliot\TodoRegistrar\Config;
 use Aeliot\TodoRegistrar\Service\File\Finder;
 
 return (new Config())
-    ->setFinder((new Finder())->name('/\.(?:php|yaml|yml)$/')->in(__DIR__))
+    ->setFinder((new Finder())->name('/\.(?:php|yaml|yml)$/')->in(__DIR__)->sortByName(true))
     ->setRegistrar('JIRA', [
         'issue' => [
             'projectKey' => 'TODO',
