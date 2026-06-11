@@ -75,6 +75,8 @@ final readonly class FileProcessor
                 $context->output->writeln(\sprintf($message, $key), OutputAdapter::VERBOSITY_VERBOSE);
             }
 
+            $context->statistic->tickIssueKeyUsage($key);
+
             if (!$context->isDryRun) {
                 $todo->injectKey($key);
             }

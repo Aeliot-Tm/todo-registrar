@@ -67,6 +67,7 @@ final readonly class ReportBuilder
                     'total' => $statistic->getTodosTotal(),
                 ],
             ],
+            'issues' => $statistic->getIssueKeys(),
             'files' => array_map(
                 static fn (string $path, int $count): array => [
                     'path' => $path,

@@ -27,6 +27,11 @@ final class ProcessStatistic
      */
     private array $files = [];
 
+    /**
+     * @var array<string,int>
+     */
+    private array $issueKeyUsages = [];
+
     public function getCountAnalyzedFiles(): int
     {
         return \count($this->files);
@@ -75,6 +80,23 @@ final class ProcessStatistic
         return $this->files[$path];
     }
 
+    /**
+     * @return list<array{key: string, usageCounter: int}>
+     */
+    public function getIssueKeys(): array
+    {
+        ksort($this->issueKeyUsages);
+        $issueKeys = [];
+        foreach ($this->issueKeyUsages as $key => $usageCounter) {
+            $issueKeys[] = [
+                'key' => $key,
+                'usageCounter' => $usageCounter,
+            ];
+        }
+
+        return $issueKeys;
+    }
+
     public function getTodosTotal(): int
     {
         return $this->getCountRegisteredTODOs() + $this->countGluedTodos + $this->countIgnoredTodos;
@@ -98,6 +120,12 @@ final class ProcessStatistic
     public function tickIgnoredTodo(): void
     {
         ++$this->countIgnoredTodos;
+    }
+
+    public function tickIssueKeyUsage(string $key): void
+    {
+        $this->issueKeyUsages[$key] ??= 0;
+        ++$this->issueKeyUsages[$key];
     }
 
     public function tickRegistration(string $path): void
