@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Test\Unit\Service\Registrar;
 
-use Aeliot\TodoRegistrar\Service\Registrar\DryRunRegistrar;
+use Aeliot\TodoRegistrar\Service\Registrar\DryRun\DryRunRegistrar;
 use Aeliot\TodoRegistrarContracts\Todo\TodoInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;

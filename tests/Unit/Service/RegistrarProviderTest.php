@@ -41,7 +41,7 @@ final class RegistrarProviderTest extends TestCase
         $factory = new StaticRegistrarFactory();
         $config = $this->createConfig($factory, ['ticket_key' => 'LEGACY-1']);
 
-        $registrar = $this->registrarProvider->getRegistrar($config);
+        $registrar = $this->registrarProvider->getRegistrar($config->getRegistrarType(), $config->getRegistrarConfig());
 
         self::assertRegistrarReturnsKey($registrar, 'LEGACY-1');
     }

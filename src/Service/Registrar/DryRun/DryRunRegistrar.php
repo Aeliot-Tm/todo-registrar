@@ -11,7 +11,7 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Aeliot\TodoRegistrar\Service\Registrar;
+namespace Aeliot\TodoRegistrar\Service\Registrar\DryRun;
 
 use Aeliot\TodoRegistrarContracts\Registrar\RegistrarInterface;
 use Aeliot\TodoRegistrarContracts\Todo\TodoInterface;

@@ -27,3 +27,4 @@ Whey will be detected case insensitively.
 3. [JIRA](../registrar/JIRA/config.md)
 4. [Redmine](../registrar/Redmine/config.md)
 5. [Yandex Tracker](../registrar/YandexTracker/config.md)
+6. [Dry-run registrar](../dry_run.md) — `type: DryRun`, no tracker options; use with `--dry-run` on CI

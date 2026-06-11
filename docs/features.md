@@ -28,6 +28,7 @@ For the end-to-end algorithm, see [Processing Flow](processing_flow.md).
 | [Issue key injection](issue_key_injection.md) | Where and how issue keys are written into comments |
 | [Same-ticket gluing](same_ticket_gluing.md) | Reuse one ticket for identical TODOs within a single run |
 | [When source files are saved](source_files_updating.md) | Incremental save after each registration, fail-fast on errors |
+| [Dry-run mode](dry_run.md) | Count TODOs without API calls or file changes; optional `DryRun` registrar in config |
 | [Processing report](report.md) | Export run statistics as JSON or YAML |
 
 ## Configuration and integration

@@ -221,18 +221,6 @@ final class RegisterCommandTest extends TestCase
         self::assertSame(1, $report['summary']['todos']['newIssues']);
     }
 
-    private function createConfigFile(
-        string $type,
-        string $ticketKey,
-        string $stubFactoryClass = StaticRegistrarFactory::class,
-    ): string {
-        if ('php' === $type) {
-            return $this->createPhpConfig($ticketKey, $stubFactoryClass);
-        }
-
-        return $this->createYamlConfig($stubFactoryClass);
-    }
-
     private function createPhpConfig(
         string $ticketKey,
         string $stubFactoryClass = StaticRegistrarFactory::class,

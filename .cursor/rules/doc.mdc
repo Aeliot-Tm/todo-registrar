@@ -12,6 +12,7 @@ Download descriptions from files IF you need to understand the work:
 2. Features:
    - [Allowed Labels](../docs/Feature/AllowedLabels.md)
    - [Context Display](../docs/Feature/ContextDisplay.md)
+   - [DryRun Registrar](../docs/Feature/DryRunRegistrar.md)
    - [Dynamic Summary Prefix](../docs/Feature/DynamicSummaryPrefix.md)
    - [GitHub Registrar](../docs/Feature/GitHubRegistrar.md)
    - [GitLab Registrar](../docs/Feature/GitLabRegistrar.md)

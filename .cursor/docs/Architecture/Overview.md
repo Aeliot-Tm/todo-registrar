@@ -4,7 +4,7 @@
 
 TODO Registrar is a CLI application that scans PHP and YAML source files for TODO/FIXME comments and registers them as issues in external issue trackers.
 
-Implemented registrars: GitHub, GitLab, JIRA, Redmine, Yandex Tracker.
+Implemented registrars: GitHub, GitLab, JIRA, Redmine, Yandex Tracker, DryRun (simulated registration).
 
 ## High-Level Flow
 
@@ -83,7 +83,7 @@ PHP config: `require` must return `GeneralConfigInterface`.
 | `RegistrarFactoryRegistry` | Locator for `*RegistrarFactory` |
 | `IssueSupporter` | Shared summary, description, labels, assignees |
 
-Subdirectories: `GitHub/`, `GitLab/`, `JIRA/`, `Redmine/`, `YandexTracker/`.
+Subdirectories: `DryRun/`, `GitHub/`, `GitLab/`, `JIRA/`, `Redmine/`, `YandexTracker/`.
 
 ### Contracts Package
 
@@ -132,6 +132,7 @@ process:
 ```
 
 `Enum/RegistrarType` also lists `AzureBoards` and `YouTrack` — no factory implementations exist yet.
+`DryRun` is implemented; see [DryRun Registrar](../Feature/DryRunRegistrar.md).
 
 ### STDIN Configuration
 

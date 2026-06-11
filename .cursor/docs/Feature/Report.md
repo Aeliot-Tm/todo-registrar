@@ -12,7 +12,7 @@ Exports processing statistics after a run. Configured via CLI options only (not 
 
 | Option | Default | Description |
 |---|---|---|
-| `--dry-run` | off | Parse and count TODOs without API calls or file changes |
+| `--dry-run` | off | Parse and count TODOs without API calls or file changes. See [DryRun Registrar](../Feature/DryRunRegistrar.md) |
 | `--report-format` | `none` | `none`, `json`, or `yaml` |
 | `--report-path` | `todo-registrar-report.<format>` | Output path; use `-` for stdout |
 
@@ -43,7 +43,8 @@ files:
 | Class | Path |
 |---|---|
 | Builder | `src/Service/Report/ReportBuilder.php` |
-| Dry-run registrar | `src/Service/Registrar/DryRunRegistrar.php` |
+| Dry-run registrar | `src/Service/Registrar/DryRun/DryRunRegistrar.php` |
+| Dry-run factory | `src/Service/Registrar/DryRun/DryRunRegistrarFactory.php` |
 | Format enum | `src/Enum/ReportFormat.php` |
 | Statistics DTO | `src/Dto/ProcessStatistic.php`, `FileStatistic.php` |
 | CLI wiring | `src/Console/Command/RegisterCommand.php` |

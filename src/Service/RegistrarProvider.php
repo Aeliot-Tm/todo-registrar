@@ -16,9 +16,8 @@ namespace Aeliot\TodoRegistrar\Service;
 use Aeliot\TodoRegistrar\Enum\RegistrarType;
 use Aeliot\TodoRegistrar\Exception\ConfigValidationException;
 use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
-use Aeliot\TodoRegistrar\Exception\LogicException;
 use Aeliot\TodoRegistrar\Service\Registrar\RegistrarFactoryRegistry;
-use Aeliot\TodoRegistrarContracts\GeneralConfig\GeneralConfigInterface;
+use Aeliot\TodoRegistrarContracts\Exception\InvalidConfigException as InvalidConfigExceptionInterface;
 use Aeliot\TodoRegistrarContracts\Registrar\RegistrarFactoryInterface;
 use Aeliot\TodoRegistrarContracts\Registrar\RegistrarInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -35,14 +34,17 @@ final readonly class RegistrarProvider
     }
 
     /**
+     * @param RegistrarFactoryInterface|class-string<RegistrarFactoryInterface>|string $registrarType
+     * @param array<string,mixed> $registrarConfig
+     *
      * @throws ConfigValidationException
      * @throws InvalidConfigException
-     * @throws LogicException
+     * @throws InvalidConfigExceptionInterface
      */
-    public function getRegistrar(GeneralConfigInterface $config): RegistrarInterface
-    {
-        $registrarType = $config->getRegistrarType();
-
+    public function getRegistrar(
+        RegistrarFactoryInterface|string $registrarType,
+        array $registrarConfig,
+    ): RegistrarInterface {
         if ($registrarType instanceof RegistrarFactoryInterface) {
             $registrarFactory = $registrarType;
         } elseif (class_exists($registrarType) && is_a($registrarType, RegistrarFactoryInterface::class, true)) {
@@ -52,7 +54,7 @@ final readonly class RegistrarProvider
         }
 
         // @phpstan-ignore-next-line
-        return $registrarFactory->create($config->getRegistrarConfig(), $this->validator);
+        return $registrarFactory->create($registrarConfig, $this->validator);
     }
 
     /**
