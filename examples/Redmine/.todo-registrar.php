@@ -16,7 +16,12 @@ use Aeliot\TodoRegistrar\Enum\RegistrarType;
 use Aeliot\TodoRegistrar\Service\File\Finder;
 
 return (new Config())
-    ->setFinder((new Finder())->name('/\.(?:php|yaml|yml)$/')->in(__DIR__))
+    ->setFinder(
+        (new Finder())
+            ->name('/\.(?:php|yaml|yml)$/')
+            ->in(__DIR__)
+            ->sortByName(true),
+    )
     ->setRegistrar(RegistrarType::Redmine, [
         'issue' => [
             'addTagToLabels' => false,

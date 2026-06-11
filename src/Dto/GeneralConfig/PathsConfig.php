@@ -95,6 +95,15 @@ final class PathsConfig
     #[Assert\IsNull(message: 'Unknown "paths" options detected: {{ value }}')]
     private mixed $invalidKeys = null;
 
+    #[Assert\AtLeastOneOf(
+        constraints: [
+            new Assert\IsNull(),
+            new Assert\Type(type: 'boolean', message: 'Option "paths.sortByName" must be boolean'),
+        ],
+        message: 'Option "paths.sortByName" must be boolean or null'
+    )]
+    private mixed $sortByName = null;
+
     /**
      * @param array<string,mixed> $options
      */
@@ -105,6 +114,7 @@ final class PathsConfig
         $this->exclude = $options['exclude'] ?? null;
         $this->extensions = $options['extensions'] ?? null;
         $this->name = $options['name'] ?? null;
+        $this->sortByName = $options['sortByName'] ?? null;
 
         $knownKeys = ['append', 'exclude', 'extensions', 'in', 'name'];
         $unknownKeys = array_diff(array_keys($options), $knownKeys);
@@ -156,5 +166,10 @@ final class PathsConfig
     public function getInvalidKeys(): ?string
     {
         return $this->invalidKeys;
+    }
+
+    public function getSortByName(): ?bool
+    {
+        return $this->sortByName;
     }
 }

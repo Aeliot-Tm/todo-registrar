@@ -31,6 +31,8 @@ paths:                            # Required. Defines paths which will be walked
   name: '/\.(?:php|module)$/'     # Optional. Symfony Finder name pattern(s).
                                   #           Accepts string or array of strings. Can be used together with
                                   #           "extensions". Responsibility for a valid pattern is on you.
+  sortByName: true                # Optional. Sort discovered files by path name before processing.
+                                  #           Default: true. Set to `false` to keep Finder default order.
 
 registrar:                        # Required. Configuration of Registrar
   type: GitHub                    # Required. Type of supported issue tracker, DryRun, or fully qualified class
@@ -62,6 +64,28 @@ process:                          # Optional. Processing options
     extensionAliases:             # Optional. Map file extension on disk to parser key (e.g. php, yaml, yml).
       module: php                 # Does not affect Finder; list extensions in paths.extensions or paths.name too.
       inc: php
+```
+
+### Paths options
+
+The `paths` section configures file discovery via Symfony Finder.
+
+#### Option sortByName
+
+**Type:** `boolean`
+**Default:** `true`
+
+When enabled, discovered files are sorted by path name before processing. This makes run order
+deterministic across environments.
+
+Set to `false` to skip sorting and use Symfony Finder default iteration order.
+
+**Example:**
+
+```yaml
+paths:
+  in: src
+  sortByName: false
 ```
 
 ### Registrar options

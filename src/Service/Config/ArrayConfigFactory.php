@@ -113,7 +113,8 @@ final readonly class ArrayConfigFactory
         $finder = (new Finder())
             ->files()
             ->ignoreVCS(true)
-            ->in($pathsConfig?->getIn() ?? (getcwd() ?: '.'));
+            ->in($pathsConfig?->getIn() ?? (getcwd() ?: '.'))
+            ->sortByName($pathsConfig->getSortByName() ?? true);
 
         $append = $pathsConfig?->getAppend();
         if ($append) {

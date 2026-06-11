@@ -54,7 +54,7 @@ final class HeapContextFactoryTest extends TestCase
         $processConfig->setExtensionAliases(['module' => 'php', 'yaml' => 'yaml']);
 
         $config = (new Config())
-            ->setFinder((new Finder())->in(sys_get_temp_dir())->name('*.none'))
+            ->setFinder((new Finder())->in(sys_get_temp_dir())->name('*.none')->sortByName(true))
             ->setRegistrar(IncrementalRegistrarFactory::class, ['prefix' => 'KEY'])
             ->setProcessConfig($processConfig);
 

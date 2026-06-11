@@ -4,7 +4,7 @@ Scans PHP and YAML source files for TODO/FIXME comments, tokenizes them, and bui
 
 ## What It Does
 
-1. Discovers files via Symfony Finder (`paths` config or PHP Finder setup)
+1. Discovers files via Symfony Finder (`paths` config or PHP Finder setup); by default, files are sorted by path name
 2. Selects a parser by file extension (`FileParserRegistry`)
 3. Produces `ParsedFile`: all tokens (`TokenInterface[]`) and a lazy context map
 4. Passes the result to `FileHeap` for comment grouping and further processing
@@ -47,6 +47,7 @@ paths:
   extensions: [php, yaml, yml]   # default when omitted
   exclude: vendor
   name: '/\.(?:php|ya?ml)$/'
+  sortByName: true               # default when omitted; set false for Finder default order
 
 process:
   extensionAliases:

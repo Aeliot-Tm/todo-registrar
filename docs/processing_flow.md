@@ -28,7 +28,8 @@ to disk right away — not at the end of the file or the end of the run. See [Wh
 
 ## Step 1: File discovery
 
-The tool walks paths from configuration (`paths.in`, optional `append`, `exclude`, `extensions`, `name`) using Symfony Finder.
+The tool walks paths from configuration (`paths.in`, optional `append`, `exclude`, `extensions`, `name`, `sortByName`)
+using Symfony Finder. By default, discovered files are sorted by path name (`sortByName: true`).
 
 Default scanned extensions: `php`, `yaml`, `yml`. You can scan other extensions (for example `.module`)
 via `paths.extensions` and map them to a parser with `process.extensionAliases`. See [General YAML config](config/general_config_yaml.md).

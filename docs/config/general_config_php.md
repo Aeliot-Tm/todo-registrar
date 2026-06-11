@@ -15,7 +15,7 @@ use Aeliot\TodoRegistrar\Config;
 use Aeliot\TodoRegistrar\Service\File\Finder;
 
 return (new Config())
-    ->setFinder((new Finder())->name('/\.(?:php|yaml|yml)$/')->in(__DIR__))
+    ->setFinder((new Finder())->name('/\.(?:php|yaml|yml)$/')->in(__DIR__)->sortByName(true))
     ->setRegistrar('JIRA', [
         'issue' => [
             'projectKey' => 'TODO',
@@ -51,7 +51,8 @@ Pass instance of `Aeliot\TodoRegistrarContracts\FinderInterface` to method `setF
 If you use implementation from this project (`Aeliot\TodoRegistrar\Service\File\Finder`)
 then read documentation of [Symfony Finder](https://symfony.com/doc/current/components/finder.html).
 It has the same configuration: configure file masks with `name()`, directories with `in()`, and so on.
-In YAML config, `paths.extensions` and `paths.name` are applied to Finder automatically; in PHP config you set Finder yourself.
+In YAML config, `paths.extensions`, `paths.name`, and `paths.sortByName` (default `true`) are applied to Finder
+automatically; in PHP config you set Finder yourself (for example `->sortByName(true)`).
 
 ### Setting of Registrar
 

@@ -39,8 +39,9 @@ Iterates configured paths via Symfony Finder.
 
 YAML config (`paths`):
 
-- `in`, `append`, `exclude`, `extensions`, `name`
+- `in`, `append`, `exclude`, `extensions`, `name`, `sortByName`
 - Default extensions: `php`, `yaml`, `yml`
+- Default `sortByName`: `true` (files sorted by path name)
 
 PHP config: configure Finder directly.
 

@@ -113,6 +113,7 @@ Top-level keys: `paths`, `registrar`, `tags`, `issueKeyInjection`, `process`.
 paths:
   in: src
   extensions: [php, yaml, yml]
+  sortByName: true   # optional, default true
 
 registrar:
   type: GitHub

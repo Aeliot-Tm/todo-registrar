@@ -235,7 +235,7 @@ use Aeliot\TodoRegistrar\Config;
 use Aeliot\TodoRegistrar\Service\File\Finder;
 
 return (new Config())
-    ->setFinder((new Finder())->name('/\.(?:php|yaml|yml)$/')->in('{$this->tempDir}'))
+    ->setFinder((new Finder())->name('/\.(?:php|yaml|yml)$/')->in('{$this->tempDir}')->sortByName(true))
     ->setRegistrar('{$stubFactoryClass}', [
         'ticket_key' => '{$ticketKey}',
     ]);
