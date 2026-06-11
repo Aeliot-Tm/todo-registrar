@@ -1,0 +1,16 @@
+name: TODO Statistic
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  statistic:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: Aeliot-Tm/todo-registrar-statistic-action@3ffb978d3cac1f625a908ff8ada5fc619a628699
