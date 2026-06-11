@@ -25,7 +25,8 @@ Example:
 todo-registrar register --dry-run --report-format=json --report-path=-
 ```
 
-Console summary uses **Would register** instead of **Registered**. See [Processing report](report.md) for report
+Console summary uses **Would register** instead of **Registered**. The exported report sets `meta.dryRun` to `true`
+and lists dry-run placeholder keys (for example `#dry-run-1`) in `issues`. See [Processing report](report.md) for report
 options and structure.
 
 ## Minimal config with DryRun registrar
