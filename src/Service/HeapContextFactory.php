@@ -37,6 +37,8 @@ final readonly class HeapContextFactory
         $context->isDryRun = $isDryRun;
         $context->output = $output;
 
+        $context->statistic->getMeta()->setDryRun($isDryRun);
+
         return $context;
     }
 

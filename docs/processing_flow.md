@@ -89,7 +89,9 @@ not needed. See [Processing report](report.md).
 
 ## Step 8: Report (optional)
 
-When `--report-format` is set, run statistics are exported. See [Processing report](report.md).
+When `--report-format` is set, run statistics are exported as JSON or YAML: run metadata (`meta`),
+summary counters (`summary`), inserted issue keys with usage counts (`issues`), and per-file registration
+counts (`files`). See [Processing report](report.md).
 
 ## Error handling
 

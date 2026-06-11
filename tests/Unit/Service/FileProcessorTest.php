@@ -47,6 +47,13 @@ final class FileProcessorTest extends TestCase
             self::assertStringContainsString('// TODO: KEY-2 Second task', $content);
             self::assertSame(2, $context->statistic->getCountRegisteredTODOs());
             self::assertSame(2, $fileHeap->getRegistrationCount());
+            self::assertSame(
+                [
+                    ['key' => 'KEY-1', 'usageCounter' => 1],
+                    ['key' => 'KEY-2', 'usageCounter' => 1],
+                ],
+                $context->statistic->getIssueKeys(),
+            );
         } finally {
             $this->removeFile($path);
         }
@@ -92,6 +99,10 @@ final class FileProcessorTest extends TestCase
             self::assertSame(2, $context->statistic->getCountRegisteredTODOs());
             self::assertSame(1, $context->statistic->getCountGluedTodos());
             self::assertSame(2, $fileHeap->getRegistrationCount());
+            self::assertSame(
+                [['key' => 'KEY-1', 'usageCounter' => 2]],
+                $context->statistic->getIssueKeys(),
+            );
         } finally {
             $this->removeFile($path);
         }
@@ -113,6 +124,13 @@ final class FileProcessorTest extends TestCase
             self::assertSame(2, $context->statistic->getCountRegisteredTODOs());
             self::assertSame(2, $context->statistic->getCountNewIssues());
             self::assertSame(2, $fileHeap->getRegistrationCount());
+            self::assertSame(
+                [
+                    ['key' => 'KEY-1', 'usageCounter' => 1],
+                    ['key' => 'KEY-2', 'usageCounter' => 1],
+                ],
+                $context->statistic->getIssueKeys(),
+            );
         } finally {
             $this->removeFile($path);
         }

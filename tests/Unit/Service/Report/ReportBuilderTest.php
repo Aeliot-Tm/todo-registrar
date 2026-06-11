@@ -109,6 +109,26 @@ final class ReportBuilderTest extends TestCase
         self::assertSame(3, $decoded['summary']['todos']['registered']);
     }
 
+    public function testFormatIncludesIssueKeysWithUsageCounters(): void
+    {
+        $statistic = $this->createStatistic(['src/foo.php' => 2], 0, 0, 0);
+        $statistic->tickIssueKeyUsage('PROJ-2');
+        $statistic->tickIssueKeyUsage('PROJ-1');
+        $statistic->tickIssueKeyUsage('PROJ-1');
+
+        $result = $this->reportBuilder->format(ReportFormat::JSON, $statistic);
+
+        $decoded = json_decode($result, true);
+        self::assertArrayHasKey('issues', $decoded);
+        self::assertSame(
+            [
+                ['key' => 'PROJ-1', 'usageCounter' => 2],
+                ['key' => 'PROJ-2', 'usageCounter' => 1],
+            ],
+            $decoded['issues'],
+        );
+    }
+
     /**
      * @param array<string, int> $files path => registration count
      */

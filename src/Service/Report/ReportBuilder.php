@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Aeliot\TodoRegistrar\Service\Report;
 
+use Aeliot\TodoRegistrar\Console\Application;
 use Aeliot\TodoRegistrar\Dto\ProcessStatistic;
 use Aeliot\TodoRegistrar\Enum\ReportFormat;
 use Aeliot\TodoRegistrar\Exception\LogicException;
@@ -51,6 +52,10 @@ final readonly class ReportBuilder
         $files = $statistic->getFiles();
 
         return [
+            'meta' => [
+                'version' => Application::VERSION,
+                'dryRun' => $statistic->getMeta()->isDryRun(),
+            ],
             'summary' => [
                 'files' => [
                     'analyzed' => $statistic->getCountAnalyzedFiles(),
@@ -67,6 +72,7 @@ final readonly class ReportBuilder
                     'total' => $statistic->getTodosTotal(),
                 ],
             ],
+            'issues' => $statistic->getIssueKeys(),
             'files' => array_map(
                 static fn (string $path, int $count): array => [
                     'path' => $path,

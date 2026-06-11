@@ -24,7 +24,7 @@ use Symfony\Component\DependencyInjection\TaggedContainerInterface;
  */
 final class Application extends SymfonyApplication
 {
-    private const VERSION = '4.0.0';
+    public const VERSION = '4.0.0';
 
     public function __construct(ContainerInterface $container)
     {

@@ -161,11 +161,21 @@ With `--dry-run`, `FileHeap::recordRegistration()` updates statistics only; `Sav
 
 ## Statistics
 
-**Class:** `ProcessStatistic`
+**Classes:** `ProcessStatistic`, `ProcessMeta`
 
-Tracks per run: analyzed/updated files, comment tokens, ignored/glued/registered TODOs, `newIssues` (registered − glued), per-file registration counts, and `dryRun` flag.
+Tracks per run:
 
-Optional export via [Report](../Feature/Report.md).
+- analyzed/updated files, comment tokens, ignored/glued/registered TODOs
+- `newIssues` (registered − glued)
+- per-file registration counts
+- issue key usage (`key` → `usageCounter`) for each inserted key
+- run metadata (`dryRun` flag) via `ProcessMeta`
+
+`FileProcessor::register()` calls `tickIssueKeyUsage()` on every key injection (new registration or same-ticket glue
+reuse). Ignored TODOs with a pre-existing key in the comment are counted in `ignored` but not added to the issue key
+list.
+
+Optional export via [Report](../Feature/Report.md) (`meta`, `summary`, `issues`, `files`).
 
 ## Processing Loop
 
