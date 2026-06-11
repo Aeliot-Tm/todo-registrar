@@ -16,6 +16,7 @@ namespace Aeliot\TodoRegistrar\Enum;
 enum RegistrarType: string
 {
     case AzureBoards = 'AzureBoards';
+    case DryRun = 'DryRun';
     case GitHub = 'GitHub';
     case GitLab = 'GitLab';
     case JIRA = 'JIRA';

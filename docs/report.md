@@ -6,7 +6,7 @@ The script collects information about the processing and can export it to a repo
 
 | Option | Description |
 |---|---|
-| `--dry-run` | Parse and count TODOs without API calls or source file changes |
+| `--dry-run` | Parse and count TODOs without API calls or source file changes. See [Dry-run mode](dry_run.md) |
 | `--report-format=FORMAT` | Export format: `none`, `json`, `yaml`. Default: `none` |
 | `--report-path=PATH` | Output file path. Default: `todo-registrar-report.<format>`. Use `-` for stdout |
 

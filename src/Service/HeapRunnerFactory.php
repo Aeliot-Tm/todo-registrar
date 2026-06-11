@@ -14,13 +14,16 @@ declare(strict_types=1);
 namespace Aeliot\TodoRegistrar\Service;
 
 use Aeliot\TodoRegistrar\Console\OutputAdapter;
+use Aeliot\TodoRegistrar\Enum\RegistrarType;
 use Aeliot\TodoRegistrar\Exception\ConfigValidationException;
 use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
 use Aeliot\TodoRegistrar\Exception\LogicException;
 use Aeliot\TodoRegistrar\Exception\NotSupportedConfigException;
 use Aeliot\TodoRegistrar\Exception\UnavailableConfigException;
 use Aeliot\TodoRegistrar\Service\Config\ConfigProvider;
-use Aeliot\TodoRegistrar\Service\Registrar\DryRunRegistrar;
+use Aeliot\TodoRegistrarContracts\Exception\InvalidConfigException as InvalidConfigExceptionInterface;
+use Aeliot\TodoRegistrarContracts\GeneralConfig\GeneralConfigInterface;
+use Aeliot\TodoRegistrarContracts\Registrar\RegistrarInterface;
 
 /**
  * @internal
@@ -40,6 +43,7 @@ final readonly class HeapRunnerFactory
     /**
      * @throws ConfigValidationException
      * @throws InvalidConfigException
+     * @throws InvalidConfigExceptionInterface
      * @throws LogicException
      * @throws NotSupportedConfigException
      * @throws UnavailableConfigException
@@ -48,7 +52,7 @@ final readonly class HeapRunnerFactory
     {
         $config = $this->configProvider->getConfig($configPath);
         $commentExtractor = $this->commentExtractorFactory->create($config);
-        $registrar = $isDryRun ? new DryRunRegistrar() : $this->registrarProvider->getRegistrar($config);
+        $registrar = $this->getRegistrar($config, $isDryRun);
         $todoBuilder = $this->todoBuilderFactory->create($config, $output);
         $fileProcessor = new FileProcessor($commentExtractor, $registrar, $todoBuilder);
 
@@ -60,5 +64,23 @@ final readonly class HeapRunnerFactory
             $output,
             $isDryRun,
         );
+    }
+
+    /**
+     * @throws ConfigValidationException
+     * @throws InvalidConfigException
+     * @throws InvalidConfigExceptionInterface
+     */
+    private function getRegistrar(GeneralConfigInterface $config, bool $isDryRun): RegistrarInterface
+    {
+        if ($isDryRun) {
+            $registrarType = RegistrarType::DryRun->value;
+            $registrarConfig = [];
+        } else {
+            $registrarType = $config->getRegistrarType();
+            $registrarConfig = $config->getRegistrarConfig();
+        }
+
+        return $this->registrarProvider->getRegistrar($registrarType, $registrarConfig);
     }
 }

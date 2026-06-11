@@ -125,12 +125,15 @@ Run-scoped state lives in `HeapContext` (`statistic`, `hashToKey`, `glueSameTick
 If `process.glueSameTickets` and hash seen → reuse key, `tickGluedTodo()`.
 Else → `registrar->register($todo)`, store hash → key mapping.
 
-With `--dry-run`, `DryRunRegistrar` returns fake keys (`#dry-run-N`); the real registrar is not instantiated.
+With `--dry-run`, `HeapRunnerFactory` selects `DryRunRegistrar` (via `RegistrarType::DryRun`) and clears registrar
+config; fake keys `#dry-run-N` are returned and the configured tracker is not used. Config may also set
+`registrar.type: DryRun` for a minimal setup without tracker credentials — see [DryRun Registrar](../Feature/DryRunRegistrar.md).
 
 Errors wrapped in `CommentRegistrationException` with comment line and content.
 
 | Registrar | Returned key |
 |---|---|
+| DryRun | `#dry-run-N` |
 | JIRA | `PROJ-123` |
 | GitHub / GitLab / Redmine | `#123` |
 | Yandex Tracker | `QUEUE-123` |

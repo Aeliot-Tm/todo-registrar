@@ -29,6 +29,8 @@ Each built-in tracker has its own configuration and inline config keys:
 4. [Redmine](registrar/Redmine/config.md)
 5. [Yandex Tracker](registrar/YandexTracker/config.md)
 
+For dry-run and CI statistics without tracker credentials, see [Dry-run mode](dry_run.md) (`registrar.type: DryRun`).
+
 ## Shared registrar features:
 
 1. [Allowed labels](allowed_labels.md) — Filter labels applied to issues.

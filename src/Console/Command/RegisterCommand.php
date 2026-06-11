@@ -25,6 +25,7 @@ use Aeliot\TodoRegistrar\Exception\NotSupportedConfigException;
 use Aeliot\TodoRegistrar\Exception\UnavailableConfigException;
 use Aeliot\TodoRegistrar\Service\HeapRunnerFactory;
 use Aeliot\TodoRegistrar\Service\Report\ReportBuilder;
+use Aeliot\TodoRegistrarContracts\Exception\InvalidConfigException as InvalidConfigExceptionInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -67,6 +68,7 @@ final class RegisterCommand extends Command
      * @throws CommentRegistrationException
      * @throws FileReadException
      * @throws InvalidConfigException
+     * @throws InvalidConfigExceptionInterface
      * @throws LogicException
      * @throws NoLineException
      * @throws NotSupportedConfigException

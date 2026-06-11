@@ -33,9 +33,10 @@ paths:                            # Required. Defines paths which will be walked
                                   #           "extensions". Responsibility for a valid pattern is on you.
 
 registrar:                        # Required. Configuration of Registrar
-  type: GitHub                    # Required. Type of supported issue tracker or fully qualified class of custom factory
-                                  #           of Registrar (`App\MyTodoRegistrarFactory`).
-  options:                        # Required. Options necessary for exact Registrar.
+  type: GitHub                    # Required. Type of supported issue tracker, DryRun, or fully qualified class
+                                  #           of custom factory of Registrar (`App\MyTodoRegistrarFactory`).
+                                  #           DryRun needs no options — see docs/dry_run.md.
+  options:                        # Required for real trackers. Optional for DryRun (ignored).
     issue:
       labels: tech-debt
     service:
@@ -72,6 +73,7 @@ Registrar options specific for each issue tracker see in separate documentation:
 3. [JIRA](../registrar/JIRA/config.md)
 4. [Redmine](../registrar/Redmine/config.md)
 5. [Yandex Tracker](../registrar/YandexTracker/config.md)
+6. [Dry-run registrar](../dry_run.md) — `type: DryRun`, no tracker credentials
 
 ### Issue Key Injection options
 
