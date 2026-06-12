@@ -3,7 +3,7 @@ set -euo pipefail
 
 REPORT_PATH="${1:?report path required}"
 MR_BODY_PATH="${2:?MR body output path required}"
-LOGO_URL="${3:-https://cdn.jsdelivr.net/gh/Aeliot-Tm/todo-registrar@main/docs/logo.svg}"
+LOGO_URL="${3:-https://cdn.jsdelivr.net/gh/Aeliot-Tm/todo-registrar@main/docs/logo-in-comment.svg}"
 REGISTRAR_LINK="[TODO Registrar](https://github.com/Aeliot-Tm/todo-registrar)"
 
 pluralize() {
