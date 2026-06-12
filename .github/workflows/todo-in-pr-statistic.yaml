@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   statistic:
-    uses: Aeliot-Tm/todo-registrar-statistic-action/.github/workflows/statistic.yaml@49aec0e8bd89c218bc8514f9d5caf68e8a4a527a
+    uses: Aeliot-Tm/todo-registrar-statistic-action/.github/workflows/statistic.yaml@399d98ab89d662901bede273f25094f56109e096
     with:
       config: |
         paths:
