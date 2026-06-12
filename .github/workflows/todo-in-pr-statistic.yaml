@@ -10,24 +10,21 @@ permissions:
 
 jobs:
   statistic:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v6
-      - uses: Aeliot-Tm/todo-registrar-statistic-action@0.1.0
-        with:
-          config: |
-            paths:
-              in: .
-              append: bin/todo-registrar
-              exclude:
-                - tests/fixtures
-                - var
-                - vendor
-            process:
-              glueSameTickets: true
-              glueSequentialComments: true
-            registrar:
-              type: DryRun
-            tags:
-              - todo
-              - fixme
+    uses: Aeliot-Tm/todo-registrar-statistic-action/.github/workflows/statistic.yaml@316c6eabcd03e117fcd846f22fcd045d25a8008a
+    with:
+      config: |
+        paths:
+          in: .
+          append: bin/todo-registrar
+          exclude:
+            - tests/fixtures
+            - var
+            - vendor
+        process:
+          glueSameTickets: true
+          glueSequentialComments: true
+        registrar:
+          type: DryRun
+        tags:
+          - todo
+          - fixme
