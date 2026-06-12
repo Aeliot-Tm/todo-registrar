@@ -12,7 +12,7 @@ declare(strict_types=1);
  */
 
 // TODO: similar test remark which have to be glued
-function a()
+function a(): void
 {
     // FIXME implement
 }
