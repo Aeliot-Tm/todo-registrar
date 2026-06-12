@@ -11,8 +11,13 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-// TODO: similar test remark which have to be glued
-function a(): void
+namespace Aeliot\TodoRegistrar;
+
+class tmp
 {
-    // FIXME implement
+    // TODO: similar test remark which have to be glued
+    public function a(): void
+    {
+        // FIXME implement
+    }
 }
