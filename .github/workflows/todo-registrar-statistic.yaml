@@ -14,3 +14,20 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: Aeliot-Tm/todo-registrar-statistic-action@3ffb978d3cac1f625a908ff8ada5fc619a628699
+        with:
+          config: |
+            paths:
+              in: .
+              append: bin/todo-registrar
+              exclude:
+                - tests/fixtures
+                - var
+                - vendor
+            process:
+              glueSameTickets: true
+              glueSequentialComments: true
+            registrar:
+              type: DryRun
+            tags:
+              - todo
+              - fixme
