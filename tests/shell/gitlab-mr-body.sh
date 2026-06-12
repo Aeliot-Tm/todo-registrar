@@ -7,7 +7,7 @@ command -v jq >/dev/null || {
 }
 
 ROOT_DIR="$(cd "$(dirname "$0")/../.." && pwd)"
-BUILD_SCRIPT="${ROOT_DIR}/examples/GitLab/scripts/build-mr-body.sh"
+BUILD_SCRIPT="${ROOT_DIR}/bin/build-mr-body.sh"
 REPORT_PATH="${ROOT_DIR}/tests/fixtures/gitlab/report.json"
 EXPECTED_PATH="${ROOT_DIR}/tests/fixtures/gitlab/mr-body.expected.md"
 GENERATED_PATH="$(mktemp)"
