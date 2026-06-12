@@ -44,6 +44,17 @@ jobs:
       - name: Check unused composer requirements
         run: composer unused
 
+  gitlab-mr-comment:
+    name: 'GitLab: verify MR comment fixture'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install jq
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq jq
+      - name: Run shell test
+        run: tests/shell/gitlab-mr-comment.sh
+
   php-cs-check:
     name: 'PHP CS Fixer: check'
     runs-on: ubuntu-latest
