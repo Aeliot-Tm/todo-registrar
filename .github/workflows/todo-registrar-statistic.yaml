@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - uses: Aeliot-Tm/todo-registrar-statistic-action@3ffb978d3cac1f625a908ff8ada5fc619a628699
+      - uses: Aeliot-Tm/todo-registrar-statistic-action@0.1.0
         with:
           config: |
             paths:
