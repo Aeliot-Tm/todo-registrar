@@ -1,4 +1,4 @@
-name: TODO Statistic
+name: TODO in PR Statistic
 
 on:
   pull_request:
