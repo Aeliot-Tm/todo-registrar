@@ -15,9 +15,9 @@ namespace Aeliot\TodoRegistrar;
 
 class tmp
 {
-    // notTODO: similar test remark which have to be glued
+    // TODO: similar test remark which have to be glued
     public function a(): void
     {
-        // notFIXME implement
+        // FIXME implement
     }
 }
