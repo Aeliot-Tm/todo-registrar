@@ -32,6 +32,7 @@
     "autoload-dev": {
         "psr-4": {
             "Aeliot\\TodoRegistrar\\Test\\": "tests/",
+            "Aeliot\\TodoRegistrar\\Test\\Functional\\": "tests/functional",
             "Aeliot\\TodoRegistrar\\Test\\Integration\\": "tests/integration",
             "Aeliot\\TodoRegistrar\\Test\\Stub\\": "tests/stub",
             "Aeliot\\TodoRegistrar\\Test\\Unit\\": "tests/unit"
