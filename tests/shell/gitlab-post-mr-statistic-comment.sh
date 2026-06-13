@@ -26,6 +26,7 @@ export GITLAB_CONTROL="${MOCK_DIR}/gitlab-control"
 export GITLAB_CONTROL_MOCK_LOG="$MOCK_LOG"
 export CI_MERGE_REQUEST_IID=1
 chmod +x "${POST_SCRIPT}"
+bash -n "${POST_SCRIPT}"
 
 run_case() {
   local report_path="$1"
