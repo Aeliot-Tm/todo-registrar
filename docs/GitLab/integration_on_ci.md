@@ -24,12 +24,12 @@ and runs todo-registrar via `docker run` with project directory mounted to `/cod
    Export JSON report to `/runner-temp` to build useful description.
 5. Commit injected IDs of created issues (only source changes under `/code`).
 6. Push changes.
-7. _Optional._ Build MR description with [build-mr-body.sh](../../examples/GitLab/scripts/build-mr-body.sh).
+7. _Optional._ Build MR description with [build-mr-body.sh](../../bin/build-mr-body.sh).
 8. Create Merge Request when something is committed.
 
 > For the duties of example it added into stage `tests`. Usually it is quite good place.
 
-> Download [build-mr-body.sh](../../examples/GitLab/scripts/build-mr-body.sh) via `curl` in `before_script`
+> Download [build-mr-body.sh](../../bin/build-mr-body.sh) via `curl` in `before_script`
 > or place it next to your config (`./scripts/build-mr-body.sh`).
 
 ### CI artifacts isolation (`/runner-temp`)
@@ -57,7 +57,6 @@ After commit and push, build the MR description from the report:
 ```bash
 REPORT_PATH="${RUNNER_TEMP}/todo-registrar-report.json"
 MR_BODY_PATH="${RUNNER_TEMP}/mr-body.md"
-export COMMIT_SHA="$(git rev-parse HEAD)"
 ./scripts/build-mr-body.sh "$REPORT_PATH" "$MR_BODY_PATH"
 ./gitlab-control create_mr \
     --title "TODO-REGISTRAR: automated registering of new TODOs" \

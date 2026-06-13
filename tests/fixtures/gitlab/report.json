@@ -1,0 +1,57 @@
+{
+  "summary": {
+    "todos": {
+      "registered": 7,
+      "newIssues": 5,
+      "glued": 2
+    }
+  },
+  "issues": [
+    {
+      "key": "TEST-101",
+      "usageCounter": 1
+    },
+    {
+      "key": "TEST-102",
+      "usageCounter": 2
+    },
+    {
+      "key": "TEST-103",
+      "usageCounter": 1
+    },
+    {
+      "key": "TEST-104",
+      "usageCounter": 2
+    },
+    {
+      "key": "TEST-105",
+      "usageCounter": 1
+    }
+  ],
+  "files": [
+    {
+      "path": "src/Service/Baz.php",
+      "summary": {
+        "todos": {
+          "registered": 4
+        }
+      }
+    },
+    {
+      "path": "src/Service/Foo.php",
+      "summary": {
+        "todos": {
+          "registered": 3
+        }
+      }
+    },
+    {
+      "path": "src/Service/Bar.php",
+      "summary": {
+        "todos": {
+          "registered": 0
+        }
+      }
+    }
+  ]
+}

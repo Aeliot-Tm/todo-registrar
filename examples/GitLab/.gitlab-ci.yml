@@ -12,7 +12,7 @@ stages:
         - curl -sL "https://gitlab.com/aeliot-tm/gitlab-control/-/raw/main/controller.sh" -o ./gitlab-control
         - chmod +x ./gitlab-control
         - |
-          curl -sL "https://raw.githubusercontent.com/Aeliot-Tm/todo-registrar/refs/heads/main/examples/GitLab/scripts/build-mr-body.sh" \
+          curl -sL "https://raw.githubusercontent.com/Aeliot-Tm/todo-registrar/refs/heads/main/bin/build-mr-body.sh" \
           -o ./scripts/build-mr-body.sh
         - chmod +x ./scripts/build-mr-body.sh
     script:
@@ -37,7 +37,6 @@ stages:
                 ./gitlab-control push "$NEW_BRANCH"
                 REPORT_PATH="${RUNNER_TEMP}/todo-registrar-report.json"
                 MR_BODY_PATH="${RUNNER_TEMP}/mr-body.md"
-                export COMMIT_SHA="$(git rev-parse HEAD)"
                 ./scripts/build-mr-body.sh "$REPORT_PATH" "$MR_BODY_PATH"
                 ./gitlab-control create_mr \
                     --target "development" \
