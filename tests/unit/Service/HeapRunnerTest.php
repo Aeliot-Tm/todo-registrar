@@ -21,7 +21,7 @@ use Aeliot\TodoRegistrar\Service\FileHeapFactory;
 use Aeliot\TodoRegistrar\Service\FileProcessor;
 use Aeliot\TodoRegistrar\Service\HeapContextFactory;
 use Aeliot\TodoRegistrar\Service\HeapRunner;
-use Aeliot\TodoRegistrar\Test\Unit\Service\Support\ProcessingTestSupport;
+use Aeliot\TodoRegistrar\Test\unit\Service\Support\ProcessingTestSupport;
 use Aeliot\TodoRegistrarContracts\FinderInterface;
 use Aeliot\TodoRegistrarContracts\GeneralConfig\GeneralConfigInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
