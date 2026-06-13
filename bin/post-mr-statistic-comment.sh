@@ -5,7 +5,7 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 STATISTIC_MARKER_SEARCH="TODO-REGISTRAR-STATISTIC:START"
 STATISTIC_MARKER_START="<!-- TODO-REGISTRAR-STATISTIC:START -->"
 STATISTIC_MARKER_END="<!-- TODO-REGISTRAR-STATISTIC:END -->"
-GITLAB_CONTROL_URL="${GITLAB_CONTROL_URL:-https://gitlab.com/aeliot-tm/gitlab-control/-/raw/main/controller.sh}"
+GITLAB_CONTROL_URL="${GITLAB_CONTROL_URL:-https://gitlab.com/aeliot-tm/gitlab-control/-/raw/0.2.0/controller.sh}"
 
 resolve_gitlab_control() {
   if [[ -n "${GITLAB_CONTROL:-}" && -x "$GITLAB_CONTROL" ]]; then
