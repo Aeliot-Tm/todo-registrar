@@ -24,6 +24,7 @@ chmod +x "${MOCK_DIR}/gitlab-control"
 
 export GITLAB_CONTROL="${MOCK_DIR}/gitlab-control"
 export GITLAB_CONTROL_MOCK_LOG="$MOCK_LOG"
+export CI_MERGE_REQUEST_IID=1
 chmod +x "${POST_SCRIPT}"
 
 run_case() {
@@ -36,7 +37,7 @@ run_case() {
 
   diff -u "$expected_comment_path" "$COMMENT_PATH"
 
-  grep -Fq 'upsert_mr_note TODO-REGISTRAR-STATISTIC:START '"$COMMENT_PATH" "$MOCK_LOG" || {
+  grep -Fq 'upsert_mr_note TODO-REGISTRAR-STATISTIC:START '"$COMMENT_PATH"' --mr-iid 1' "$MOCK_LOG" || {
     echo "mock gitlab-control did not receive expected upsert_mr_note invocation for ${case_label}" >&2
     cat "$MOCK_LOG" >&2
     exit 1
@@ -52,3 +53,14 @@ run_case \
   "${FIXTURES_DIR}/report-empty.json" \
   "${FIXTURES_DIR}/mr-comment-empty.expected.md" \
   "empty report"
+
+rm -f "$MOCK_LOG" "$COMMENT_PATH"
+unset CI_MERGE_REQUEST_IID
+export CI_OPEN_MERGE_REQUESTS="other/group!9,test/group!42"
+export CI_PROJECT_PATH="test/group"
+"${POST_SCRIPT}" "${FIXTURES_DIR}/report.json" --comment-path "$COMMENT_PATH"
+grep -Fq 'upsert_mr_note TODO-REGISTRAR-STATISTIC:START '"$COMMENT_PATH"' --mr-iid 42' "$MOCK_LOG" || {
+  echo "mock gitlab-control did not receive expected MR IID from CI_OPEN_MERGE_REQUESTS" >&2
+  cat "$MOCK_LOG" >&2
+  exit 1
+}

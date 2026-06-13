@@ -33,6 +33,32 @@ resolve_gitlab_control() {
   printf '%s' "$bootstrap_path"
 }
 
+resolve_mr_iid() {
+  if [[ -n "$MR_IID" ]]; then
+    printf '%s' "$MR_IID"
+    return 0
+  fi
+  if [[ -n "${CI_MERGE_REQUEST_IID:-}" ]]; then
+    printf '%s' "$CI_MERGE_REQUEST_IID"
+    return 0
+  fi
+  if [[ -z "${CI_OPEN_MERGE_REQUESTS:-}" || -z "${CI_PROJECT_PATH:-}" ]]; then
+    return 1
+  fi
+
+  local entry project iid
+  for entry in $(echo "$CI_OPEN_MERGE_REQUESTS" | tr ',' ' '); do
+    project="${entry%%!*}"
+    iid="${entry##*!}"
+    if [[ "$project" == "$CI_PROJECT_PATH" ]]; then
+      printf '%s' "$iid"
+      return 0
+    fi
+  done
+
+  return 1
+}
+
 REPORT_PATH=""
 COMMENT_PATH=""
 MR_IID=""
@@ -95,9 +121,11 @@ export TODO_REGISTRAR_STATISTIC_MARKER_END="$STATISTIC_MARKER_END"
 
 "$BUILD_SCRIPT" "$REPORT_PATH" "$COMMENT_PATH"
 
-UPSERT_ARGS=(upsert_mr_note "$STATISTIC_MARKER_SEARCH" "$COMMENT_PATH")
-if [[ -n "$MR_IID" ]]; then
-  UPSERT_ARGS+=(--mr-iid "$MR_IID")
+if ! MR_IID="$(resolve_mr_iid)"; then
+  echo "post-mr-statistic-comment: no MR IID found, skipping" >&2
+  exit 0
 fi
+
+UPSERT_ARGS=(upsert_mr_note "$STATISTIC_MARKER_SEARCH" "$COMMENT_PATH" --mr-iid "$MR_IID")
 
 "$GITLAB_CONTROL" "${UPSERT_ARGS[@]}"
