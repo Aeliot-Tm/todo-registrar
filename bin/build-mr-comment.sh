@@ -5,8 +5,8 @@ REPORT_PATH="${1:?report path required}"
 COMMENT_PATH="${2:?comment output path required}"
 LOGO_URL="${3:-https://cdn.jsdelivr.net/gh/Aeliot-Tm/todo-registrar@main/docs/logo-in-comment.svg}"
 REGISTRAR_PROJECT_URL="https://github.com/Aeliot-Tm/todo-registrar"
-MARKER_START="<!-- TODO-REGISTRAR-STATISTIC:START -->"
-MARKER_END="<!-- TODO-REGISTRAR-STATISTIC:END -->"
+MARKER_START="${TODO_REGISTRAR_STATISTIC_MARKER_START:-<!-- TODO-REGISTRAR-STATISTIC:START -->}"
+MARKER_END="${TODO_REGISTRAR_STATISTIC_MARKER_END:-<!-- TODO-REGISTRAR-STATISTIC:END -->}"
 
 pluralize() {
   local count="$1"
