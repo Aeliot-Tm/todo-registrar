@@ -59,7 +59,7 @@ stages:
     - curl -fsSL "h$BUILD_MR_COMMENT_SCRIPT_URL" -o "$BUILD_MR_COMMENT_SCRIPT" && chmod +x "$BUILD_MR_COMMENT_SCRIPT"
     - curl -fsSL "$POST_MR_STATISTIC_SCRIPT_URL" -o "$POST_MR_STATISTIC_SCRIPT" && chmod +x "$POST_MR_STATISTIC_SCRIPT"
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_OPEN_MERGE_REQUESTS'
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
   script:
     - export RUNNER_TEMP="/tmp/todo-registrar-statistic-${CI_PIPELINE_ID}"
     - mkdir -p "$RUNNER_TEMP"
