@@ -90,6 +90,12 @@ The Composer package is the most common integration, but less flexible than Dock
 | <img src="https://upload.wikimedia.org/wikipedia/commons/f/f3/Logo_Yandex_Tracker_2021.svg" width="24" height="24" alt="" /> [Yandex Tracker](https://tracker.yandex.com/) | See [description of configuration](docs/registrar/YandexTracker/config.md). Supported via OAuth tokens. |
 | Other Issue Trackers | Request an implementation through the [issues](https://github.com/Aeliot-Tm/todo-registrar/issues) section or see [customization](docs/customization.md) section to do it yourself. |
 
+## GitHub Actions based on the project
+
+- [TODO Registrar Action](https://github.com/marketplace/actions/todo-registrar) — register issues and create Pull Request on GitHub.
+- [TODO Registrar Statistic Action](https://github.com/marketplace/actions/todo-registrar-statistic) — add sticky-comment Pull Request on GitHub
+  with statistic about not registered TODOs code
+
 ## Articles
 
 RU: https://habr.com/ru/articles/832994/
