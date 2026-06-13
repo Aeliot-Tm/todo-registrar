@@ -31,7 +31,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Aeliot\\TodoRegistrar\\Test\\": "tests/"
+            "Aeliot\\TodoRegistrar\\Test\\": "tests/",
+            "Aeliot\\TodoRegistrar\\Test\\Stub\\": "tests/stub"
         }
     },
     "bin": [
