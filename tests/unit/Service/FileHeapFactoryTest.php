@@ -22,7 +22,7 @@ use Aeliot\TodoRegistrar\Service\File\FileParserRegistry;
 use Aeliot\TodoRegistrar\Service\File\Parser\PhpFileParser;
 use Aeliot\TodoRegistrar\Service\File\Saver;
 use Aeliot\TodoRegistrar\Service\FileHeapFactory;
-use Aeliot\TodoRegistrar\Test\Unit\Service\Support\ProcessingTestSupport;
+use Aeliot\TodoRegistrar\Test\unit\Service\Support\ProcessingTestSupport;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;

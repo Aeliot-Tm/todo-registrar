@@ -18,7 +18,7 @@ use Aeliot\TodoRegistrar\Exception\CommentRegistrationException;
 use Aeliot\TodoRegistrar\Service\Comment\CommentNodesBuilder;
 use Aeliot\TodoRegistrar\Service\FileProcessor;
 use Aeliot\TodoRegistrar\Test\Stub\IncrementalKeyRegistrar;
-use Aeliot\TodoRegistrar\Test\Unit\Service\Support\ProcessingTestSupport;
+use Aeliot\TodoRegistrar\Test\unit\Service\Support\ProcessingTestSupport;
 use Aeliot\TodoRegistrarContracts\Registrar\RegistrarInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
