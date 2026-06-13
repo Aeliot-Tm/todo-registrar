@@ -4,16 +4,16 @@ on:
   push:
     branches: [ "main" ]
 
+# Define the permissions for the action
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
 jobs:
   todo-registrar:
     name: Register TODO
     runs-on: ubuntu-latest
-
-    # Define the permissions for the action
-    permissions:
-      contents: write
-      pull-requests: write
-      issues: write
 
     steps:
       - uses: actions/checkout@v6
