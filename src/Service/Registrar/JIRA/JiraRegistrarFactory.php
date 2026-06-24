@@ -46,9 +46,13 @@ final readonly class JiraRegistrarFactory implements RegistrarFactoryInterface
         $defaultIssueLinkType = $issueConfig['issueLinkType'] ?? $config['issueLinkType'] ?? 'Relates';
         $serviceFactory = new ServiceFactory($config['service']);
         $issueLinkService = $serviceFactory->createIssueLinkService();
+        $customFieldIdProvider = new CustomFieldIdProvider(
+            $generalIssueConfig,
+            new CustomFieldIdFinder($serviceFactory->createFieldService()),
+        );
 
         return new JiraRegistrar(
-            new IssueFieldFactory($generalIssueConfig, $this->issueSupporter),
+            new IssueFieldFactory($customFieldIdProvider, $generalIssueConfig, $this->issueSupporter),
             new IssueLinkRegistrar(
                 new LinkedIssueNormalizer(
                     $defaultIssueLinkType,
