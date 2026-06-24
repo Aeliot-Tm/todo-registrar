@@ -9,12 +9,8 @@ stages:
   interruptible: false
   before_script:
     - command -v jq >/dev/null || (apt-get update -qq && apt-get install -y -qq jq)
-    - curl -sL "https://gitlab.com/aeliot-tm/gitlab-control/-/raw/main/controller.sh" -o ./gitlab-control
-    - chmod +x ./gitlab-control
-    - |
-      curl -sL "https://raw.githubusercontent.com/Aeliot-Tm/todo-registrar/refs/heads/main/bin/build-mr-body.sh" \
-      -o ./scripts/build-mr-body.sh
-    - chmod +x ./scripts/build-mr-body.sh
+    - curl -fsSL "$GITLAB_CONTROL_SCRIPT_URL" -o ./gitlab-control && chmod +x ./gitlab-control
+    - curl -fsSL "$BUILD_MR_BOBY_SCRIPT_URL" -o ./scripts/build-mr-body.sh && chmod +x ./scripts/build-mr-body.sh
   rules:
     - if: $CI_COMMIT_BRANCH == "development"
   script:
@@ -48,6 +44,9 @@ stages:
       else
           echo "No changes, nothing to commit & push!"
       fi
+  variables:
+    BUILD_MR_BOBY_SCRIPT_URL: https://raw.githubusercontent.com/Aeliot-Tm/todo-registrar/refs/tags/4.2.0/examples/GitLab/scripts/build-mr-body.sh
+    GITLAB_CONTROL_SCRIPT_URL: https://gitlab.com/aeliot-tm/gitlab-control/-/raw/0.2.0/controller.sh
 
 'TODO Registrar: statistic':
   stage: test
@@ -56,11 +55,11 @@ stages:
   before_script:
     - command -v jq >/dev/null || (apt-get update -qq && apt-get install -y -qq jq)
     - mkdir -p "$(dirname "$GITLAB_CONTROL")"
-    - curl -fsSL "https://gitlab.com/aeliot-tm/gitlab-control/-/raw/main/controller.sh" -o "$GITLAB_CONTROL" && chmod +x "$GITLAB_CONTROL"
-    - curl -fsSL "https://raw.githubusercontent.com/Aeliot-Tm/todo-registrar/refs/heads/main/bin/build-mr-comment.sh" -o "$BUILD_MR_COMMENT_SCRIPT" && chmod +x "$BUILD_MR_COMMENT_SCRIPT"
-    - curl -fsSL "https://raw.githubusercontent.com/Aeliot-Tm/todo-registrar/refs/heads/main/bin/post-mr-statistic-comment.sh" -o "$POST_MR_STATISTIC_SCRIPT" && chmod +x "$POST_MR_STATISTIC_SCRIPT"
+    - curl -fsSL "$GITLAB_CONTROL_SCRIPT_URL" -o "$GITLAB_CONTROL" && chmod +x "$GITLAB_CONTROL"
+    - curl -fsSL "h$BUILD_MR_COMMENT_SCRIPT_URL" -o "$BUILD_MR_COMMENT_SCRIPT" && chmod +x "$BUILD_MR_COMMENT_SCRIPT"
+    - curl -fsSL "$POST_MR_STATISTIC_SCRIPT_URL" -o "$POST_MR_STATISTIC_SCRIPT" && chmod +x "$POST_MR_STATISTIC_SCRIPT"
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_OPEN_MERGE_REQUESTS'
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
   script:
     - export RUNNER_TEMP="/tmp/todo-registrar-statistic-${CI_PIPELINE_ID}"
     - mkdir -p "$RUNNER_TEMP"
@@ -75,5 +74,8 @@ stages:
     - '"$POST_MR_STATISTIC_SCRIPT" "${RUNNER_TEMP}/todo-registrar-report.json"'
   variables:
     BUILD_MR_COMMENT_SCRIPT: "${CI_PROJECT_DIR}/.ci/build-mr-comment.sh"
+    BUILD_MR_COMMENT_SCRIPT_URL: https://raw.githubusercontent.com/Aeliot-Tm/todo-registrar/refs/tags/4.2.0/bin/build-mr-comment.sh
     GITLAB_CONTROL: "${CI_PROJECT_DIR}/.ci/gitlab-control"
+    GITLAB_CONTROL_SCRIPT_URL: https://gitlab.com/aeliot-tm/gitlab-control/-/raw/0.2.0/controller.sh
     POST_MR_STATISTIC_SCRIPT: "${CI_PROJECT_DIR}/.ci/post-mr-statistic-comment.sh"
+    POST_MR_STATISTIC_SCRIPT_URL: https://raw.githubusercontent.com/Aeliot-Tm/todo-registrar/refs/tags/4.2.0/bin/post-mr-statistic-comment.sh
