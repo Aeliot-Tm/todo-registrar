@@ -102,22 +102,50 @@ and matches against known custom fields. Unknown keys raise an error.
 
 Inline `customFields` override general config values for the same key.
 
-Field values are passed to JIRA as-is. Format depends on the field type (text, select, multi-select, user, date, etc.) — see
+Field values are passed to JIRA as-is. Format depends on the field type — see the cheat sheet below and
 [JIRA REST API examples](https://developer.atlassian.com/server/jira/platform/jira-rest-api-examples/#creating-an-issue-using-custom-fields).
+
+### Value formats cheat sheet
+
+The registrar does not transform values: use the JSON shape that JIRA REST API expects for each field type.
+
+| Field type | Value format |
+|---|---|
+| Text / Textarea / URL | string: `"some text"` |
+| Number | number: `42.07` |
+| Date | string `YYYY-MM-DD`: `"2011-10-03"` |
+| DateTime | ISO 8601 string: `"2011-10-19T10:29:29.908+1100"` |
+| Select / Radio | object: `{"value": "Option name"}` or `{"id": "10001"}` |
+| Multi-select | array: `[{"value": "red"}, {"value": "blue"}]` |
+| Cascading select | object: `{"value": "parent", "child": {"value": "child"}}` |
+| User | object: `{"name": "username"}` (Server) or `{"accountId": "..."}` (Cloud) |
+| Multi-user | array: `[{"name": "user1"}, {"name": "user2"}]` |
+| Group | object: `{"name": "jira-developers"}` |
+| Multi-group | array: `[{"name": "admins"}, {"name": "jira-users"}]` |
+| Version (single) | object: `{"name": "5.0"}` or `{"id": "10000"}` |
+| Version (multi) | array: `[{"name": "1.0"}, {"name": "2.0"}]` |
+| Project | object: `{"key": "PROJ"}` or `{"id": "10000"}` |
+
+`value` is used for predefined options (select, radio, cascading select). User, group, version, and project fields use `name`, `key`, or `id` instead.
+
+To find allowed options and schema for a field, use `createmeta` / `editmeta` for your `projectKey` and `issueType`.
 
 Example:
 
 ```yaml
 issue:
   customFields:
-    My Custom Field: "some value"
+    My Custom Field:
+      value: parent-option
+      child:
+        value: child-option
   customFieldsMapping:
     My Custom Field: customfield_123
 ```
 
 ```php
 // TODO: Fix deployment
-//       {EXTRAS: {customFields: {"My Custom Field": "some value"}}}
+//       {EXTRAS: {customFields: {"My Custom Field": {value: parent-option, child: {value: child-option}}}}}
 ```
 
 `customFieldsMapping` is optional. Use it to pin display names to IDs and skip API lookup, or when the field name alone is ambiguous.
