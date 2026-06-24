@@ -25,6 +25,7 @@ use JiraRestApi\Issue\IssueField;
 final readonly class IssueFieldFactory
 {
     public function __construct(
+        private CustomFieldIdProvider $customFieldIdProvider,
         private GeneralIssueConfig $generalIssueConfig,
         private IssueSupporter $issueSupporter,
     ) {
@@ -45,6 +46,7 @@ final readonly class IssueFieldFactory
         $this->setIssueType($issueField, $todo);
         $this->setAssignee($issueField, $todo);
         $this->setComponents($issueField, $todo);
+        $this->setCustomField($issueField, $todo);
         $this->setLabels($issueField, $todo);
         $this->setPriority($issueField, $todo);
 
@@ -66,6 +68,18 @@ final readonly class IssueFieldFactory
             ...$this->generalIssueConfig->getComponents(),
         ];
         $issueField->addComponentsAsArray(array_unique($component));
+    }
+
+    private function setCustomField(IssueField $issueField, TodoInterface $todo): void
+    {
+        $customFields = array_merge(
+            $this->generalIssueConfig->getCustomFields() ?? [],
+            $todo->getInlineConfig()['customFields'] ?? [],
+        );
+        foreach ($customFields as $key => $value) {
+            $fieldId = $this->customFieldIdProvider->getId($key);
+            $issueField->addCustomField($fieldId, $value);
+        }
     }
 
     private function setIssueType(IssueField $issueField, TodoInterface $todo): void

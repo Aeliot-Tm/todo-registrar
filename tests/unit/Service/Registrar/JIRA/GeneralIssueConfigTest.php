@@ -54,6 +54,12 @@ final class GeneralIssueConfigTest extends TestCase
                 'components' => ['Backend', 'API'],
                 'assignee' => 'developer1',
                 'priority' => 'High',
+                'customFields' => [
+                    'My Custom Field' => ['value' => 'Backend'],
+                ],
+                'customFieldsMapping' => [
+                    'My Custom Field' => 'customfield_123',
+                ],
             ],
         ];
 
@@ -254,6 +260,8 @@ final class GeneralIssueConfigTest extends TestCase
         self::assertSame('', $config->getTagPrefix());
         self::assertSame('', $config->getSummaryPrefix());
         self::assertSame([], $config->getComponents());
+        self::assertSame([], $config->getCustomFields());
+        self::assertSame([], $config->getCustomFieldsMapping());
         self::assertNull($config->getAssignee());
         self::assertNull($config->getPriority());
     }

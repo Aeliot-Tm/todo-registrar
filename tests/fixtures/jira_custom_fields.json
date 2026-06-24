@@ -1,0 +1,54 @@
+[
+    {
+        "id": "customfield_123",
+        "name": "My Custom Field",
+        "custom": true,
+        "orderable": true,
+        "navigable": true,
+        "searchable": true,
+        "clauseNames": [
+            "My Custom Field",
+            "cf[123]"
+        ],
+        "schema": {
+            "type": "option",
+            "custom": "com.atlassian.jira.plugin.system.customfieldtypes:select",
+            "customId": 123
+        }
+    },
+    {
+        "id": "customfield_10100",
+        "name": "Explanation",
+        "custom": true,
+        "orderable": true,
+        "navigable": true,
+        "searchable": true,
+        "clauseNames": [
+            "Explanation",
+            "cf[10100]"
+        ],
+        "schema": {
+            "type": "string",
+            "custom": "com.atlassian.jira.plugin.system.customfieldtypes:textfield",
+            "customId": 10100
+        }
+    },
+    {
+        "id": "customfield_10200",
+        "name": "Platform",
+        "custom": true,
+        "orderable": true,
+        "navigable": true,
+        "searchable": true,
+        "clauseNames": [
+            "Platform",
+            "Platform[Select List (single choice)]",
+            "cf[10200]"
+        ],
+        "schema": {
+            "type": "option",
+            "custom": "com.atlassian.jira.plugin.system.customfieldtypes:select",
+            "customId": 10200
+        }
+    }
+]

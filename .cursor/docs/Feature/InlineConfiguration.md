@@ -39,7 +39,7 @@ Rules enforced by `ExtrasReader`:
 | `showContext` | Context display format override |
 | `contextTitle` | Context block title override |
 
-Registrar-specific keys: see individual registrar docs (e.g. `linkedIssues` for JIRA, `milestone` for GitLab, `queue` for Yandex Tracker).
+Registrar-specific keys: see individual registrar docs (e.g. `linkedIssues` and `customFields` for JIRA, `milestone` for GitLab, `queue` for Yandex Tracker).
 
 ## Priority
 

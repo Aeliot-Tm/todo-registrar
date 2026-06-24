@@ -40,6 +40,27 @@ final class GeneralIssueConfig extends AbstractGeneralIssueConfig
     ])]
     protected mixed $components = null;
 
+    #[Assert\AtLeastOneOf(
+        constraints: [
+            new Assert\IsNull(),
+            new Assert\Type(type: 'array', message: 'Option "customFields" must be an array'),
+        ],
+        message: 'Option "customFields" must be an array or null'
+    )]
+    protected mixed $customFields = null;
+
+    #[Assert\AtLeastOneOf(
+        constraints: [
+            new Assert\IsNull(),
+            new Assert\Sequentially([
+                new Assert\Type(type: 'array', message: 'Option "customFieldsMapping" must be an array'),
+                new Assert\All([new Assert\Type(type: 'string', message: 'Each custom field ID must be a string')]),
+            ]),
+        ],
+        message: 'Option "customFieldsMapping" must be an array of string custom field IDs or null'
+    )]
+    protected mixed $customFieldsMapping = null;
+
     #[Assert\NotBlank(message: 'Option "issueType" is required for JIRA registrar')]
     #[Assert\Type(type: 'string', message: 'Option "issueType" must be a string (e.g., "Task", "Bug", "Story")')]
     protected mixed $issueType = null;
@@ -76,6 +97,22 @@ final class GeneralIssueConfig extends AbstractGeneralIssueConfig
         return $this->components;
     }
 
+    /**
+     * @return array<string, mixed>|null
+     */
+    public function getCustomFields(): ?array
+    {
+        return $this->customFields;
+    }
+
+    /**
+     * @return array<string, string>|null
+     */
+    public function getCustomFieldsMapping(): ?array
+    {
+        return $this->customFieldsMapping;
+    }
+
     public function getIssueType(): string
     {
         return $this->issueType;
@@ -102,6 +139,8 @@ final class GeneralIssueConfig extends AbstractGeneralIssueConfig
         $config += [
             'assignee' => null,
             'components' => [],
+            'customFields' => [],
+            'customFieldsMapping' => [],
             'priority' => null,
         ];
 

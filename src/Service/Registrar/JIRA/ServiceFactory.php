@@ -15,6 +15,7 @@ namespace Aeliot\TodoRegistrar\Service\Registrar\JIRA;
 
 use Aeliot\TodoRegistrar\Exception\InvalidConfigException;
 use JiraRestApi\Configuration\ArrayConfiguration;
+use JiraRestApi\Field\FieldService;
 use JiraRestApi\Issue\IssueService;
 use JiraRestApi\IssueLink\IssueLinkService;
 use JiraRestApi\JiraException;
@@ -29,6 +30,20 @@ final readonly class ServiceFactory
      */
     public function __construct(private array $config)
     {
+    }
+
+    /**
+     * @throws InvalidConfigException
+     */
+    public function createFieldService(): FieldService
+    {
+        $serviceConfig = $this->getServiceConfig();
+
+        try {
+            return new FieldService($serviceConfig);
+        } catch (JiraException $exception) {
+            throw new InvalidConfigException('Cannot create JIRA field service', 0, $exception);
+        }
     }
 
     /**
