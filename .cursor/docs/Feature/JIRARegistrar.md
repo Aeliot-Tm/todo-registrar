@@ -130,7 +130,7 @@ The registrar does not transform values: use the JSON shape that JIRA REST API e
 
 To find allowed options and schema for a field, use `createmeta` / `editmeta` for your `projectKey` and `issueType`.
 
-Example:
+**Example:**
 
 ```yaml
 issue:
